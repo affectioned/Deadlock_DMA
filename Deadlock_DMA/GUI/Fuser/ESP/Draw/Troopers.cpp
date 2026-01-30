@@ -26,6 +26,11 @@ void Draw_Troopers::operator()()
 		if (patronTeam == PatronTeam::None)
 			continue;
 
+		auto bIsFriend = Trooper.IsFriendly();
+
+		if (bHideFriendly && bIsFriend)
+			continue;
+
 		Vector2 ScreenPos{};
 		if (!Deadlock::WorldToScreen(Trooper.m_Position, ScreenPos)) continue;
 
