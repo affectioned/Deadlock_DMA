@@ -319,25 +319,31 @@ json Config::SerializeConfig() {
 	};
 
 	j["ColorPicker"] = {
-		{"FriendlyNameTagColor", static_cast<uint32_t>(ColorPicker::FriendlyNameTagColor)},
-		{"EnemyNameTagColor", static_cast<uint32_t>(ColorPicker::EnemyNameTagColor)},
-		{"EnemyBoneColor", static_cast<uint32_t>(ColorPicker::EnemyBoneColor)},
-		{"FriendlyBoneColor", static_cast<uint32_t>(ColorPicker::FriendlyBoneColor)},
+		// HiddenKing Team Colors
+		{"HiddenKingNameTagColor", static_cast<uint32_t>(ColorPicker::HiddenKingNameTagColor)},
+		{"HiddenKingBoneColor", static_cast<uint32_t>(ColorPicker::HiddenKingBoneColor)},
+		{"HiddenKingRadarColor", static_cast<uint32_t>(ColorPicker::HiddenKingRadarColor)},
+		{"HiddenKingTrooperColor", static_cast<uint32_t>(ColorPicker::HiddenKingTrooperColor)},
+		{"HiddenKingHealthStatusBarColor", static_cast<uint32_t>(ColorPicker::HiddenKingHealthStatusBarColor)},
+		{"HiddenKingSoulsStatusBarColor", static_cast<uint32_t>(ColorPicker::HiddenKingSoulsStatusBarColor)},
+
+		// Archmother Team Colors
+		{"ArchmotherNameTagColor", static_cast<uint32_t>(ColorPicker::ArchmotherNameTagColor)},
+		{"ArchmotherBoneColor", static_cast<uint32_t>(ColorPicker::ArchmotherBoneColor)},
+		{"ArchmotherRadarColor", static_cast<uint32_t>(ColorPicker::ArchmotherRadarColor)},
+		{"ArchmotherTrooperColor", static_cast<uint32_t>(ColorPicker::ArchmotherTrooperColor)},
+		{"ArchmotherHealthStatusBarColor", static_cast<uint32_t>(ColorPicker::ArchmotherHealthStatusBarColor)},
+		{"ArchmotherSoulsStatusBarColor", static_cast<uint32_t>(ColorPicker::ArchmotherSoulsStatusBarColor)},
+
+		// Neutral/Shared Colors
 		{"SinnersColor", static_cast<uint32_t>(ColorPicker::SinnersColor)},
 		{"MonsterCampColor", static_cast<uint32_t>(ColorPicker::MonsterCampColor)},
-		{"FriendlyRadarColor", static_cast<uint32_t>(ColorPicker::FriendlyRadarColor)},
-		{"EnemyRadarColor", static_cast<uint32_t>(ColorPicker::EnemyRadarColor)},
-		{"FriendlyTrooperColor", static_cast<uint32_t>(ColorPicker::FriendlyTrooperColor)},
-		{"EnemyTrooperColor", static_cast<uint32_t>(ColorPicker::EnemyTrooperColor)},
 		{"UnsecuredSoulsTextColor", static_cast<uint32_t>(ColorPicker::UnsecuredSoulsTextColor)},
 		{"UnsecuredSoulsHighlightedTextColor", static_cast<uint32_t>(ColorPicker::UnsecuredSoulsHighlightedTextColor)},
-		{"FriendlyHealthStatusBarColor", static_cast<uint32_t>(ColorPicker::FriendlyHealthStatusBarColor)},
-		{"EnemyHealthStatusBarColor", static_cast<uint32_t>(ColorPicker::EnemyHealthStatusBarColor)},
-		{"FriendlySoulsStatusBarColor", static_cast<uint32_t>(ColorPicker::FriendlySoulsStatusBarColor)},
-		{"EnemySoulsStatusBarColor", static_cast<uint32_t>(ColorPicker::EnemySoulsStatusBarColor)},
 		{"HealthBarForegroundColor", static_cast<uint32_t>(ColorPicker::HealthBarForegroundColor)},
 		{"HealthBarBackgroundColor", static_cast<uint32_t>(ColorPicker::HealthBarBackgroundColor)},
 		{"AimbotFOVCircle", static_cast<uint32_t>(ColorPicker::AimbotFOVCircle)},
+		{"AimbotFOVCircleActive", static_cast<uint32_t>(ColorPicker::AimbotFOVCircleActive)},
 		{"RadarBackgroundColor", static_cast<uint32_t>(ColorPicker::RadarBackgroundColor)}
 	};
 
@@ -461,22 +467,28 @@ void Config::DeserializeConfig(const json& j) {
 	// ColorPicker
 	if (j.contains("ColorPicker")) {
 		const auto& colors = j["ColorPicker"];
-		if (colors.contains("FriendlyNameTagColor")) ColorPicker::FriendlyNameTagColor = colors["FriendlyNameTagColor"].get<uint32_t>();
-		if (colors.contains("EnemyNameTagColor")) ColorPicker::EnemyNameTagColor = colors["EnemyNameTagColor"].get<uint32_t>();
-		if (colors.contains("EnemyBoneColor")) ColorPicker::EnemyBoneColor = colors["EnemyBoneColor"].get<uint32_t>();
-		if (colors.contains("FriendlyBoneColor")) ColorPicker::FriendlyBoneColor = colors["FriendlyBoneColor"].get<uint32_t>();
+
+		// HiddenKing Team Colors
+		if (colors.contains("HiddenKingNameTagColor")) ColorPicker::HiddenKingNameTagColor = colors["HiddenKingNameTagColor"].get<uint32_t>();
+		if (colors.contains("HiddenKingBoneColor")) ColorPicker::HiddenKingBoneColor = colors["HiddenKingBoneColor"].get<uint32_t>();
+		if (colors.contains("HiddenKingRadarColor")) ColorPicker::HiddenKingRadarColor = colors["HiddenKingRadarColor"].get<uint32_t>();
+		if (colors.contains("HiddenKingTrooperColor")) ColorPicker::HiddenKingTrooperColor = colors["HiddenKingTrooperColor"].get<uint32_t>();
+		if (colors.contains("HiddenKingHealthStatusBarColor")) ColorPicker::HiddenKingHealthStatusBarColor = colors["HiddenKingHealthStatusBarColor"].get<uint32_t>();
+		if (colors.contains("HiddenKingSoulsStatusBarColor")) ColorPicker::HiddenKingSoulsStatusBarColor = colors["HiddenKingSoulsStatusBarColor"].get<uint32_t>();
+
+		// Archmother Team Colors
+		if (colors.contains("ArchmotherNameTagColor")) ColorPicker::ArchmotherNameTagColor = colors["ArchmotherNameTagColor"].get<uint32_t>();
+		if (colors.contains("ArchmotherBoneColor")) ColorPicker::ArchmotherBoneColor = colors["ArchmotherBoneColor"].get<uint32_t>();
+		if (colors.contains("ArchmotherRadarColor")) ColorPicker::ArchmotherRadarColor = colors["ArchmotherRadarColor"].get<uint32_t>();
+		if (colors.contains("ArchmotherTrooperColor")) ColorPicker::ArchmotherTrooperColor = colors["ArchmotherTrooperColor"].get<uint32_t>();
+		if (colors.contains("ArchmotherHealthStatusBarColor")) ColorPicker::ArchmotherHealthStatusBarColor = colors["ArchmotherHealthStatusBarColor"].get<uint32_t>();
+		if (colors.contains("ArchmotherSoulsStatusBarColor")) ColorPicker::ArchmotherSoulsStatusBarColor = colors["ArchmotherSoulsStatusBarColor"].get<uint32_t>();
+
+		// Neutral/Shared Colors
 		if (colors.contains("SinnersColor")) ColorPicker::SinnersColor = colors["SinnersColor"].get<uint32_t>();
 		if (colors.contains("MonsterCampColor")) ColorPicker::MonsterCampColor = colors["MonsterCampColor"].get<uint32_t>();
-		if (colors.contains("FriendlyRadarColor")) ColorPicker::FriendlyRadarColor = colors["FriendlyRadarColor"].get<uint32_t>();
-		if (colors.contains("EnemyRadarColor")) ColorPicker::EnemyRadarColor = colors["EnemyRadarColor"].get<uint32_t>();
-		if (colors.contains("FriendlyTrooperColor")) ColorPicker::FriendlyTrooperColor = colors["FriendlyTrooperColor"].get<uint32_t>();
-		if (colors.contains("EnemyTrooperColor")) ColorPicker::EnemyTrooperColor = colors["EnemyTrooperColor"].get<uint32_t>();
 		if (colors.contains("UnsecuredSoulsTextColor")) ColorPicker::UnsecuredSoulsTextColor = colors["UnsecuredSoulsTextColor"].get<uint32_t>();
 		if (colors.contains("UnsecuredSoulsHighlightedTextColor")) ColorPicker::UnsecuredSoulsHighlightedTextColor = colors["UnsecuredSoulsHighlightedTextColor"].get<uint32_t>();
-		if (colors.contains("FriendlyHealthStatusBarColor")) ColorPicker::FriendlyHealthStatusBarColor = colors["FriendlyHealthStatusBarColor"].get<uint32_t>();
-		if (colors.contains("EnemyHealthStatusBarColor")) ColorPicker::EnemyHealthStatusBarColor = colors["EnemyHealthStatusBarColor"].get<uint32_t>();
-		if (colors.contains("FriendlySoulsStatusBarColor")) ColorPicker::FriendlySoulsStatusBarColor = colors["FriendlySoulsStatusBarColor"].get<uint32_t>();
-		if (colors.contains("EnemySoulsStatusBarColor")) ColorPicker::EnemySoulsStatusBarColor = colors["EnemySoulsStatusBarColor"].get<uint32_t>();
 		if (colors.contains("HealthBarForegroundColor")) ColorPicker::HealthBarForegroundColor = colors["HealthBarForegroundColor"].get<uint32_t>();
 		if (colors.contains("HealthBarBackgroundColor")) ColorPicker::HealthBarBackgroundColor = colors["HealthBarBackgroundColor"].get<uint32_t>();
 		if (colors.contains("AimbotFOVCircle")) ColorPicker::AimbotFOVCircle = colors["AimbotFOVCircle"].get<uint32_t>();

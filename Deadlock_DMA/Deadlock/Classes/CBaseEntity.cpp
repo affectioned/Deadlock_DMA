@@ -12,6 +12,21 @@ const bool CBaseEntity::IsFriendly() const
 	return m_TeamNum == LocalController.m_TeamNum;
 }
 
+const PatronTeam CBaseEntity::GetPatronTeam() const
+{
+	if (EntityList::m_LocalControllerIndex < 0)
+		return PatronTeam::None;
+
+	auto& LocalController = EntityList::m_PlayerControllers[EntityList::m_LocalControllerIndex];
+
+	if (m_TeamNum == static_cast<uint8_t>(PatronTeam::HiddenKing))
+		return PatronTeam::HiddenKing;
+	else if (m_TeamNum == static_cast<uint8_t>(PatronTeam::Archmother))
+		return PatronTeam::Archmother;
+
+	return PatronTeam::None;
+}
+
 const bool CBaseEntity::IsLocalPlayer() const
 {
 	std::scoped_lock lock(Deadlock::m_LocalAddressMutex);

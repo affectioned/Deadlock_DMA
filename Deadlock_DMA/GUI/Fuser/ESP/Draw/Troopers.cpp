@@ -21,9 +21,9 @@ void Draw_Troopers::operator()()
 
 		if (Trooper.IsDormant()) continue;
 
-		auto bIsFriend = Trooper.IsFriendly();
+		auto patronTeam = Trooper.GetPatronTeam();
 
-		if (bHideFriendly && bIsFriend)
+		if (patronTeam == PatronTeam::None)
 			continue;
 
 		Vector2 ScreenPos{};
@@ -32,6 +32,8 @@ void Draw_Troopers::operator()()
 		std::string TrooperString = std::format("{}", Trooper.m_CurrentHealth);
 		auto TextSize = ImGui::CalcTextSize(TrooperString.c_str());
 		ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
-		ImGui::TextColored((bIsFriend) ? ColorPicker::FriendlyTrooperColor : ColorPicker::EnemyTrooperColor, TrooperString.c_str());
+
+		auto TrooperColor = (patronTeam == PatronTeam::HiddenKing) ? ColorPicker::HiddenKingTrooperColor : ColorPicker::ArchmotherTrooperColor;
+		ImGui::TextColored(TrooperColor, TrooperString.c_str());
 	}
 }

@@ -329,6 +329,9 @@
     <ClInclude Include="Makcu\MyMakcu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Deadlock\Const\PatronTeam.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Deadlock_DMA.rc">

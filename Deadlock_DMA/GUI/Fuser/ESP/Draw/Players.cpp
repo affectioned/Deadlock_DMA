@@ -106,7 +106,7 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 	auto It = g_HeroBoneMap.find(PC.m_HeroID);
 	if (It == g_HeroBoneMap.end()) return;
 
-	auto SkeletonColor = PC.IsFriendly() ? ColorPicker::FriendlyBoneColor : ColorPicker::EnemyBoneColor;
+	auto SkeletonColor = (PC.GetPatronTeam() == PatronTeam::HiddenKing) ? ColorPicker::HiddenKingBoneColor : ColorPicker::ArchmotherBoneColor;
 
 	for (const auto& [StartBone, EndBone] : It->second)
 	{
@@ -123,7 +123,7 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 
 void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
-	auto HeadColor = PC.IsFriendly() ? ColorPicker::FriendlyBoneColor : ColorPicker::EnemyBoneColor;
+	auto HeadColor = (PC.GetPatronTeam() == PatronTeam::HiddenKing) ? ColorPicker::HiddenKingBoneColor : ColorPicker::ArchmotherBoneColor;
 
 	auto HeadBoneIndex = Aimpoints::GetAimpoints(PC.m_HeroID).first;
 
@@ -193,7 +193,7 @@ void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const CCitade
 
 	auto TextSize = ImGui::CalcTextSize(NameTagString.c_str());
 
-	auto BackgroundColor = PC.IsFriendly() ? ColorPicker::FriendlyNameTagColor : ColorPicker::EnemyNameTagColor;
+	auto BackgroundColor = (PC.GetPatronTeam() == PatronTeam::HiddenKing) ? ColorPicker::HiddenKingBoneColor : ColorPicker::ArchmotherBoneColor;
 
 	//ImVec2 UpperLeft = ImVec2(ScreenPos.x - (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + WindowPos.y + (LineNumber * TextSize.y));
 	//ImVec2 LowerRight = ImVec2(ScreenPos.x + (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + TextSize.y + WindowPos.y + (LineNumber * TextSize.y));

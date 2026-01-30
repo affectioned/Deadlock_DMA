@@ -81,7 +81,7 @@ void Radar::DrawEntities()
 			EntityDrawPos = ClampToRect(EntityDrawPos, radarTL, radarBR);
 		}
 
-		ImU32 Color = Pawn.IsFriendly() ? ColorPicker::FriendlyRadarColor : ColorPicker::EnemyRadarColor;
+		ImU32 Color = (Pawn.GetPatronTeam() == PatronTeam::HiddenKing) ? ColorPicker::HiddenKingBoneColor : ColorPicker::ArchmotherBoneColor;
 
 		if (bHideFriendly && Pawn.IsFriendly()) continue;
 
@@ -139,9 +139,7 @@ void Radar::DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayer
 
 	ImVec2 size = ImGui::CalcTextSize(text.c_str());
 
-	ImU32 color = PC.IsFriendly()
-		? ColorPicker::FriendlyNameTagColor
-		: ColorPicker::EnemyNameTagColor;
+	ImU32 color = (PC.GetPatronTeam() == PatronTeam::HiddenKing) ? ColorPicker::HiddenKingBoneColor : ColorPicker::ArchmotherBoneColor;
 
 	ImVec2 pos = {
 		AnchorPos.x - size.x * 0.5f,

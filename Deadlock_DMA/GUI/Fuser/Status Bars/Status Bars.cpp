@@ -42,10 +42,9 @@ void StatusBars::RenderGenericComparisonBar(ValuePair Values, ColorPair Colors, 
 
 void StatusBars::RenderTeamHealthBars(GameStatistics& Stats, const ImVec2& WindowPos, const ImVec2& WindowSize, ImDrawList* DrawList, int& LineNumber)
 {
-
 	RenderGenericComparisonBar(
 		ValuePair(Stats.m_FriendlyTeamHealth, Stats.m_EnemyTeamHealth),
-		ColorPair(ColorPicker::FriendlyHealthStatusBarColor, ColorPicker::EnemyHealthStatusBarColor),
+		ColorPair(ColorPicker::HiddenKingHealthStatusBarColor, ColorPicker::ArchmotherHealthStatusBarColor),
 		LineNumber,
 		DrawList,
 		WindowPos,
@@ -57,7 +56,7 @@ void StatusBars::RenderTeamSoulsBars(GameStatistics& Stats, const ImVec2& Window
 {
 	RenderGenericComparisonBar(
 		ValuePair(Stats.m_FriendlySoulsCollected, Stats.m_EnemySoulsCollected),
-		ColorPair(ColorPicker::FriendlySoulsStatusBarColor, ColorPicker::EnemySoulsStatusBarColor),
+		ColorPair(ColorPicker::HiddenKingSoulsStatusBarColor, ColorPicker::ArchmotherSoulsStatusBarColor),
 		LineNumber,
 		DrawList,
 		WindowPos,
@@ -69,7 +68,7 @@ void StatusBars::RenderUnspentSoulsBar(GameStatistics& Stats, const ImVec2& Wind
 {
 	RenderGenericComparisonBar(
 		ValuePair(Stats.m_FriendlyUnspentSouls, Stats.m_EnemyUnspentSouls),
-		ColorPair(ColorPicker::FriendlySoulsStatusBarColor, ColorPicker::EnemySoulsStatusBarColor),
+		ColorPair(ColorPicker::HiddenKingSoulsStatusBarColor, ColorPicker::ArchmotherSoulsStatusBarColor),
 		LineNumber,
 		DrawList,
 		WindowPos,

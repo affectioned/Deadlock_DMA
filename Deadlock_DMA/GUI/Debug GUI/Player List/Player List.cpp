@@ -12,13 +12,14 @@ void PlayerList::Render()
 
 	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
-	if (ImGui::BeginTable("Players Table", 6))
+	if (ImGui::BeginTable("Players Table", 7))
 	{
 		ImGui::TableSetupColumn("Health");
 		ImGui::TableSetupColumn("Hero ID");
 		ImGui::TableSetupColumn("Hero Name");
 		ImGui::TableSetupColumn("Distance");
 		ImGui::TableSetupColumn("Souls");
+		ImGui::TableSetupColumn("Team");
 		ImGui::TableSetupColumn("Pawn Address");
 		ImGui::TableHeadersRow();
 
@@ -45,6 +46,8 @@ void PlayerList::Render()
 			ImGui::Text("%.2f m", Pawn.DistanceFromLocalPlayer(true));
 			ImGui::TableNextColumn();
 			ImGui::Text("%d", ControllerIt->m_TotalSouls);
+			ImGui::TableNextColumn();
+			ImGui::Text("%d", ControllerIt->m_TeamNum);
 			ImGui::TableNextColumn();
 			if (ImGui::Button(std::format("Copy Address##{}", PlayerNum).c_str()))
 				ImGui::SetClipboardText(std::format("0x{:X}", Pawn.m_EntityAddress).c_str());

@@ -4,51 +4,45 @@
 
 void ColorPicker::Render()
 {
-	if (!bMasterToggle)	return;
+	if (!bMasterToggle) return;
 
 	ImGui::Begin("Color Picker", &bMasterToggle);
 
-	MyColorPicker("Friendly Name Tag", ColorPicker::FriendlyNameTagColor);
+	// HiddenKing Team Colors
+	if (ImGui::CollapsingHeader("HiddenKing Team", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		MyColorPicker("Name Tag", ColorPicker::HiddenKingNameTagColor);
+		MyColorPicker("Bone", ColorPicker::HiddenKingBoneColor);
+		MyColorPicker("Radar", ColorPicker::HiddenKingRadarColor);
+		MyColorPicker("Trooper", ColorPicker::HiddenKingTrooperColor);
+		MyColorPicker("Health Status Bar", ColorPicker::HiddenKingHealthStatusBarColor);
+		MyColorPicker("Souls Status Bar", ColorPicker::HiddenKingSoulsStatusBarColor);
+	}
 
-	MyColorPicker("Enemy Name Tag", ColorPicker::EnemyNameTagColor);
+	// Archmother Team Colors
+	if (ImGui::CollapsingHeader("Archmother Team", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		MyColorPicker("Name Tag", ColorPicker::ArchmotherNameTagColor);
+		MyColorPicker("Bone", ColorPicker::ArchmotherBoneColor);
+		MyColorPicker("Radar", ColorPicker::ArchmotherRadarColor);
+		MyColorPicker("Trooper", ColorPicker::ArchmotherTrooperColor);
+		MyColorPicker("Health Status Bar", ColorPicker::ArchmotherHealthStatusBarColor);
+		MyColorPicker("Souls Status Bar", ColorPicker::ArchmotherSoulsStatusBarColor);
+	}
 
-	MyColorPicker("Friendly Bone", ColorPicker::FriendlyBoneColor);
-
-	MyColorPicker("Enemy Bone", ColorPicker::EnemyBoneColor);
-
-	MyColorPicker("Sinner's Sacrifice", ColorPicker::SinnersColor);
-
-	MyColorPicker("Monster Camp", ColorPicker::MonsterCampColor);
-
-	MyColorPicker("Friendly Radar", ColorPicker::FriendlyRadarColor);
-
-	MyColorPicker("Enemy Radar", ColorPicker::EnemyRadarColor);
-
-	MyColorPicker("Friendly Trooper", ColorPicker::FriendlyTrooperColor);
-
-	MyColorPicker("Enemy Trooper", ColorPicker::EnemyTrooperColor);
-
-	MyColorPicker("Unsecured Souls Text", ColorPicker::UnsecuredSoulsTextColor);
-
-	MyColorPicker("Unsecured Souls Highlighted Text", ColorPicker::UnsecuredSoulsHighlightedTextColor);
-
-	MyColorPicker("Friendly Health Status Bar", ColorPicker::FriendlyHealthStatusBarColor);
-
-	MyColorPicker("Enemy Health Status Bar", ColorPicker::EnemyHealthStatusBarColor);
-
-	MyColorPicker("Friendly Souls Status Bar", ColorPicker::FriendlySoulsStatusBarColor);
-
-	MyColorPicker("Enemy Souls Status Bar", ColorPicker::EnemySoulsStatusBarColor);
-
-	MyColorPicker("Health Bar Foreground", ColorPicker::HealthBarForegroundColor);
-
-	MyColorPicker("Health Bar Background", ColorPicker::HealthBarBackgroundColor);
-
-	MyColorPicker("Aimbot FOV Circle", ColorPicker::AimbotFOVCircle);
-
-	MyColorPicker("Aimbot FOV Circle Active", ColorPicker::AimbotFOVCircleActive);
-
-	MyColorPicker("Radar Background", ColorPicker::RadarBackgroundColor);
+	// Neutral/Shared Colors
+	if (ImGui::CollapsingHeader("Neutral & Shared", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		MyColorPicker("Sinner's Sacrifice", ColorPicker::SinnersColor);
+		MyColorPicker("Monster Camp", ColorPicker::MonsterCampColor);
+		MyColorPicker("Unsecured Souls Text", ColorPicker::UnsecuredSoulsTextColor);
+		MyColorPicker("Unsecured Souls Highlighted Text", ColorPicker::UnsecuredSoulsHighlightedTextColor);
+		MyColorPicker("Health Bar Foreground", ColorPicker::HealthBarForegroundColor);
+		MyColorPicker("Health Bar Background", ColorPicker::HealthBarBackgroundColor);
+		MyColorPicker("Aimbot FOV Circle", ColorPicker::AimbotFOVCircle);
+		MyColorPicker("Aimbot FOV Circle Active", ColorPicker::AimbotFOVCircleActive);
+		MyColorPicker("Radar Background", ColorPicker::RadarBackgroundColor);
+	}
 
 	ImGui::End();
 }

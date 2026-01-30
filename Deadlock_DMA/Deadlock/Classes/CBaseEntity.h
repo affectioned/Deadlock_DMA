@@ -1,6 +1,7 @@
 #pragma once
 #include "Deadlock/Engine/Vector3.h"
-#
+#include "Deadlock/Const/PatronTeam.hpp"
+
 class CBaseEntity
 {
 public:
@@ -16,6 +17,7 @@ public:
 	const bool IsInvalid() const { return m_Flags & 0x1; }
 	void SetInvalid() { m_Flags |= 0x1; }
 	const bool IsFriendly() const;
+	const PatronTeam GetPatronTeam() const;
 	const bool IsLocalPlayer() const;
 	const float DistanceFromLocalPlayer(bool bInMeters = 0) const;
 	const bool IsDormant() const { return m_Dormant; }
