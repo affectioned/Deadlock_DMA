@@ -29,7 +29,7 @@ DMA_Connection::DMA_Connection()
     std::println("Connecting to DMA...");
 
     try {
-        LPCSTR args[] = { "", "-device", "FPGA" };
+        LPCSTR args[] = {"-device", "FPGA", "-waitinitialize"};
         m_VMMHandle = VMMDLL_Initialize(3, args);
 
         if (!m_VMMHandle)
@@ -42,10 +42,8 @@ DMA_Connection::DMA_Connection()
         std::println(stderr, "{}", e.what());
         std::println(stderr, "Press ENTER to exit...");
 
-        // Wait for user input so the window stays open
         std::cin.get();
 
-        // Re-throw so the program doesn't try to use a null handle
         throw;
     }
 }

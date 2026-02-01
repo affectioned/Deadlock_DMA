@@ -161,5 +161,5 @@ void Aimbot::RenderFOVCircle()
 
 	ImColor circleColor = bIsActive ? ColorPicker::AimbotFOVCircleActive : ColorPicker::AimbotFOVCircle;
 
-	ImGui::GetWindowDrawList()->AddCircle(CenterScreen, fMaxPixelDistance, circleColor, 100, 1.5f);
+	ImGui::GetWindowDrawList()->AddCircle(CenterScreen, fMaxPixelDistance, circleColor, 100, 0.1f);
 }
