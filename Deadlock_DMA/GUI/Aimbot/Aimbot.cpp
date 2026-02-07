@@ -26,9 +26,9 @@ void Aimbot::RenderSettings()
 		ImGui::TextColored(ImColor(255, 0, 0), "Makcu Disconnected!");
 	}
 
-	ImGui::SliderFloat("Smooth X", &fSmoothX, 1.0f, 50.0f, "%.1f");
+	ImGui::SliderFloat("Smooth X", &fAlphaX, 0.01f, 1.0f, "%.2f");
 
-	ImGui::SliderFloat("Smooth Y", &fSmoothY, 1.0f, 50.0f, "%.1f");
+	ImGui::SliderFloat("Smooth Y", &fAlphaY, 0.01f, 1.0f, "%.2f");
 
 	ImGui::SliderFloat("Gaussian Noise", &fGaussianNoise, 0.0f, 2.0f, "%.2f");
 
@@ -129,9 +129,11 @@ void Aimbot::OnFrame(DMA_Connection* Conn)
 
 		Vector2 Delta = GetAimDelta(CenterScreen);
 
+		// Lerp from no movement toward full delta
+		// fAlphaX/Y in (0.0, 1.0]: lower = smoother
 		Vector2 MoveAmount{
-			Delta.x / fSmoothX,
-			Delta.y / fSmoothY
+			std::lerp(0.0f, Delta.x, fAlphaX),
+			std::lerp(0.0f, Delta.y, fAlphaY)
 		};
 
 		// https://en.cppreference.com/w/cpp/numeric/random/normal_distribution.html

@@ -239,7 +239,6 @@ json Config::SerializeConfig() {
 
 	j["MainMenu"] = {
 		{"bVSync", MainMenu::bVSync},
-		{"iTargetFPS", MainMenu::iTargetFPS},
 	};
 
 	// Aimbot
@@ -248,8 +247,8 @@ json Config::SerializeConfig() {
 		{"bSettings", Aimbot::bSettings},
 
 		// Targetting
-		{"fSmoothX", Aimbot::fSmoothX},
-		{"fSmoothY", Aimbot::fSmoothY},
+		{"fSmoothX", Aimbot::fAlphaX},
+		{"fSmoothY", Aimbot::fAlphaY},
 		{"fGaussianNoise", Aimbot::fGaussianNoise},
 		{"fMaxPixelDistance", Aimbot::fMaxPixelDistance},
 		{"bAimHead", Aimbot::bAimHead},
@@ -353,7 +352,6 @@ void Config::DeserializeConfig(const json& j) {
 		const auto m = j["MainMenu"];
 
 		if (m.contains("bVSync")) MainMenu::bVSync = m["bVSync"].get<bool>();
-		if (m.contains("iTargetFPS")) MainMenu::iTargetFPS = m["iTargetFPS"].get<int>();
 	}
 
 	// Aimbot
@@ -364,8 +362,8 @@ void Config::DeserializeConfig(const json& j) {
 		if (ab.contains("bSettings")) Aimbot::bSettings = ab["bSettings"].get<bool>();
 
 		// Targeting
-		if (ab.contains("fSmoothX")) Aimbot::fSmoothX = ab["fSmoothX"].get<float>();
-		if (ab.contains("fSmoothY")) Aimbot::fSmoothY = ab["fSmoothY"].get<float>();
+		if (ab.contains("fSmoothX")) Aimbot::fAlphaX = ab["fSmoothX"].get<float>();
+		if (ab.contains("fSmoothY")) Aimbot::fAlphaX = ab["fSmoothY"].get<float>();
 		if (ab.contains("fGaussianNoise")) Aimbot::fGaussianNoise = ab["fGaussianNoise"].get<float>();
 		if (ab.contains("fMaxPixelDistance")) Aimbot::fMaxPixelDistance = ab["fMaxPixelDistance"].get<float>();
 		if (ab.contains("bAimHead")) Aimbot::bAimHead = ab["bAimHead"].get<bool>();

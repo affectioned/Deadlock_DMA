@@ -12,8 +12,8 @@ public:
 
 public:
 	static inline bool bSettings{ true };
-	static inline float fSmoothX{ 15.0f };
-	static inline float fSmoothY{ 18.0f };
+	static inline float fAlphaX{ 0.067f };
+	static inline float fAlphaY{ 0.056f };
 	static inline float fGaussianNoise{ 0.8f }; 
 	static inline float fMaxPixelDistance{ 100.0f };
 	static inline float fBulletVelocity{ 500.0f };
