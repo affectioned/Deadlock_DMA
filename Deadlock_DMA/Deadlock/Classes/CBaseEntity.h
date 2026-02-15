@@ -12,6 +12,7 @@ public:
 	uint8_t m_Flags{ 0 };
 	ETeam m_TeamNum{ 0 };
 	uint8_t m_Dormant{ 0 };
+	bool m_SilverForm{ false };
 
 public:
 	const bool IsInvalid() const { return m_Flags & 0x1; }
@@ -37,6 +38,9 @@ public:
 
 		uintptr_t TeamNumPtr = m_EntityAddress + Offsets::BaseEntity::TeamNum;
 		VMMDLL_Scatter_PrepareEx(vmsh, TeamNumPtr, sizeof(uint8_t), reinterpret_cast<BYTE*>(&m_TeamNum), nullptr);
+
+		uintptr_t SilverFormPtr = m_EntityAddress + Offsets::BaseEntity::SilverForm;
+		VMMDLL_Scatter_PrepareEx(vmsh, SilverFormPtr, sizeof(bool), reinterpret_cast<BYTE*>(&m_SilverForm), nullptr);
 
 		if (bReadHealth)
 		{

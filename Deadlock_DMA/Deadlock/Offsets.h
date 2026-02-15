@@ -45,6 +45,7 @@ namespace Offsets
 		inline constexpr std::ptrdiff_t GameSceneNode = 0x330;
 		inline constexpr std::ptrdiff_t CurrentHealth = 0x354;
 		inline constexpr std::ptrdiff_t TeamNum = 0x3F3;
+		inline constexpr std::ptrdiff_t SilverForm = 0x889;
 	}
 
 	namespace Controller

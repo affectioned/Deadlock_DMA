@@ -106,7 +106,11 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 	auto It = g_HeroBoneMap.find(PC.m_HeroID);
 	if (It == g_HeroBoneMap.end()) return;
 
-	for (const auto& [StartBone, EndBone] : It->second)
+	const auto& BonePairs = (PC.m_HeroID == HeroId::Silver && !Pawn.m_SilverForm)
+		? BoneLists::Silver_Wolf_BonePairs
+		: It->second;
+
+	for (const auto& [StartBone, EndBone] : BonePairs)
 	{
 		Vector2 Start2D, End2D;
 

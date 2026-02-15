@@ -566,6 +566,26 @@ namespace BoneLists
 		{29,28},
 		{28,17}
 	};
+	const inline std::vector<std::pair<uint32_t, uint32_t>> Silver_Wolf_BonePairs{
+		{30,19},
+		{19,21},
+		{19,26},
+		{21,22},
+		{22,23},
+		{26,27},
+		{27,28},
+		{19,18},
+		{18,17},
+		{17,5},
+		{5,6},
+		{5,11},
+		{11,12},
+		{12,34},
+		{34,15},
+		{6,7},
+		{7,33},
+		{33,10}
+	};
 	const inline std::vector<std::pair<uint32_t, uint32_t>> Silver_BonePairs{
 		{22,21},
 		{21,20},
