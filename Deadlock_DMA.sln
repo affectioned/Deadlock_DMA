@@ -5,6 +5,8 @@ VisualStudioVersion = 18.3.11222.16 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Deadlock_DMA", "Deadlock_DMA\Deadlock_DMA.vcxproj", "{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BoneExtractor", "BoneExtractor\BoneExtractor.pyproj", "{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Catch|x64 = Catch|x64
@@ -39,6 +41,17 @@ Global
 		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Tracy|x64.Build.0 = Tracy|x64
 		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Tracy|x86.ActiveCfg = Tracy|Win32
 		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Tracy|x86.Build.0 = Tracy|Win32
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.Catch|x64.ActiveCfg = Debug
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.Catch|x86.ActiveCfg = Debug
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.DbgPrint|x64.ActiveCfg = Debug
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.DbgPrint|x86.ActiveCfg = Debug
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.DLL|x64.ActiveCfg = Debug
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.DLL|x86.ActiveCfg = Debug
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.Release|x64.ActiveCfg = Release
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.Release|x64.Build.0 = Release
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.Release|x86.ActiveCfg = Release
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.Tracy|x64.ActiveCfg = Debug
+		{3F8C1A2B-7D4E-4A9F-B6C3-8E2D5F0A1B9C}.Tracy|x86.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
