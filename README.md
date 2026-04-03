@@ -1,5 +1,4 @@
-# Update
-This project is now archived. I hope it is useful to those wanting to learn.
+In maintance mode by me.
 
 # Deadlock_DMA
 
