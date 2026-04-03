@@ -775,6 +775,7 @@
     <ClCompile Include="Deadlock\Classes\CCitadelPlayerPawn.cpp" />
     <ClInclude Include="Deadlock\Classes\CTrooperEntity.h" />
     <ClInclude Include="Deadlock\Const\Aimpoints.h" />
+    <ClInclude Include="Deadlock\Const\BoneListTypes.hpp" />
     <ClInclude Include="Deadlock\Const\ETeam.h" />
     <ClInclude Include="Deadlock\Const\HeroEnum.hpp">
       <FileType>CppCode</FileType>

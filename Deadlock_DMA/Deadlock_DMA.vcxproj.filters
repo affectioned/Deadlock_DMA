@@ -338,6 +338,9 @@
     <ClInclude Include="Deadlock\Const\ETeam.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Deadlock\Const\BoneListTypes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Deadlock_DMA.rc">
