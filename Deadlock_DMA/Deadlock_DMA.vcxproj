@@ -774,13 +774,11 @@
     <ClCompile Include="Deadlock\Classes\CBaseEntity.cpp" />
     <ClCompile Include="Deadlock\Classes\CCitadelPlayerPawn.cpp" />
     <ClInclude Include="Deadlock\Classes\CTrooperEntity.h" />
-    <ClInclude Include="Deadlock\Const\Aimpoints.h" />
     <ClInclude Include="Deadlock\Const\BoneListTypes.hpp" />
     <ClInclude Include="Deadlock\Const\ETeam.h" />
     <ClInclude Include="Deadlock\Const\HeroEnum.hpp">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClCompile Include="Deadlock\Const\Aimpoints.cpp" />
     <ClCompile Include="Deadlock\Deadlock.cpp" />
     <ClCompile Include="Deadlock\Engine\CHandle.cpp" />
     <ClCompile Include="Deadlock\Entity List\EntityList.cpp" />
@@ -788,7 +786,6 @@
     <ClCompile Include="DMA\DMA Thread.cpp" />
     <ClCompile Include="DMA\DMA.cpp" />
     <ClCompile Include="DMA\Input Manager.cpp" />
-    <ClCompile Include="DMA\MultiScan.cpp" />
     <ClCompile Include="DMA\Process.cpp" />
     <ClCompile Include="DMA\SigScan.cpp" />
     <ClCompile Include="GUI\Aimbot\Aimbot.cpp" />
@@ -880,7 +877,6 @@
     <ClInclude Include="Deadlock\Entity List\EntityList.h" />
     <ClInclude Include="Deadlock\Offsets.h" />
     <ClInclude Include="DMA\DMA.h" />
-    <ClInclude Include="DMA\MultiScan.h" />
     <ClInclude Include="DMA\Process.h" />
     <ClInclude Include="GUI\Color Picker\Color Picker.h" />
     <ClInclude Include="GUI\Debug GUI\Class List\Class List.h" />

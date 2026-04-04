@@ -87,9 +87,6 @@
     <ClCompile Include="GUI\Radar\Radar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DMA\MultiScan.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Deadlock\Offsets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -127,9 +124,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GUI\Aimbot\Aimbot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Deadlock\Const\Aimpoints.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GUI\Config\Config.cpp">
@@ -263,9 +257,6 @@
     <ClInclude Include="GUI\Radar\Radar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DMA\MultiScan.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Tests\All Tests.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -318,9 +309,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Aimbot\Aimbot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Deadlock\Const\Aimpoints.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
