@@ -27,6 +27,16 @@ void Radar::Render()
 	ImGui::PopStyleColor(1);
 }
 
+void Radar::RenderContent()
+{
+	ImGui::Checkbox("Enable Radar", &bMasterToggle);
+	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
+	ImGui::Checkbox("MOBA Style", &bMobaStyle);
+	ImGui::Checkbox("Player-Centered", &bPlayerCentered);
+	ImGui::SetNextItemWidth(150.0f);
+	ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
+}
+
 void Radar::RenderSettings()
 {
 	ImGui::PushFont(nullptr, 12.0f);
@@ -148,7 +158,7 @@ void Radar::DrawEntities()
 
 void Radar::DrawLocalPlayerViewRay(ImDrawList* DrawList, const ImVec2& ScreenPos, const ETeam& LocalTeam)
 {
-	float Rad = Deadlock::GetClientYaw() + std::numbers::pi;
+	float Rad = Deadlock::GetClientYaw() + std::numbers::pi_v<float>;
 
 	ImVec2 LineEnd = { ScreenPos.x - (fRaySize * std::sin(Rad)), ScreenPos.y - (fRaySize * std::cos(Rad)) };
 

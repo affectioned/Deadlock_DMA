@@ -141,36 +141,31 @@ const char* CKeybind::GetKeyName(uint32_t vkCode)
 	}
 }
 
-void Keybinds::Render()
+void Keybinds::RenderContent()
 {
-	if (!bSettings) return;
-
-	ImGui::Begin("Keybinds", &bSettings);
-
-	if (c_keys::IsInitialized() == false)
+	if (!c_keys::IsInitialized())
 	{
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.3f, 0.3f, 1.0f));
-		ImGui::Text("Input Manager not initialized!");
-		ImGui::PopStyleColor();
-		ImGui::End();
+		ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), "Input Manager not initialized!");
 		return;
 	}
 
-	ImGui::SeparatorText("Keybinds");
-	// Table for better layout
 	if (ImGui::BeginTable("##KeybindsTable", 4, ImGuiTableFlags_SizingStretchProp))
 	{
-		ImGui::TableSetupColumn("Action", ImGuiTableColumnFlags_WidthFixed, 120.0f);
-		ImGui::TableSetupColumn("Key", ImGuiTableColumnFlags_WidthFixed, 150.0f);
+		ImGui::TableSetupColumn("Action",    ImGuiTableColumnFlags_WidthFixed, 120.0f);
+		ImGui::TableSetupColumn("Key",       ImGuiTableColumnFlags_WidthFixed, 150.0f);
 		ImGui::TableSetupColumn("Target PC", ImGuiTableColumnFlags_WidthFixed, 80.0f);
-		ImGui::TableSetupColumn("Radar PC", ImGuiTableColumnFlags_WidthFixed, 80.0f);
+		ImGui::TableSetupColumn("Radar PC",  ImGuiTableColumnFlags_WidthFixed, 80.0f);
 		ImGui::TableHeadersRow();
-
 		Aimbot.Render();
-
 		ImGui::EndTable();
 	}
+}
 
+void Keybinds::Render()
+{
+	if (!bSettings) return;
+	ImGui::Begin("Keybinds", &bSettings);
+	RenderContent();
 	ImGui::End();
 }
 

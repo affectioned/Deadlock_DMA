@@ -30,7 +30,7 @@ void DMA_Thread_Main()
 
 	auto Deadlock = &Deadlock::Proc();
 
-	CTimer ViewMatrixTimer(std::chrono::milliseconds(1), [&Conn] {Deadlock::UpdateViewMatrix(Conn); });
+	CTimer ViewMatrixTimer(std::chrono::milliseconds(2), [&Conn] {Deadlock::UpdateViewMatrix(Conn); });
 	CTimer YawTimer(std::chrono::milliseconds(10), [&Conn] {Deadlock::UpdateClientYaw(Conn); });
 	CTimer ServerTimeTimer(std::chrono::milliseconds(1000), [&Conn] {Deadlock::UpdateServerTime(Conn); });
 	CTimer LocalControllerAddressTime(std::chrono::seconds(15), [&Conn] {Deadlock::UpdateLocalPlayerAddresses(Conn); });
@@ -39,7 +39,7 @@ void DMA_Thread_Main()
 	CTimer QuickTrooperTimer(std::chrono::milliseconds(100), [&Conn, &Deadlock] {EntityList::QuickTrooperRefresh(Conn, Deadlock); });
 
 	CTimer FullPawnTimer(std::chrono::seconds(2), [&Conn, &Deadlock] {EntityList::FullPawnRefresh_lk(Conn, Deadlock); });
-	CTimer QuickPawnTimer(std::chrono::milliseconds(5), [&Conn, &Deadlock] {EntityList::QuickPawnRefresh(Conn, Deadlock); });
+	CTimer QuickPawnTimer(std::chrono::milliseconds(8), [&Conn, &Deadlock] {EntityList::QuickPawnRefresh(Conn, Deadlock); });
 
 	CTimer FullMonsterCampTimer(std::chrono::seconds(2), [&Conn, &Deadlock] {EntityList::FullMonsterCampRefresh(Conn, Deadlock); });
 	CTimer QuickMonsterCampTimer(std::chrono::milliseconds(100), [&Conn, &Deadlock] {EntityList::QuickMonsterCampRefresh(Conn, Deadlock); });
@@ -53,6 +53,8 @@ void DMA_Thread_Main()
 
 	while (bRunning)
 	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
 		auto TimeNow = std::chrono::high_resolution_clock::now();
 		ViewMatrixTimer.Tick(TimeNow);
 		YawTimer.Tick(TimeNow);

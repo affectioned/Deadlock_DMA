@@ -38,10 +38,8 @@ void ESP::OnFrame()
 	ImGui::PopFont();
 }
 
-void ESP::RenderSettings()
+void ESP::RenderContent()
 {
-	ImGui::Begin("ESP Settings");
-
 	ImGui::Checkbox("Enable ESP", &bMasterToggle);
 
 	if (ImGui::CollapsingHeader("Players", ImGuiTreeNodeFlags_DefaultOpen))
@@ -50,6 +48,7 @@ void ESP::RenderSettings()
 		ImGui::Checkbox("Master Toggle", &Draw_Players::bMasterToggle);
 		ImGui::Checkbox("Hide Friendly", &Draw_Players::bHideFriendly);
 
+		ImGui::Checkbox("Boxes", &Draw_Players::bDrawBoxes);
 		ImGui::Checkbox("Bones", &Draw_Players::bDrawBones);
 		if (Draw_Players::bDrawBones)
 		{
@@ -80,6 +79,11 @@ void ESP::RenderSettings()
 	ImGui::Checkbox("Draw Monster Camps", &Draw_Camps::bMasterToggle);
 
 	ImGui::Checkbox("Draw Sinners", &Draw_Sinners::bMasterToggle);
+}
 
+void ESP::RenderSettings()
+{
+	ImGui::Begin("ESP Settings");
+	RenderContent();
 	ImGui::End();
 }

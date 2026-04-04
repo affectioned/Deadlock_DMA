@@ -2,38 +2,31 @@
 #include "Color Picker.h"
 #include "GUI/Fuser/ESP/ESP.h"
 
+void ColorPicker::RenderContent()
+{
+	MyColorPicker("Sinner's Sacrifice",                 SinnersColor);
+	MyColorPicker("Monster Camp",                       MonsterCampColor);
+	MyColorPicker("Unsecured Souls Text",               UnsecuredSoulsTextColor);
+	MyColorPicker("Unsecured Souls Highlighted",        UnsecuredSoulsHighlightedTextColor);
+	MyColorPicker("Friendly Health Status Bar",         FriendlyHealthStatusBarColor);
+	MyColorPicker("Enemy Health Status Bar",            EnemyHealthStatusBarColor);
+	MyColorPicker("Friendly Souls Status Bar",          FriendlySoulsStatusBarColor);
+	MyColorPicker("Enemy Souls Status Bar",             EnemySoulsStatusBarColor);
+	MyColorPicker("Health Bar Foreground",              HealthBarForegroundColor);
+	MyColorPicker("Health Bar Background",              HealthBarBackgroundColor);
+	MyColorPicker("Aimbot FOV Circle",                  AimbotFOVCircle);
+	MyColorPicker("Aimbot FOV Circle Active",           AimbotFOVCircleActive);
+	MyColorPicker("Radar Background",                   RadarBackgroundColor);
+	MyColorPicker("Team: Hidden King",                  HiddenKingTeamColor);
+	MyColorPicker("Team: Arch Mother",                  ArchMotherTeamColor);
+	MyColorPicker("Skeleton",                           SkeletonColor);
+}
+
 void ColorPicker::Render()
 {
-	if (!bMasterToggle)	return;
-
+	if (!bMasterToggle) return;
 	ImGui::Begin("Color Picker", &bMasterToggle);
-
-	MyColorPicker("Sinner's Sacrifice", ColorPicker::SinnersColor);
-
-	MyColorPicker("Monster Camp", ColorPicker::MonsterCampColor);
-
-	MyColorPicker("Unsecured Souls Text", ColorPicker::UnsecuredSoulsTextColor);
-
-	MyColorPicker("Unsecured Souls Highlighted Text", ColorPicker::UnsecuredSoulsHighlightedTextColor);
-
-	MyColorPicker("Friendly Health Status Bar", ColorPicker::FriendlyHealthStatusBarColor);
-
-	MyColorPicker("Enemy Health Status Bar", ColorPicker::EnemyHealthStatusBarColor);
-
-	MyColorPicker("Friendly Souls Status Bar", ColorPicker::FriendlySoulsStatusBarColor);
-
-	MyColorPicker("Enemy Souls Status Bar", ColorPicker::EnemySoulsStatusBarColor);
-
-	MyColorPicker("Health Bar Foreground", ColorPicker::HealthBarForegroundColor);
-
-	MyColorPicker("Health Bar Background", ColorPicker::HealthBarBackgroundColor);
-
-	MyColorPicker("Aimbot FOV Circle", ColorPicker::AimbotFOVCircle);
-
-	MyColorPicker("Aimbot FOV Circle Active", ColorPicker::AimbotFOVCircleActive);
-
-	MyColorPicker("Radar Background", ColorPicker::RadarBackgroundColor);
-
+	RenderContent();
 	ImGui::End();
 }
 

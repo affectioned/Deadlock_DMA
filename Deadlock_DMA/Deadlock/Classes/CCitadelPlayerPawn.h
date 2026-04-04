@@ -4,7 +4,7 @@
 #include "CBaseEntity.h"
 #include "CCitadelPlayerController.h"
 
-constexpr int MAX_BONES   = 70;
+constexpr int MAX_BONES   = 600;
 constexpr int MAX_MODEL_PATH = 128;
 
 class CCitadelPlayerPawn : public CBaseEntity

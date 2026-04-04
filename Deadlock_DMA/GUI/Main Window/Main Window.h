@@ -11,7 +11,7 @@ public:
 	static inline bool g_SwapChainOccluded = false;
 	static inline UINT g_ResizeWidth = 0, g_ResizeHeight = 0;
 	static inline ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
-	static inline ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	static inline ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 	static inline WNDCLASSEXW wc{};
 
 public:

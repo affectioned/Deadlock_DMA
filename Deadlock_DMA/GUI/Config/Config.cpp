@@ -64,10 +64,8 @@ void Config::RefreshConfigFilesList(std::vector<std::string>& outList) {
 	}
 }
 
-void Config::Render()
+void Config::RenderContent()
 {
-	ImGui::Begin("Configuration Manager");
-
 	static char configNameBuf[128] = "default";
 	static int selectedConfig = -1;
 	static std::vector<std::string> configFiles;
@@ -194,7 +192,12 @@ void Config::Render()
 	}
 
 	ImGui::EndChild();
+}
 
+void Config::Render()
+{
+	ImGui::Begin("Configuration Manager");
+	RenderContent();
 	ImGui::End();
 }
 
@@ -275,7 +278,8 @@ json Config::SerializeConfig() {
 		{"Draw_Players", {
 			{"bMasterToggle", Draw_Players::bMasterToggle},
 			{"bHideFriendly", Draw_Players::bHideFriendly},
-			{"bDrawBones", Draw_Players::bDrawBones},
+			{"bDrawBoxes", Draw_Players::bDrawBoxes},
+		{"bDrawBones", Draw_Players::bDrawBones},
 			{"fBonesThickness", Draw_Players::fBonesThickness},
 			{"bDrawHead", Draw_Players::bDrawHead},
 			{"bDrawVelocityVector", Draw_Players::bDrawVelocityVector},
@@ -395,7 +399,8 @@ void Config::DeserializeConfig(const json& j) {
 			const auto& players = fuser["Draw_Players"];
 			if (players.contains("bMasterToggle")) Draw_Players::bMasterToggle = players["bMasterToggle"].get<bool>();
 			if (players.contains("bHideFriendly")) Draw_Players::bHideFriendly = players["bHideFriendly"].get<bool>();
-			if (players.contains("bDrawBones")) Draw_Players::bDrawBones = players["bDrawBones"].get<bool>();
+			if (players.contains("bDrawBoxes")) Draw_Players::bDrawBoxes = players["bDrawBoxes"].get<bool>();
+		if (players.contains("bDrawBones")) Draw_Players::bDrawBones = players["bDrawBones"].get<bool>();
 			if (players.contains("fBonesThickness")) Draw_Players::fBonesThickness = players["fBonesThickness"].get<float>();
 			if (players.contains("bDrawHead")) Draw_Players::bDrawHead = players["bDrawHead"].get<bool>();
 			if (players.contains("bDrawVelocityVector")) Draw_Players::bDrawVelocityVector = players["bDrawVelocityVector"].get<bool>();

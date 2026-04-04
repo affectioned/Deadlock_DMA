@@ -145,5 +145,5 @@ float Deadlock::GetClientYawDegrees()
 {
 	std::scoped_lock Lock(m_ClientYawMutex);
 
-	return m_ClientYaw * (180.0 / std::numbers::pi);
+	return m_ClientYaw * (180.0f / std::numbers::pi_v<float>);
 }

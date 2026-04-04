@@ -5,14 +5,26 @@
 #include "Status Bars/Status Bars.h"
 #include "GUI/Aimbot/Aimbot.h"
 
-void Fuser::Render() 
+void Fuser::Render()
 {
 	if (!bMasterToggle) return;
 
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(Fuser::m_ScreenSize);
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 255.0f));
-	ImGui::Begin("Fuser", nullptr, ImGuiWindowFlags_NoDecoration);
+	// Position at absolute screen coordinates so ViewportsEnable gives the
+	// Fuser its own OS window, completely separate from the menu window.
+	ImGui::SetNextWindowPos(ImVec2(0.f, 0.f), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(m_ScreenSize, ImGuiCond_Always);
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+	ImGui::Begin("##Fuser", nullptr,
+		ImGuiWindowFlags_NoDecoration              |
+		ImGuiWindowFlags_NoMove                    |
+		ImGuiWindowFlags_NoResize                  |
+		ImGuiWindowFlags_NoFocusOnAppearing        |
+		ImGuiWindowFlags_NoDocking                 |
+		ImGuiWindowFlags_NoScrollWithMouse         |
+		ImGuiWindowFlags_NoInputs                  |
+		ImGuiWindowFlags_NoNav);
 	auto WindowPos = ImGui::GetWindowPos();
 	auto DrawList = ImGui::GetWindowDrawList();
 
@@ -25,6 +37,7 @@ void Fuser::Render()
 	StatusBars::Render();
 
 	ImGui::End();
+	ImGui::PopStyleVar(2);
 	ImGui::PopStyleColor();
 }
 

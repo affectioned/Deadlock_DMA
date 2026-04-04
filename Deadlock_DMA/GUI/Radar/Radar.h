@@ -6,6 +6,7 @@ class Radar
 public:
 	static void Render();
 	static void RenderSettings();
+	static void RenderContent();
 private:
 	static void DrawEntities();
 	static void DrawLocalPlayerViewRay(ImDrawList* DrawList, const ImVec2& ScreenPos, const ETeam& LocalTeam);

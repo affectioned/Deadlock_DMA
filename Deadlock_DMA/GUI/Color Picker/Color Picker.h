@@ -4,6 +4,7 @@ class ColorPicker
 {
 public:
 	static void Render();
+	static void RenderContent();
 	static void MyColorPicker(const char* label, ImColor& color);
 
 public:

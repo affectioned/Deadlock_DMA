@@ -49,6 +49,9 @@ void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const CCitadel
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
 
+	if (bDrawBoxes)
+		DrawBox(PC, Pawn, DrawList, WindowPos);
+
 	if (bDrawBones)
 		DrawSkeleton(PC, Pawn, DrawList, WindowPos);
 
@@ -100,13 +103,40 @@ void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const CCita
 	LineNumber++;
 }
 
+void Draw_Players::DrawBox(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
+{
+	int HeadBoneIndex = GetHeroBoneSlot(Pawn.GetModelPath(), HitboxSlot::Head);
+	if (HeadBoneIndex < 0) return;
+
+	Vector2 HeadScreen{}, FeetScreen{};
+	if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[HeadBoneIndex], HeadScreen)) return;
+	if (!Deadlock::WorldToScreen(Pawn.m_Position, FeetScreen)) return;
+
+	float height = FeetScreen.y - HeadScreen.y;
+	if (height <= 0.f) return;
+
+	float width = height * 0.4f;
+	float headOffset = height * 0.12f;
+
+	ImVec2 TopLeft     = ImVec2(HeadScreen.x - width + WindowPos.x, HeadScreen.y - headOffset + WindowPos.y);
+	ImVec2 BottomRight = ImVec2(HeadScreen.x + width + WindowPos.x, FeetScreen.y + WindowPos.y);
+
+	ImColor boxColor = PC.m_TeamNum == ETeam::HIDDEN_KING
+		? ColorPicker::HiddenKingTeamColor
+		: ColorPicker::ArchMotherTeamColor;
+
+	DrawList->AddRect(TopLeft, BottomRight, boxColor, 0.f, 0, 1.5f);
+}
+
 void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
-	const auto* BonePairs = GetHeroBonePairs(PC.m_HeroID);
+	const auto* BonePairs = GetHeroBonePairs(Pawn.GetModelPath());
 	if (!BonePairs) return;
 
 	for (const auto& [StartBone, EndBone] : *BonePairs)
 	{
+		if (StartBone >= MAX_BONES || EndBone >= MAX_BONES) continue;
+
 		Vector2 Start2D, End2D;
 
 		if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[StartBone], Start2D)) continue;
@@ -120,7 +150,7 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 
 void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
-	int HeadBoneIndex = GetHeroBoneSlot(PC.m_HeroID, HitboxSlot::Head);
+	int HeadBoneIndex = GetHeroBoneSlot(Pawn.GetModelPath(), HitboxSlot::Head);
 	if (HeadBoneIndex < 0) return;
 
 	Vector2 Head2D;

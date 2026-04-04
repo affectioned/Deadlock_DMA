@@ -72,7 +72,7 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 
 		if (Addr == 0) continue;
 
-		VMMDLL_Scatter_PrepareEx(vmsh, Addr, EntityListSize, reinterpret_cast<BYTE*>(&WriteAddr), nullptr);
+		VMMDLL_Scatter_PrepareEx(vmsh, Addr, static_cast<DWORD>(EntityListSize), reinterpret_cast<BYTE*>(&WriteAddr), nullptr);
 	}
 
 	VMMDLL_Scatter_Execute(vmsh);
@@ -258,7 +258,7 @@ void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)
 
 	VMMDLL_Scatter_Execute(vmsh);
 
-	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
 void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
@@ -306,7 +306,7 @@ void EntityList::QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 
 	VMMDLL_Scatter_Execute(vmsh);
 
-	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
 void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)

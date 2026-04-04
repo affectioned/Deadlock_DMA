@@ -1,0 +1,51 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build Release x64
+        run: |
+          msbuild Deadlock_DMA.sln `
+            /p:Configuration=Release `
+            /p:Platform=x64 `
+            /m `
+            /nologo `
+            /verbosity:minimal
+
+      - name: Package artifacts
+        run: |
+          Compress-Archive -Path "x64\Release\Deadlock_DMA.exe" -DestinationPath "Deadlock_DMA.zip" -Force
+        shell: pwsh
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $sha  = "${{ github.sha }}".Substring(0, 7)
+          $date = Get-Date -Format "yyyy-MM-dd"
+          $tag  = "build-$sha"
+          $name = "Build $sha ($date)"
+          $msg  = "Automated build from commit ${{ github.sha }}`n`n${{ github.event.head_commit.message }}"
+
+          gh release create $tag Deadlock_DMA.zip `
+            --title $name `
+            --notes $msg `
+            --latest
+        shell: pwsh

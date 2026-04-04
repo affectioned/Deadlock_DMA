@@ -10,4 +10,5 @@ public:
 public:
 	static void OnFrame();
 	static void RenderSettings();
+	static void RenderContent();
 };

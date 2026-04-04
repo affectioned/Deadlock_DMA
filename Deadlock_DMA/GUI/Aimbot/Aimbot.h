@@ -7,6 +7,7 @@ class Aimbot
 {
 public:
 	static void RenderSettings();
+	static void RenderContent();
 	static void OnFrame(DMA_Connection* Conn);
 	static void RenderFOVCircle();
 

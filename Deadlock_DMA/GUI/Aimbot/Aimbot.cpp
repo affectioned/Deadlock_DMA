@@ -6,10 +6,8 @@
 #include "GUI/Color Picker/Color Picker.h"
 #include "Makcu/MyMakcu.h"
 
-void Aimbot::RenderSettings()
+void Aimbot::RenderContent()
 {
-	if (!bSettings) return;
-
 	static bool bFirstFrame{ true };
 	if (bFirstFrame)
 	{
@@ -17,33 +15,27 @@ void Aimbot::RenderSettings()
 		bFirstFrame = false;
 	}
 
-	ImGui::Begin("Aimbot", &bSettings);
-
-	if (MyMakcu::m_Device.isConnected()) {
+	if (MyMakcu::m_Device.isConnected())
 		ImGui::TextColored(ImColor(0, 255, 0), "Makcu Connected!");
-	}
-	else {
+	else
 		ImGui::TextColored(ImColor(255, 0, 0), "Makcu Disconnected!");
-	}
 
 	ImGui::SliderFloat("Smooth X", &fAlphaX, 0.01f, 1.0f, "%.2f");
-
 	ImGui::SliderFloat("Smooth Y", &fAlphaY, 0.01f, 1.0f, "%.2f");
-
 	ImGui::SliderFloat("Gaussian Noise", &fGaussianNoise, 0.0f, 2.0f, "%.2f");
-
 	ImGui::SliderFloat("Max Pixel Distance", &fMaxPixelDistance, 10.0f, 500.0f, "%.1f");
-
 	ImGui::InputFloat("Bullet Velocity", &fBulletVelocity);
-
 	ImGui::Checkbox("Prediction", &bPrediction);
-
-	ImGui::Checkbox("Aim Head?", &bAimHead);
-
+	ImGui::Checkbox("Aim Head", &bAimHead);
 	ImGui::SameLine();
-
 	ImGui::Checkbox("FOV Circle", &bDrawMaxFOV);
+}
 
+void Aimbot::RenderSettings()
+{
+	if (!bSettings) return;
+	ImGui::Begin("Aimbot", &bSettings);
+	RenderContent();
 	ImGui::End();
 }
 
@@ -73,10 +65,8 @@ Vector2 Aimbot::GetAimDelta(const Vector2& CenterScreen)
 		if (ControllerIt->IsDead())
 			continue;
 
-		auto& HeroId = ControllerIt->m_HeroID;
-
 		HitboxSlot slot = bAimHead ? HitboxSlot::Head : HitboxSlot::Torso;
-		int FinalAimpointIndex = GetHeroBoneSlot(HeroId, slot);
+		int FinalAimpointIndex = GetHeroBoneSlot(Pawn.GetModelPath(), slot);
 		if (FinalAimpointIndex < 0) continue;
 
 		Vector3 AimPointWorldPos = Pawn.m_BonePositions[FinalAimpointIndex];
@@ -143,7 +133,7 @@ void Aimbot::OnFrame(DMA_Connection* Conn)
 		MoveAmount.x += noise(gen);
 		MoveAmount.y += noise(gen);
 
-		MyMakcu::m_Device.mouseMove(MoveAmount.x, MoveAmount.y);
+		MyMakcu::m_Device.mouseMove(static_cast<int32_t>(MoveAmount.x), static_cast<int32_t>(MoveAmount.y));
 
 		Deadlock::UpdateViewMatrix(Conn);
 		EntityList::QuickPawnRefresh(Conn, &Deadlock::Proc());

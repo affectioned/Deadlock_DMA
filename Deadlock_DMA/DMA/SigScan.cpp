@@ -56,7 +56,7 @@ uint64_t FindSignature(DMA_Connection* Conn, const char* signature,
 
 	std::vector<uint8_t> buffer(range_end - range_start);
 	if (!VMMDLL_MemReadEx(Conn->GetHandle(), PID, range_start,
-	                      buffer.data(), buffer.size(), 0, VMMDLL_FLAG_NOCACHE))
+	                      buffer.data(), static_cast<DWORD>(buffer.size()), 0, VMMDLL_FLAG_NOCACHE))
 		return 0;
 
 	const char* pat = signature;

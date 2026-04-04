@@ -24,3 +24,6 @@ Both files are written to `Deadlock_DMA/Deadlock/Const/` automatically:
 |------|----------|
 | `BoneListTypes.hpp` | `HitboxSlot` enum, `BonePair` struct, `ModelBoneData` struct |
 | `BoneLists.hpp` | `g_HeroModelData` unordered_map keyed by hero model path |
+
+## Credits
+- [Deadlock Bone Extractor](https://www.unknowncheats.me/forum/deadlock/744334-deadlock-bone-extractor.html) (UnknownCheats) — original concept and reference for extracting bone/hitbox data from Deadlock VPKs
