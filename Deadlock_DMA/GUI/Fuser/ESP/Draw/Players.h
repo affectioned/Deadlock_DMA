@@ -20,7 +20,7 @@ public:
 	static inline bool bDrawHealthBar{ true };
 	static inline bool bHideLocalPlayer{ true };
 	static inline bool bShowDistance{ true };
-	static inline bool bDrawBoxes{ false };
+	static inline bool bDrawBoxes{ true };
 
 private:
 	static void DrawPlayer(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn);
