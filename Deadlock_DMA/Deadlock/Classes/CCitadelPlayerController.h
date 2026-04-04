@@ -7,6 +7,8 @@
 class CCitadelPlayerController : public CBaseEntity
 {
 public:
+	using CBaseEntity::CBaseEntity;
+
 	CHandle  m_hPawn{ 0 };
 	int32_t  m_CurrentLevel{ 0 };
 	int32_t  m_MaxHealth{ 0 };
@@ -36,35 +38,36 @@ public:
 		if (IsInvalid())
 			return;
 
-		uintptr_t PawnHandleAddress = m_EntityAddress + Offsets::Controller::m_hPawn;
+		uintptr_t PawnHandleAddress = m_EntityAddress + Offsets::CCitadelPlayerController::m_hPawn;
 		VMMDLL_Scatter_PrepareEx(vmsh, PawnHandleAddress, sizeof(CHandle), reinterpret_cast<BYTE*>(&m_hPawn), nullptr);
 
-		uintptr_t PlayerDataAddress = m_EntityAddress + Offsets::Controller::PlayerData;
+		uintptr_t PlayerDataAddress = m_EntityAddress + Offsets::CCitadelPlayerController::m_PlayerDataGlobal;
 
-		uintptr_t LevelAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::Level;
+		uintptr_t LevelAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_iLevel;
 		VMMDLL_Scatter_PrepareEx(vmsh, LevelAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentLevel), nullptr);
 
-		uintptr_t MaxHealthAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::MaxHealth;
+		uintptr_t MaxHealthAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_iHealthMax;
 		VMMDLL_Scatter_PrepareEx(vmsh, MaxHealthAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_MaxHealth), nullptr);
 
-		uintptr_t CurrentHealthAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::CurrentHealth;
+		uintptr_t CurrentHealthAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_iHealth;
 		VMMDLL_Scatter_PrepareEx(vmsh, CurrentHealthAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
 
-		uintptr_t HeroIDAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::HeroID;
+		uintptr_t HeroIDAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_nHeroID;
 		VMMDLL_Scatter_PrepareEx(vmsh, HeroIDAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_HeroID), nullptr);
 
-		uintptr_t TotalSoulsAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::TotalSouls;
+		uintptr_t TotalSoulsAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_nTotalSouls;
 		VMMDLL_Scatter_PrepareEx(vmsh, TotalSoulsAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_TotalSouls), nullptr);
 
-		uintptr_t UltTrainedAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::UltimateTrained;
+		uintptr_t UltTrainedAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_bUltimateTrained;
 		VMMDLL_Scatter_PrepareEx(vmsh, UltTrainedAddress, sizeof(bool), reinterpret_cast<BYTE*>(&m_bUltimateTrained), nullptr);
 
-		uintptr_t UltCDStartAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::UltimateCooldownStart;
+		uintptr_t UltCDStartAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_flUltimateCooldownStart;
 		VMMDLL_Scatter_PrepareEx(vmsh, UltCDStartAddress, sizeof(float), reinterpret_cast<BYTE*>(&m_flUltimateCooldownStart), nullptr);
 
-		uintptr_t UltCDEndAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::UltimateCooldownEnd;
+		uintptr_t UltCDEndAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_flUltimateCooldownEnd;
 		VMMDLL_Scatter_PrepareEx(vmsh, UltCDEndAddress, sizeof(float), reinterpret_cast<BYTE*>(&m_flUltimateCooldownEnd), nullptr);
 	}
+
 	void QuickRead(VMMDLL_SCATTER_HANDLE vmsh)
 	{
 		if (IsInvalid())
@@ -72,9 +75,9 @@ public:
 
 		CBaseEntity::QuickRead(vmsh, false);
 
-		uintptr_t PlayerDataAddress = m_EntityAddress + Offsets::Controller::PlayerData;
+		uintptr_t PlayerDataAddress = m_EntityAddress + Offsets::CCitadelPlayerController::m_PlayerDataGlobal;
 
-		uintptr_t CurrentHealthAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::CurrentHealth;
+		uintptr_t CurrentHealthAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_iHealth;
 		VMMDLL_Scatter_PrepareEx(vmsh, CurrentHealthAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
 	}
 private:

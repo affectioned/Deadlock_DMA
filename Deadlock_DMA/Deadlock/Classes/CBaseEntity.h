@@ -32,16 +32,16 @@ public:
 		if (IsInvalid())
 			return;
 
-		uintptr_t GameSceneNodePtr = m_EntityAddress + Offsets::BaseEntity::GameSceneNode;
+		uintptr_t GameSceneNodePtr = m_EntityAddress + Offsets::C_BaseEntity::m_pGameSceneNode;
 		VMMDLL_Scatter_PrepareEx(vmsh, GameSceneNodePtr, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&m_GameSceneNodeAddress), nullptr);
 
-		uintptr_t TeamNumPtr = m_EntityAddress + Offsets::BaseEntity::TeamNum;
+		uintptr_t TeamNumPtr = m_EntityAddress + Offsets::C_BaseEntity::m_iTeamNum;
 		VMMDLL_Scatter_PrepareEx(vmsh, TeamNumPtr, sizeof(uint8_t), reinterpret_cast<BYTE*>(&m_TeamNum), nullptr);
 
 		if (bReadHealth)
 		{
-			uintptr_t CurrentHealthPtr = m_EntityAddress + Offsets::BaseEntity::CurrentHealth;
-			VMMDLL_Scatter_PrepareEx(vmsh, CurrentHealthPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
+			uintptr_t HealthPtr = m_EntityAddress + Offsets::C_BaseEntity::m_iHealth;
+			VMMDLL_Scatter_PrepareEx(vmsh, HealthPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
 		}
 	}
 
@@ -53,10 +53,10 @@ public:
 		if (IsInvalid())
 			return;
 
-		uintptr_t PositionAddress = m_GameSceneNodeAddress + Offsets::SceneNode::Position;
+		uintptr_t PositionAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_vecAbsOrigin;
 		VMMDLL_Scatter_PrepareEx(vmsh, PositionAddress, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Position), nullptr);
 
-		uintptr_t DormantAddress = m_GameSceneNodeAddress + Offsets::SceneNode::Dormant;
+		uintptr_t DormantAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_bDormant;
 		VMMDLL_Scatter_PrepareEx(vmsh, DormantAddress, sizeof(uint8_t), reinterpret_cast<BYTE*>(&m_Dormant), nullptr);
 	}
 
@@ -67,14 +67,14 @@ public:
 
 		if (bReadHealth)
 		{
-			uintptr_t CurrentHealthPtr = m_EntityAddress + Offsets::BaseEntity::CurrentHealth;
-			VMMDLL_Scatter_PrepareEx(vmsh, CurrentHealthPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
+			uintptr_t HealthPtr = m_EntityAddress + Offsets::C_BaseEntity::m_iHealth;
+			VMMDLL_Scatter_PrepareEx(vmsh, HealthPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
 		}
 
-		uintptr_t PositionAddress = m_GameSceneNodeAddress + Offsets::SceneNode::Position;
+		uintptr_t PositionAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_vecAbsOrigin;
 		VMMDLL_Scatter_PrepareEx(vmsh, PositionAddress, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Position), nullptr);
 
-		uintptr_t DormantAddress = m_GameSceneNodeAddress + Offsets::SceneNode::Dormant;
+		uintptr_t DormantAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_bDormant;
 		VMMDLL_Scatter_PrepareEx(vmsh, DormantAddress, sizeof(uint8_t), reinterpret_cast<BYTE*>(&m_Dormant), nullptr);
 	}
 

@@ -16,53 +16,49 @@ namespace Offsets
 		inline constexpr std::ptrdiff_t ServerTime = 0x68;
 	}
 
-	namespace SceneNode
+	namespace CGameSceneNode
 	{
-		inline constexpr std::ptrdiff_t Position = 0xC8;
-		inline constexpr std::ptrdiff_t Dormant = 0x103;
-		inline constexpr std::ptrdiff_t ModelState = 0x150;
+		inline constexpr std::ptrdiff_t m_vecAbsOrigin = 0xC8;
+		inline constexpr std::ptrdiff_t m_bDormant     = 0x103;
+		inline constexpr std::ptrdiff_t m_modelState   = 0x150;
 	}
 
-	namespace ModelState
+	namespace CModelState
 	{
-		inline constexpr std::ptrdiff_t BoneArrayPtr = 0x80;
-		// CModelState::m_ModelName (CUtlSymbolLarge = char*) at 0xA8
-		// Confirmed from schema_dump.hpp (or75/Andromeda-DeadLock-Base)
-		inline constexpr std::ptrdiff_t ModelName    = 0xA8;
+		inline constexpr std::ptrdiff_t m_pBones    = 0x80;
+		inline constexpr std::ptrdiff_t m_ModelName = 0xA8;
 	}
 
-	namespace Pawn
+	namespace C_BaseEntity
 	{
-		inline constexpr std::ptrdiff_t Velocity = 0x438;
-		inline constexpr std::ptrdiff_t hController = 0x10A8;
-		inline constexpr std::ptrdiff_t TotalUnspentSouls = 0x12D8;
-		inline constexpr std::ptrdiff_t UnsecuredSouls = 0x12E4;
+		inline constexpr std::ptrdiff_t m_pGameSceneNode = 0x330;
+		inline constexpr std::ptrdiff_t m_iHealth        = 0x354;
+		inline constexpr std::ptrdiff_t m_iTeamNum       = 0x3F3;
 	}
 
-	namespace BaseEntity
+	namespace CCitadelPlayerController
 	{
-		inline constexpr std::ptrdiff_t GameSceneNode = 0x330;
-		inline constexpr std::ptrdiff_t CurrentHealth = 0x354;
-		inline constexpr std::ptrdiff_t TeamNum = 0x3F3;
-		// UltimateTrained/CooldownStart/End are in PlayerDataGlobal_t (Controller::PlayerData + offset)
-		// kept here for reference: see Controller::PlayerDataOffsets
-	}
+		inline constexpr std::ptrdiff_t m_hPawn           = 0x8AC;
+		inline constexpr std::ptrdiff_t m_PlayerDataGlobal = 0x8F0;
 
-	namespace Controller
-	{
-		inline constexpr std::ptrdiff_t m_hPawn = 0x8AC;
-		inline constexpr std::ptrdiff_t PlayerData = 0x8F0;
-
-		namespace PlayerDataOffsets
+		namespace PlayerDataGlobal_t
 		{
-			inline constexpr std::ptrdiff_t Level = 0x8;
-			inline constexpr std::ptrdiff_t MaxHealth = 0x10;
-			inline constexpr std::ptrdiff_t HeroID = 0x1C;
-			inline constexpr std::ptrdiff_t TotalSouls = 0x24;
-			inline constexpr std::ptrdiff_t CurrentHealth = 0x4C;
-			inline constexpr std::ptrdiff_t UltimateTrained = 0x70;
-			inline constexpr std::ptrdiff_t UltimateCooldownStart = 0x74;
-			inline constexpr std::ptrdiff_t UltimateCooldownEnd = 0x78;
+			inline constexpr std::ptrdiff_t m_iLevel                  = 0x8;
+			inline constexpr std::ptrdiff_t m_iHealthMax               = 0x10;
+			inline constexpr std::ptrdiff_t m_nHeroID                  = 0x1C;
+			inline constexpr std::ptrdiff_t m_nTotalSouls              = 0x24;
+			inline constexpr std::ptrdiff_t m_iHealth                  = 0x4C;
+			inline constexpr std::ptrdiff_t m_bUltimateTrained         = 0x70;
+			inline constexpr std::ptrdiff_t m_flUltimateCooldownStart  = 0x74;
+			inline constexpr std::ptrdiff_t m_flUltimateCooldownEnd    = 0x78;
 		}
+	}
+
+	namespace CCitadelPlayerPawn
+	{
+		inline constexpr std::ptrdiff_t m_vecVelocity      = 0x438;
+		inline constexpr std::ptrdiff_t m_hController      = 0x10A8;
+		inline constexpr std::ptrdiff_t m_nTotalUnspentSouls = 0x12D8;
+		inline constexpr std::ptrdiff_t m_nUnsecuredSouls  = 0x12E4;
 	}
 }

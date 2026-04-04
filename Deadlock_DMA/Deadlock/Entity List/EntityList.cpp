@@ -229,6 +229,9 @@ void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
 
+	for (auto& Pawn : m_PlayerPawns)
+		Pawn.ExtractBonePositions();
+
 	for (int i = 0; i < m_PlayerPawns.size(); i++)
 	{
 		if (m_PlayerPawns[i].IsLocalPlayer())
@@ -259,6 +262,9 @@ void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
+
+	for (auto& Pawn : m_PlayerPawns)
+		Pawn.ExtractBonePositions();
 }
 
 void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)

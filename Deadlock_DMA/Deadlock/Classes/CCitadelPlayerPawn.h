@@ -10,6 +10,8 @@ constexpr int MAX_MODEL_PATH = 128;
 class CCitadelPlayerPawn : public CBaseEntity
 {
 public:
+	using CBaseEntity::CBaseEntity;
+
 	Vector3   m_BonePositions[MAX_BONES]{ 0.0f };
 	Vector3   m_Velocity{ 0.0f };
 	uintptr_t m_BoneArrayAddress{ 0 };
@@ -23,14 +25,26 @@ public:
 
 	std::string_view GetModelPath() const { return { m_ModelPathBuf }; }
 
-private:
-	void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh)
+	// Called after VMMDLL_Scatter_Execute to unpack positions from the raw bone block.
+	void ExtractBonePositions()
 	{
 		for (int i = 0; i < MAX_BONES; i++)
-		{
-			uintptr_t BoneAddress = m_BoneArrayAddress + (i * 0x20);
-			VMMDLL_Scatter_PrepareEx(vmsh, BoneAddress, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_BonePositions[i]), nullptr);
-		}
+			memcpy(&m_BonePositions[i], m_BoneBlock + i * BONE_STRIDE, sizeof(Vector3));
+	}
+
+private:
+	// Source 2 lays out each bone entry as 0x20 bytes: position (Vector3) first, then rotation.
+	// Reading the whole array in one scatter call is far more efficient than 600 individual reads.
+	static constexpr int BONE_STRIDE = 0x20;
+	uint8_t m_BoneBlock[MAX_BONES * BONE_STRIDE]{ 0 };
+
+	void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh)
+	{
+		if (!m_BoneArrayAddress) return;
+
+		// One read covers all bones — position is extracted afterwards in ExtractBonePositions().
+		VMMDLL_Scatter_PrepareEx(vmsh, m_BoneArrayAddress, sizeof(m_BoneBlock),
+			reinterpret_cast<BYTE*>(m_BoneBlock), nullptr);
 	}
 
 public:
@@ -38,16 +52,16 @@ public:
 	{
 		CBaseEntity::PrepareRead_1(vmsh, false);
 
-		uintptr_t hControllerPtr = m_EntityAddress + Offsets::Pawn::hController;
+		uintptr_t hControllerPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_hController;
 		VMMDLL_Scatter_PrepareEx(vmsh, hControllerPtr, sizeof(uint32_t), reinterpret_cast<BYTE*>(&m_hController.Data), nullptr);
 
-		uintptr_t UnsecuredSoulsPtr = m_EntityAddress + Offsets::Pawn::UnsecuredSouls;
+		uintptr_t UnsecuredSoulsPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_nUnsecuredSouls;
 		VMMDLL_Scatter_PrepareEx(vmsh, UnsecuredSoulsPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_UnsecuredSouls), nullptr);
 
-		uintptr_t TotalUnspentSoulsPtr = m_EntityAddress + Offsets::Pawn::TotalUnspentSouls;
+		uintptr_t TotalUnspentSoulsPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_nTotalUnspentSouls;
 		VMMDLL_Scatter_PrepareEx(vmsh, TotalUnspentSoulsPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_TotalUnspentSouls), nullptr);
 
-		uintptr_t VelocityPtr = m_EntityAddress + Offsets::Pawn::Velocity;
+		uintptr_t VelocityPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_vecVelocity;
 		VMMDLL_Scatter_PrepareEx(vmsh, VelocityPtr, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Velocity), nullptr);
 	}
 
@@ -61,11 +75,11 @@ public:
 		if (IsInvalid())
 			return;
 
-		uintptr_t BoneArrayPtrAddress = m_GameSceneNodeAddress + Offsets::SceneNode::ModelState + Offsets::ModelState::BoneArrayPtr;
+		uintptr_t BoneArrayPtrAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_modelState + Offsets::CModelState::m_pBones;
 		VMMDLL_Scatter_PrepareEx(vmsh, BoneArrayPtrAddress, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&m_BoneArrayAddress), nullptr);
 
 		// Read m_ModelName pointer (CUtlSymbolLarge = char* in Source 2)
-		uintptr_t ModelNamePtrAddress = m_GameSceneNodeAddress + Offsets::SceneNode::ModelState + Offsets::ModelState::ModelName;
+		uintptr_t ModelNamePtrAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_modelState + Offsets::CModelState::m_ModelName;
 		VMMDLL_Scatter_PrepareEx(vmsh, ModelNamePtrAddress, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&m_ModelNamePtr), nullptr);
 	}
 
@@ -84,6 +98,7 @@ public:
 				reinterpret_cast<BYTE*>(m_ModelPathBuf), nullptr);
 		}
 	}
+
 	void QuickRead(VMMDLL_SCATTER_HANDLE vmsh)
 	{
 		if (IsInvalid())
@@ -91,7 +106,7 @@ public:
 
 		CBaseEntity::QuickRead(vmsh, false);
 
-		uintptr_t VelocityPtr = m_EntityAddress + Offsets::Pawn::Velocity;
+		uintptr_t VelocityPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_vecVelocity;
 		VMMDLL_Scatter_PrepareEx(vmsh, VelocityPtr, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Velocity), nullptr);
 
 		PrepareBoneRead(vmsh);

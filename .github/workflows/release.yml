@@ -25,6 +25,7 @@ jobs:
           msbuild Deadlock_DMA.sln `
             /p:Configuration=Release `
             /p:Platform=x64 `
+            /p:PlatformToolset=v143 `
             /m `
             /nologo `
             /verbosity:minimal
