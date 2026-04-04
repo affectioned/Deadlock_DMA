@@ -9,6 +9,7 @@
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Debug GUI/Trooper List/Trooper List.h"
 #include "GUI/Debug GUI/Class List/Class List.h"
+#include "GUI/Debug GUI/Hero Model Map/Hero Model Map.h"
 #include "GUI/Fuser/Fuser.h"
 #include "GUI/Aimbot/Aimbot.h"
 #include "GUI/Color Picker/Color Picker.h"
@@ -31,6 +32,7 @@ void Render(ImGuiContext* ctx)
 	PlayerList::Render();
 	TrooperList::Render();
 	ClassList::Render();
+	HeroModelMap::Render();
 
 	Fuser::RenderSettings();
 	ESP::RenderSettings();

@@ -75,8 +75,9 @@ Vector2 Aimbot::GetAimDelta(const Vector2& CenterScreen)
 
 		auto& HeroId = ControllerIt->m_HeroID;
 
-		auto AimList = Aimpoints::GetAimpoints(HeroId);
-		size_t FinalAimpointIndex = (bAimHead) ? AimList.first : AimList.second;
+		HitboxSlot slot = bAimHead ? HitboxSlot::Head : HitboxSlot::Torso;
+		int FinalAimpointIndex = GetHeroBoneSlot(HeroId, slot);
+		if (FinalAimpointIndex < 0) continue;
 
 		Vector3 AimPointWorldPos = Pawn.m_BonePositions[FinalAimpointIndex];
 

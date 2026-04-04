@@ -4,17 +4,24 @@
 #include "CBaseEntity.h"
 #include "CCitadelPlayerController.h"
 
-constexpr int MAX_BONES = 70;
+constexpr int MAX_BONES   = 70;
+constexpr int MAX_MODEL_PATH = 128;
 
 class CCitadelPlayerPawn : public CBaseEntity
 {
 public:
-	Vector3 m_BonePositions[MAX_BONES]{ 0.0f };
-	Vector3 m_Velocity{ 0.0f };
+	Vector3   m_BonePositions[MAX_BONES]{ 0.0f };
+	Vector3   m_Velocity{ 0.0f };
 	uintptr_t m_BoneArrayAddress{ 0 };
-	CHandle m_hController{ 0 };
-	int32_t m_TotalUnspentSouls{ 0 };
-	int32_t m_UnsecuredSouls{ 0 };
+	CHandle   m_hController{ 0 };
+	int32_t   m_TotalUnspentSouls{ 0 };
+	int32_t   m_UnsecuredSouls{ 0 };
+
+	// Model path: two-hop read (SceneNode + ModelState + ModelName → char*)
+	uintptr_t m_ModelNamePtr{ 0 };
+	char      m_ModelPathBuf[MAX_MODEL_PATH]{ 0 };
+
+	std::string_view GetModelPath() const { return { m_ModelPathBuf }; }
 
 private:
 	void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh)
@@ -56,6 +63,10 @@ public:
 
 		uintptr_t BoneArrayPtrAddress = m_GameSceneNodeAddress + Offsets::SceneNode::ModelState + Offsets::ModelState::BoneArrayPtr;
 		VMMDLL_Scatter_PrepareEx(vmsh, BoneArrayPtrAddress, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&m_BoneArrayAddress), nullptr);
+
+		// Read m_ModelName pointer (CUtlSymbolLarge = char* in Source 2)
+		uintptr_t ModelNamePtrAddress = m_GameSceneNodeAddress + Offsets::SceneNode::ModelState + Offsets::ModelState::ModelName;
+		VMMDLL_Scatter_PrepareEx(vmsh, ModelNamePtrAddress, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&m_ModelNamePtr), nullptr);
 	}
 
 	void PrepareRead_3(VMMDLL_SCATTER_HANDLE vmsh)
@@ -64,6 +75,14 @@ public:
 			return;
 
 		PrepareBoneRead(vmsh);
+
+		// Read model path string from the pointer obtained in PrepareRead_2
+		if (m_ModelNamePtr)
+		{
+			memset(m_ModelPathBuf, 0, sizeof(m_ModelPathBuf));
+			VMMDLL_Scatter_PrepareEx(vmsh, m_ModelNamePtr, MAX_MODEL_PATH - 1,
+				reinterpret_cast<BYTE*>(m_ModelPathBuf), nullptr);
+		}
 	}
 	void QuickRead(VMMDLL_SCATTER_HANDLE vmsh)
 	{

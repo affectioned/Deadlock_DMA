@@ -1,13 +1,9 @@
 #pragma once
-#include "DMA/MultiScan.h"
+#include "DMA/SigScan.h"
 
 namespace Offsets
 {
 	bool ResolveOffsets(DMA_Connection* Conn);
-	bool ResolveGameEntitySystem(MultiScan& ms, DMA_Connection* Conn);
-	bool ResolveLocalController(MultiScan& ms, DMA_Connection* Conn);
-	bool ResolveViewMatrix(MultiScan& ms, DMA_Connection* Conn);
-	bool ResolvePredictionPtr(MultiScan& ms, DMA_Connection* Conn);
 
 	inline constexpr std::ptrdiff_t FirstEntityList = 0x10;
 	inline std::ptrdiff_t GameEntitySystem = 0;
@@ -30,6 +26,9 @@ namespace Offsets
 	namespace ModelState
 	{
 		inline constexpr std::ptrdiff_t BoneArrayPtr = 0x80;
+		// CModelState::m_ModelName (CUtlSymbolLarge = char*) at 0xA8
+		// Confirmed from schema_dump.hpp (or75/Andromeda-DeadLock-Base)
+		inline constexpr std::ptrdiff_t ModelName    = 0xA8;
 	}
 
 	namespace Pawn
@@ -45,7 +44,8 @@ namespace Offsets
 		inline constexpr std::ptrdiff_t GameSceneNode = 0x330;
 		inline constexpr std::ptrdiff_t CurrentHealth = 0x354;
 		inline constexpr std::ptrdiff_t TeamNum = 0x3F3;
-		inline constexpr std::ptrdiff_t SilverForm = 0x889;
+		// UltimateTrained/CooldownStart/End are in PlayerDataGlobal_t (Controller::PlayerData + offset)
+		// kept here for reference: see Controller::PlayerDataOffsets
 	}
 
 	namespace Controller
@@ -60,6 +60,9 @@ namespace Offsets
 			inline constexpr std::ptrdiff_t HeroID = 0x1C;
 			inline constexpr std::ptrdiff_t TotalSouls = 0x24;
 			inline constexpr std::ptrdiff_t CurrentHealth = 0x4C;
+			inline constexpr std::ptrdiff_t UltimateTrained = 0x70;
+			inline constexpr std::ptrdiff_t UltimateCooldownStart = 0x74;
+			inline constexpr std::ptrdiff_t UltimateCooldownEnd = 0x78;
 		}
 	}
 }

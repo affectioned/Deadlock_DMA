@@ -7,11 +7,14 @@
 class CCitadelPlayerController : public CBaseEntity
 {
 public:
-	CHandle m_hPawn{ 0 };
-	int32_t m_CurrentLevel{ 0 };
-	int32_t m_MaxHealth{ 0 };
-	int32_t m_TotalSouls{ 0 };
-	HeroId m_HeroID{ 0 };
+	CHandle  m_hPawn{ 0 };
+	int32_t  m_CurrentLevel{ 0 };
+	int32_t  m_MaxHealth{ 0 };
+	int32_t  m_TotalSouls{ 0 };
+	HeroId   m_HeroID{ 0 };
+	bool     m_bUltimateTrained{ false };
+	float    m_flUltimateCooldownStart{ 0.f };
+	float    m_flUltimateCooldownEnd{ 0.f };
 
 public:
 	const bool IsDead() const { return m_CurrentHealth <= 0; }
@@ -52,6 +55,15 @@ public:
 
 		uintptr_t TotalSoulsAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::TotalSouls;
 		VMMDLL_Scatter_PrepareEx(vmsh, TotalSoulsAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_TotalSouls), nullptr);
+
+		uintptr_t UltTrainedAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::UltimateTrained;
+		VMMDLL_Scatter_PrepareEx(vmsh, UltTrainedAddress, sizeof(bool), reinterpret_cast<BYTE*>(&m_bUltimateTrained), nullptr);
+
+		uintptr_t UltCDStartAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::UltimateCooldownStart;
+		VMMDLL_Scatter_PrepareEx(vmsh, UltCDStartAddress, sizeof(float), reinterpret_cast<BYTE*>(&m_flUltimateCooldownStart), nullptr);
+
+		uintptr_t UltCDEndAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::UltimateCooldownEnd;
+		VMMDLL_Scatter_PrepareEx(vmsh, UltCDEndAddress, sizeof(float), reinterpret_cast<BYTE*>(&m_flUltimateCooldownEnd), nullptr);
 	}
 	void QuickRead(VMMDLL_SCATTER_HANDLE vmsh)
 	{

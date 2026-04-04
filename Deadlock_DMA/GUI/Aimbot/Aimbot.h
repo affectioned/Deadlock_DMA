@@ -1,7 +1,7 @@
 #pragma once
 
 #include "makcu/makcu.h"
-#include "Deadlock/Const/Aimpoints.h"
+#include "Deadlock/Const/HeroSkeletonMap.hpp"
 
 class Aimbot
 {

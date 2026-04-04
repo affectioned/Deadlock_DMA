@@ -147,6 +147,12 @@
     <ClCompile Include="GUI\Utils\ImageLoading.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Debug GUI\Hero Model Map\Hero Model Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DMA\SigScan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -339,6 +345,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deadlock\Const\BoneListTypes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Const\HeroSkeletonMap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Debug GUI\Hero Model Map\Hero Model Map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMA\SigScan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

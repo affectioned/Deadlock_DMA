@@ -41,6 +41,12 @@ const uintptr_t Process::GetClientBase() const
 	return m_Modules.at(Client);
 }
 
+const size_t Process::GetClientSize() const
+{
+	using namespace ConstStrings;
+	return m_ModuleSizes.at(Client);
+}
+
 const DWORD Process::GetPID() const
 {
 	return m_PID;
@@ -70,8 +76,19 @@ bool Process::PopulateModules(DMA_Connection* Conn)
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
+	// Populate sizes for modules we care about
+	for (const auto& name : { Game, Client })
+	{
+		PVMMDLL_MAP_MODULEENTRY info = nullptr;
+		if (VMMDLL_Map_GetModuleFromNameU(Handle, m_PID, const_cast<LPSTR>(name.c_str()), &info, VMMDLL_MODULE_FLAG_NORMAL))
+		{
+			m_ModuleSizes[name] = info->cbImageSize;
+			VMMDLL_MemFree(info);
+		}
+	}
+
 	for (auto& [Name, Address] : m_Modules)
-		std::println("Module `{}` at address 0x{:X}", Name, Address);
+		std::println("Module `{}` at 0x{:X} size 0x{:X}", Name, Address, m_ModuleSizes[Name]);
 
 	return false;
 }

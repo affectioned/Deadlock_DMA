@@ -2,10 +2,9 @@
 #include "Players.h"
 #include "Deadlock/Entity List/EntityList.h"
 #include "Deadlock/Const/HeroEnum.hpp"
-#include "Deadlock/Const/BoneLists.hpp"
+#include "Deadlock/Const/HeroSkeletonMap.hpp"
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Fonts/Fonts.h"
-#include "Deadlock/Const/Aimpoints.h"
 
 void Draw_Players::operator()()
 {
@@ -103,14 +102,10 @@ void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const CCita
 
 void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
-	auto It = g_HeroBoneMap.find(PC.m_HeroID);
-	if (It == g_HeroBoneMap.end()) return;
+	const auto* BonePairs = GetHeroBonePairs(PC.m_HeroID);
+	if (!BonePairs) return;
 
-	const auto& BonePairs = (PC.m_HeroID == HeroId::Silver && !Pawn.m_SilverForm)
-		? BoneLists::Silver_Wolf_BonePairs
-		: It->second;
-
-	for (const auto& [StartBone, EndBone] : BonePairs)
+	for (const auto& [StartBone, EndBone] : *BonePairs)
 	{
 		Vector2 Start2D, End2D;
 
@@ -125,7 +120,8 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 
 void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
-	auto HeadBoneIndex = Aimpoints::GetAimpoints(PC.m_HeroID).first;
+	int HeadBoneIndex = GetHeroBoneSlot(PC.m_HeroID, HitboxSlot::Head);
+	if (HeadBoneIndex < 0) return;
 
 	Vector2 Head2D;
 	if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[HeadBoneIndex], Head2D)) return;

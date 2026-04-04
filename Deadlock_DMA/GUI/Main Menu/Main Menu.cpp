@@ -10,6 +10,7 @@
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Debug GUI/Class List/Class List.h"
 #include "GUI/Debug GUI/Trooper List/Trooper List.h"
+#include "GUI/Debug GUI/Hero Model Map/Hero Model Map.h"
 
 void MainMenu::Render()
 {
@@ -40,6 +41,7 @@ void MainMenu::Render()
 	ImGui::Checkbox("Player List", &PlayerList::bSettings);
 	ImGui::Checkbox("Class List", &ClassList::bSettings);
 	ImGui::Checkbox("Trooper List", &TrooperList::bSettings);
+	ImGui::Checkbox("Hero Model Map", &HeroModelMap::bSettings);
 
 	ImGui::End();
 }

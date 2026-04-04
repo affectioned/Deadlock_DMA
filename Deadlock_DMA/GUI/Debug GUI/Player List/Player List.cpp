@@ -3,6 +3,8 @@
 #include "Player List.h"
 
 #include "Deadlock/Entity List/EntityList.h"
+#include "Deadlock/Const/HeroSkeletonMap.hpp"
+#include "Deadlock/Deadlock.h"
 
 void PlayerList::Render()
 {
@@ -12,16 +14,18 @@ void PlayerList::Render()
 
 	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
-	if (ImGui::BeginTable("Players Table", 8))
+	if (ImGui::BeginTable("Players Table", 10))
 	{
 		ImGui::TableSetupColumn("Health");
 		ImGui::TableSetupColumn("Hero ID");
 		ImGui::TableSetupColumn("Hero Name");
+		ImGui::TableSetupColumn("Live Model");
+		ImGui::TableSetupColumn("Assigned");
 		ImGui::TableSetupColumn("Distance");
 		ImGui::TableSetupColumn("Souls");
 		ImGui::TableSetupColumn("Pawn Address");
 		ImGui::TableSetupColumn("Team ID");
-		ImGui::TableSetupColumn("Silver Form");
+		ImGui::TableSetupColumn("Ult CD");
 		ImGui::TableHeadersRow();
 
 		uint32_t PlayerNum = 0;
@@ -43,6 +47,50 @@ void PlayerList::Render()
 			ImGui::Text("%d", static_cast<int>(ControllerIt->m_HeroID));
 			ImGui::TableNextColumn();
 			ImGui::Text(ControllerIt->GetHeroName().data());
+			// --- Live Model (from DMA read) ---
+			ImGui::TableNextColumn();
+			{
+				std::string_view live = Pawn.GetModelPath();
+				if (!live.empty())
+				{
+					// Extract short codename: parent directory before filename
+					auto last = live.rfind('/');
+					auto prev = live.rfind('/', last - 1);
+					std::string codename(live.substr(prev + 1, last - prev - 1));
+
+					const char* assigned = GetHeroModelPath(ControllerIt->m_HeroID);
+					bool mismatch = !assigned || live != assigned;
+					if (mismatch)
+						ImGui::TextColored(ImVec4(1.f, 0.5f, 0.2f, 1.f), "%s", codename.c_str());
+					else
+						ImGui::TextUnformatted(codename.c_str());
+					if (ImGui::IsItemHovered())
+						ImGui::SetTooltip("%.*s", static_cast<int>(live.size()), live.data());
+				}
+				else
+				{
+					ImGui::TextDisabled("...");
+				}
+			}
+			// --- Assigned Model (from HeroSkeletonMap) ---
+			ImGui::TableNextColumn();
+			{
+				const char* fullPath = GetHeroModelPath(ControllerIt->m_HeroID);
+				if (fullPath)
+				{
+					std::string_view sv(fullPath);
+					auto last = sv.rfind('/');
+					auto prev = sv.rfind('/', last - 1);
+					std::string codename(sv.substr(prev + 1, last - prev - 1));
+					ImGui::TextUnformatted(codename.c_str());
+					if (ImGui::IsItemHovered())
+						ImGui::SetTooltip("%s", fullPath);
+				}
+				else
+				{
+					ImGui::TextDisabled("???");
+				}
+			}
 			ImGui::TableNextColumn();
 			ImGui::Text("%.2f m", Pawn.DistanceFromLocalPlayer(true));
 			ImGui::TableNextColumn();
@@ -53,7 +101,23 @@ void PlayerList::Render()
 			ImGui::TableNextColumn();
 			ImGui::Text("%d", Pawn.m_TeamNum);
 			ImGui::TableNextColumn();
-			ImGui::Text("%s", Pawn.m_SilverForm ? "true" : "false");
+			if (!ControllerIt->m_bUltimateTrained)
+			{
+				ImGui::TextDisabled("not trained");
+			}
+			else if (ControllerIt->m_flUltimateCooldownEnd <= 0.f)
+			{
+				ImGui::TextColored(ImVec4(0.f, 1.f, 0.f, 1.f), "READY");
+			}
+			else
+			{
+				float serverTime = Deadlock::m_ServerTime;
+				float remaining = ControllerIt->m_flUltimateCooldownEnd - serverTime;
+				if (remaining <= 0.f)
+					ImGui::TextColored(ImVec4(0.f, 1.f, 0.f, 1.f), "READY");
+				else
+					ImGui::Text("%.1fs", remaining);
+			}
 			PlayerNum++;
 		}
 

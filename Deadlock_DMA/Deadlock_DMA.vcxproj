@@ -790,10 +790,12 @@
     <ClCompile Include="DMA\Input Manager.cpp" />
     <ClCompile Include="DMA\MultiScan.cpp" />
     <ClCompile Include="DMA\Process.cpp" />
+    <ClCompile Include="DMA\SigScan.cpp" />
     <ClCompile Include="GUI\Aimbot\Aimbot.cpp" />
     <ClCompile Include="GUI\Color Picker\Color Picker.cpp" />
     <ClCompile Include="GUI\Config\Config.cpp" />
     <ClCompile Include="GUI\Debug GUI\Class List\Class List.cpp" />
+    <ClCompile Include="GUI\Debug GUI\Hero Model Map\Hero Model Map.cpp" />
     <ClCompile Include="GUI\Debug GUI\Player List\Player List.cpp" />
     <ClCompile Include="GUI\Debug GUI\Trooper List\Trooper List.cpp" />
     <ClCompile Include="GUI\Fonts\Fonts.cpp" />
@@ -826,10 +828,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Tracy|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DbgPrint|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="Deadlock\Const\HeroSkeletonMap.hpp" />
     <ClInclude Include="DMA\DMA Thread.h" />
     <ClInclude Include="DMA\Input Manager.h" />
+    <ClInclude Include="DMA\SigScan.h" />
     <ClInclude Include="GUI\Aimbot\Aimbot.h" />
     <ClInclude Include="GUI\Config\Config.h" />
+    <ClInclude Include="GUI\Debug GUI\Hero Model Map\Hero Model Map.h" />
     <ClInclude Include="GUI\Fonts\Data\IBMPlexMono.h" />
     <ClInclude Include="GUI\Fonts\Fonts.h" />
     <ClInclude Include="GUI\Fuser\ESP\Draw\Camps.h" />
