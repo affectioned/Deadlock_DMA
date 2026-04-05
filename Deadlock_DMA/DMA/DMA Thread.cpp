@@ -7,6 +7,8 @@
 
 #include "GUI/Keybinds/Keybinds.h"
 
+#pragma comment(lib, "Winmm.lib")
+
 extern std::atomic<bool> bRunning;
 
 void DMA_Thread_Main()
@@ -53,11 +55,13 @@ void DMA_Thread_Main()
 
 	CTimer Keybinds(std::chrono::milliseconds(50), [&Conn]() { Keybinds::OnDMAFrame(Conn); });
 
+	timeBeginPeriod(1);
+
 	while (bRunning)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
-		auto TimeNow = std::chrono::high_resolution_clock::now();
+		auto TimeNow = std::chrono::steady_clock::now();
 		ViewMatrixTimer.Tick(TimeNow);
 		YawTimer.Tick(TimeNow);
 		ServerTimeTimer.Tick(TimeNow);
@@ -73,6 +77,8 @@ void DMA_Thread_Main()
 		FullUpdateTimer.Tick(TimeNow);
 		Keybinds.Tick(TimeNow);
 	}
+
+	timeEndPeriod(1);
 
 	Conn->EndConnection();
 }

@@ -30,18 +30,33 @@ public:
 	// Cached pointer into g_HeroModelData — valid after CacheBoneData(), null if unknown hero.
 	const ModelBoneData* m_pBoneData{ nullptr };
 
+	// Highest bone index we need + 1. Derived from bone data; falls back to MAX_BONES
+	// until the first CacheBoneData() call resolves the hero.
+	int m_BoneCount{ MAX_BONES };
+
 	std::string_view GetModelPath() const { return { m_ModelPathBuf }; }
 
 	// Call once after the model path string has been read (end of FullPawnRefresh).
 	void CacheBoneData()
 	{
 		m_pBoneData = GetHeroBoneData(GetModelPath());
+		if (!m_pBoneData)
+			return;
+
+		int maxIdx = 0;
+		for (const auto& [name, idx] : m_pBoneData->ids)
+			maxIdx = std::max(maxIdx, idx);
+		for (int s = 0; s < kHitboxSlotCount; s++)
+			for (int16_t idx : m_pBoneData->slotBones[s])
+				maxIdx = std::max(maxIdx, (int)idx);
+
+		m_BoneCount = std::min(maxIdx + 1, MAX_BONES);
 	}
 
 	// Copy Vector3 positions out of the raw stride-0x20 bulk read buffer.
 	void ExtractBones()
 	{
-		for (int i = 0; i < MAX_BONES; i++)
+		for (int i = 0; i < m_BoneCount; i++)
 			memcpy(&m_BonePositions[i], m_BoneRawBuf + (i * BONE_STRIDE), sizeof(Vector3));
 	}
 
@@ -52,7 +67,7 @@ private:
 	void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh)
 	{
 		if (!m_BoneArrayAddress) return;
-		VMMDLL_Scatter_PrepareEx(vmsh, m_BoneArrayAddress, sizeof(m_BoneRawBuf),
+		VMMDLL_Scatter_PrepareEx(vmsh, m_BoneArrayAddress, m_BoneCount * BONE_STRIDE,
 			reinterpret_cast<BYTE*>(m_BoneRawBuf), nullptr);
 	}
 

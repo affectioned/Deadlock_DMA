@@ -19,7 +19,7 @@ public:
 private:
 	T m_Interval{};
 	F m_Function{};
-	std::chrono::high_resolution_clock::time_point m_LastExecutionTime{};
+	std::chrono::steady_clock::time_point m_LastExecutionTime{};
 };
 
 void DMA_Thread_Main();
