@@ -46,16 +46,6 @@ void MainMenu::Render()
 			ImGuiIO& io = ImGui::GetIO();
 			ImGui::Text("FPS: %.1f  Frame: %.3f ms", io.Framerate, 1000.0f / io.Framerate);
 
-			ImGui::Spacing();
-			ImGui::SeparatorText("Fuser");
-			ImGui::Checkbox("Enable Fuser", &Fuser::bMasterToggle);
-
-			ImGui::SeparatorText("HUD");
-			ImGui::Checkbox("Souls Per Minute", &Fuser::bDrawSoulsPerMinute);
-			ImGui::Checkbox("Team Health Bar", &StatusBars::bRenderTeamHealthBar);
-			ImGui::Checkbox("Team Souls Bar", &StatusBars::bRenderTeamSoulsBar);
-			ImGui::Checkbox("Unspent Souls Bar", &StatusBars::bRenderUnspentSoulsBar);
-
 			ImGui::EndTabItem();
 		}
 
@@ -77,6 +67,13 @@ void MainMenu::Render()
 		if (ImGui::BeginTabItem("Radar"))
 		{
 			Radar::RenderContent();
+			ImGui::EndTabItem();
+		}
+
+		// ── Fuser ────────────────────────────────────────────────────────
+		if (ImGui::BeginTabItem("Fuser"))
+		{
+			Fuser::RenderContent();
 			ImGui::EndTabItem();
 		}
 
