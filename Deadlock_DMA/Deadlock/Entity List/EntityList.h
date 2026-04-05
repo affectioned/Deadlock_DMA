@@ -5,6 +5,7 @@
 class EntityList
 {
 public: /* Interface methods */
+	static void InitScatterHandle(DMA_Connection* Conn, Process* Proc);
 	static void FullUpdate(DMA_Connection* Conn, Process* Proc);
 
 	static void GetEntityListAddresses(DMA_Connection* Conn, Process* Proc);
@@ -64,6 +65,10 @@ private: /* Internal variables */
 	static inline std::vector<uintptr_t> m_TrooperAddresses{};
 	static inline std::vector<uintptr_t> m_MonsterCampAddresses{};
 	static inline std::vector<uintptr_t> m_SinnersAddresses{};
+
+	// Single scatter handle shared across all DMA operations on the DMA thread.
+	// Initialized once via InitScatterHandle(); cleared before each batch.
+	static inline VMMDLL_SCATTER_HANDLE m_vmsh{ nullptr };
 
 public: /* Debug features */
 	static void PrintPlayerControllerAddresses();

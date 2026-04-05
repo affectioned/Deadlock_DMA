@@ -201,9 +201,15 @@ def extract_model_data(root) -> dict | None:
     bones = [(str(n).lower(), int(p)) for n, p in zip(bone_names, bone_parents)]
     n_bones = len(bones)
 
+    MAX_PAIRS = 70
+
     # ---- Bone pairs ----
+    # Bones are stored root-first in Source2 skeletons, so iterating in index
+    # order naturally prioritises the core spine/head chain before extremities.
     pairs = []
     for i, (name, parent) in enumerate(bones):
+        if len(pairs) >= MAX_PAIRS:
+            break
         if parent < 0 or parent >= n_bones:
             continue
         if not _is_body_bone(name):
@@ -448,7 +454,8 @@ def main():
                 skipped += 1
                 continue
 
-            print(f"  [ok] {model_path:<72}  {len(model['pairs'])} pairs  {len(model['ids'])} ids")
+            pair_note = " (capped)" if len(model['pairs']) == 70 else ""
+            print(f"  [ok] {model_path:<72}  {len(model['pairs'])} pairs{pair_note}  {len(model['ids'])} ids")
             model_map[model_path] = model
             processed += 1
 

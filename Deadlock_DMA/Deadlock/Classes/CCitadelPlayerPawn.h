@@ -1,11 +1,15 @@
 #pragma once
 #include "pch.h"
 #include "Deadlock/Engine/CHandle.h"
+#include "Deadlock/Const/HeroSkeletonMap.hpp"
 #include "CBaseEntity.h"
 #include "CCitadelPlayerController.h"
 
-constexpr int MAX_BONES   = 600;
+constexpr int MAX_BONES      = 70;
 constexpr int MAX_MODEL_PATH = 128;
+
+// Stride of each bone entry in the game's bone array.
+constexpr int BONE_STRIDE = 0x20;
 
 class CCitadelPlayerPawn : public CBaseEntity
 {
@@ -23,28 +27,33 @@ public:
 	uintptr_t m_ModelNamePtr{ 0 };
 	char      m_ModelPathBuf[MAX_MODEL_PATH]{ 0 };
 
+	// Cached pointer into g_HeroModelData — valid after CacheBoneData(), null if unknown hero.
+	const ModelBoneData* m_pBoneData{ nullptr };
+
 	std::string_view GetModelPath() const { return { m_ModelPathBuf }; }
 
-	// Called after VMMDLL_Scatter_Execute to unpack positions from the raw bone block.
-	void ExtractBonePositions()
+	// Call once after the model path string has been read (end of FullPawnRefresh).
+	void CacheBoneData()
+	{
+		m_pBoneData = GetHeroBoneData(GetModelPath());
+	}
+
+	// Copy Vector3 positions out of the raw stride-0x20 bulk read buffer.
+	void ExtractBones()
 	{
 		for (int i = 0; i < MAX_BONES; i++)
-			memcpy(&m_BonePositions[i], m_BoneBlock + i * BONE_STRIDE, sizeof(Vector3));
+			memcpy(&m_BonePositions[i], m_BoneRawBuf + (i * BONE_STRIDE), sizeof(Vector3));
 	}
 
 private:
-	// Source 2 lays out each bone entry as 0x20 bytes: position (Vector3) first, then rotation.
-	// Reading the whole array in one scatter call is far more efficient than 600 individual reads.
-	static constexpr int BONE_STRIDE = 0x20;
-	uint8_t m_BoneBlock[MAX_BONES * BONE_STRIDE]{ 0 };
+	// Single contiguous buffer for one scatter read covering all bone slots.
+	uint8_t m_BoneRawBuf[MAX_BONES * BONE_STRIDE]{ 0 };
 
 	void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh)
 	{
 		if (!m_BoneArrayAddress) return;
-
-		// One read covers all bones — position is extracted afterwards in ExtractBonePositions().
-		VMMDLL_Scatter_PrepareEx(vmsh, m_BoneArrayAddress, sizeof(m_BoneBlock),
-			reinterpret_cast<BYTE*>(m_BoneBlock), nullptr);
+		VMMDLL_Scatter_PrepareEx(vmsh, m_BoneArrayAddress, sizeof(m_BoneRawBuf),
+			reinterpret_cast<BYTE*>(m_BoneRawBuf), nullptr);
 	}
 
 public:

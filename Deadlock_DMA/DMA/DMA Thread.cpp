@@ -28,6 +28,8 @@ void DMA_Thread_Main()
 		return;
 	}
 
+	EntityList::InitScatterHandle(Conn, &Deadlock::Proc());
+
 	auto Deadlock = &Deadlock::Proc();
 
 	CTimer ViewMatrixTimer(std::chrono::milliseconds(2), [&Conn] {Deadlock::UpdateViewMatrix(Conn); });

@@ -105,8 +105,10 @@ void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const CCita
 
 void Draw_Players::DrawBox(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
-	int HeadBoneIndex = GetHeroBoneSlot(Pawn.GetModelPath(), HitboxSlot::Head);
-	if (HeadBoneIndex < 0) return;
+	if (!Pawn.m_pBoneData) return;
+	const auto& headSlot = Pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
+	if (headSlot.empty()) return;
+	int HeadBoneIndex = headSlot[0];
 
 	Vector2 HeadScreen{}, FeetScreen{};
 	if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[HeadBoneIndex], HeadScreen)) return;
@@ -130,10 +132,9 @@ void Draw_Players::DrawBox(const CCitadelPlayerController& PC, const CCitadelPla
 
 void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
-	const auto* BonePairs = GetHeroBonePairs(Pawn.GetModelPath());
-	if (!BonePairs) return;
+	if (!Pawn.m_pBoneData || Pawn.m_pBoneData->pairs.empty()) return;
 
-	for (const auto& [StartBone, EndBone] : *BonePairs)
+	for (const auto& [StartBone, EndBone] : Pawn.m_pBoneData->pairs)
 	{
 		if (StartBone >= MAX_BONES || EndBone >= MAX_BONES) continue;
 
@@ -150,8 +151,10 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 
 void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
-	int HeadBoneIndex = GetHeroBoneSlot(Pawn.GetModelPath(), HitboxSlot::Head);
-	if (HeadBoneIndex < 0) return;
+	if (!Pawn.m_pBoneData) return;
+	const auto& headSlot = Pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
+	if (headSlot.empty()) return;
+	int HeadBoneIndex = headSlot[0];
 
 	Vector2 Head2D;
 	if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[HeadBoneIndex], Head2D)) return;

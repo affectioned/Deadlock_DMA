@@ -386,7 +386,7 @@
       <AdditionalDependencies>leechcore.lib;vmm.lib;makcu-cpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /D "$(ProjectDir)..\Dependencies\MemProcFS\*.dll" "$(TargetDir)"
+      <Command>
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

@@ -5,6 +5,11 @@
 
 #include "GUI/Query.h"
 
+void EntityList::InitScatterHandle(DMA_Connection* Conn, Process* Proc)
+{
+	m_vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+}
+
 void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 {
 	ZoneScoped;
@@ -40,18 +45,16 @@ void EntityList::GetEntityListAddresses(DMA_Connection* Conn, Process* Proc)
 
 	uintptr_t StartEntityListArray = m_EntitySystem_Address + 0x10;
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (int i = 0; i < MAX_ENTITY_LISTS; i++)
 	{
 		auto& WriteAddr = m_EntityList_Addresses[i];
 		auto Addr = StartEntityListArray + (i * sizeof(uintptr_t));
-		VMMDLL_Scatter_PrepareEx(vmsh, Addr, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&WriteAddr), nullptr);
+		VMMDLL_Scatter_PrepareEx(m_vmsh, Addr, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&WriteAddr), nullptr);
 	}
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 }
 
 void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
@@ -63,7 +66,7 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 
 	size_t EntityListSize = sizeof(CEntityListEntry) * MAX_ENTITIES;
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (int i = 0; i < MAX_ENTITY_LISTS; i++)
 	{
@@ -72,12 +75,10 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 
 		if (Addr == 0) continue;
 
-		VMMDLL_Scatter_PrepareEx(vmsh, Addr, static_cast<DWORD>(EntityListSize), reinterpret_cast<BYTE*>(&WriteAddr), nullptr);
+		VMMDLL_Scatter_PrepareEx(m_vmsh, Addr, static_cast<DWORD>(EntityListSize), reinterpret_cast<BYTE*>(&WriteAddr), nullptr);
 	}
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
 	DbgPrintln("Entity Map Updated.");
 }
@@ -137,21 +138,19 @@ void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 	for (auto& addr : m_PlayerController_Addresses)
 		m_PlayerControllers.emplace_back(CCitadelPlayerController(addr));
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& PC : m_PlayerControllers)
-		PC.PrepareRead_1(vmsh);
+		PC.PrepareRead_1(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
-	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& PC : m_PlayerControllers)
-		PC.PrepareRead_2(vmsh);
+		PC.PrepareRead_2(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
 	for (int i = 0; i < m_PlayerControllers.size(); i++)
 	{
@@ -176,14 +175,12 @@ void EntityList::QuickControllerRefresh(DMA_Connection* Conn, Process* Proc)
 
 	std::scoped_lock Lock(m_ControllerMutex);
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& PC : m_PlayerControllers)
-		PC.QuickRead(vmsh);
+		PC.QuickRead(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 }
 
 void EntityList::FullPawnRefresh_lk(DMA_Connection* Conn, Process* Proc)
@@ -206,31 +203,32 @@ void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 	for (auto& addr : m_PlayerPawn_Addresses)
 		m_PlayerPawns.emplace_back(CCitadelPlayerPawn(addr));
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Pawn : m_PlayerPawns)
-		Pawn.PrepareRead_1(vmsh);
+		Pawn.PrepareRead_1(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
-	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
-
-	for (auto& Pawn : m_PlayerPawns)
-		Pawn.PrepareRead_2(vmsh);
-
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Pawn : m_PlayerPawns)
-		Pawn.PrepareRead_3(vmsh);
+		Pawn.PrepareRead_2(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Pawn : m_PlayerPawns)
-		Pawn.ExtractBonePositions();
+		Pawn.PrepareRead_3(m_vmsh);
+
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
+
+	for (auto& Pawn : m_PlayerPawns)
+	{
+		Pawn.ExtractBones();
+		Pawn.CacheBoneData();
+	}
 
 	for (int i = 0; i < m_PlayerPawns.size(); i++)
 	{
@@ -254,17 +252,15 @@ void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)
 
 	std::scoped_lock Lock(m_PawnMutex);
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Pawn : m_PlayerPawns)
-		Pawn.QuickRead(vmsh);
+		Pawn.QuickRead(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
 	for (auto& Pawn : m_PlayerPawns)
-		Pawn.ExtractBonePositions();
+		Pawn.ExtractBones();
 }
 
 void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
@@ -280,21 +276,19 @@ void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 	for (auto& addr : m_MonsterCampAddresses)
 		m_MonsterCamps.emplace_back(CBaseEntity(addr));
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Camp : m_MonsterCamps)
-		Camp.PrepareRead_1(vmsh);
+		Camp.PrepareRead_1(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
-	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Camp : m_MonsterCamps)
-		Camp.PrepareRead_2(vmsh);
+		Camp.PrepareRead_2(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 }
 
 void EntityList::QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
@@ -305,14 +299,12 @@ void EntityList::QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 
 	std::scoped_lock Lock(m_MonsterCampMutex);
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Camp : m_MonsterCamps)
-		Camp.QuickRead(vmsh);
+		Camp.QuickRead(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 }
 
 void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
@@ -328,21 +320,19 @@ void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 	for (auto& addr : m_TrooperAddresses)
 		m_Troopers.emplace_back(CTrooperEntity(addr));
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Trooper : m_Troopers)
-		Trooper.PrepareRead_1(vmsh);
+		Trooper.PrepareRead_1(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
-	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Trooper : m_Troopers)
-		Trooper.PrepareRead_2(vmsh);
+		Trooper.PrepareRead_2(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
 	DbgPrintln("Trooper List Refreshed. Count: {}", m_Troopers.size());
 }
@@ -357,14 +347,12 @@ void EntityList::QuickTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 
 	if (m_Troopers.empty()) return;
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Trooper : m_Troopers)
-		Trooper.QuickRead(vmsh);
+		Trooper.QuickRead(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 }
 
 void EntityList::FullSinnerRefresh(DMA_Connection* Conn, Process* Proc)
@@ -380,21 +368,19 @@ void EntityList::FullSinnerRefresh(DMA_Connection* Conn, Process* Proc)
 	for (auto& addr : m_SinnersAddresses)
 		m_Sinners.emplace_back(CBaseEntity(addr));
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Sinner : m_Sinners)
-		Sinner.PrepareRead_1(vmsh);
+		Sinner.PrepareRead_1(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
-	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (auto& Sinner : m_Sinners)
-		Sinner.PrepareRead_2(vmsh);
+		Sinner.PrepareRead_2(m_vmsh);
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 }
 
 uintptr_t EntityList::GetEntityAddressFromHandle(CHandle Handle)
@@ -431,17 +417,15 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 
 	auto Buffer = std::make_unique<NameBuffer[]>(UniqueClassNames.size());
 
-	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
 	for (int i = 0; i < UniqueClassNames.size(); i++)
 	{
 		auto& NamePtr = UniqueClassNames[i];
-		VMMDLL_Scatter_PrepareEx(vmsh, NamePtr, sizeof(NameBuffer), reinterpret_cast<BYTE*>(&Buffer.get()[i]), nullptr);
+		VMMDLL_Scatter_PrepareEx(m_vmsh, NamePtr, sizeof(NameBuffer), reinterpret_cast<BYTE*>(&Buffer.get()[i]), nullptr);
 	}
 
-	VMMDLL_Scatter_Execute(vmsh);
-
-	VMMDLL_Scatter_CloseHandle(vmsh);
+	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 
 	std::scoped_lock Lock(m_ClassMapMutex);
 
