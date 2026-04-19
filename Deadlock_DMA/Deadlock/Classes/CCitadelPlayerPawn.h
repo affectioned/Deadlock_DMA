@@ -18,8 +18,10 @@ public:
 
 	Vector3   m_BonePositions[MAX_BONES]{ 0.0f };
 	Vector3   m_Velocity{ 0.0f };
+	Vector3   m_EyeAngles{ 0.0f };
 	uintptr_t m_BoneArrayAddress{ 0 };
 	CHandle   m_hController{ 0 };
+	float     m_flRespawnTime{ 0.0f };
 	int32_t   m_TotalUnspentSouls{ 0 };
 	int32_t   m_UnsecuredSouls{ 0 };
 
@@ -87,6 +89,12 @@ public:
 
 		uintptr_t VelocityPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_vecVelocity;
 		VMMDLL_Scatter_PrepareEx(vmsh, VelocityPtr, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Velocity), nullptr);
+
+		uintptr_t EyeAnglesPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_angEyeAngles;
+		VMMDLL_Scatter_PrepareEx(vmsh, EyeAnglesPtr, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_EyeAngles), nullptr);
+
+		uintptr_t RespawnTimePtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_flRespawnTime;
+		VMMDLL_Scatter_PrepareEx(vmsh, RespawnTimePtr, sizeof(float), reinterpret_cast<BYTE*>(&m_flRespawnTime), nullptr);
 	}
 
 	void PrepareRead_2(VMMDLL_SCATTER_HANDLE vmsh)

@@ -23,45 +23,49 @@ bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 	uintptr_t clientBase = Deadlock::Proc().GetClientBase();
 	uintptr_t clientEnd  = clientBase + Deadlock::Proc().GetClientSize();
 
-	// GameEntitySystem — "48 8B 0D ? ? ? ? 8B FD"
+	// GameEntitySystem — "48 8B 0D ? ? ? ? 8B FD C1 EF"
 	try
 	{
-		uint64_t hit = FindSignature(Conn, "48 8B 0D ? ? ? ? 8B FD", clientBase, clientEnd, pid);
+		uint64_t hit = FindSignature(Conn, "48 8B 0D ? ? ? ? 8B FD C1 EF", clientBase, clientEnd, pid);
 		if (!hit) throw std::runtime_error("sig not found");
 		Offsets::GameEntitySystem = ResolveRIP(Conn, pid, clientBase, hit, 3, 7);
 		std::println("[+] GameEntitySystem Offset: 0x{:X}", Offsets::GameEntitySystem);
 	}
 	catch (...)
 	{
-		Offsets::GameEntitySystem = 0x3845eb8;
+		Offsets::GameEntitySystem = 0x31887F8;
 		std::println("[!] GameEntitySystem sig failed, using fallback RVA: 0x{:X}", Offsets::GameEntitySystem);
 	}
 
-	// LocalController — "48 3B 35 ? ? ? ?"
+	// LocalController — "48 3B 35 ? ? ? ? 75 ? 48 C7 05"
 	try
 	{
-		uint64_t hit = FindSignature(Conn, "48 3B 35 ? ? ? ?", clientBase, clientEnd, pid);
+		uint64_t hit = FindSignature(Conn, "48 3B 35 ? ? ? ? 75 ? 48 C7 05", clientBase, clientEnd, pid);
 		if (!hit) throw std::runtime_error("sig not found");
 		Offsets::LocalController = ResolveRIP(Conn, pid, clientBase, hit, 3, 7);
 		std::println("[+] LocalController Offset: 0x{:X}", Offsets::LocalController);
 	}
 	catch (...)
 	{
-		Offsets::LocalController = 0x36f2fa0;
+		Offsets::LocalController = 0x3708D90;
 		std::println("[!] LocalController sig failed, using fallback RVA: 0x{:X}", Offsets::LocalController);
 	}
 
 	// ViewMatrix — "F3 0F 10 05 ? ? ? ? F3 0F 59 01"
+	// CViewRender pointer (dwViewRender) = 0x37647B0; ViewMatrix is typically 0x400 bytes before it.
 	try
 	{
 		uint64_t hit = FindSignature(Conn, "F3 0F 10 05 ? ? ? ? F3 0F 59 01", clientBase, clientEnd, pid);
 		if (!hit) throw std::runtime_error("sig not found");
 		Offsets::ViewMatrix = ResolveRIP(Conn, pid, clientBase, hit, 4, 8);
+		// Reject false positives that land in the code section (< 32 MB into client.dll)
+		if (Offsets::ViewMatrix < 0x2000000)
+			throw std::runtime_error("ViewMatrix resolved into code section");
 		std::println("[+] ViewMatrix Offset: 0x{:X}", Offsets::ViewMatrix);
 	}
 	catch (...)
 	{
-		Offsets::ViewMatrix = 0x3728010;
+		Offsets::ViewMatrix = 0x373DDB0;
 		std::println("[!] ViewMatrix sig failed, using fallback RVA: 0x{:X}", Offsets::ViewMatrix);
 	}
 
@@ -76,7 +80,7 @@ bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 	}
 	catch (...)
 	{
-		Offsets::PredictionPtr = 0x3728410;
+		Offsets::PredictionPtr = 0x2E95F98;
 		std::println("[!] PredictionPtr sig failed, using fallback RVA: 0x{:X}", Offsets::PredictionPtr);
 	}
 

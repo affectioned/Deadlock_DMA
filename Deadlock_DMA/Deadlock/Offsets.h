@@ -56,9 +56,11 @@ namespace Offsets
 
 	namespace CCitadelPlayerPawn
 	{
-		inline constexpr std::ptrdiff_t m_vecVelocity      = 0x438;
-		inline constexpr std::ptrdiff_t m_hController      = 0x10A8;
+		inline constexpr std::ptrdiff_t m_vecVelocity        = 0x438;
+		inline constexpr std::ptrdiff_t m_hController        = 0x10A8;
+		inline constexpr std::ptrdiff_t m_angEyeAngles       = 0x11B0;
+		inline constexpr std::ptrdiff_t m_flRespawnTime      = 0x130C;
 		inline constexpr std::ptrdiff_t m_nTotalUnspentSouls = 0x12D8;
-		inline constexpr std::ptrdiff_t m_nUnsecuredSouls  = 0x12E4;
+		inline constexpr std::ptrdiff_t m_nUnsecuredSouls    = 0x12E4;
 	}
 }

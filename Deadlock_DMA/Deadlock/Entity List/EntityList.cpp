@@ -47,12 +47,8 @@ void EntityList::GetEntityListAddresses(DMA_Connection* Conn, Process* Proc)
 
 	VMMDLL_Scatter_Clear(m_vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (int i = 0; i < MAX_ENTITY_LISTS; i++)
-	{
-		auto& WriteAddr = m_EntityList_Addresses[i];
-		auto Addr = StartEntityListArray + (i * sizeof(uintptr_t));
-		VMMDLL_Scatter_PrepareEx(m_vmsh, Addr, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&WriteAddr), nullptr);
-	}
+	VMMDLL_Scatter_PrepareEx(m_vmsh, StartEntityListArray, MAX_ENTITY_LISTS * sizeof(uintptr_t),
+		reinterpret_cast<BYTE*>(m_EntityList_Addresses.data()), nullptr);
 
 	VMMDLL_Scatter_ExecuteRead(m_vmsh);
 }

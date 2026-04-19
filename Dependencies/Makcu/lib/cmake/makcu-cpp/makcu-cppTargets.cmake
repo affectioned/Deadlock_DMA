@@ -60,6 +60,7 @@ add_library(makcu::makcu-cpp_shared SHARED IMPORTED)
 
 set_target_properties(makcu::makcu-cpp_shared PROPERTIES
   INTERFACE_COMPILE_DEFINITIONS "MAKCU_SHARED"
+  INTERFACE_COMPILE_FEATURES "cxx_std_23"
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/makcu"
   INTERFACE_LINK_LIBRARIES "Threads::Threads;setupapi"
 )
@@ -68,6 +69,7 @@ set_target_properties(makcu::makcu-cpp_shared PROPERTIES
 add_library(makcu::makcu-cpp_static STATIC IMPORTED)
 
 set_target_properties(makcu::makcu-cpp_static PROPERTIES
+  INTERFACE_COMPILE_FEATURES "cxx_std_23"
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/makcu"
   INTERFACE_LINK_LIBRARIES "Threads::Threads;setupapi"
 )
