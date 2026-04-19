@@ -16,5 +16,5 @@ size_t CHandle::GetEntityEntryIndex() const
 
 bool CHandle::IsValid() const
 {
-	return (Data & 0x7FFF) <= (MAX_ENTITIES * MAX_ENTITY_LISTS);
+	return (Data & 0x7FFF) < (MAX_ENTITIES * MAX_ENTITY_LISTS);
 }

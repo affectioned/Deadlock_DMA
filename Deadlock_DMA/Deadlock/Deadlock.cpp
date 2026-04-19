@@ -97,7 +97,7 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 
 	DbgPrintln("Local Player Pawn Address: 0x{:X}", m_LocalPlayerPawnAddress);
 
-	return false;
+	return true;
 }
 
 void Deadlock::GetPredictionAddress(DMA_Connection* Conn)

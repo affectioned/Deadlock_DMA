@@ -62,4 +62,10 @@ ImGui + DirectX 11 overlay. The main GUI thread calls `MainWindow::OnFrame()` ea
 
 **Hero bone data** — after reading the model path string, call `CacheBoneData()` to resolve the hero and set `m_BoneCount` to the minimum needed bones rather than the `MAX_BONES=70` fallback.
 
-**SDK reference** — upstream struct definitions live at `github.com/neverlosecc/source2sdk` (branch `deadlock`). When the game updates, compare changed HPP files there against `Offsets.h`.
+**SDK reference** — upstream struct definitions live at `github.com/neverlosecc/source2sdk` (branch `deadlock`). When the game updates, compare changed HPP files there against `Offsets.h`. A local schema dump also lives at `C:\Users\admin\Downloads\schema-dump\deadlock\sdk\` — auto-generated HPP files with confirmed field offsets.
+
+**Entity list addresses** — `GetEntityListAddresses` does a single bulk scatter read of `MAX_ENTITY_LISTS * 8` bytes directly into `m_EntityList_Addresses.data()` (contiguous `std::array<uintptr_t>`), not 32 individual reads.
+
+**`CCitadelPlayerPawn` fields read** — `PrepareRead_1` reads: `m_hController` (0x10A8), `m_nUnsecuredSouls` (0x12E4), `m_nTotalUnspentSouls` (0x12D8), `m_vecVelocity` (0x438), `m_angEyeAngles` (0x11B0), `m_flRespawnTime` (0x130C).
+
+**GUI** — `Fuser::Render()` is a black, fullscreen, no-decoration ImGui window that acts as the ESP overlay. It must always cover the entire screen. Never add decoration, input handling, or non-zero window padding to it. The main menu is a separate OS window (via `ImGuiConfigFlags_ViewportsEnable`) toggled with Insert.

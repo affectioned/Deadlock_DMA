@@ -27,6 +27,7 @@ void StatusBars::RenderGenericComparisonBar(ValuePair Values, ColorPair Colors, 
 	DrawList->AddRectFilled(TopLeft, BottomRight, Colors.second);
 
 	uint32_t TotalValue = Values.first + Values.second;
+	if (TotalValue == 0) { LineNumber++; return; }
 	float FirstValuePercentage = static_cast<float>(Values.first) / static_cast<float>(TotalValue);
 
 	BottomRight.x = TopLeft.x + (EffectiveWidth * FirstValuePercentage);
