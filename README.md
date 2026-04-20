@@ -6,6 +6,16 @@ An open-source DMA cheat client for Valve's **Deadlock**, written in **C++23**.
 
 <img width="1920" height="1079" alt="Showcase" src="https://raw.githubusercontent.com/CyN1ckal/Deadlock_DMA/refs/heads/master/Deadlock%201.1.png" />
 
+## Educational Purpose
+
+This project is intended **strictly for educational and research purposes** — to study Direct Memory Access (DMA) techniques, Source 2 engine internals, and game client architecture. It demonstrates:
+
+- How DMA hardware can read process memory without injecting into a target process
+- How Source 2 entity systems, scatter reads, and networked field offsets are structured
+- How ImGui overlays and input emulation devices interface with game data
+
+**Do not use this software in online multiplayer games.** Using cheats in live games violates the terms of service of the game and the platform, harms other players, and may result in permanent bans or legal consequences. The authors take no responsibility for misuse.
+
 ## Features
 
 - **ESP** — players (skeleton, boxes, head circle, health bars, unsecured souls, velocity vector), troopers, monster camps, Sinner's Sacrifice
