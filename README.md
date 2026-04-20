@@ -16,25 +16,6 @@ This project is intended **strictly for educational and research purposes** — 
 
 **Do not use this software in online multiplayer games.** Using cheats in live games violates the terms of service of the game and the platform, harms other players, and may result in permanent bans or legal consequences. The authors take no responsibility for misuse.
 
-## Features
-
-- **ESP** — players (skeleton, boxes, head circle, health bars, unsecured souls, velocity vector), troopers, monster camps, Sinner's Sacrifice
-- **Aimbot** — smooth mouse movement via Makcu, Gaussian noise, velocity prediction, configurable FOV
-- **Radar** — minimap overlay with team-coloured player icons, MOBA-style health bars, local player view ray
-- **HUD** — team health/souls status bars, souls-per-minute display
-- **Config system** — JSON save/load profiles
-
-## Changes from upstream
-
-- Updated offsets and entity layout for the latest game patch
-- Replaced raw VMMDLL scatter calls with a type-safe `ScatterRead` RAII wrapper
-- Replaced heuristic address validation with `IsAddressReadable()` probe
-- Removed dead try/catch blocks around MemProcFS calls (API uses return values, not exceptions)
-- Bone/hitbox data regenerated from current VPK via `BoneExtractor`; aimbot now targets by `HitboxSlot` instead of a static index map
-- Parallel compilation (`/MP`) enabled; `imgui_demo.cpp` removed from build
-- Removed all build configurations except `Release|x64` and `Debug|x64`
-- Removed Tracy profiler and Catch2 test infrastructure
-
 ## Requirements
 
 - [MemProcFS FPGA](https://github.com/ufrisk/MemProcFS) — DMA hardware driver
@@ -60,13 +41,6 @@ Place the following files from [MemProcFS](https://github.com/ufrisk/MemProcFS) 
 | `leechcore_driver.dll` | MemProcFS |
 | `vmm.dll` | MemProcFS |
 | `makcu-cpp.dll` | Makcu C++ |
-
-## Usage
-
-- Press **Insert** to toggle the menu
-- The Fuser window (ESP overlay) is a black fullscreen window — position it over your game monitor in the taskbar
-- Configure monitor and resolution under the **Fuser** tab before first use
-- Aimbot requires a connected Makcu device; status is shown in the **Aimbot** tab
 
 ## Credits
 
