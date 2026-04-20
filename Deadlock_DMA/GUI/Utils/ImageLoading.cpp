@@ -2,8 +2,10 @@
 #include "ImageLoading.h"
 #include "GUI/Main Window/Main Window.h"
 
+#define _CRT_SECURE_NO_WARNINGS
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <fstream>
 
 // Simple helper function to load an image into a DX11 texture with common settings
 bool LoadTextureFromMemory(const void* data, size_t data_size, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height)

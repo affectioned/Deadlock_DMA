@@ -3,6 +3,7 @@
 #include "Config.h"
 
 #include "GUI/Aimbot/Aimbot.h"
+#include "Deadlock/Const/BoneListTypes.hpp"
 
 #include "GUI/Fuser/Fuser.h"
 
@@ -12,6 +13,7 @@
 #include "GUI/Fuser/ESP/Draw/Players.h"
 #include "GUI/Fuser/ESP/Draw/Sinners.h"
 #include "GUI/Fuser/ESP/Draw/Troopers.h"
+#include "GUI/Fuser/ESP/Draw/XpOrbs.h"
 
 #include "GUI/Fuser/Status Bars/Status Bars.h"
 
@@ -64,8 +66,10 @@ void Config::RefreshConfigFilesList(std::vector<std::string>& outList) {
 	}
 }
 
-void Config::RenderContent()
+void Config::Render()
 {
+	ImGui::Begin("Configuration Manager");
+
 	static char configNameBuf[128] = "default";
 	static int selectedConfig = -1;
 	static std::vector<std::string> configFiles;
@@ -192,12 +196,7 @@ void Config::RenderContent()
 	}
 
 	ImGui::EndChild();
-}
 
-void Config::Render()
-{
-	ImGui::Begin("Configuration Manager");
-	RenderContent();
 	ImGui::End();
 }
 
@@ -242,6 +241,7 @@ json Config::SerializeConfig() {
 
 	j["MainMenu"] = {
 		{"bVSync", MainMenu::bVSync},
+		{"iTargetFPS", MainMenu::iTargetFPS},
 	};
 
 	// Aimbot
@@ -250,16 +250,17 @@ json Config::SerializeConfig() {
 		{"bSettings", Aimbot::bSettings},
 
 		// Targetting
-		{"fSmoothX", Aimbot::fAlphaX},
-		{"fSmoothY", Aimbot::fAlphaY},
+		{"fAlphaX", Aimbot::fAlphaX},
+		{"fAlphaY", Aimbot::fAlphaY},
 		{"fGaussianNoise", Aimbot::fGaussianNoise},
 		{"fMaxPixelDistance", Aimbot::fMaxPixelDistance},
-		{"bAimHead", Aimbot::bAimHead},
+		{"eHitboxSlot", static_cast<int>(Aimbot::eHitboxSlot)},
 		{"bDrawMaxFOV", Aimbot::bDrawMaxFOV},
 
 		// Prediction
 		{"bPrediction", Aimbot::bPrediction},
-		{"fBulletVelocity", Aimbot::fBulletVelocity}
+		{"fBulletVelocity", Aimbot::fBulletVelocity},
+		{"fLatencyMs", Aimbot::fLatencyMs}
 	};
 
 	j["Fuser"] = {
@@ -278,8 +279,7 @@ json Config::SerializeConfig() {
 		{"Draw_Players", {
 			{"bMasterToggle", Draw_Players::bMasterToggle},
 			{"bHideFriendly", Draw_Players::bHideFriendly},
-			{"bDrawBoxes", Draw_Players::bDrawBoxes},
-		{"bDrawBones", Draw_Players::bDrawBones},
+			{"bDrawBones", Draw_Players::bDrawBones},
 			{"fBonesThickness", Draw_Players::fBonesThickness},
 			{"bDrawHead", Draw_Players::bDrawHead},
 			{"bDrawVelocityVector", Draw_Players::bDrawVelocityVector},
@@ -294,6 +294,10 @@ json Config::SerializeConfig() {
 
 		{"Draw_Sinners", {
 			{"bMasterToggle", Draw_Sinners::bMasterToggle}
+		}},
+
+		{"Draw_XpOrbs", {
+			{"bMasterToggle", Draw_XpOrbs::bMasterToggle}
 		}},
 
 		{"Draw_Troopers", {
@@ -320,7 +324,8 @@ json Config::SerializeConfig() {
 
 	j["ColorPicker"] = {
 		{"SinnersColor", static_cast<uint32_t>(ColorPicker::SinnersColor)},
-		{"MonsterCampColor", static_cast<uint32_t>(ColorPicker::MonsterCampColor)},
+		{"BossColor", static_cast<uint32_t>(ColorPicker::BossColor)},
+		{"XpOrbColor", static_cast<uint32_t>(ColorPicker::XpOrbColor)},
 		{"UnsecuredSoulsTextColor", static_cast<uint32_t>(ColorPicker::UnsecuredSoulsTextColor)},
 		{"UnsecuredSoulsHighlightedTextColor", static_cast<uint32_t>(ColorPicker::UnsecuredSoulsHighlightedTextColor)},
 		{"FriendlyHealthStatusBarColor", static_cast<uint32_t>(ColorPicker::FriendlyHealthStatusBarColor)},
@@ -330,6 +335,7 @@ json Config::SerializeConfig() {
 		{"HealthBarForegroundColor", static_cast<uint32_t>(ColorPicker::HealthBarForegroundColor)},
 		{"HealthBarBackgroundColor", static_cast<uint32_t>(ColorPicker::HealthBarBackgroundColor)},
 		{"AimbotFOVCircle", static_cast<uint32_t>(ColorPicker::AimbotFOVCircle)},
+		{"AimbotFOVCircleActive", static_cast<uint32_t>(ColorPicker::AimbotFOVCircleActive)},
 		{"RadarBackgroundColor", static_cast<uint32_t>(ColorPicker::RadarBackgroundColor)}
 	};
 
@@ -345,6 +351,7 @@ void Config::DeserializeConfig(const json& j) {
 		const auto m = j["MainMenu"];
 
 		if (m.contains("bVSync")) MainMenu::bVSync = m["bVSync"].get<bool>();
+		if (m.contains("iTargetFPS")) MainMenu::iTargetFPS = m["iTargetFPS"].get<int>();
 	}
 
 	// Aimbot
@@ -355,16 +362,17 @@ void Config::DeserializeConfig(const json& j) {
 		if (ab.contains("bSettings")) Aimbot::bSettings = ab["bSettings"].get<bool>();
 
 		// Targeting
-		if (ab.contains("fSmoothX")) Aimbot::fAlphaX = ab["fSmoothX"].get<float>();
-		if (ab.contains("fSmoothY")) Aimbot::fAlphaX = ab["fSmoothY"].get<float>();
+		if (ab.contains("fAlphaX")) Aimbot::fAlphaX = ab["fAlphaX"].get<float>();
+		if (ab.contains("fAlphaY")) Aimbot::fAlphaY = ab["fAlphaY"].get<float>();
 		if (ab.contains("fGaussianNoise")) Aimbot::fGaussianNoise = ab["fGaussianNoise"].get<float>();
 		if (ab.contains("fMaxPixelDistance")) Aimbot::fMaxPixelDistance = ab["fMaxPixelDistance"].get<float>();
-		if (ab.contains("bAimHead")) Aimbot::bAimHead = ab["bAimHead"].get<bool>();
+		if (ab.contains("eHitboxSlot")) Aimbot::eHitboxSlot = static_cast<HitboxSlot>(ab["eHitboxSlot"].get<int>());
 		if (ab.contains("bDrawMaxFOV")) Aimbot::bDrawMaxFOV = ab["bDrawMaxFOV"].get<bool>();
 
 		// Prediction
 		if (ab.contains("bPrediction")) Aimbot::bPrediction = ab["bPrediction"].get<bool>();
 		if (ab.contains("fBulletVelocity")) Aimbot::fBulletVelocity = ab["fBulletVelocity"].get<float>();
+		if (ab.contains("fLatencyMs")) Aimbot::fLatencyMs = ab["fLatencyMs"].get<float>();
 	}
 
 	// Fuser
@@ -399,8 +407,7 @@ void Config::DeserializeConfig(const json& j) {
 			const auto& players = fuser["Draw_Players"];
 			if (players.contains("bMasterToggle")) Draw_Players::bMasterToggle = players["bMasterToggle"].get<bool>();
 			if (players.contains("bHideFriendly")) Draw_Players::bHideFriendly = players["bHideFriendly"].get<bool>();
-			if (players.contains("bDrawBoxes")) Draw_Players::bDrawBoxes = players["bDrawBoxes"].get<bool>();
-		if (players.contains("bDrawBones")) Draw_Players::bDrawBones = players["bDrawBones"].get<bool>();
+			if (players.contains("bDrawBones")) Draw_Players::bDrawBones = players["bDrawBones"].get<bool>();
 			if (players.contains("fBonesThickness")) Draw_Players::fBonesThickness = players["fBonesThickness"].get<float>();
 			if (players.contains("bDrawHead")) Draw_Players::bDrawHead = players["bDrawHead"].get<bool>();
 			if (players.contains("bDrawVelocityVector")) Draw_Players::bDrawVelocityVector = players["bDrawVelocityVector"].get<bool>();
@@ -417,6 +424,12 @@ void Config::DeserializeConfig(const json& j) {
 		if (fuser.contains("Draw_Sinners")) {
 			const auto& sinners = fuser["Draw_Sinners"];
 			if (sinners.contains("bMasterToggle")) Draw_Sinners::bMasterToggle = sinners["bMasterToggle"].get<bool>();
+		}
+
+		// Draw_XpOrbs
+		if (fuser.contains("Draw_XpOrbs")) {
+			const auto& xporbs = fuser["Draw_XpOrbs"];
+			if (xporbs.contains("bMasterToggle")) Draw_XpOrbs::bMasterToggle = xporbs["bMasterToggle"].get<bool>();
 		}
 
 		// Draw_Troopers
@@ -451,7 +464,8 @@ void Config::DeserializeConfig(const json& j) {
 	if (j.contains("ColorPicker")) {
 		const auto& colors = j["ColorPicker"];
 		if (colors.contains("SinnersColor")) ColorPicker::SinnersColor = colors["SinnersColor"].get<uint32_t>();
-		if (colors.contains("MonsterCampColor")) ColorPicker::MonsterCampColor = colors["MonsterCampColor"].get<uint32_t>();
+		if (colors.contains("BossColor")) ColorPicker::BossColor = colors["BossColor"].get<uint32_t>();
+		if (colors.contains("XpOrbColor")) ColorPicker::XpOrbColor = colors["XpOrbColor"].get<uint32_t>();
 		if (colors.contains("UnsecuredSoulsTextColor")) ColorPicker::UnsecuredSoulsTextColor = colors["UnsecuredSoulsTextColor"].get<uint32_t>();
 		if (colors.contains("UnsecuredSoulsHighlightedTextColor")) ColorPicker::UnsecuredSoulsHighlightedTextColor = colors["UnsecuredSoulsHighlightedTextColor"].get<uint32_t>();
 		if (colors.contains("FriendlyHealthStatusBarColor")) ColorPicker::FriendlyHealthStatusBarColor = colors["FriendlyHealthStatusBarColor"].get<uint32_t>();

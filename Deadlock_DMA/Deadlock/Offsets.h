@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "DMA/SigScan.h"
 
 namespace Offsets
@@ -9,10 +9,11 @@ namespace Offsets
 	inline std::ptrdiff_t GameEntitySystem = 0;
 	inline std::ptrdiff_t LocalController = 0;
 	inline std::ptrdiff_t ViewMatrix = 0;
-	inline std::ptrdiff_t PredictionPtr = 0;
+	inline std::ptrdiff_t Prediction = 0; // client.dll::CPrediction (pointer to CPrediction instance)
 
-	namespace Prediction
+	namespace CPrediction
 	{
+		// Field name unconfirmed — not exposed in schema dump, falls in unnamed padding at +0x68 of CPrediction.
 		inline constexpr std::ptrdiff_t ServerTime = 0x68;
 	}
 
@@ -32,13 +33,14 @@ namespace Offsets
 	namespace C_BaseEntity
 	{
 		inline constexpr std::ptrdiff_t m_pGameSceneNode = 0x330;
+		inline constexpr std::ptrdiff_t m_iMaxHealth     = 0x350;
 		inline constexpr std::ptrdiff_t m_iHealth        = 0x354;
 		inline constexpr std::ptrdiff_t m_iTeamNum       = 0x3F3;
 	}
 
 	namespace CCitadelPlayerController
 	{
-		inline constexpr std::ptrdiff_t m_hPawn           = 0x8AC;
+		inline constexpr std::ptrdiff_t m_hHeroPawn           = 0x8AC;
 		inline constexpr std::ptrdiff_t m_PlayerDataGlobal = 0x8F0;
 
 		namespace PlayerDataGlobal_t
@@ -54,7 +56,7 @@ namespace Offsets
 		}
 	}
 
-	namespace CCitadelPlayerPawn
+	namespace C_CitadelPlayerPawn
 	{
 		inline constexpr std::ptrdiff_t m_vecVelocity        = 0x438;
 		inline constexpr std::ptrdiff_t m_hController        = 0x10A8;

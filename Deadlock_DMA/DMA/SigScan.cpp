@@ -83,3 +83,10 @@ uint64_t FindSignature(DMA_Connection* Conn, const char* signature,
 
 	return first_match;
 }
+
+bool IsAddressReadable(DMA_Connection* Conn, uint64_t addr, DWORD PID)
+{
+	if (!addr) return false;
+	uint8_t probe;
+	return VMMDLL_MemReadEx(Conn->GetHandle(), PID, addr, &probe, 1, nullptr, VMMDLL_FLAG_NOCACHE) != 0;
+}

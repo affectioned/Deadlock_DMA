@@ -1,4 +1,5 @@
 #pragma once
+#include "..\..\..\Dependencies\nlohmann\json.hpp"
 
 using json = nlohmann::json;
 
@@ -6,7 +7,6 @@ class Config
 {
 public:
 	static void Render();
-	static void RenderContent();
 	static void SaveConfig(const std::string& configName);
 	static bool LoadConfig(const std::string& configName);
 

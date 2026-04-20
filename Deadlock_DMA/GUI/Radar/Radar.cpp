@@ -5,12 +5,11 @@
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Utils/ImageLoading.h"
 #include "Deadlock/Const/ETeam.h"
+#include <numbers>
 
 void Radar::Render()
 {
 	if (!bMasterToggle) return;
-
-	ZoneScoped;
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(ColorPicker::RadarBackgroundColor));
 
@@ -25,16 +24,6 @@ void Radar::Render()
 	ImGui::End();
 
 	ImGui::PopStyleColor(1);
-}
-
-void Radar::RenderContent()
-{
-	ImGui::Checkbox("Enable Radar", &bMasterToggle);
-	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
-	ImGui::Checkbox("MOBA Style", &bMobaStyle);
-	ImGui::Checkbox("Player-Centered", &bPlayerCentered);
-	ImGui::SetNextItemWidth(150.0f);
-	ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
 }
 
 void Radar::RenderSettings()
@@ -97,7 +86,7 @@ ImVec2 Radar::GetRadarSizeInGameUnits()
 	return ImVec2(WindowSize.x * fRadarScale, WindowSize.y * fRadarScale);
 }
 
-ImColor GetRadarColor(const CCitadelPlayerPawn& Pawn) {
+ImColor GetRadarColor(const C_CitadelPlayerPawn& Pawn) {
 	if (Pawn.IsLocalPlayer())
 		return ColorPicker::LocalPlayerRadar;
 
@@ -111,8 +100,6 @@ ImColor GetRadarColor(const CCitadelPlayerPawn& Pawn) {
 
 void Radar::DrawEntities()
 {
-	ZoneScoped;
-
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
 	auto WindowSize = ImGui::GetWindowSize();
@@ -158,7 +145,7 @@ void Radar::DrawEntities()
 
 void Radar::DrawLocalPlayerViewRay(ImDrawList* DrawList, const ImVec2& ScreenPos, const ETeam& LocalTeam)
 {
-	float Rad = Deadlock::GetClientYaw() + std::numbers::pi_v<float>;
+	auto Rad = Deadlock::GetClientYaw() + std::numbers::pi_v<float>;
 
 	ImVec2 LineEnd = { ScreenPos.x - (fRaySize * std::sin(Rad)), ScreenPos.y - (fRaySize * std::cos(Rad)) };
 
@@ -169,7 +156,7 @@ void Radar::DrawLocalPlayerViewRay(ImDrawList* DrawList, const ImVec2& ScreenPos
 	DrawList->AddLine(ScreenPos, LineEnd, IM_COL32(0, 255, 0, 255), 2.0f);
 }
 
-void Radar::DrawPlayer(const CCitadelPlayerPawn& Pawn, const ImVec2& RadarPos)
+void Radar::DrawPlayer(const C_CitadelPlayerPawn& Pawn, const ImVec2& RadarPos)
 {
 	std::scoped_lock Lock(EntityList::m_ControllerMutex);
 
@@ -190,7 +177,7 @@ void Radar::DrawPlayer(const CCitadelPlayerPawn& Pawn, const ImVec2& RadarPos)
 	}
 }
 
-void Radar::DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber) {
+void Radar::DrawNameTag(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber) {
 	ImVec2 TextSize = ImGui::CalcTextSize(PC.GetHeroName().data());
 
 	ImU32 TextColor = GetRadarColor(Pawn);
@@ -202,7 +189,7 @@ void Radar::DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayer
 	LineNumber++;
 }
 
-void Radar::DrawHealthBar(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber)
+void Radar::DrawHealthBar(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber)
 {
 	constexpr float HealthBarWidth = 80.0f;
 	constexpr float Padding = 2.0f;

@@ -13,6 +13,23 @@ void ClassList::Render()
 	// Display total count
 	ImGui::Text("Total Classes: %zu", EntityList::m_EntityClassMap.size());
 
+	ImGui::SameLine();
+
+	if (ImGui::Button("Export All to Clipboard"))
+	{
+		std::vector<std::string> sorted;
+		sorted.reserve(EntityList::m_EntityClassMap.size());
+		for (auto&& [ClassName, _] : EntityList::m_EntityClassMap)
+			sorted.push_back(ClassName);
+		std::sort(sorted.begin(), sorted.end());
+
+		std::string out;
+		for (auto& name : sorted)
+			out += name + "\n";
+
+		ImGui::SetClipboardText(out.c_str());
+	}
+
 	ImGui::Spacing();
 	ImGui::Separator();
 	ImGui::Spacing();

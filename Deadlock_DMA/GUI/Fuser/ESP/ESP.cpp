@@ -10,13 +10,12 @@
 #include "Draw/Troopers.h"
 #include "Draw/Camps.h"
 #include "Draw/Sinners.h"
+#include "Draw/XpOrbs.h"
 
 void ESP::OnFrame()
 {
 	if (!bMasterToggle)
 		return;
-
-	ZoneScoped;
 
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
@@ -35,11 +34,16 @@ void ESP::OnFrame()
 	if (Draw_Sinners::bMasterToggle)
 		Draw_Sinners::operator()();
 
+	if (Draw_XpOrbs::bMasterToggle)
+		Draw_XpOrbs::operator()();
+
 	ImGui::PopFont();
 }
 
-void ESP::RenderContent()
+void ESP::RenderSettings()
 {
+	ImGui::Begin("ESP Settings");
+
 	ImGui::Checkbox("Enable ESP", &bMasterToggle);
 
 	if (ImGui::CollapsingHeader("Players", ImGuiTreeNodeFlags_DefaultOpen))
@@ -48,7 +52,6 @@ void ESP::RenderContent()
 		ImGui::Checkbox("Master Toggle", &Draw_Players::bMasterToggle);
 		ImGui::Checkbox("Hide Friendly", &Draw_Players::bHideFriendly);
 
-		ImGui::Checkbox("Boxes", &Draw_Players::bDrawBoxes);
 		ImGui::Checkbox("Bones", &Draw_Players::bDrawBones);
 		if (Draw_Players::bDrawBones)
 		{
@@ -76,14 +79,11 @@ void ESP::RenderContent()
 	ImGui::Checkbox("Draw Troopers", &Draw_Troopers::bMasterToggle);
 	ImGui::Checkbox("Hide Friendly Troopers", &Draw_Troopers::bHideFriendly);
 
-	ImGui::Checkbox("Draw Monster Camps", &Draw_Camps::bMasterToggle);
+	ImGui::Checkbox("Draw Bosses", &Draw_Camps::bMasterToggle);
 
 	ImGui::Checkbox("Draw Sinners", &Draw_Sinners::bMasterToggle);
-}
 
-void ESP::RenderSettings()
-{
-	ImGui::Begin("ESP Settings");
-	RenderContent();
+	ImGui::Checkbox("Draw XP Orbs", &Draw_XpOrbs::bMasterToggle);
+
 	ImGui::End();
 }

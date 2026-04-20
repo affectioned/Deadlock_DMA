@@ -1,4 +1,5 @@
 #include "pch.h"
+#include <iostream>
 
 #include "DMA.h"
 
@@ -24,7 +25,6 @@ bool DMA_Connection::EndConnection()
 
 DMA_Connection::DMA_Connection()
 {
-    ZoneScoped;
 
     std::println("Connecting to DMA...");
 
@@ -57,7 +57,6 @@ DMA_Connection::DMA_Connection()
 
 DMA_Connection::~DMA_Connection()
 {
-	ZoneScoped;
 
 	VMMDLL_Close(m_VMMHandle);
 

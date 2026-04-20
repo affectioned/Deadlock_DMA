@@ -6,13 +6,12 @@ class Radar
 public:
 	static void Render();
 	static void RenderSettings();
-	static void RenderContent();
 private:
 	static void DrawEntities();
 	static void DrawLocalPlayerViewRay(ImDrawList* DrawList, const ImVec2& ScreenPos, const ETeam& LocalTeam);
-    static void DrawPlayer(const CCitadelPlayerPawn& Pawn, const ImVec2& RadarPos);
-    static void DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber);
-	static void DrawHealthBar(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber);
+    static void DrawPlayer(const C_CitadelPlayerPawn& Pawn, const ImVec2& RadarPos);
+    static void DrawNameTag(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber);
+	static void DrawHealthBar(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber);
 	static inline float DegToRad(float Deg)
 	{
 		return Deg * 0.01745329f;

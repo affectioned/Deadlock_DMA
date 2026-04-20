@@ -8,6 +8,8 @@
 
 #include "DMA/Input Manager.h"
 
+#include <numbers>
+
 bool Deadlock::Initialize(DMA_Connection* Conn)
 {
 	if (c_keys::InitKeyboard(Conn))
@@ -19,13 +21,20 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	Offsets::ResolveOffsets(Conn);
 
-	EntityList::FullUpdate(Conn, &Process);
+	std::println("[+] Initializing scatter handle...");
+	EntityList::InitScatterHandle(Conn, &Process);
 
+	std::println("[+] Running FullUpdate...");
+	EntityList::FullUpdate(Conn, &Process);
+	std::println("[+] FullUpdate complete.");
+
+	std::println("[+] Updating local player addresses...");
 	UpdateLocalPlayerAddresses(Conn);
 
+	std::println("[+] Resolving prediction address...");
 	GetPredictionAddress(Conn);
 
-	DbgPrintln("Deadlock Initialized.");
+	std::println("[+] Deadlock initialized.");
 
 	return true;
 }
@@ -37,8 +46,6 @@ Process& Deadlock::Proc()
 
 void Deadlock::UpdateViewMatrix(DMA_Connection* Conn)
 {
-	ZoneScoped;
-
 	std::scoped_lock lock(ViewMatrixMutex);
 	uintptr_t ViewMatrixAddress = Proc().GetClientBase() + Offsets::ViewMatrix;
 	m_ViewMatrix = Proc().ReadMem<Matrix44>(Conn, ViewMatrixAddress);
@@ -80,41 +87,37 @@ bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
 
 bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 {
-	ZoneScoped;
-
 	std::scoped_lock Lock(m_LocalAddressMutex);
 
 	uintptr_t LocalPlayerControllerAddress = Proc().GetClientBase() + Offsets::LocalController;
 	m_LocalPlayerControllerAddress = Proc().ReadMem<uintptr_t>(Conn, LocalPlayerControllerAddress);
-	DbgPrintln("Local Player Controller Address: 0x{:X}", m_LocalPlayerControllerAddress);
+	std::println("Local Player Controller Address: 0x{:X}", m_LocalPlayerControllerAddress);
 
 	auto LocalPlayerControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), m_LocalPlayerControllerAddress);
 
 	if (LocalPlayerControllerIt == EntityList::m_PlayerControllers.end())
 		return false;
 
-	m_LocalPlayerPawnAddress = EntityList::GetEntityAddressFromHandle(LocalPlayerControllerIt->m_hPawn);
+	m_LocalPlayerPawnAddress = EntityList::GetEntityAddressFromHandle(LocalPlayerControllerIt->m_hHeroPawn);
 
-	DbgPrintln("Local Player Pawn Address: 0x{:X}", m_LocalPlayerPawnAddress);
+	std::println("Local Player Pawn Address: 0x{:X}", m_LocalPlayerPawnAddress);
 
 	return true;
 }
 
 void Deadlock::GetPredictionAddress(DMA_Connection* Conn)
 {
-	uintptr_t PredictionPtrAddress = Proc().GetClientBase() + Offsets::PredictionPtr;
+	uintptr_t PredictionPtrAddress = Proc().GetClientBase() + Offsets::Prediction;
 	m_PredictionAddress = Proc().ReadMem<uintptr_t>(Conn, PredictionPtrAddress);
 
-	DbgPrintln("Prediction Address: 0x{:X}", m_PredictionAddress);
+	std::println("Prediction Address: 0x{:X}", m_PredictionAddress);
 }
 
 void Deadlock::UpdateServerTime(DMA_Connection* Conn)
 {
 	if (!m_PredictionAddress) return;
 
-	ZoneScoped;
-
-	uintptr_t ServerTimeAddress = m_PredictionAddress + Offsets::Prediction::ServerTime;
+	uintptr_t ServerTimeAddress = m_PredictionAddress + Offsets::CPrediction::ServerTime;
 
 	std::scoped_lock lock(m_ServerTimeMutex);
 	m_ServerTime = Proc().ReadMem<float>(Conn, ServerTimeAddress);
@@ -122,8 +125,6 @@ void Deadlock::UpdateServerTime(DMA_Connection* Conn)
 
 void Deadlock::UpdateClientYaw(DMA_Connection* Conn)
 {
-	ZoneScoped;
-
 	auto Mat = GetViewMatrix();
 
 	SetClientYaw(atan2(Mat.m01, Mat.m00));

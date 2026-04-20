@@ -6,4 +6,5 @@ namespace Query
 	bool IsUsingTroopers();
 	bool IsUsingCamps();
 	bool IsUsingSinners();
+	bool IsUsingXpOrbs();
 }

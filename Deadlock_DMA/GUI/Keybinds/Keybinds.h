@@ -19,7 +19,6 @@ class Keybinds
 {
 public:
 	static void Render();
-	static void RenderContent();
 	static void OnDMAFrame(DMA_Connection* Conn);
 
 public:

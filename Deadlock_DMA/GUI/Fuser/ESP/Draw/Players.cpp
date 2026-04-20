@@ -2,14 +2,12 @@
 #include "Players.h"
 #include "Deadlock/Entity List/EntityList.h"
 #include "Deadlock/Const/HeroEnum.hpp"
-#include "Deadlock/Const/HeroSkeletonMap.hpp"
+#include "Deadlock/Const/BoneLists.hpp"
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Fonts/Fonts.h"
 
 void Draw_Players::operator()()
 {
-	ZoneScoped;
-
 	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
 	auto WindowPos = ImGui::GetWindowPos();
@@ -38,7 +36,7 @@ void Draw_Players::operator()()
 	}
 }
 
-void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn)
+void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn)
 {
 	if (bHideFriendly && PC.IsFriendly())
 		return;
@@ -48,9 +46,6 @@ void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const CCitadel
 
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
-
-	if (bDrawBoxes)
-		DrawBox(PC, Pawn, DrawList, WindowPos);
 
 	if (bDrawBones)
 		DrawSkeleton(PC, Pawn, DrawList, WindowPos);
@@ -72,7 +67,7 @@ void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const CCitadel
 		DrawHealthBar(PC, Pawn, ImVec2(ScreenPos.x + WindowPos.x, ScreenPos.y + WindowPos.y), DrawList, LineNumber);
 }
 
-void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, const ImVec2& PawnScreenPos, ImDrawList* DrawList, int& LineNumber)
+void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, const ImVec2& PawnScreenPos, ImDrawList* DrawList, int& LineNumber)
 {
 	constexpr float HealthBarWidth = 80.0f;
 	constexpr float Padding = 2.0f;
@@ -103,34 +98,7 @@ void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const CCita
 	LineNumber++;
 }
 
-void Draw_Players::DrawBox(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
-{
-	if (!Pawn.m_pBoneData) return;
-	const auto& headSlot = Pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
-	if (headSlot.empty()) return;
-	int HeadBoneIndex = headSlot[0];
-
-	Vector2 HeadScreen{}, FeetScreen{};
-	if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[HeadBoneIndex], HeadScreen)) return;
-	if (!Deadlock::WorldToScreen(Pawn.m_Position, FeetScreen)) return;
-
-	float height = FeetScreen.y - HeadScreen.y;
-	if (height <= 0.f) return;
-
-	float width = height * 0.4f;
-	float headOffset = height * 0.12f;
-
-	ImVec2 TopLeft     = ImVec2(HeadScreen.x - width + WindowPos.x, HeadScreen.y - headOffset + WindowPos.y);
-	ImVec2 BottomRight = ImVec2(HeadScreen.x + width + WindowPos.x, FeetScreen.y + WindowPos.y);
-
-	ImColor boxColor = PC.m_TeamNum == ETeam::HIDDEN_KING
-		? ColorPicker::HiddenKingTeamColor
-		: ColorPicker::ArchMotherTeamColor;
-
-	DrawList->AddRect(TopLeft, BottomRight, boxColor, 0.f, 0, 1.5f);
-}
-
-void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
+void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
 	if (!Pawn.m_pBoneData || Pawn.m_pBoneData->pairs.empty()) return;
 
@@ -149,7 +117,7 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 	}
 }
 
-void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
+void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
 	if (!Pawn.m_pBoneData) return;
 	const auto& headSlot = Pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
@@ -173,7 +141,7 @@ void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCit
 	DrawList->AddCircle(HeadPos, HeadRadius, ColorPicker::SkeletonColor, 32, fBonesThickness);
 }
 
-void Draw_Players::DrawVelocityVector(const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
+void Draw_Players::DrawVelocityVector(const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
 	Vector3 FuturePosition = Pawn.m_Position + Pawn.m_Velocity;
 	Vector2 Start2D, End2D;
@@ -184,7 +152,7 @@ void Draw_Players::DrawVelocityVector(const CCitadelPlayerPawn& Pawn, ImDrawList
 	DrawList->AddLine(Start, End, ImColor(255, 255, 255), 5.0f);
 }
 
-void Draw_Players::DrawBoneNumbers(const CCitadelPlayerPawn& Pawn)
+void Draw_Players::DrawBoneNumbers(const C_CitadelPlayerPawn& Pawn)
 {
 	ImGui::PushFont(nullptr, 12.0f);
 
@@ -203,7 +171,7 @@ void Draw_Players::DrawBoneNumbers(const CCitadelPlayerPawn& Pawn)
 	ImGui::PopFont();
 }
 
-void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos, int& LineNumber)
+void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos, int& LineNumber)
 {
 	Vector2 ScreenPos{};
 	if (!Deadlock::WorldToScreen(Pawn.m_Position, ScreenPos)) return;
@@ -230,7 +198,7 @@ void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const CCitade
 		DrawUnsecuredSouls(Pawn, ScreenPos, LineNumber);
 }
 
-void Draw_Players::DrawUnsecuredSouls(const CCitadelPlayerPawn& Pawn, const Vector2& ScreenPos, int& LineNumber)
+void Draw_Players::DrawUnsecuredSouls(const C_CitadelPlayerPawn& Pawn, const Vector2& ScreenPos, int& LineNumber)
 {
 	if (Pawn.m_UnsecuredSouls < UnsecuredSoulsMinimumThreshold)
 		return;

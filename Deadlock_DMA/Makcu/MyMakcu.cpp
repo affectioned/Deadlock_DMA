@@ -14,7 +14,7 @@ bool MyMakcu::Initialize()
 	else
 	{
 		for (const auto& d : devices)
-			std::println("[Makcu] Found device: {} — {} (VID:{:04X} PID:{:04X}) connected={}",
+			std::println("[Makcu] Found device: {} - {} (VID:{:04X} PID:{:04X}) connected={}",
 				d.port, d.description, d.vid, d.pid, d.isConnected);
 	}
 

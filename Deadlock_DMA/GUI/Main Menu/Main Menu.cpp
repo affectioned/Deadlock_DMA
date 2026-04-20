@@ -1,115 +1,47 @@
 #include "pch.h"
 #include "Main Menu.h"
-
+#include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Fuser/Fuser.h"
 #include "GUI/Fuser/ESP/ESP.h"
 #include "GUI/Fuser/Status Bars/Status Bars.h"
-#include "GUI/Aimbot/Aimbot.h"
 #include "GUI/Radar/Radar.h"
-#include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Aimbot/Aimbot.h"
 #include "GUI/Keybinds/Keybinds.h"
-#include "GUI/Config/Config.h"
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Debug GUI/Class List/Class List.h"
 #include "GUI/Debug GUI/Trooper List/Trooper List.h"
 
 void MainMenu::Render()
 {
-	// Toggle visibility with Insert
-	static bool bInsertWasDown = false;
-	bool bInsertDown = (GetAsyncKeyState(VK_INSERT) & 0x8000) != 0;
-	if (bInsertDown && !bInsertWasDown)
-		bVisible = !bVisible;
-	bInsertWasDown = bInsertDown;
+	ImGui::Begin("Main Menu", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
-	if (!bVisible) return;
+	ImGui::SeparatorText("Performance");
+	ImGui::Checkbox("VSync", &bVSync);
+	ImGui::SetNextItemWidth(100.0f);
+	// 1280x960@240Hz, 1920x1080@240/165/144/120Hz, 2560x1440@144/120Hz, 2560x1080@165/144Hz, 3440x1440@100/60Hz
+	ImGui::SliderInt("Target FPS", &iTargetFPS, 60, 240);
 
-	// Position outside the main (Fuser) viewport on first use so ImGui
-	// creates a separate OS window for the menu (requires ViewportsEnable).
-	auto* mainVP = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(
-		ImVec2(mainVP->Pos.x + mainVP->Size.x + 10.f, mainVP->Pos.y),
-		ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(ImVec2(600.f, 500.f), ImGuiCond_FirstUseEver);
-	ImGui::Begin("DEADLOCK DMA", &bVisible, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::Spacing();
+	ImGuiIO& io = ImGui::GetIO();
+	ImGui::Text("ImGui IO FPS: %.1f", io.Framerate);
+	ImGui::Text("Frame Time: %.3f ms", 1000.0f / io.Framerate);
+	ImGui::Text("Delta Time: %.3f ms", io.DeltaTime * 1000.0f);
 
-	if (ImGui::BeginTabBar("##MainTabs"))
-	{
-		// ── General ─────────────────────────────────────────────────────
-		if (ImGui::BeginTabItem("General"))
-		{
-			ImGui::SeparatorText("Performance");
-			ImGui::Checkbox("VSync", &bVSync);
-			ImGui::SameLine();
-			ImGui::TextDisabled(bVSync ? "(on - capped to refresh rate)" : "(off - uncapped)");
+	ImGui::SeparatorText("Main Features");
+	ImGui::Checkbox("Aimbot Settings", &Aimbot::bSettings);
+	ImGui::Checkbox("Fuser Settings", &Fuser::bSettings);
+	ImGui::Spacing();
 
-			ImGuiIO& io = ImGui::GetIO();
-			ImGui::Text("FPS: %.1f  Frame: %.3f ms", io.Framerate, 1000.0f / io.Framerate);
+	ImGui::SeparatorText("Configuration");
+	ImGui::Checkbox("Keybinds", &Keybinds::bSettings);
+	ImGui::Checkbox("Color Picker", &ColorPicker::bMasterToggle);
 
-			ImGui::EndTabItem();
-		}
+	ImGui::Spacing();
 
-		// ── ESP ──────────────────────────────────────────────────────────
-		if (ImGui::BeginTabItem("ESP"))
-		{
-			ESP::RenderContent();
-			ImGui::EndTabItem();
-		}
-
-		// ── Aimbot ───────────────────────────────────────────────────────
-		if (ImGui::BeginTabItem("Aimbot"))
-		{
-			Aimbot::RenderContent();
-			ImGui::EndTabItem();
-		}
-
-		// ── Radar ────────────────────────────────────────────────────────
-		if (ImGui::BeginTabItem("Radar"))
-		{
-			Radar::RenderContent();
-			ImGui::EndTabItem();
-		}
-
-		// ── Fuser ────────────────────────────────────────────────────────
-		if (ImGui::BeginTabItem("Fuser"))
-		{
-			Fuser::RenderContent();
-			ImGui::EndTabItem();
-		}
-
-		// ── Colors ───────────────────────────────────────────────────────
-		if (ImGui::BeginTabItem("Colors"))
-		{
-			ColorPicker::RenderContent();
-			ImGui::EndTabItem();
-		}
-
-		// ── Keybinds ─────────────────────────────────────────────────────
-		if (ImGui::BeginTabItem("Keybinds"))
-		{
-			Keybinds::RenderContent();
-			ImGui::EndTabItem();
-		}
-
-		// ── Config ───────────────────────────────────────────────────────
-		if (ImGui::BeginTabItem("Config"))
-		{
-			Config::RenderContent();
-			ImGui::EndTabItem();
-		}
-
-		// ── Debug ────────────────────────────────────────────────────────
-		if (ImGui::BeginTabItem("Debug"))
-		{
-			ImGui::SeparatorText("Debug Windows");
-			ImGui::Checkbox("Player List",  &PlayerList::bSettings);
-			ImGui::Checkbox("Class List",   &ClassList::bSettings);
-			ImGui::Checkbox("Trooper List", &TrooperList::bSettings);
-			ImGui::EndTabItem();
-		}
-
-		ImGui::EndTabBar();
-	}
+	ImGui::SeparatorText("Debug Tools");
+	ImGui::Checkbox("Player List", &PlayerList::bSettings);
+	ImGui::Checkbox("Class List", &ClassList::bSettings);
+	ImGui::Checkbox("Trooper List", &TrooperList::bSettings);
 
 	ImGui::End();
 }

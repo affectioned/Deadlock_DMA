@@ -8,8 +8,6 @@
 
 void Draw_Sinners::operator()()
 {
-	ZoneScoped;
-
 	std::scoped_lock Lock(EntityList::m_SinnerMutex);
 
 	auto WindowPos = ImGui::GetWindowPos();

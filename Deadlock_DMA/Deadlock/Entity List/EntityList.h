@@ -1,5 +1,5 @@
-#pragma once
-#include "Deadlock/Classes/CEntityListEntry.h"
+﻿#pragma once
+#include "Deadlock/Classes/CEntityIdentity.h"
 #include "Deadlock/Classes/Classes.h"
 
 class EntityList
@@ -24,6 +24,9 @@ public: /* Interface methods */
 
 	static void FullSinnerRefresh(DMA_Connection* Conn, Process* Proc);
 
+	static void FullXpOrbRefresh(DMA_Connection* Conn, Process* Proc);
+	static void QuickXpOrbRefresh(DMA_Connection* Conn, Process* Proc);
+
 	static void FullPawnRefresh_lk(DMA_Connection* Conn, Process* Proc);
 	static void FullPawnRefresh(DMA_Connection* Conn, Process* Proc);
 	static void QuickPawnRefresh(DMA_Connection* Conn, Process* Proc);
@@ -37,20 +40,23 @@ public: /* Interface methods */
 public: /* Interface variables */
 	static inline std::mutex m_PawnMutex{};
 	static inline int32_t m_LocalPawnIndex = -1;
-	static inline std::vector<CCitadelPlayerPawn> m_PlayerPawns{};
+	static inline std::vector<C_CitadelPlayerPawn> m_PlayerPawns{};
 
 	static inline std::mutex m_ControllerMutex{};
 	static inline int32_t m_LocalControllerIndex = -1;
 	static inline std::vector<CCitadelPlayerController> m_PlayerControllers{};
 
 	static inline std::mutex m_TrooperMutex{};
-	static inline std::vector<CTrooperEntity> m_Troopers{};
+	static inline std::vector<C_NPC_Trooper> m_Troopers{};
 
 	static inline std::mutex m_MonsterCampMutex{};
-	static inline std::vector<CBaseEntity> m_MonsterCamps{};
+	static inline std::vector<C_BaseEntity> m_MonsterCamps{};
 
 	static inline std::mutex m_SinnerMutex{};
-	static inline std::vector<CBaseEntity> m_Sinners{};
+	static inline std::vector<C_BaseEntity> m_Sinners{};
+
+	static inline std::mutex m_XpOrbMutex{};
+	static inline std::vector<C_BaseEntity> m_XpOrbs{};
 
 	static inline std::mutex m_ClassMapMutex{};
 	static inline std::unordered_map<std::string, uintptr_t> m_EntityClassMap{};
@@ -58,17 +64,18 @@ public: /* Interface variables */
 private: /* Internal variables */
 	static inline uintptr_t m_EntitySystem_Address = 0;
 	static inline std::array<uintptr_t, MAX_ENTITY_LISTS> m_EntityList_Addresses{};
-	static inline std::array<std::array<CEntityListEntry, MAX_ENTITIES>, MAX_ENTITY_LISTS> m_CompleteEntityList{};
+	static inline std::array<std::array<CEntityIdentity, MAX_ENTITIES>, MAX_ENTITY_LISTS> m_CompleteEntityList{};
 
 	static inline std::vector<uintptr_t> m_PlayerController_Addresses{};
 	static inline std::vector<uintptr_t> m_PlayerPawn_Addresses{};
-	static inline std::vector<uintptr_t> m_TrooperAddresses{};
-	static inline std::vector<uintptr_t> m_MonsterCampAddresses{};
+	static inline std::vector<std::pair<uintptr_t, const char*>> m_TrooperAddresses{};
+	static inline std::vector<std::pair<uintptr_t, const char*>> m_MonsterCampAddresses{};
 	static inline std::vector<uintptr_t> m_SinnersAddresses{};
+	static inline std::vector<uintptr_t> m_XpOrbAddresses{};
 
-	// Single scatter handle shared across all DMA operations on the DMA thread.
+	// Single ScatterRead shared across all DMA operations on the DMA thread.
 	// Initialized once via InitScatterHandle(); cleared before each batch.
-	static inline VMMDLL_SCATTER_HANDLE m_vmsh{ nullptr };
+	static inline std::unique_ptr<ScatterRead> m_sr;
 
 public: /* Debug features */
 	static void PrintPlayerControllerAddresses();
@@ -79,5 +86,5 @@ public: /* Debug features */
 public:
 	static ETeam GetLocalPlayerTeam();
 	static Vector3 GetLocalPawnPosition();
-	static 	CCitadelPlayerController* GetAssociatedPC(const CCitadelPlayerPawn& Pawn);
+	static 	CCitadelPlayerController* GetAssociatedPC(const C_CitadelPlayerPawn& Pawn);
 };

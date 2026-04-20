@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.3.11222.16
@@ -9,80 +9,16 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BoneExtractor", "BoneExtrac
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Catch|Any CPU = Catch|Any CPU
-		Catch|x64 = Catch|x64
-		Catch|x86 = Catch|x86
-		DbgPrint|Any CPU = DbgPrint|Any CPU
-		DbgPrint|x64 = DbgPrint|x64
-		DbgPrint|x86 = DbgPrint|x86
-		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		DLL|Any CPU = DLL|Any CPU
-		DLL|x64 = DLL|x64
-		DLL|x86 = DLL|x86
-		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-		Tracy|Any CPU = Tracy|Any CPU
-		Tracy|x64 = Tracy|x64
-		Tracy|x86 = Tracy|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Catch|Any CPU.ActiveCfg = Catch|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Catch|Any CPU.Build.0 = Catch|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Catch|x64.ActiveCfg = Catch|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Catch|x64.Build.0 = Catch|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Catch|x86.ActiveCfg = Catch|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Catch|x86.Build.0 = Catch|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DbgPrint|Any CPU.ActiveCfg = DbgPrint|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DbgPrint|Any CPU.Build.0 = DbgPrint|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DbgPrint|x64.ActiveCfg = DbgPrint|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DbgPrint|x64.Build.0 = DbgPrint|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DbgPrint|x86.ActiveCfg = DbgPrint|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DbgPrint|x86.Build.0 = DbgPrint|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Debug|Any CPU.Build.0 = Debug|x64
 		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Debug|x64.ActiveCfg = Debug|x64
 		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Debug|x64.Build.0 = Debug|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Debug|x86.ActiveCfg = Debug|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Debug|x86.Build.0 = Debug|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DLL|Any CPU.ActiveCfg = DLL|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DLL|Any CPU.Build.0 = DLL|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DLL|x64.ActiveCfg = DLL|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DLL|x64.Build.0 = DLL|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DLL|x86.ActiveCfg = DLL|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DLL|x86.Build.0 = DLL|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Release|Any CPU.ActiveCfg = Release|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Release|Any CPU.Build.0 = Release|x64
 		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Release|x64.ActiveCfg = Release|x64
 		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Release|x64.Build.0 = Release|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Release|x86.ActiveCfg = Release|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Release|x86.Build.0 = Release|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Tracy|Any CPU.ActiveCfg = Tracy|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Tracy|Any CPU.Build.0 = Tracy|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Tracy|x64.ActiveCfg = Tracy|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Tracy|x64.Build.0 = Tracy|x64
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Tracy|x86.ActiveCfg = Tracy|Win32
-		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Tracy|x86.Build.0 = Tracy|Win32
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Catch|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Catch|x64.ActiveCfg = Debug|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Catch|x86.ActiveCfg = Debug|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.DbgPrint|Any CPU.ActiveCfg = Release|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.DbgPrint|x64.ActiveCfg = Release|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.DbgPrint|x86.ActiveCfg = Release|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.DLL|Any CPU.ActiveCfg = Release|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.DLL|x64.ActiveCfg = Release|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.DLL|x86.ActiveCfg = Release|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Release|x64.ActiveCfg = Release|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Release|x86.ActiveCfg = Release|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Tracy|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Tracy|x64.ActiveCfg = Debug|Any CPU
-		{B9C33C29-D1B0-411C-A987-835A09CB5BAD}.Tracy|x86.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

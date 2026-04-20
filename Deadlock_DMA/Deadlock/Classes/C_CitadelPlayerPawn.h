@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 #include "pch.h"
 #include "Deadlock/Engine/CHandle.h"
 #include "Deadlock/Const/HeroSkeletonMap.hpp"
-#include "CBaseEntity.h"
+#include "C_BaseEntity.h"
 #include "CCitadelPlayerController.h"
 
 constexpr int MAX_BONES      = 70;
@@ -11,10 +11,10 @@ constexpr int MAX_MODEL_PATH = 128;
 // Stride of each bone entry in the game's bone array.
 constexpr int BONE_STRIDE = 0x20;
 
-class CCitadelPlayerPawn : public CBaseEntity
+class C_CitadelPlayerPawn : public C_BaseEntity
 {
 public:
-	using CBaseEntity::CBaseEntity;
+	using C_BaseEntity::C_BaseEntity;
 
 	Vector3   m_BonePositions[MAX_BONES]{ 0.0f };
 	Vector3   m_Velocity{ 0.0f };
@@ -66,81 +66,79 @@ private:
 	// Single contiguous buffer for one scatter read covering all bone slots.
 	uint8_t m_BoneRawBuf[MAX_BONES * BONE_STRIDE]{ 0 };
 
-	void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh)
+	void PrepareBoneRead(ScatterRead& sr)
 	{
 		if (!m_BoneArrayAddress) return;
-		VMMDLL_Scatter_PrepareEx(vmsh, m_BoneArrayAddress, m_BoneCount * BONE_STRIDE,
-			reinterpret_cast<BYTE*>(m_BoneRawBuf), nullptr);
+		sr.AddRaw(m_BoneArrayAddress, m_BoneCount * BONE_STRIDE, m_BoneRawBuf);
 	}
 
 public:
-	void PrepareRead_1(VMMDLL_SCATTER_HANDLE vmsh)
+	void PrepareRead_1(ScatterRead& sr)
 	{
-		CBaseEntity::PrepareRead_1(vmsh, false);
+		C_BaseEntity::PrepareRead_1(sr, false);
 
-		uintptr_t hControllerPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_hController;
-		VMMDLL_Scatter_PrepareEx(vmsh, hControllerPtr, sizeof(uint32_t), reinterpret_cast<BYTE*>(&m_hController.Data), nullptr);
+		uintptr_t hControllerPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_hController;
+		sr.Add(hControllerPtr, &m_hController.Data);
 
-		uintptr_t UnsecuredSoulsPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_nUnsecuredSouls;
-		VMMDLL_Scatter_PrepareEx(vmsh, UnsecuredSoulsPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_UnsecuredSouls), nullptr);
+		uintptr_t UnsecuredSoulsPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_nUnsecuredSouls;
+		sr.Add(UnsecuredSoulsPtr, &m_UnsecuredSouls);
 
-		uintptr_t TotalUnspentSoulsPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_nTotalUnspentSouls;
-		VMMDLL_Scatter_PrepareEx(vmsh, TotalUnspentSoulsPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_TotalUnspentSouls), nullptr);
+		uintptr_t TotalUnspentSoulsPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_nTotalUnspentSouls;
+		sr.Add(TotalUnspentSoulsPtr, &m_TotalUnspentSouls);
 
-		uintptr_t VelocityPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_vecVelocity;
-		VMMDLL_Scatter_PrepareEx(vmsh, VelocityPtr, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Velocity), nullptr);
+		uintptr_t VelocityPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_vecVelocity;
+		sr.Add(VelocityPtr, &m_Velocity);
 
-		uintptr_t EyeAnglesPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_angEyeAngles;
-		VMMDLL_Scatter_PrepareEx(vmsh, EyeAnglesPtr, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_EyeAngles), nullptr);
+		uintptr_t EyeAnglesPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_angEyeAngles;
+		sr.Add(EyeAnglesPtr, &m_EyeAngles);
 
-		uintptr_t RespawnTimePtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_flRespawnTime;
-		VMMDLL_Scatter_PrepareEx(vmsh, RespawnTimePtr, sizeof(float), reinterpret_cast<BYTE*>(&m_flRespawnTime), nullptr);
+		uintptr_t RespawnTimePtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_flRespawnTime;
+		sr.Add(RespawnTimePtr, &m_flRespawnTime);
 	}
 
-	void PrepareRead_2(VMMDLL_SCATTER_HANDLE vmsh)
+	void PrepareRead_2(ScatterRead& sr)
 	{
 		if (!m_GameSceneNodeAddress)
 			SetInvalid();
 
-		CBaseEntity::PrepareRead_2(vmsh);
+		C_BaseEntity::PrepareRead_2(sr);
 
 		if (IsInvalid())
 			return;
 
 		uintptr_t BoneArrayPtrAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_modelState + Offsets::CModelState::m_pBones;
-		VMMDLL_Scatter_PrepareEx(vmsh, BoneArrayPtrAddress, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&m_BoneArrayAddress), nullptr);
+		sr.Add(BoneArrayPtrAddress, &m_BoneArrayAddress);
 
 		// Read m_ModelName pointer (CUtlSymbolLarge = char* in Source 2)
 		uintptr_t ModelNamePtrAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_modelState + Offsets::CModelState::m_ModelName;
-		VMMDLL_Scatter_PrepareEx(vmsh, ModelNamePtrAddress, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&m_ModelNamePtr), nullptr);
+		sr.Add(ModelNamePtrAddress, &m_ModelNamePtr);
 	}
 
-	void PrepareRead_3(VMMDLL_SCATTER_HANDLE vmsh)
+	void PrepareRead_3(ScatterRead& sr)
 	{
 		if (IsInvalid())
 			return;
 
-		PrepareBoneRead(vmsh);
+		PrepareBoneRead(sr);
 
 		// Read model path string from the pointer obtained in PrepareRead_2
 		if (m_ModelNamePtr)
 		{
 			memset(m_ModelPathBuf, 0, sizeof(m_ModelPathBuf));
-			VMMDLL_Scatter_PrepareEx(vmsh, m_ModelNamePtr, MAX_MODEL_PATH - 1,
-				reinterpret_cast<BYTE*>(m_ModelPathBuf), nullptr);
+			sr.AddRaw(m_ModelNamePtr, MAX_MODEL_PATH - 1, m_ModelPathBuf);
 		}
 	}
 
-	void QuickRead(VMMDLL_SCATTER_HANDLE vmsh)
+	void QuickRead(ScatterRead& sr)
 	{
 		if (IsInvalid())
 			return;
 
-		CBaseEntity::QuickRead(vmsh, false);
+		C_BaseEntity::QuickRead(sr, false);
 
-		uintptr_t VelocityPtr = m_EntityAddress + Offsets::CCitadelPlayerPawn::m_vecVelocity;
-		VMMDLL_Scatter_PrepareEx(vmsh, VelocityPtr, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Velocity), nullptr);
+		uintptr_t VelocityPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_vecVelocity;
+		sr.Add(VelocityPtr, &m_Velocity);
 
-		PrepareBoneRead(vmsh);
+		PrepareBoneRead(sr);
 	}
 };

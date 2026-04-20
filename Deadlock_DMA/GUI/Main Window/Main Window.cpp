@@ -5,10 +5,15 @@
 #include "GUI/Main Menu/Main Menu.h"
 #include "GUI/Fonts/Fonts.h"
 #include "GUI/Radar/Radar.h"
+#include "GUI/Fuser/ESP/ESP.h"
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Debug GUI/Trooper List/Trooper List.h"
 #include "GUI/Debug GUI/Class List/Class List.h"
 #include "GUI/Fuser/Fuser.h"
+#include "GUI/Aimbot/Aimbot.h"
+#include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Keybinds/Keybinds.h"
+#include "GUI/Config/Config.h"
 
 void Render(ImGuiContext* ctx)
 {
@@ -18,6 +23,7 @@ void Render(ImGuiContext* ctx)
 		Fonts::Initialize(ImGui::GetIO());
 
 	ImGui::PushFont(Fonts::m_IBMPlexMonoSemiBold, 16.0f);
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
 	Fuser::Render();
 	Radar::Render();
@@ -26,6 +32,13 @@ void Render(ImGuiContext* ctx)
 	TrooperList::Render();
 	ClassList::Render();
 
+	Fuser::RenderSettings();
+	ESP::RenderSettings();
+	Aimbot::RenderSettings();
+
+	ColorPicker::Render();
+	Keybinds::Render();
+	Config::Render();
 	MainMenu::Render();
 
 	ImGui::PopFont();

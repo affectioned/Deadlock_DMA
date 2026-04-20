@@ -1,15 +1,15 @@
-#pragma once
-#include "CBaseEntity.h"
+﻿#pragma once
+#include "C_BaseEntity.h"
 #include "Deadlock/Engine/CHandle.h"
 #include "Deadlock/Const/HeroMap.hpp"
 #include "Deadlock/Const/HeroEnum.hpp"
 
-class CCitadelPlayerController : public CBaseEntity
+class CCitadelPlayerController : public C_BaseEntity
 {
 public:
-	using CBaseEntity::CBaseEntity;
+	using C_BaseEntity::C_BaseEntity;
 
-	CHandle  m_hPawn{ 0 };
+	CHandle  m_hHeroPawn{ 0 };
 	int32_t  m_CurrentLevel{ 0 };
 	int32_t  m_MaxHealth{ 0 };
 	int32_t  m_TotalSouls{ 0 };
@@ -31,54 +31,54 @@ public:
 	}
 
 public:
-	void PrepareRead_1(VMMDLL_SCATTER_HANDLE vmsh)
+	void PrepareRead_1(ScatterRead& sr)
 	{
-		CBaseEntity::PrepareRead_1(vmsh, false);
+		C_BaseEntity::PrepareRead_1(sr, false);
 
 		if (IsInvalid())
 			return;
 
-		uintptr_t PawnHandleAddress = m_EntityAddress + Offsets::CCitadelPlayerController::m_hPawn;
-		VMMDLL_Scatter_PrepareEx(vmsh, PawnHandleAddress, sizeof(CHandle), reinterpret_cast<BYTE*>(&m_hPawn), nullptr);
+		uintptr_t PawnHandleAddress = m_EntityAddress + Offsets::CCitadelPlayerController::m_hHeroPawn;
+		sr.Add(PawnHandleAddress, &m_hHeroPawn);
 
 		uintptr_t PlayerDataAddress = m_EntityAddress + Offsets::CCitadelPlayerController::m_PlayerDataGlobal;
 
 		uintptr_t LevelAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_iLevel;
-		VMMDLL_Scatter_PrepareEx(vmsh, LevelAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentLevel), nullptr);
+		sr.Add(LevelAddress, &m_CurrentLevel);
 
 		uintptr_t MaxHealthAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_iHealthMax;
-		VMMDLL_Scatter_PrepareEx(vmsh, MaxHealthAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_MaxHealth), nullptr);
+		sr.Add(MaxHealthAddress, &m_MaxHealth);
 
 		uintptr_t CurrentHealthAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_iHealth;
-		VMMDLL_Scatter_PrepareEx(vmsh, CurrentHealthAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
+		sr.Add(CurrentHealthAddress, &m_CurrentHealth);
 
 		uintptr_t HeroIDAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_nHeroID;
-		VMMDLL_Scatter_PrepareEx(vmsh, HeroIDAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_HeroID), nullptr);
+		sr.Add(HeroIDAddress, &m_HeroID);
 
 		uintptr_t TotalSoulsAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_nTotalSouls;
-		VMMDLL_Scatter_PrepareEx(vmsh, TotalSoulsAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_TotalSouls), nullptr);
+		sr.Add(TotalSoulsAddress, &m_TotalSouls);
 
 		uintptr_t UltTrainedAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_bUltimateTrained;
-		VMMDLL_Scatter_PrepareEx(vmsh, UltTrainedAddress, sizeof(bool), reinterpret_cast<BYTE*>(&m_bUltimateTrained), nullptr);
+		sr.Add(UltTrainedAddress, &m_bUltimateTrained);
 
 		uintptr_t UltCDStartAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_flUltimateCooldownStart;
-		VMMDLL_Scatter_PrepareEx(vmsh, UltCDStartAddress, sizeof(float), reinterpret_cast<BYTE*>(&m_flUltimateCooldownStart), nullptr);
+		sr.Add(UltCDStartAddress, &m_flUltimateCooldownStart);
 
 		uintptr_t UltCDEndAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_flUltimateCooldownEnd;
-		VMMDLL_Scatter_PrepareEx(vmsh, UltCDEndAddress, sizeof(float), reinterpret_cast<BYTE*>(&m_flUltimateCooldownEnd), nullptr);
+		sr.Add(UltCDEndAddress, &m_flUltimateCooldownEnd);
 	}
 
-	void QuickRead(VMMDLL_SCATTER_HANDLE vmsh)
+	void QuickRead(ScatterRead& sr)
 	{
 		if (IsInvalid())
 			return;
 
-		CBaseEntity::QuickRead(vmsh, false);
+		C_BaseEntity::QuickRead(sr, false);
 
 		uintptr_t PlayerDataAddress = m_EntityAddress + Offsets::CCitadelPlayerController::m_PlayerDataGlobal;
 
 		uintptr_t CurrentHealthAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_iHealth;
-		VMMDLL_Scatter_PrepareEx(vmsh, CurrentHealthAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
+		sr.Add(CurrentHealthAddress, &m_CurrentHealth);
 	}
 private:
 

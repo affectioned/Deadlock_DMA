@@ -20,16 +20,14 @@ public:
 	static inline bool bDrawHealthBar{ true };
 	static inline bool bHideLocalPlayer{ true };
 	static inline bool bShowDistance{ true };
-	static inline bool bDrawBoxes{ true };
 
 private:
-	static void DrawPlayer(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn);
-	static void DrawHealthBar(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, const ImVec2& PawnScreenPos, ImDrawList* DrawList, int& LineNumber);
-	static void DrawSkeleton(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
-	static void DrawHeadCircle(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
-	static void DrawVelocityVector(const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
-	static void DrawBoneNumbers(const CCitadelPlayerPawn& Pawn);
-	static void DrawBox(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
-	static void DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos, int& LineNumber);
-	static void DrawUnsecuredSouls(const CCitadelPlayerPawn& Pawn, const Vector2& ScreenPos, int& LineNumber);
+	static void DrawPlayer(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn);
+	static void DrawHealthBar(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, const ImVec2& PawnScreenPos, ImDrawList* DrawList, int& LineNumber);
+	static void DrawSkeleton(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
+	static void DrawHeadCircle(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
+	static void DrawVelocityVector(const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
+	static void DrawBoneNumbers(const C_CitadelPlayerPawn& Pawn);
+	static void DrawNameTag(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos, int& LineNumber);
+	static void DrawUnsecuredSouls(const C_CitadelPlayerPawn& Pawn, const Vector2& ScreenPos, int& LineNumber);
 };

@@ -27,7 +27,6 @@ void StatusBars::RenderGenericComparisonBar(ValuePair Values, ColorPair Colors, 
 	DrawList->AddRectFilled(TopLeft, BottomRight, Colors.second);
 
 	uint32_t TotalValue = Values.first + Values.second;
-	if (TotalValue == 0) { LineNumber++; return; }
 	float FirstValuePercentage = static_cast<float>(Values.first) / static_cast<float>(TotalValue);
 
 	BottomRight.x = TopLeft.x + (EffectiveWidth * FirstValuePercentage);
@@ -80,8 +79,6 @@ void StatusBars::RenderUnspentSoulsBar(GameStatistics& Stats, const ImVec2& Wind
 
 void StatusBars::Render()
 {
-	ZoneScoped;
-
 	auto WindowPos = ImGui::GetWindowPos();
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowSize = ImGui::GetWindowSize();
@@ -108,7 +105,7 @@ GameStatistics::GameStatistics()
 	{
 		if (Controller.IsInvalid()) continue;
 
-		auto AssociatedPawnAddr = EntityList::GetEntityAddressFromHandle(Controller.m_hPawn);
+		auto AssociatedPawnAddr = EntityList::GetEntityAddressFromHandle(Controller.m_hHeroPawn);
 
 		if (!AssociatedPawnAddr) continue;
 

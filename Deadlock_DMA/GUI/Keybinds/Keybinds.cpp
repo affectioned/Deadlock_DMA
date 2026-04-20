@@ -141,31 +141,36 @@ const char* CKeybind::GetKeyName(uint32_t vkCode)
 	}
 }
 
-void Keybinds::RenderContent()
-{
-	if (!c_keys::IsInitialized())
-	{
-		ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), "Input Manager not initialized!");
-		return;
-	}
-
-	if (ImGui::BeginTable("##KeybindsTable", 4, ImGuiTableFlags_SizingStretchProp))
-	{
-		ImGui::TableSetupColumn("Action",    ImGuiTableColumnFlags_WidthFixed, 120.0f);
-		ImGui::TableSetupColumn("Key",       ImGuiTableColumnFlags_WidthFixed, 150.0f);
-		ImGui::TableSetupColumn("Target PC", ImGuiTableColumnFlags_WidthFixed, 80.0f);
-		ImGui::TableSetupColumn("Radar PC",  ImGuiTableColumnFlags_WidthFixed, 80.0f);
-		ImGui::TableHeadersRow();
-		Aimbot.Render();
-		ImGui::EndTable();
-	}
-}
-
 void Keybinds::Render()
 {
 	if (!bSettings) return;
+
 	ImGui::Begin("Keybinds", &bSettings);
-	RenderContent();
+
+	if (c_keys::IsInitialized() == false)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.3f, 0.3f, 1.0f));
+		ImGui::Text("Input Manager not initialized!");
+		ImGui::PopStyleColor();
+		ImGui::End();
+		return;
+	}
+
+	ImGui::SeparatorText("Keybinds");
+	// Table for better layout
+	if (ImGui::BeginTable("##KeybindsTable", 4, ImGuiTableFlags_SizingStretchProp))
+	{
+		ImGui::TableSetupColumn("Action", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+		ImGui::TableSetupColumn("Key", ImGuiTableColumnFlags_WidthFixed, 150.0f);
+		ImGui::TableSetupColumn("Target PC", ImGuiTableColumnFlags_WidthFixed, 80.0f);
+		ImGui::TableSetupColumn("Radar PC", ImGuiTableColumnFlags_WidthFixed, 80.0f);
+		ImGui::TableHeadersRow();
+
+		Aimbot.Render();
+
+		ImGui::EndTable();
+	}
+
 	ImGui::End();
 }
 
@@ -245,16 +250,17 @@ void CKeybind::Render()
 
 void Keybinds::OnDMAFrame(DMA_Connection* Conn)
 {
-	if (Aimbot.IsActive(Conn))
+	Aimbot::bIsActive = Aimbot.IsActive(Conn);
+	if (Aimbot::bIsActive)
 		Aimbot::OnFrame(Conn);
 }
 
 const bool CKeybind::IsActive(DMA_Connection* Conn) const
 {
-	if (m_bTargetPC && c_keys::IsKeyDown(Conn, m_Key) & 0x1)
+	if (m_bTargetPC && c_keys::IsKeyDown(Conn, m_Key))
 		return true;
 
-	if (m_bRadarPC && GetAsyncKeyState(m_Key) & 0x1)
+	if (m_bRadarPC && (GetAsyncKeyState(m_Key) & 0x8000))
 		return true;
 
 	return false;

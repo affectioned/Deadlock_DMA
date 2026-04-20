@@ -8,13 +8,35 @@
 // sigHit   – absolute address of the first byte of the matched instruction
 // dispOff  – byte offset within the instruction where the 32-bit displacement lives
 // instrSz  – total size of the instruction (RIP advances past it before applying disp)
+// Returns 0 if the resolved address is not readable (false-positive match).
 static ptrdiff_t ResolveRIP(DMA_Connection* Conn, DWORD pid,
                              uintptr_t clientBase, uint64_t sigHit,
                              int dispOff, int instrSz)
 {
 	int32_t disp = ReadFromPID<int32_t>(Conn, sigHit + dispOff, pid);
 	uintptr_t absAddr = static_cast<uintptr_t>(sigHit) + instrSz + disp;
+	if (!IsAddressReadable(Conn, absAddr, pid))
+		return 0;
 	return static_cast<ptrdiff_t>(absAddr - clientBase);
+}
+
+static void ResolveOffset(DMA_Connection* Conn, DWORD pid, uintptr_t clientBase, uintptr_t clientEnd,
+                           const char* name, ptrdiff_t& target, ptrdiff_t fallback,
+                           const char* sig, int dispOff, int instrSz)
+{
+	uint64_t hit = FindSignature(Conn, sig, clientBase, clientEnd, pid);
+	ptrdiff_t offset = hit ? ResolveRIP(Conn, pid, clientBase, hit, dispOff, instrSz) : 0;
+
+	if (offset)
+	{
+		target = offset;
+		std::println("[+] {} Offset: 0x{:X}", name, target);
+	}
+	else
+	{
+		target = fallback;
+		std::println("[!] {} sig failed, using fallback RVA: 0x{:X}", name, target);
+	}
 }
 
 bool Offsets::ResolveOffsets(DMA_Connection* Conn)
@@ -23,66 +45,21 @@ bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 	uintptr_t clientBase = Deadlock::Proc().GetClientBase();
 	uintptr_t clientEnd  = clientBase + Deadlock::Proc().GetClientSize();
 
-	// GameEntitySystem — "48 8B 0D ? ? ? ? 8B FD C1 EF"
-	try
-	{
-		uint64_t hit = FindSignature(Conn, "48 8B 0D ? ? ? ? 8B FD C1 EF", clientBase, clientEnd, pid);
-		if (!hit) throw std::runtime_error("sig not found");
-		Offsets::GameEntitySystem = ResolveRIP(Conn, pid, clientBase, hit, 3, 7);
-		std::println("[+] GameEntitySystem Offset: 0x{:X}", Offsets::GameEntitySystem);
-	}
-	catch (...)
-	{
-		Offsets::GameEntitySystem = 0x31887F8;
-		std::println("[!] GameEntitySystem sig failed, using fallback RVA: 0x{:X}", Offsets::GameEntitySystem);
-	}
+	ResolveOffset(Conn, pid, clientBase, clientEnd,
+		"GameEntitySystem", Offsets::GameEntitySystem, 0x31887F8,
+		"48 8B 0D ? ? ? ? 8B FD C1 EF", 3, 7);
 
-	// LocalController — "48 3B 35 ? ? ? ? 75 ? 48 C7 05"
-	try
-	{
-		uint64_t hit = FindSignature(Conn, "48 3B 35 ? ? ? ? 75 ? 48 C7 05", clientBase, clientEnd, pid);
-		if (!hit) throw std::runtime_error("sig not found");
-		Offsets::LocalController = ResolveRIP(Conn, pid, clientBase, hit, 3, 7);
-		std::println("[+] LocalController Offset: 0x{:X}", Offsets::LocalController);
-	}
-	catch (...)
-	{
-		Offsets::LocalController = 0x3708D90;
-		std::println("[!] LocalController sig failed, using fallback RVA: 0x{:X}", Offsets::LocalController);
-	}
+	ResolveOffset(Conn, pid, clientBase, clientEnd,
+		"LocalController", Offsets::LocalController, 0x3708D90,
+		"48 3B 35 ? ? ? ? 75 ? 48 C7 05", 3, 7);
 
-	// ViewMatrix — "F3 0F 10 05 ? ? ? ? F3 0F 59 01"
-	// CViewRender pointer (dwViewRender) = 0x37647B0; ViewMatrix is typically 0x400 bytes before it.
-	try
-	{
-		uint64_t hit = FindSignature(Conn, "F3 0F 10 05 ? ? ? ? F3 0F 59 01", clientBase, clientEnd, pid);
-		if (!hit) throw std::runtime_error("sig not found");
-		Offsets::ViewMatrix = ResolveRIP(Conn, pid, clientBase, hit, 4, 8);
-		// Reject false positives that land in the code section (< 32 MB into client.dll)
-		if (Offsets::ViewMatrix < 0x2000000)
-			throw std::runtime_error("ViewMatrix resolved into code section");
-		std::println("[+] ViewMatrix Offset: 0x{:X}", Offsets::ViewMatrix);
-	}
-	catch (...)
-	{
-		Offsets::ViewMatrix = 0x373DDB0;
-		std::println("[!] ViewMatrix sig failed, using fallback RVA: 0x{:X}", Offsets::ViewMatrix);
-	}
+	ResolveOffset(Conn, pid, clientBase, clientEnd,
+		"ViewMatrix", Offsets::ViewMatrix, 0x373DDB0,
+		"F3 0F 10 05 ? ? ? ? F3 0F 59 01", 4, 8);
 
-	// PredictionPtr — "48 8B 05 ? ? ? ? 38 58"
-	// Fallback: dwViewRender (0x3728410) — confirm if this is the right mapping
-	try
-	{
-		uint64_t hit = FindSignature(Conn, "48 8B 05 ? ? ? ? 38 58", clientBase, clientEnd, pid);
-		if (!hit) throw std::runtime_error("sig not found");
-		Offsets::PredictionPtr = ResolveRIP(Conn, pid, clientBase, hit, 3, 7);
-		std::println("[+] PredictionPtr Offset: 0x{:X}", Offsets::PredictionPtr);
-	}
-	catch (...)
-	{
-		Offsets::PredictionPtr = 0x2E95F98;
-		std::println("[!] PredictionPtr sig failed, using fallback RVA: 0x{:X}", Offsets::PredictionPtr);
-	}
+	ResolveOffset(Conn, pid, clientBase, clientEnd,
+		"CPrediction", Offsets::Prediction, 0x2E95F98,
+		"48 8B 05 ? ? ? ? 38 58", 3, 7);
 
 	DbgPrintln("All offsets resolved.");
 	return true;

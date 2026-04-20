@@ -2,20 +2,17 @@
 
 class DMA_Connection
 {
-public: /* Singleton interface */
+public:
 	static DMA_Connection* GetInstance();
-
-private:
-	static inline DMA_Connection* m_Instance = nullptr;
 
 public:
 	VMM_HANDLE GetHandle() const;
 	bool EndConnection();
 
 private:
+	static inline DMA_Connection* m_Instance = nullptr;
 	VMM_HANDLE m_VMMHandle = nullptr;
 
-private:
 	DMA_Connection();
 	~DMA_Connection();
 };

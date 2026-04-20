@@ -12,32 +12,49 @@ msbuild Deadlock_DMA.sln /p:Configuration=Release /p:Platform=x64
 
 **Build configurations:**
 - `Release | x64` — production build
-- `Catch | x64` — runs Catch3 unit tests (outputs `Deadlock_DMA_Catch.exe`)
-- `Tracy | x64` — enables Tracy profiler (`TRACY_ENABLE` macro)
-- `DbgPrint | x64` — enables debug printing (`DBGPRINT` macro)
+- `Debug | x64` — debug build (no optimizations)
 
 **Runtime DLLs required** (from `Dependencies/MemProcFS/`, copied automatically by post-build step):
 `FTD3XX.dll`, `leechcore.dll`, `leechcore_driver.dll`, `vmm.dll`, `makcu-cpp.dll`
-
-## Tests
-
-Build with `Catch | x64`, then run the output `Deadlock_DMA_Catch.exe`. Tests use Catch3 `TEST_CASE` macros and live in `Deadlock_DMA/Tests/`. They test entity object construction and scatter read preparation only — they do not require a live DMA connection.
 
 ## Architecture
 
 The codebase has three layers that map cleanly to directories:
 
 ### 1. DMA Layer (`DMA/`)
-Low-level memory access via MemProcFS (VMMDLL). `Process.h` provides `ReadMem<T>()`. `DMA Thread.h/cpp` runs the main acquisition loop on a dedicated thread, firing timer-based callbacks at different intervals.
+Low-level memory access via MemProcFS (VMMDLL).
+
+**`ScatterRead.h`** — RAII wrapper around `VMMDLL_SCATTER_HANDLE`. Non-copyable; one instance per thread. Methods: `Add<T>(addr, T*)`, `AddRaw(addr, cb, void*)`, `Execute()`, `Clear()`. Include order in `pch.h` matters: `ScatterRead.h` must come before `Process.h`.
+
+**`Process.h`** — provides `ReadMem<T>()` for single-value reads (creates a temporary `ScatterRead` internally). Use scatter batching for any per-frame work.
+
+**`SigScan.h/cpp`** — `FindSignature()` scans a byte range for a pattern. `IsAddressReadable()` probes a single byte via `VMMDLL_MemReadEx` — used to validate resolved RIP-relative addresses. `ResolveOffset()` in `Offsets.cpp` combines scan + RIP resolve + fallback without exceptions (MemProcFS API uses return values, not exceptions).
+
+**`DMA Thread.h/cpp`** — main acquisition loop on a dedicated thread. One persistent `ScatterRead sr` is created once and reused. The loop runs every 1 ms with no rate-limiting: all updates fire every tick. `Keybinds::OnDMAFrame` is called last and fires the aimbot if active.
 
 ### 2. Game Layer (`Deadlock/`)
-Translates raw memory into game objects.
+Translates raw memory into game objects. All class and field names match the exact Valve/Source 2 SDK names from the schema dump at `C:\Users\admin\Downloads\schema-dump\deadlock\`.
 
-**`Offsets.h`** — all struct field offsets. Static offsets are `constexpr`; dynamic offsets (GameEntitySystem, LocalController, ViewMatrix, PredictionPtr) are resolved at runtime via signature scanning in `Offsets.cpp`. **This is the first file to update when the game patches.**
+**`Offsets.h`** — all struct field offsets. Static offsets are `constexpr`; dynamic offsets (`GameEntitySystem`, `LocalController`, `ViewMatrix`, `Prediction`) are resolved at runtime via `Offsets::ResolveOffsets()` in `Offsets.cpp`. `Offsets::Prediction` holds the RVA of the `CPrediction` global pointer; `Offsets::CPrediction::ServerTime` (0x68) is the field within it. **This is the first file to update when the game patches.**
 
 **`Deadlock.h/cpp`** — global game state (view matrix, local player addresses, server time, client yaw). All fields are mutex-protected for cross-thread access.
 
-**`Entity List/EntityList.h/cpp`** — scans the game's entity system and maintains five mutex-protected entity vectors: `m_PlayerControllers`, `m_PlayerPawns`, `m_Troopers`, `m_MonsterCamps`, `m_Sinners`. Refresh is split into `FullRefresh` (every 2–5 s, rebuilds the list) and `QuickRefresh` (every 8–100 ms, updates positions/health only).
+**`Entity List/EntityList.h/cpp`** — scans the game's entity system and maintains six mutex-protected entity vectors: `m_PlayerControllers`, `m_PlayerPawns`, `m_Troopers`, `m_MonsterCamps`, `m_Sinners`, `m_XpOrbs`. `FullUpdate` rebuilds the entity list (called every tick). The per-type Refresh functions (`PawnRefresh`, `ControllerRefresh`, etc.) do incremental updates — adding new entities with full 2–3 stage init, quick-updating existing ones.
+
+**Entity class name strings** — the strings used in `SortEntityList` / `FindClass()` do not follow a consistent naming pattern. Confirmed live entity name strings (from Debug GUI class list export):
+- `player` → `C_CitadelPlayerPawn` (player pawns)
+- `citadel_player_controller` → `CCitadelPlayerController`
+- `npc_trooper` → `C_NPC_Trooper` (lane minions)
+- `npc_trooper_boss` → `C_NPC_TrooperBoss` (Walkers)
+- `npc_trooper_neutral` → `C_NPC_TrooperNeutral` (jungle neutrals)
+- `npc_boss_tier2` / `npc_boss_tier3` → major bosses (Patron etc.), tracked in `m_MonsterCamps`
+- `npc_neutral_sinners_sacrifice` → Sinners
+- `item_xp` → XP orbs
+- `citadel_item_pickup_rejuv_herotest` → Rejuvenator pickups (note `_herotest` suffix is the real entity name)
+- `destroyable_building` → shrines, guardians, destructible objectives
+- Punchable buff boxes (`C_Citadel_PunchablePowerup`) do **not** appear in the entity class map
+
+**Entity labels** — `C_BaseEntity` has a `const char* m_Label` field set at sort time. `m_TrooperAddresses` and `m_MonsterCampAddresses` are `vector<pair<uintptr_t, const char*>>`. Labels: regular troopers = `nullptr`, Walkers = `"Walker"`, neutrals = `"Neutral"`, tier-2 boss = `"Tier 2"`, tier-3 boss = `"Tier 3"`. `C_NPC_Trooper::PrepareRead_1` uses `m_Label != nullptr` to gate the `m_iMaxHealth` read (Walkers only).
 
 **`Classes/`** — C++ wrappers for game entities. Each class uses a multi-stage scatter read pattern:
 - `PrepareRead_1` — entity-level fields + controller handle
@@ -45,20 +62,24 @@ Translates raw memory into game objects.
 - `PrepareRead_3` — bone array + model path string (pawns only)
 - `QuickRead` — position + health only (used in the fast loop)
 
-All `PrepareRead_*` methods only *enqueue* reads into a `VMMDLL_SCATTER_HANDLE`; the caller executes the batch with `VMMDLL_Scatter_ExecuteRead()`.
+All `PrepareRead_*` methods only *enqueue* reads into the caller's `ScatterRead&`; the caller calls `sr.Execute()` after each stage and `sr.Clear()` before the next.
 
 **`Const/`** — hero enums, team enum, and generated bone/hitbox data. `BoneLists.hpp` and `BoneListTypes.hpp` are auto-generated by `BoneExtractor/` (Python 3 script that reads Deadlock VPK files). Run the extractor after hero model changes.
 
 ### 3. GUI Layer (`GUI/`)
 ImGui + DirectX 11 overlay. The main GUI thread calls `MainWindow::OnFrame()` each frame, which calls into `Fuser::Render()`. `Query::IsUsing*()` functions gate which entity types are rendered (and also determine which entity types the DMA thread bothers refreshing). `Deadlock::WorldToScreen()` handles the view matrix projection.
 
+**Aimbot** — `Aimbot::OnFrame` is a single-frame function (no loop, no DMA reads). It reads only from mutex-protected cached entity data. `Keybinds::OnDMAFrame` manages `Aimbot::bIsActive` and calls `OnFrame` when the key is held.
+
 ## Key Patterns
 
-**Scatter reads** — never read individual fields one at a time. Batch all reads for a frame into a single scatter handle, execute once, then extract results.
+**Scatter reads** — never read individual fields one at a time. Batch all reads into a `ScatterRead`, call `Execute()` once, then extract results. Use `Clear()` between stages in the same batch. The `ScatterRead` instance is owned by the calling thread; never share it across threads.
+
+**MemProcFS error handling** — the API signals failure via return values (`false`, `0`, `nullptr`), not C++ exceptions. Never use try/catch to handle MemProcFS failures; use `if` checks instead.
 
 **Offset naming** — offsets are always relative to the base pointer of the named class, not to any parent. `CGameSceneNode::m_modelState` is actually in `CSkeletonInstance` (which the game stores at the same pointer), so the offset is relative to the scene node pointer.
 
-**Bone stride** — bone data in `CModelState` is packed at stride `0x20` (32 bytes per entry). `CCitadelPlayerPawn::ExtractBones()` copies the `Vector3` from the start of each stride slot.
+**Bone stride** — bone data in `CModelState` is packed at stride `0x20` (32 bytes per entry). `C_CitadelPlayerPawn::ExtractBones()` copies the `Vector3` from the start of each stride slot.
 
 **Hero bone data** — after reading the model path string, call `CacheBoneData()` to resolve the hero and set `m_BoneCount` to the minimum needed bones rather than the `MAX_BONES=70` fallback.
 
@@ -66,6 +87,10 @@ ImGui + DirectX 11 overlay. The main GUI thread calls `MainWindow::OnFrame()` ea
 
 **Entity list addresses** — `GetEntityListAddresses` does a single bulk scatter read of `MAX_ENTITY_LISTS * 8` bytes directly into `m_EntityList_Addresses.data()` (contiguous `std::array<uintptr_t>`), not 32 individual reads.
 
-**`CCitadelPlayerPawn` fields read** — `PrepareRead_1` reads: `m_hController` (0x10A8), `m_nUnsecuredSouls` (0x12E4), `m_nTotalUnspentSouls` (0x12D8), `m_vecVelocity` (0x438), `m_angEyeAngles` (0x11B0), `m_flRespawnTime` (0x130C).
+**`C_CitadelPlayerPawn` fields read** — `PrepareRead_1` reads: `m_hController` (0x10A8), `m_nUnsecuredSouls` (0x12E4), `m_nTotalUnspentSouls` (0x12D8), `m_vecVelocity` (0x438), `m_angEyeAngles` (0x11B0), `m_flRespawnTime` (0x130C).
 
 **GUI** — `Fuser::Render()` is a black, fullscreen, no-decoration ImGui window that acts as the ESP overlay. It must always cover the entire screen. Never add decoration, input handling, or non-zero window padding to it. The main menu is a separate OS window (via `ImGuiConfigFlags_ViewportsEnable`) toggled with Insert.
+
+**Player health** — player health/max health come from `PlayerDataGlobal_t` (inline struct at `controller + 0x8F0`), not from `C_BaseEntity::m_iHealth`. The pawn's engine-level health field is unreliable for players. NPC health (troopers, bosses) uses `C_BaseEntity::m_iHealth` (0x354) and `m_iMaxHealth` (0x350) directly.
+
+**DMA thread timer intervals** — `ViewMatrix`: 2ms, `Yaw`: 10ms, `ServerTime`: 1s, `LocalControllerAddress`: 15s, `FullTrooper`: 3s, `QuickTrooper`: 16ms, `FullPawn`: 2s, `QuickPawn`: 8ms, `FullMonsterCamp`: 2s, `QuickMonsterCamp`: 100ms, `FullController`: 2s, `QuickController`: 150ms, `FullSinner`: 1s, `FullXpOrb`: 500ms, `QuickXpOrb`: 16ms, `FullUpdate`: 5s, `Keybinds`: 5ms. Verbose per-refresh log lines use `DbgPrintln` (no-op in Release) to avoid I/O pressure.

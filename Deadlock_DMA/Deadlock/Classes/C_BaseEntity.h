@@ -1,17 +1,19 @@
-#pragma once
+﻿#pragma once
 #include "Deadlock/Engine/Vector3.h"
 #include "Deadlock/Const/ETeam.h"
 
-class CBaseEntity
+class C_BaseEntity
 {
 public:
 	uintptr_t m_EntityAddress{ 0 };
 	Vector3 m_Position{ 0.0f };
 	uintptr_t m_GameSceneNodeAddress{ 0 };
+	int32_t m_MaxHealth{ 0 };
 	int32_t m_CurrentHealth{ 0 };
 	uint8_t m_Flags{ 0 };
 	ETeam m_TeamNum{ 0 };
 	uint8_t m_Dormant{ 0 };
+	const char* m_Label{ nullptr };
 
 public:
 	const bool IsInvalid() const { return m_Flags & 0x1; }
@@ -21,10 +23,10 @@ public:
 	const float DistanceFromLocalPlayer(bool bInMeters = 0) const;
 	const bool IsDormant() const { return m_Dormant; }
 
-	CBaseEntity(uintptr_t _EntityAddress) : m_EntityAddress(_EntityAddress) {};
+	C_BaseEntity(uintptr_t _EntityAddress) : m_EntityAddress(_EntityAddress) {};
 
 public:
-	void PrepareRead_1(VMMDLL_SCATTER_HANDLE vmsh, bool bReadHealth = true)
+	void PrepareRead_1(ScatterRead& sr, bool bReadHealth = true, bool bReadMaxHealth = false)
 	{
 		if (!m_EntityAddress)
 			SetInvalid();
@@ -33,19 +35,24 @@ public:
 			return;
 
 		uintptr_t GameSceneNodePtr = m_EntityAddress + Offsets::C_BaseEntity::m_pGameSceneNode;
-		VMMDLL_Scatter_PrepareEx(vmsh, GameSceneNodePtr, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&m_GameSceneNodeAddress), nullptr);
+		sr.Add(GameSceneNodePtr, &m_GameSceneNodeAddress);
 
 		uintptr_t TeamNumPtr = m_EntityAddress + Offsets::C_BaseEntity::m_iTeamNum;
-		VMMDLL_Scatter_PrepareEx(vmsh, TeamNumPtr, sizeof(uint8_t), reinterpret_cast<BYTE*>(&m_TeamNum), nullptr);
+		sr.Add(TeamNumPtr, &m_TeamNum);
 
 		if (bReadHealth)
 		{
+			if (bReadMaxHealth)
+			{
+				uintptr_t MaxHealthPtr = m_EntityAddress + Offsets::C_BaseEntity::m_iMaxHealth;
+				sr.Add(MaxHealthPtr, &m_MaxHealth);
+			}
 			uintptr_t HealthPtr = m_EntityAddress + Offsets::C_BaseEntity::m_iHealth;
-			VMMDLL_Scatter_PrepareEx(vmsh, HealthPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
+			sr.Add(HealthPtr, &m_CurrentHealth);
 		}
 	}
 
-	void PrepareRead_2(VMMDLL_SCATTER_HANDLE vmsh)
+	void PrepareRead_2(ScatterRead& sr)
 	{
 		if (!m_GameSceneNodeAddress)
 			SetInvalid();
@@ -54,13 +61,13 @@ public:
 			return;
 
 		uintptr_t PositionAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_vecAbsOrigin;
-		VMMDLL_Scatter_PrepareEx(vmsh, PositionAddress, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Position), nullptr);
+		sr.Add(PositionAddress, &m_Position);
 
 		uintptr_t DormantAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_bDormant;
-		VMMDLL_Scatter_PrepareEx(vmsh, DormantAddress, sizeof(uint8_t), reinterpret_cast<BYTE*>(&m_Dormant), nullptr);
+		sr.Add(DormantAddress, &m_Dormant);
 	}
 
-	void QuickRead(VMMDLL_SCATTER_HANDLE vmsh, bool bReadHealth = true)
+	void QuickRead(ScatterRead& sr, bool bReadHealth = true)
 	{
 		if (IsInvalid())
 			return;
@@ -68,17 +75,17 @@ public:
 		if (bReadHealth)
 		{
 			uintptr_t HealthPtr = m_EntityAddress + Offsets::C_BaseEntity::m_iHealth;
-			VMMDLL_Scatter_PrepareEx(vmsh, HealthPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
+			sr.Add(HealthPtr, &m_CurrentHealth);
 		}
 
 		uintptr_t PositionAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_vecAbsOrigin;
-		VMMDLL_Scatter_PrepareEx(vmsh, PositionAddress, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Position), nullptr);
+		sr.Add(PositionAddress, &m_Position);
 
 		uintptr_t DormantAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_bDormant;
-		VMMDLL_Scatter_PrepareEx(vmsh, DormantAddress, sizeof(uint8_t), reinterpret_cast<BYTE*>(&m_Dormant), nullptr);
+		sr.Add(DormantAddress, &m_Dormant);
 	}
 
-	bool operator==(const CBaseEntity& Other) const
+	bool operator==(const C_BaseEntity& Other) const
 	{
 		return m_EntityAddress == Other.m_EntityAddress;
 	}

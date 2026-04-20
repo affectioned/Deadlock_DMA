@@ -4,12 +4,13 @@ class ColorPicker
 {
 public:
 	static void Render();
-	static void RenderContent();
 	static void MyColorPicker(const char* label, ImColor& color);
 
 public:
 	static inline bool bMasterToggle{ true };
 	static inline ImColor SinnersColor{ 0.65f,0.05f,0.7f,1.0f };
+	static inline ImColor BossColor{ 1.0f,0.4f,0.0f,1.0f };
+	static inline ImColor XpOrbColor{ 1.0f,0.85f,0.0f,1.0f };
 	static inline ImColor MonsterCampColor{ 0.8f,0.8f,0.8f,1.0f };
 	static inline ImColor LocalPlayerRadar{ 0.0f,1.0f,0.0f,1.0f };
 	static inline ImColor UnsecuredSoulsTextColor{ 1.0f,1.0f,1.0f,1.0f };

@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include <expected>
 
 struct CTextureInfo {
 	ID3D11ShaderResourceView* pTexture{ nullptr };

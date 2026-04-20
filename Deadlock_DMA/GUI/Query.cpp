@@ -5,6 +5,7 @@
 #include "GUI/Fuser/ESP/Draw/Troopers.h"
 #include "GUI/Fuser/ESP/Draw/Camps.h"
 #include "GUI/Fuser/ESP/Draw/Sinners.h"
+#include "GUI/Fuser/ESP/Draw/XpOrbs.h"
 
 bool Query::IsUsingPlayers()
 {
@@ -30,6 +31,13 @@ bool Query::IsUsingCamps()
 bool Query::IsUsingSinners()
 {
 	if (Fuser::bMasterToggle && Draw_Sinners::bMasterToggle) return true;
+
+	return false;
+}
+
+bool Query::IsUsingXpOrbs()
+{
+	if (Fuser::bMasterToggle && Draw_XpOrbs::bMasterToggle) return true;
 
 	return false;
 }
