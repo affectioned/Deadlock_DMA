@@ -146,11 +146,13 @@
     <ClCompile Include="Deadlock\Classes\C_CitadelPlayerPawn.cpp" />
     <ClInclude Include="Deadlock\Classes\C_NPC_Trooper.h" />
     <ClInclude Include="Deadlock\Const\BoneListTypes.hpp" />
+    <ClInclude Include="Deadlock\Const\EntityConfig.h" />
     <ClInclude Include="Deadlock\Const\ETeam.h" />
     <ClInclude Include="Deadlock\Const\HeroEnum.hpp">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClCompile Include="Deadlock\Deadlock.cpp" />
+    <ClCompile Include="Deadlock\DeadlockContext.cpp" />
     <ClCompile Include="Deadlock\Engine\CHandle.cpp" />
     <ClCompile Include="Deadlock\Entity List\EntityList.cpp" />
     <ClCompile Include="Deadlock\Offsets.cpp" />
@@ -187,7 +189,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClInclude Include="Deadlock\Const\HeroSkeletonMap.hpp" />
+    <ClInclude Include="Deadlock\DeadlockContext.h" />
+    <ClInclude Include="Deadlock\GameModules.h" />
     <ClInclude Include="DMA\DMA Thread.h" />
+    <ClInclude Include="DMA\IGameContext.h" />
     <ClInclude Include="DMA\Input Manager.h" />
     <ClInclude Include="DMA\ScatterRead.h" />
     <ClInclude Include="DMA\SigScan.h" />

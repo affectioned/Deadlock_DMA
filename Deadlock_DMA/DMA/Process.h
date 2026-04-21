@@ -1,11 +1,5 @@
 #pragma once
 
-namespace ConstStrings
-{
-	const std::string Game = "deadlock.exe";
-	const std::string Client = "client.dll";
-}
-
 class Process
 {
 private:
@@ -14,23 +8,27 @@ private:
 	std::unordered_map<std::string, size_t>    m_ModuleSizes{};
 
 public:
-	bool GetProcessInfo(const std::string& ProcessName, DMA_Connection* Conn);
-	const uintptr_t GetBaseAddress() const;
-	const uintptr_t GetClientBase() const;
-	const size_t    GetClientSize() const;
-	const DWORD GetPID() const;
-	const uintptr_t GetModuleAddress(const std::string& ModuleName);
+	// Blocks until the process is found, then resolves every module in moduleNames.
+	bool GetProcessInfo(const std::string& processName,
+	                    const std::vector<std::string>& moduleNames,
+	                    DMA_Connection* conn);
+
+	// Returns 0 if name was not in moduleNames at init time.
+	uintptr_t GetModuleBase(const std::string& name) const;
+	size_t    GetModuleSize(const std::string& name) const;
+	DWORD     GetPID() const;
 
 private:
-	bool PopulateModules(DMA_Connection* Conn);
+	bool PopulateModules(const std::vector<std::string>& names, DMA_Connection* conn);
 
 public:
-	template<typename T> inline T ReadMem(DMA_Connection* Conn, uintptr_t Address)
+	template<typename T>
+	T ReadMem(DMA_Connection* conn, uintptr_t address)
 	{
-		T Buffer{};
-		ScatterRead sr(Conn->GetHandle(), m_PID);
-		sr.Add(Address, &Buffer);
+		T buf{};
+		ScatterRead sr(conn->GetHandle(), m_PID);
+		sr.Add(address, &buf);
 		sr.Execute();
-		return Buffer;
+		return buf;
 	}
 };

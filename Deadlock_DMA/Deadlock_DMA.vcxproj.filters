@@ -39,9 +39,6 @@
     <ClCompile Include="..\Dependencies\ImGui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Dependencies\ImGui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Dependencies\ImGui\imgui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,16 +60,10 @@
     <ClCompile Include="GUI\Fuser\ESP\ESP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Deadlock\Classes\CBaseEntity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GUI\Color Picker\Color Picker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Deadlock\Engine\CHandle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Deadlock\Classes\CCitadelPlayerPawn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GUI\Debug GUI\Player List\Player List.cpp">
@@ -88,9 +79,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Deadlock\Offsets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dependencies\Catch\3.11.0\catch_amalgamated.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DMA\DMA Thread.cpp">
@@ -141,6 +129,18 @@
     <ClCompile Include="DMA\SigScan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Deadlock\Classes\C_BaseEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Deadlock\Classes\C_CitadelPlayerPawn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Fuser\ESP\Draw\XpOrbs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Deadlock\DeadlockContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -161,16 +161,7 @@
     <ClInclude Include="Deadlock\Entity List\EntityList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Deadlock\Classes\CBaseEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Deadlock\Classes\CCitadelPlayerController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Deadlock\Classes\CEntityListEntry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Deadlock\Classes\CCitadelPlayerPawn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deadlock\Engine\Vector3.h">
@@ -251,27 +242,6 @@
     <ClInclude Include="GUI\Radar\Radar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tests\All Tests.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tests\Class Tests\Class Tests.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tests\Class Tests\Test CBaseEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tests\Class Tests\Test CCitadelPlayerController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tests\Class Tests\Test CCitadelPlayerPawn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Deadlock\Classes\CTrooperEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tests\Class Tests\Test CTrooperEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DMA\DMA Thread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -333,6 +303,36 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DMA\SigScan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Classes\C_NPC_Trooper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMA\ScatterRead.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Fuser\ESP\Draw\XpOrbs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Classes\C_BaseEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Classes\C_CitadelPlayerPawn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Classes\CEntityIdentity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMA\IGameContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\DeadlockContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\GameModules.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Const\EntityConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

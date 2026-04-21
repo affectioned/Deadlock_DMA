@@ -1,14 +1,11 @@
 #include "pch.h"
 #include <filesystem>
 
-#include "Deadlock/Deadlock.h"
 #include "GUI/Main Window/Main Window.h"
-
 #include "DMA/DMA Thread.h"
-
 #include "GUI/Config/Config.h"
-
 #include "Makcu/MyMakcu.h"
+#include "Deadlock/DeadlockContext.h"
 
 std::atomic<bool> bRunning{ true };
 
@@ -29,6 +26,8 @@ int main()
 	MainWindow::Initialize();
 
 	MyMakcu::Initialize();
+
+	g_GameContext = new DeadlockContext();
 
 	std::thread DMAThread(DMA_Thread_Main);
 

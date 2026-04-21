@@ -40,7 +40,7 @@ void EntityList::UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::GetEntitySystemAddress(DMA_Connection* Conn, Process* Proc)
 {
-	uintptr_t EntitySystemPointer = Proc->GetModuleAddress("client.dll") + Offsets::GameEntitySystem;
+	uintptr_t EntitySystemPointer = Proc->GetModuleBase("client.dll") + Offsets::GameEntitySystem;
 	uintptr_t LatestAddr = Proc->ReadMem<uintptr_t>(Conn, EntitySystemPointer);
 
 	if (LatestAddr == m_EntitySystem_Address) return;

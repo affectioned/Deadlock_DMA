@@ -3,6 +3,8 @@
 #include <chrono>
 #include <string>
 #include <print>
+#include <vector>
+#include <functional>
 #include <unordered_map>
 #include <array>
 #include <memory>
@@ -32,6 +34,3 @@
 
 #include "Deadlock/Offsets.h"
 #include "Deadlock/Deadlock.h"
-
-inline constexpr size_t MAX_ENTITIES = 512;
-inline constexpr size_t MAX_ENTITY_LISTS = 64;

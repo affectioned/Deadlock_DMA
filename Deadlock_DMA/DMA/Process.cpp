@@ -1,24 +1,24 @@
 #include "pch.h"
 
 #include "DMA.h"
-
 #include "Process.h"
 
-bool Process::GetProcessInfo(const std::string& ProcessName, DMA_Connection* Conn)
+bool Process::GetProcessInfo(const std::string& processName,
+                              const std::vector<std::string>& moduleNames,
+                              DMA_Connection* conn)
 {
-
-	std::println("Waiting for process {}..", ProcessName);
+	std::println("Waiting for process {}..", processName);
 
 	m_PID = 0;
 
 	while (true)
 	{
-		VMMDLL_PidGetFromName(Conn->GetHandle(), ProcessName.c_str(), &m_PID);
+		VMMDLL_PidGetFromName(conn->GetHandle(), processName.c_str(), &m_PID);
 
 		if (m_PID)
 		{
-			std::println("Found process `{}` with PID {}", ProcessName, m_PID);
-			PopulateModules(Conn);
+			std::println("Found process `{}` with PID {}", processName, m_PID);
+			PopulateModules(moduleNames, conn);
 			break;
 		}
 
@@ -28,65 +28,57 @@ bool Process::GetProcessInfo(const std::string& ProcessName, DMA_Connection* Con
 	return true;
 }
 
-const uintptr_t Process::GetBaseAddress() const
+uintptr_t Process::GetModuleBase(const std::string& name) const
 {
-	using namespace ConstStrings;
-	return m_Modules.at(Game);
+	auto it = m_Modules.find(name);
+	return it != m_Modules.end() ? it->second : 0;
 }
 
-const uintptr_t Process::GetClientBase() const
+size_t Process::GetModuleSize(const std::string& name) const
 {
-	using namespace ConstStrings;
-	return m_Modules.at(Client);
+	auto it = m_ModuleSizes.find(name);
+	return it != m_ModuleSizes.end() ? it->second : 0;
 }
 
-const size_t Process::GetClientSize() const
-{
-	using namespace ConstStrings;
-	return m_ModuleSizes.at(Client);
-}
-
-const DWORD Process::GetPID() const
+DWORD Process::GetPID() const
 {
 	return m_PID;
 }
 
-const uintptr_t Process::GetModuleAddress(const std::string& ModuleName)
+bool Process::PopulateModules(const std::vector<std::string>& names, DMA_Connection* conn)
 {
-	return m_Modules.at(ModuleName);
-}
+	auto handle = conn->GetHandle();
 
-bool Process::PopulateModules(DMA_Connection* Conn)
-{
-
-	using namespace ConstStrings;
-
-	auto Handle = Conn->GetHandle();
-
-	while (!m_Modules[Game] || !m_Modules[Client])
+	auto allResolved = [&]
 	{
-		if (!m_Modules[Game])
-			m_Modules[Game] = VMMDLL_ProcessGetModuleBaseU(Handle, this->m_PID, Game.c_str());
+		for (const auto& name : names)
+			if (!m_Modules[name]) return false;
+		return true;
+	};
 
-		if (!m_Modules[Client])
-			m_Modules[Client] = VMMDLL_ProcessGetModuleBaseU(Handle, this->m_PID, Client.c_str());
+	while (!allResolved())
+	{
+		for (const auto& name : names)
+		{
+			if (!m_Modules[name])
+				m_Modules[name] = VMMDLL_ProcessGetModuleBaseU(handle, m_PID, name.c_str());
+		}
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
-	// Populate sizes for modules we care about
-	for (const auto& name : { Game, Client })
+	for (const auto& name : names)
 	{
 		PVMMDLL_MAP_MODULEENTRY info = nullptr;
-		if (VMMDLL_Map_GetModuleFromNameU(Handle, m_PID, const_cast<LPSTR>(name.c_str()), &info, VMMDLL_MODULE_FLAG_NORMAL))
+		if (VMMDLL_Map_GetModuleFromNameU(handle, m_PID, const_cast<LPSTR>(name.c_str()), &info, VMMDLL_MODULE_FLAG_NORMAL))
 		{
 			m_ModuleSizes[name] = info->cbImageSize;
 			VMMDLL_MemFree(info);
 		}
 	}
 
-	for (auto& [Name, Address] : m_Modules)
-		std::println("Module `{}` at 0x{:X} size 0x{:X}", Name, Address, m_ModuleSizes[Name]);
+	for (const auto& [name, addr] : m_Modules)
+		std::println("Module `{}` at 0x{:X} size 0x{:X}", name, addr, m_ModuleSizes[name]);
 
-	return false;
+	return true;
 }

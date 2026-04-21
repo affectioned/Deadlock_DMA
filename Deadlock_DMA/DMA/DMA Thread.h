@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DMA/DMA.h"
+#include "IGameContext.h"
 
 template <typename T, typename F>
 class CTimer
@@ -21,5 +21,9 @@ private:
 	F m_Function{};
 	std::chrono::steady_clock::time_point m_LastExecutionTime{};
 };
+
+// Type-erased timer for storing mixed-interval timers in a container.
+// All intervals are expressed in milliseconds.
+using Timer = CTimer<std::chrono::milliseconds, std::function<void()>>;
 
 void DMA_Thread_Main();

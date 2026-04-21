@@ -1,8 +1,8 @@
 #include "pch.h"
 
 #include "Offsets.h"
-
 #include "Deadlock.h"
+#include "GameModules.h"
 
 // Resolve a RIP-relative MOV/LEA reference and return the module-relative offset.
 // sigHit   – absolute address of the first byte of the matched instruction
@@ -42,8 +42,8 @@ static void ResolveOffset(DMA_Connection* Conn, DWORD pid, uintptr_t clientBase,
 bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 {
 	DWORD pid = Deadlock::Proc().GetPID();
-	uintptr_t clientBase = Deadlock::Proc().GetClientBase();
-	uintptr_t clientEnd  = clientBase + Deadlock::Proc().GetClientSize();
+	uintptr_t clientBase = Deadlock::Proc().GetModuleBase(GameModules::ClientDll);
+	uintptr_t clientEnd  = clientBase + Deadlock::Proc().GetModuleSize(GameModules::ClientDll);
 
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
 		"GameEntitySystem", Offsets::GameEntitySystem, 0x31887F8,

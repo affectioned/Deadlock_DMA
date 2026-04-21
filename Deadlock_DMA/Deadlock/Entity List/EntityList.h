@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Deadlock/Const/EntityConfig.h"
 #include "Deadlock/Classes/CEntityIdentity.h"
 #include "Deadlock/Classes/Classes.h"
 

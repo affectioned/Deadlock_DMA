@@ -1,23 +1,17 @@
 #include "pch.h"
 
 #include "Deadlock.h"
-
+#include "GameModules.h"
 #include "Entity List/EntityList.h"
-
 #include "GUI/Fuser/Fuser.h"
-
-#include "DMA/Input Manager.h"
 
 #include <numbers>
 
 bool Deadlock::Initialize(DMA_Connection* Conn)
 {
-	if (c_keys::InitKeyboard(Conn))
-		std::println("[+] Target PC keyboard connected");
-
 	auto& Process = Deadlock::Proc();
 
-	Process.GetProcessInfo("deadlock.exe", Conn);
+	Process.GetProcessInfo(GameModules::ProcessName, GameModules::ModuleList(), Conn);
 
 	Offsets::ResolveOffsets(Conn);
 
@@ -47,7 +41,7 @@ Process& Deadlock::Proc()
 void Deadlock::UpdateViewMatrix(DMA_Connection* Conn)
 {
 	std::scoped_lock lock(ViewMatrixMutex);
-	uintptr_t ViewMatrixAddress = Proc().GetClientBase() + Offsets::ViewMatrix;
+	uintptr_t ViewMatrixAddress = Proc().GetModuleBase(GameModules::ClientDll) + Offsets::ViewMatrix;
 	m_ViewMatrix = Proc().ReadMem<Matrix44>(Conn, ViewMatrixAddress);
 }
 
@@ -89,7 +83,7 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 {
 	std::scoped_lock Lock(m_LocalAddressMutex);
 
-	uintptr_t LocalPlayerControllerAddress = Proc().GetClientBase() + Offsets::LocalController;
+	uintptr_t LocalPlayerControllerAddress = Proc().GetModuleBase(GameModules::ClientDll) + Offsets::LocalController;
 	m_LocalPlayerControllerAddress = Proc().ReadMem<uintptr_t>(Conn, LocalPlayerControllerAddress);
 	std::println("Local Player Controller Address: 0x{:X}", m_LocalPlayerControllerAddress);
 
@@ -107,7 +101,7 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 
 void Deadlock::GetPredictionAddress(DMA_Connection* Conn)
 {
-	uintptr_t PredictionPtrAddress = Proc().GetClientBase() + Offsets::Prediction;
+	uintptr_t PredictionPtrAddress = Proc().GetModuleBase(GameModules::ClientDll) + Offsets::Prediction;
 	m_PredictionAddress = Proc().ReadMem<uintptr_t>(Conn, PredictionPtrAddress);
 
 	std::println("Prediction Address: 0x{:X}", m_PredictionAddress);
