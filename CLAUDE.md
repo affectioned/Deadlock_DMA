@@ -22,15 +22,19 @@ msbuild Deadlock_DMA.sln /p:Configuration=Release /p:Platform=x64
 The codebase has three layers that map cleanly to directories:
 
 ### 1. DMA Layer (`DMA/`)
-Low-level memory access via MemProcFS (VMMDLL).
+Low-level memory access via MemProcFS (VMMDLL). Subfolders:
 
-**`ScatterRead.h`** — RAII wrapper around `VMMDLL_SCATTER_HANDLE`. Non-copyable; one instance per thread. Methods: `Add<T>(addr, T*)`, `AddRaw(addr, cb, void*)`, `Execute()`, `Clear()`. Include order in `pch.h` matters: `ScatterRead.h` must come before `Process.h`.
+**`Memory/ScatterRead.h`** — RAII wrapper around `VMMDLL_SCATTER_HANDLE`. Non-copyable; one instance per thread. Methods: `Add<T>(addr, T*)`, `AddRaw(addr, cb, void*)`, `Execute()`, `Clear()`. Include order in `pch.h` matters: `ScatterRead.h` must come before `Process.h`.
 
-**`Process.h`** — provides `ReadMem<T>()` for single-value reads (creates a temporary `ScatterRead` internally). Use scatter batching for any per-frame work.
+**`Memory/Process.h`** — provides `ReadMem<T>()` for single-value reads (creates a temporary `ScatterRead` internally). Use scatter batching for any per-frame work.
 
-**`SigScan.h/cpp`** — `FindSignature()` scans a byte range for a pattern. `IsAddressReadable()` probes a single byte via `VMMDLL_MemReadEx` — used to validate resolved RIP-relative addresses. `ResolveOffset()` in `Offsets.cpp` combines scan + RIP resolve + fallback without exceptions (MemProcFS API uses return values, not exceptions).
+**`Memory/SigScan.h/cpp`** — `FindSignature()` scans a byte range for a pattern. `IsAddressReadable()` probes a single byte via `VMMDLL_MemReadEx` — used to validate resolved RIP-relative addresses. `ResolveOffset()` in `Offsets.cpp` combines scan + RIP resolve + fallback without exceptions (MemProcFS API uses return values, not exceptions).
 
-**`DMA Thread.h/cpp`** — main acquisition loop on a dedicated thread. One persistent `ScatterRead sr` is created once and reused. The loop runs every 1 ms with no rate-limiting: all updates fire every tick. `Keybinds::OnDMAFrame` is called last and fires the aimbot if active.
+**`Input/Input Manager.h/cpp`** — reads keyboard state from the target process via `gafAsyncKeyStateExport`. `c_keys::InitKeyboard()` resolves the export address; `c_keys::IsKeyDown()` reads bitfield state from target memory.
+
+**`Logging/Log.h/cpp`** — thread-safe logger. Always use `Log::Info`, `Log::Warn`, `Log::Error`, `Log::Debug` instead of `std::println` directly. `DbgLog(...)` expands to `Log::Debug(...)` when `DBGPRINT` is defined, no-op in Release. `Log::Init(path)` opens the log file (called once from `main`). **Never use `std::println` or `DbgPrintln` — always use the Log class.**
+
+**`DMA Thread.h/cpp`** — main acquisition loop on a dedicated thread. One persistent `ScatterRead sr` is created once and reused. The loop runs every 1 ms; individual update functions are gated by `CTimer` intervals. `Keybinds::OnDMAFrame` is called last and fires the aimbot if active.
 
 ### 2. Game Layer (`Deadlock/`)
 Translates raw memory into game objects. All class and field names match the exact Valve/Source 2 SDK names from the schema dump at `C:\Users\admin\Downloads\schema-dump\deadlock\`.
@@ -93,4 +97,4 @@ ImGui + DirectX 11 overlay. The main GUI thread calls `MainWindow::OnFrame()` ea
 
 **Player health** — player health/max health come from `PlayerDataGlobal_t` (inline struct at `controller + 0x8F0`), not from `C_BaseEntity::m_iHealth`. The pawn's engine-level health field is unreliable for players. NPC health (troopers, bosses) uses `C_BaseEntity::m_iHealth` (0x354) and `m_iMaxHealth` (0x350) directly.
 
-**DMA thread timer intervals** — `ViewMatrix`: 2ms, `Yaw`: 10ms, `ServerTime`: 1s, `LocalControllerAddress`: 15s, `FullTrooper`: 3s, `QuickTrooper`: 16ms, `FullPawn`: 2s, `QuickPawn`: 8ms, `FullMonsterCamp`: 2s, `QuickMonsterCamp`: 100ms, `FullController`: 2s, `QuickController`: 150ms, `FullSinner`: 1s, `FullXpOrb`: 500ms, `QuickXpOrb`: 16ms, `FullUpdate`: 5s, `Keybinds`: 5ms. Verbose per-refresh log lines use `DbgPrintln` (no-op in Release) to avoid I/O pressure.
+**DMA thread timer intervals** — `ViewMatrix`: 2ms, `Yaw`: 10ms, `ServerTime`: 1s, `LocalControllerAddress`: 15s, `FullTrooper`: 3s, `QuickTrooper`: 16ms, `FullPawn`: 2s, `QuickPawn`: 8ms, `FullMonsterCamp`: 2s, `QuickMonsterCamp`: 100ms, `FullController`: 2s, `QuickController`: 150ms, `FullSinner`: 1s, `FullXpOrb`: 500ms, `QuickXpOrb`: 16ms, `FullUpdate`: 5s, `Keybinds`: 5ms. Verbose per-refresh log lines use `DbgLog` (no-op in Release) to avoid I/O pressure.

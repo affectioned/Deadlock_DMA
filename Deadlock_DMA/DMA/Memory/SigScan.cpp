@@ -35,7 +35,7 @@ std::vector<int> GetPidListFromName(DMA_Connection* Conn, std::string name)
 
 	if (!VMMDLL_ProcessGetInformationAll(Conn->GetHandle(), &process_info, &total_processes))
 	{
-		std::println("[!] Failed to get process list");
+		Log::Warn("[!] Failed to get process list");
 		return list;
 	}
 

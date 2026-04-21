@@ -15,11 +15,10 @@ int main()
 		wchar_t exePath[MAX_PATH]{};
 		GetModuleFileNameW(nullptr, exePath, MAX_PATH);
 		auto logPath = std::filesystem::path(exePath).parent_path() / "deadlock_dma.log";
-		_wfreopen(logPath.c_str(), L"w", stdout);
-		setvbuf(stdout, nullptr, _IONBF, 0);
+		Log::Init(logPath.wstring());
 	}
 
-	std::println("Hello, DEADLOCK_DMA!");
+	Log::Info("Hello, DEADLOCK_DMA!");
 
 	Config::LoadConfig("default");
 
@@ -31,7 +30,7 @@ int main()
 
 	std::thread DMAThread(DMA_Thread_Main);
 
-	std::println("Press END to exit...");
+	Log::Info("Press END to exit...");
 
 	while (bRunning)
 	{

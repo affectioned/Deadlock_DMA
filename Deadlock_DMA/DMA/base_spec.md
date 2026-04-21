@@ -1,6 +1,6 @@
 # DMA Client Base — Specification
 
-This document specifies the compile-ready base layer for a DMA client. The base is intentionally game-agnostic. Game-specific logic (offsets, entity types, game state) plugs in on top through defined interfaces. Every section describes the exact API contract that must be satisfied for the project to compile.
+This document specifies the compile-ready base layer for a DMA client. The base is intentionally game-agnostic. Game-specific logic (offsets, object types, game state) plugs in on top through defined interfaces. Every section describes the exact API contract that must be satisfied for the project to compile.
 
 ---
 
@@ -8,29 +8,38 @@ This document specifies the compile-ready base layer for a DMA client. The base 
 
 ```
 DMA/
-  DMA.h / DMA.cpp                   — VMM connection singleton
-  IGameContext.h                     — IGameContext interface + g_GameContext extern
-  Process.h / Process.cpp            — process + module discovery, single-value reads
-  ScatterRead.h                      — RAII scatter read wrapper (header-only)
-  SigScan.h / SigScan.cpp            — byte-pattern scan, address probe
-  DMA Thread.h / DMA Thread.cpp      — CTimer, Timer alias, acquisition loop entry point
-  Input Manager.h / Input Manager.cpp — kernel keystroke reader (gafAsyncKeyState)
+  DMA.h / DMA.cpp                      — VMM connection singleton
+  IGameContext.h                       — IGameContext interface + g_GameContext extern
+  DMA Thread.h / DMA Thread.cpp        — CTimer, Timer alias, acquisition loop entry point
 
-Deadlock/                            — game layer (not part of the base)
+  Logging/
+    Log.h / Log.cpp                    — thread-safe logger (console + file)
+
+  Memory/
+    ScatterRead.h                      — RAII scatter read wrapper (header-only)
+    Process.h / Process.cpp            — process + module discovery, single-value reads
+    SigScan.h / SigScan.cpp            — byte-pattern scan, address probe
+
+  Input/
+    Input Manager.h / Input Manager.cpp — kernel keystroke reader (gafAsyncKeyState)
+
+Game/                                — game layer (not part of the base, rename per project)
   GameModules.h                      — process name + module list
-  DeadlockContext.h / .cpp           — concrete IGameContext, owns all timers
-  Const/EntityConfig.h               — MAX_ENTITIES / MAX_ENTITY_LISTS
+  GameContext.h / .cpp               — concrete IGameContext, owns timer threads
+  Const/Config.h                     — game-specific constants (object pool sizes, loop bounds)
 
 main.cpp                             — entry point, thread launch, main loop
 pch.h / pch.cpp                      — precompiled header
 ```
+
+The `Game/` directory name is a placeholder. Rename it to match your target (e.g. `Deadlock/`, `Fortnite/`, `Valorant/`). The base (`DMA/`, `main.cpp`, `pch.h`) requires **zero changes** between games.
 
 ---
 
 ## pch.h
 
 ### Purpose
-Single-include precompiled header. Everything every TU needs lives here.
+Single-include precompiled header. Everything every translation unit needs lives here.
 
 ### Required contents
 ```cpp
@@ -50,13 +59,6 @@ Single-include precompiled header. Everything every TU needs lives here.
 #define NOMINMAX
 #include <algorithm>
 
-// Debug-only print macro — no-op in Release to eliminate I/O pressure.
-#ifdef DBGPRINT
-#define DbgPrintln(...) std::println(__VA_ARGS__)
-#else
-#define DbgPrintln(...)
-#endif
-
 #include "vmmdll.h"
 
 #include <d3d11.h>
@@ -66,16 +68,84 @@ Single-include precompiled header. Everything every TU needs lives here.
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
-// DMA layer — include order is mandatory: DMA → ScatterRead → Process.
+// DMA layer — include order is mandatory: Log → DMA → Memory/ScatterRead → Memory/Process.
+#include "DMA/Logging/Log.h"
 #include "DMA/DMA.h"
-#include "DMA/ScatterRead.h"
-#include "DMA/Process.h"
+#include "DMA/Memory/ScatterRead.h"
+#include "DMA/Memory/Process.h"
 ```
 
 ### Notes
 - Do **not** include any game-layer headers here. The base must compile without a game layer present.
-- `MAX_ENTITIES` / `MAX_ENTITY_LISTS` are game-specific — they live in `Deadlock/Const/EntityConfig.h`, not here.
+- Game-specific constants (entity limits, pool sizes, etc.) belong in the game layer, not here.
 - Every `.cpp` file in the project must `#include "pch.h"` as its **absolute first line**. This is an MSVC precompiled header requirement — any include before `pch.h` breaks the PCH and produces cryptic compile errors.
+- `DbgLog(...)` (defined in `DMA/Log.h`) is the debug-only print macro. It is a no-op in Release builds.
+
+---
+
+## Log.h / Log.cpp
+
+### Purpose
+Thread-safe logger. Writes every message to both the console (`stdout`) and a log file next to the exe. All other code calls `Log::Info`, `Log::Warn`, `Log::Error`, or `Log::Debug` instead of `std::println` directly.
+
+### Required project settings
+- **C++ Language Standard:** `/std:c++latest` (or `/std:c++23`). Required for `std::format_string`, `std::println`, and `std::format` with the argument-forwarding signatures used in `Log.h`.
+- **Preprocessor:** define `DBGPRINT` in Debug configurations to enable `DbgLog(...)`. In Release it is a no-op with zero code generated.
+
+### API contract
+```cpp
+class Log
+{
+public:
+    // Call once at startup. Opens (or creates) the log file at logPath.
+    // Must be called before any Info/Warn/Error/Debug calls.
+    static void Init(const std::wstring& logPath);
+
+    // Formatted log helpers — same syntax as std::format / std::println.
+    template<typename... Args>
+    static void Info (std::format_string<Args...> fmt, Args&&... args);
+
+    template<typename... Args>
+    static void Warn (std::format_string<Args...> fmt, Args&&... args);
+
+    template<typename... Args>
+    static void Error(std::format_string<Args...> fmt, Args&&... args);
+
+    template<typename... Args>
+    static void Debug(std::format_string<Args...> fmt, Args&&... args);
+
+private:
+    static void Write(std::string_view prefix, std::string msg);
+};
+
+// DbgLog(...) — expands to Log::Debug(...) when DBGPRINT is defined; no-op otherwise.
+#ifdef DBGPRINT
+#define DbgLog(...) Log::Debug(__VA_ARGS__)
+#else
+#define DbgLog(...)
+#endif
+```
+
+### Output format
+Each line is prefixed with a fixed-width level tag:
+```
+[INFO] message
+[WARN] message
+[ERR ] message
+[DBG ] message    (DBGPRINT builds only)
+```
+
+### Implementation rules
+- A single `static std::mutex` serialises all writes — safe to call from both the DMA thread and the GUI thread.
+- `Init` opens the file with `std::ios::trunc` so each run starts a fresh log.
+- `Write` calls `std::println` for the console and `ofstream <<` + `flush()` for the file. Both happen inside the lock.
+- `<fstream>` is only included in `Log.cpp`, not in `Log.h`.
+- `Log.h` includes `<format>` and `<string>` for `std::format_string` and `std::string`. All other STL headers come from `pch.h`.
+
+### Notes
+- **Always use the `Log` class for all output.** Never call `std::println`, `printf`, `std::cout`, or any other print function directly anywhere in the codebase. Every message — startup, status, warning, error, debug — must go through `Log::Info`, `Log::Warn`, `Log::Error`, `Log::Debug`, or `DbgLog`. This keeps output consistent, thread-safe, and always written to the log file.
+- Do **not** redirect `stdout` with `_wfreopen`. `Log::Init` opens its own file handle independently.
+- Messages emitted before `Log::Init` returns appear on the console only — acceptable for the very first startup line.
 
 ---
 
@@ -132,7 +202,7 @@ struct IGameContext
     // Return false to abort — sets bRunning = false and exits the thread.
     virtual bool Initialize(DMA_Connection* conn) = 0;
 
-    // Called every tick (~1 ms). Tick all timers here.
+    // Called every tick (nominally 1 ms). Tick your CTimers here.
     virtual void Tick(DMA_Connection* conn,
                       std::chrono::steady_clock::time_point now) = 0;
 
@@ -144,7 +214,6 @@ extern IGameContext* g_GameContext;
 ```
 
 ### Notes
-- `Shutdown` is intentionally absent. The interface only deals with initialization and per-tick work. There is nothing to clean up when all state lives in timers.
 - `g_GameContext` is **declared** (`extern`) in `IGameContext.h` and **defined** (`= nullptr`) in `DMA Thread.cpp`. `main.cpp` assigns it before launching the thread. Do not define it anywhere else or you will get a duplicate symbol linker error.
 
 ---
@@ -170,7 +239,7 @@ public:
     template<typename T>
     void Add(uintptr_t addr, T* out);
 
-    // Queue a raw byte-range read (bone arrays, strings, bulk structs).
+    // Queue a raw byte-range read (arrays, strings, bulk structs).
     void AddRaw(uintptr_t addr, DWORD cb, void* out);
 
     // Fire all queued reads in one DMA transaction.
@@ -238,7 +307,7 @@ The module name strings are owned entirely by the game layer (`GameModules.h`). 
 
 ### Implementation rules
 - `GetProcessInfo` polls with a 1-second sleep until the PID is non-zero.
-- `PopulateModules` polls until every requested module resolves; some DLLs load after the process starts.
+- `PopulateModules` polls until every requested module resolves; some modules load after the process starts.
 - `ReadMem<T>` creates a temporary `ScatterRead` internally. Only use it for one-off reads not on the hot path. Per-frame reads must use a persistent `ScatterRead`.
 
 ---
@@ -305,9 +374,9 @@ private:
 using Timer = CTimer<std::chrono::milliseconds, std::function<void()>>;
 ```
 
-Use `CTimer<T, F>` directly when the type can be deduced (e.g. a single named timer). Use `Timer` when you need to store multiple timers in a `std::vector<Timer>`, as `DeadlockContext` does.
+Use `CTimer<T, F>` directly when the type can be deduced (e.g. a single named timer). Use `Timer` when you need to store multiple timers in a `std::vector<Timer>`, as the concrete `GameContext` does.
 
-`DMA Thread.h` must include `IGameContext.h` at the top so that any file including `DMA Thread.h` (e.g. `DeadlockContext.h`) also gets the `Timer` alias and the `g_GameContext` extern in one include.
+`DMA Thread.h` must include `IGameContext.h` at the top so that any file including `DMA Thread.h` (e.g. `GameContext.h`) also gets the `Timer` alias and the `g_GameContext` extern in one include.
 
 ### DMA_Thread_Main
 `DMA Thread.cpp` must contain:
@@ -393,7 +462,7 @@ private:
 ## main.cpp
 
 ### Purpose
-Entry point. Sets up logging, initialises subsystems in order, sets `g_GameContext`, launches the DMA thread, and runs the GUI main loop.
+Entry point. Opens the log, initialises subsystems in order, sets `g_GameContext`, launches the DMA thread, and runs the GUI main loop.
 
 ### Required implementation
 ```cpp
@@ -403,8 +472,7 @@ Entry point. Sets up logging, initialises subsystems in order, sets `g_GameConte
 #include "GUI/Main Window/Main Window.h"
 #include "DMA/DMA Thread.h"
 #include "GUI/Config/Config.h"
-#include "Makcu/MyMakcu.h"
-#include "Deadlock/DeadlockContext.h"  // swap this for another game's context
+#include "Game/GameContext.h"   // swap for your concrete IGameContext
 
 std::atomic<bool> bRunning{ true };
 
@@ -413,22 +481,20 @@ int main()
     {
         wchar_t exePath[MAX_PATH]{};
         GetModuleFileNameW(nullptr, exePath, MAX_PATH);
-        auto logPath = std::filesystem::path(exePath).parent_path() / "deadlock_dma.log";
-        _wfreopen(logPath.c_str(), L"w", stdout);
-        setvbuf(stdout, nullptr, _IONBF, 0);
+        auto logPath = std::filesystem::path(exePath).parent_path() / "client.log";
+        Log::Init(logPath.wstring());
     }
 
-    std::println("Hello, DEADLOCK_DMA!");
+    Log::Info("Starting up...");
 
     Config::LoadConfig("default");
     MainWindow::Initialize();
-    MyMakcu::Initialize();
 
-    g_GameContext = new DeadlockContext();
+    g_GameContext = new GameContext();
 
     std::thread DMAThread(DMA_Thread_Main);
 
-    std::println("Press END to exit...");
+    Log::Info("Press END to exit...");
     while (bRunning)
     {
         if (GetAsyncKeyState(VK_END) & 0x1) bRunning = false;
@@ -443,116 +509,179 @@ int main()
 ```
 
 ### Global ownership
-- `std::atomic<bool> bRunning{ true }` — **defined in `main.cpp`**, referenced as `extern` in `DMA Thread.cpp`. Controls the acquisition loop and the main window loop. Set to `false` to trigger shutdown from either thread.
+- `std::atomic<bool> bRunning{ true }` — **defined in `main.cpp`**, referenced as `extern` in `DMA Thread.cpp`. Controls both the acquisition loop and the main window loop. Set to `false` to trigger shutdown from either thread.
 
 ### Startup order (mandatory)
-1. Log redirection — must be first.
+1. `Log::Init` — must be first. Opens the log file before any other subsystem emits messages.
 2. `Config::LoadConfig` — config values must be ready before window/renderer init.
 3. `MainWindow::Initialize` — creates the D3D11 device and ImGui context.
-4. Mouse emulation init (if applicable).
+4. Any additional peripheral init (mouse emulation, etc.).
 5. `g_GameContext = new ...` — must be set before the thread starts.
 6. `std::thread(DMA_Thread_Main)` — DMA thread starts here.
-7. Main loop — `MainWindow::OnFrame()` each iteration, END key check.
+7. Main loop — `MainWindow::OnFrame()` each iteration, exit key check.
 8. `join()` — waits for `EndConnection()` to complete.
 
 ---
 
 ## Game Layer — What to Implement
 
-These files are **not** part of the base. They are required for the project to link.
+These files are **not** part of the base. They are required for the project to link. Organise them under your game directory (e.g. `Game/`, `Deadlock/`, `Fortnite/`).
 
 ### GameModules.h
-Defines the process name and the module list passed to `Process::GetProcessInfo`.
+Defines the process name and the list of modules passed to `Process::GetProcessInfo`. All name strings live here; `Process` has no hardcoded values.
 
 ```cpp
 namespace GameModules
 {
-    inline constexpr const char* ProcessName = "deadlock.exe";
-    inline constexpr const char* ClientDll   = "client.dll";
+    inline constexpr const char* ProcessName = "game.exe";
 
+    // Add one entry per module whose base address you need.
     inline std::vector<std::string> ModuleList()
     {
-        return { ProcessName, ClientDll };
+        return { ProcessName };
     }
 }
 ```
 
-Add entries to `ModuleList()` for any additional DLLs you need base addresses for.
+Common patterns by engine:
+- **Source 2** — `"game.exe"` + `"client.dll"` (main game logic lives in client.dll)
+- **Unreal Engine** — typically just `"game.exe"` (all game code is in the exe or a single shipping DLL)
+- **Unity / custom** — varies; add whatever modules your offset resolution needs
 
-### Const/EntityConfig.h
-Engine-level entity system constants. Values are Source 2 / Deadlock-specific.
+### Const/Config.h
+Game-specific constants used as loop bounds and array sizes throughout the game layer. Every game needs at least the maximum number of objects the engine can hold in a single iteration pass — without this the object-list reading loop has no upper bound.
 
 ```cpp
-inline constexpr size_t MAX_ENTITIES     = 512;
-inline constexpr size_t MAX_ENTITY_LISTS = 64;
+// Game/Const/Config.h
+// Values are engine-specific. Check the SDK or reverse the entity system to find them.
+
+inline constexpr size_t MAX_ACTORS      = 2048;  // upper bound for a single object-list pass
+inline constexpr size_t MAX_ACTOR_LISTS = 64;    // number of sub-lists (Source 2 only)
 ```
 
-### DeadlockContext : IGameContext
-Concrete context. `Initialize` calls game-state init and registers all timers. `Tick` calls `t.Tick(now)` on each. Uses `std::vector<Timer>` (`Timer` = `CTimer<milliseconds, function<void()>>`).
+Common values by engine:
+
+| Engine        | Constant           | Typical value |
+|---------------|--------------------|---------------|
+| Source 2      | `MAX_ENTITIES`     | 512 – 8192    |
+| Source 2      | `MAX_ENTITY_LISTS` | 64            |
+| Unreal Engine | `MAX_UOBJECTS`     | 65536+        |
+| Unity IL2CPP  | `MAX_OBJECTS`      | varies        |
+
+Do **not** put these constants in `pch.h`. They belong in the game layer only.
+
+### GameContext : IGameContext
+Concrete context. `Initialize` calls game-state init and registers all `CTimer`s. `Tick` fires each timer every millisecond.
 
 ```cpp
-class DeadlockContext : public IGameContext
+class GameContext : public IGameContext
 {
 public:
     bool Initialize(DMA_Connection* conn) override;
-    void Tick(DMA_Connection* conn, std::chrono::steady_clock::time_point now) override;
+    void Tick(DMA_Connection* conn, std::chrono::steady_clock::time_point now) override
+    {
+        for (auto& t : m_Timers) t.Tick(now);
+    }
 private:
-    std::vector<Timer> m_Timers;
+    std::vector<Timer> m_Timers;   // Timer = CTimer<milliseconds, function<void()>>
 };
 ```
 
-### Timer intervals (Deadlock)
-| Timer                  | Interval  |
-|------------------------|-----------|
-| ViewMatrix             | 2 ms      |
-| ClientYaw              | 10 ms     |
-| ServerTime             | 1000 ms   |
-| LocalControllerAddress | 15000 ms  |
-| FullTrooper            | 3000 ms   |
-| QuickTrooper           | 16 ms     |
-| FullPawn               | 2000 ms   |
-| QuickPawn              | 8 ms      |
-| FullMonsterCamp        | 2000 ms   |
-| QuickMonsterCamp       | 100 ms    |
-| FullController         | 2000 ms   |
-| QuickController        | 150 ms    |
-| FullSinner             | 1000 ms   |
-| FullXpOrb              | 500 ms    |
-| QuickXpOrb             | 16 ms     |
-| FullUpdate             | 5000 ms   |
-| Keybinds               | 5 ms      |
+`Initialize` populates `m_Timers` with one entry per game function:
+
+```cpp
+bool GameContext::Initialize(DMA_Connection* conn)
+{
+    if (!GameState::Initialize(conn))
+        return false;
+
+    using ms = std::chrono::milliseconds;
+
+    m_Timers =
+    {
+        { ms(/* TODO */), [conn] { GameState::UpdateViewMatrix(conn); } },
+        { ms(/* TODO */), [conn] { GameState::UpdatePlayers(conn); } },
+        { ms(/* TODO */), [conn] { GameState::FullEntityRebuild(conn); } },
+        // ... one entry per function
+    };
+
+    return true;
+}
+```
+
+#### Timer interval TODO list
+
+Every function registered as a timer needs a tuned interval. Fill these in for your game:
+
+- [ ] **View / camera matrix** — how often the projection matrix must be re-read. Typical: `2`–`8` ms.
+- [ ] **Local player address** — how often to re-resolve the local player pointer. Can be slow; re-read only on respawn or match start. Typical: `5000`–`15000` ms.
+- [ ] **Full actor/entity list rebuild** — scans the engine object list from scratch and re-populates all entity vectors. Expensive; run infrequently. Typical: `1000`–`5000` ms.
+- [ ] **Quick actor update** (positions, health, state) — reads only already-known object addresses; no list scan. Must be fast enough for smooth ESP. Typical: `8`–`16` ms.
+- [ ] **Full NPC / minion refresh** — if the game has NPC types tracked separately from players. Typical: `1000`–`3000` ms.
+- [ ] **Quick NPC update** — position-only pass on known NPC addresses. Typical: `16`–`100` ms.
+- [ ] **Server time / game clock** — how often to sync the server-side game clock. Typical: `500`–`1000` ms.
+- [ ] **Aimbot / keybind poll** — how often to check key state and fire aimbot logic. Must be tight. Typical: `5`–`16` ms.
+- [ ] **Any other game-specific reads** — e.g. item pickups, world state, score. Set intervals based on how quickly the data changes and how stale it can be before it affects gameplay.
+
+Guideline: if a slow timer (> 500 ms) consistently blocks a fast one (< 16 ms), split them into separate `GameContext` implementations chained from the same `IGameContext`, or simply profile and reduce the slow function's work per call.
+
+### Offset resolution
+Resolve dynamic offsets (pointers, globals) at startup using `FindSignature` + a RIP-relative read via `ReadFromPID`. Fall back to a hardcoded RVA when the signature fails. Log both outcomes with `Log::Info` / `Log::Warn` so offset regressions are visible at a glance.
+
+### Object / entity reading
+The multi-stage scatter-read pattern applies regardless of engine:
+1. Enqueue all fields for a batch of objects into a shared `ScatterRead`.
+2. Call `Execute()` once per stage.
+3. Call `Clear()` before enqueuing the next stage.
+
+Never read fields one object at a time on the hot path. Engine-specific differences:
+
+| Engine      | Object list location                        | Notes |
+|-------------|---------------------------------------------|-------|
+| Source 2    | Entity system at a scanned global pointer   | 32–64 entity sublists, each holding `CEntityIdentity` entries |
+| Unreal Engine | `GObjects` (TUObjectArray) / `GWorld`    | Iterate `ObjObjects.Objects` array; filter by class via `ClassPrivate` pointer |
+| Unity IL2CPP | Static field table via metadata           | Walk `Il2CppClass` → static field pointer |
 
 ---
 
 ## Compile Checklist
 
-- [ ] Every `.cpp` file has `#include "pch.h"` as its first line.
+- [ ] Project C++ language standard is set to `/std:c++latest` (C++23). Required for `std::format_string` and `std::println`.
+- [ ] Debug configuration defines the `DBGPRINT` preprocessor symbol to enable `DbgLog(...)`.
+- [ ] Every `.cpp` file has `#include "pch.h"` as its absolute first line.
 - [ ] `pch.h` has no game-layer includes and no game-specific constants.
+- [ ] `pch.h` includes `DMA/Log.h` before `DMA/DMA.h`.
+- [ ] No file calls `std::println` directly — all output goes through `Log::Info`, `Log::Warn`, `Log::Error`, `Log::Debug`, or `DbgLog`.
+- [ ] `DMA/Log.cpp` is added to the project and compiles cleanly.
+- [ ] `Log::Init` is the first call in `main()` before any other subsystem.
 - [ ] `DMA/IGameContext.h` forward-declares `DMA_Connection` instead of including `DMA.h`.
 - [ ] `DMA/DMA Thread.h` includes `IGameContext.h` at the top.
 - [ ] `DMA/DMA Thread.cpp` defines `IGameContext* g_GameContext = nullptr` and `extern std::atomic<bool> bRunning`.
 - [ ] `DMA/DMA Thread.cpp` has `#pragma comment(lib, "Winmm.lib")`.
-- [ ] `DMA/DMA Thread.cpp` has no game-layer includes (`EntityList`, `Deadlock`, etc.).
+- [ ] `DMA/DMA Thread.cpp` has no game-layer includes.
 - [ ] `DMA/Process.h` has no hardcoded module names.
 - [ ] `DMA.h`, `ScatterRead.h`, `SigScan.h`, `Input Manager.h` have no game-layer includes.
 - [ ] `main.cpp` defines `std::atomic<bool> bRunning{ true }`.
 - [ ] `g_GameContext` is assigned in `main.cpp` before `DMA_Thread_Main` is launched.
 - [ ] `g_GameContext` is not defined anywhere other than `DMA Thread.cpp`.
 - [ ] A concrete `IGameContext` implementation is compiled and linked.
+- [ ] Every function registered as a `Timer` in `GameContext::Initialize` has a tuned interval (no `/* TODO */` placeholders left).
+- [ ] `Game/Const/Config.h` defines at least one object-count constant used as a loop bound in the object-list reader.
+- [ ] `Const/Config.h` is not included in `pch.h`.
 - [ ] `c_keys::InitKeyboard` is called only from `DMA_Thread_Main`, not from the game context.
 
 ---
 
 ## Porting to a New Game
 
-| What                          | Where                            |
-|-------------------------------|----------------------------------|
-| Process and module names      | `GameModules.h`                  |
-| Entity system constants       | `Const/EntityConfig.h`           |
-| Offsets                       | `Offsets.h`                      |
-| Entity types and reads        | `Classes/`                       |
-| Entity list scan logic        | `EntityList.cpp`                 |
-| Game state (view matrix, etc.)| `GameState.h/cpp`                |
-| Timer registrations           | `GameContext::Initialize`        |
+| What                            | Where                                                    |
+|---------------------------------|----------------------------------------------------------|
+| Process and module names        | `GameModules.h`                                          |
+| Object pool / array size bounds | `Const/Config.h`                                         |
+| Dynamic offset resolution       | game layer init (called from `GameContext::Initialize`)  |
+| Object / entity reading         | `Classes/` or equivalent                                 |
+| Object list scan logic          | game layer (called by a timer)                           |
+| Game state (view matrix, etc.)  | `GameState.h/.cpp` or equivalent                         |
+| Timer intervals per function    | `GameContext::Initialize` (see interval TODO list)       |
 
 The base (`DMA/`, `main.cpp`, `pch.h`) requires **zero changes** between games.

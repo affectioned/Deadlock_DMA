@@ -24,9 +24,6 @@
     <ClCompile Include="DMA\DMA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DMA\Process.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Deadlock\Deadlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -102,9 +99,6 @@
     <ClCompile Include="GUI\Fuser\Status Bars\Status Bars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DMA\Input Manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GUI\Keybinds\Keybinds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -126,9 +120,6 @@
     <ClCompile Include="GUI\Utils\ImageLoading.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DMA\SigScan.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Deadlock\Classes\C_BaseEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -141,15 +132,24 @@
     <ClCompile Include="Deadlock\DeadlockContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DMA\Logging\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DMA\Input\Input Manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DMA\Memory\Process.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DMA\Memory\SigScan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DMA\DMA.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DMA\Process.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deadlock\Deadlock.h">
@@ -266,9 +266,6 @@
     <ClInclude Include="GUI\Fuser\Status Bars\Status Bars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DMA\Input Manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GUI\Keybinds\Keybinds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -302,13 +299,7 @@
     <ClInclude Include="Deadlock\Const\HeroSkeletonMap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DMA\SigScan.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Deadlock\Classes\C_NPC_Trooper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DMA\ScatterRead.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Fuser\ESP\Draw\XpOrbs.h">
@@ -335,10 +326,28 @@
     <ClInclude Include="Deadlock\Const\EntityConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DMA\Logging\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMA\Input\Input Manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMA\Memory\ScatterRead.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMA\Memory\SigScan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMA\Memory\Process.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Deadlock_DMA.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DMA\base_spec.md" />
   </ItemGroup>
 </Project>

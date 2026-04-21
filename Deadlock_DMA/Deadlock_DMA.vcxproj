@@ -158,9 +158,10 @@
     <ClCompile Include="Deadlock\Offsets.cpp" />
     <ClCompile Include="DMA\DMA Thread.cpp" />
     <ClCompile Include="DMA\DMA.cpp" />
-    <ClCompile Include="DMA\Input Manager.cpp" />
-    <ClCompile Include="DMA\Process.cpp" />
-    <ClCompile Include="DMA\SigScan.cpp" />
+    <ClCompile Include="DMA\Input\Input Manager.cpp" />
+    <ClCompile Include="DMA\Logging\Log.cpp" />
+    <ClCompile Include="DMA\Memory\Process.cpp" />
+    <ClCompile Include="DMA\Memory\SigScan.cpp" />
     <ClCompile Include="GUI\Aimbot\Aimbot.cpp" />
     <ClCompile Include="GUI\Color Picker\Color Picker.cpp" />
     <ClCompile Include="GUI\Config\Config.cpp" />
@@ -193,9 +194,10 @@
     <ClInclude Include="Deadlock\GameModules.h" />
     <ClInclude Include="DMA\DMA Thread.h" />
     <ClInclude Include="DMA\IGameContext.h" />
-    <ClInclude Include="DMA\Input Manager.h" />
-    <ClInclude Include="DMA\ScatterRead.h" />
-    <ClInclude Include="DMA\SigScan.h" />
+    <ClInclude Include="DMA\Input\Input Manager.h" />
+    <ClInclude Include="DMA\Logging\Log.h" />
+    <ClInclude Include="DMA\Memory\ScatterRead.h" />
+    <ClInclude Include="DMA\Memory\SigScan.h" />
     <ClInclude Include="GUI\Aimbot\Aimbot.h" />
     <ClInclude Include="GUI\Config\Config.h" />
     <ClInclude Include="GUI\Fonts\Data\IBMPlexMono.h" />
@@ -238,7 +240,7 @@
     <ClInclude Include="Deadlock\Entity List\EntityList.h" />
     <ClInclude Include="Deadlock\Offsets.h" />
     <ClInclude Include="DMA\DMA.h" />
-    <ClInclude Include="DMA\Process.h" />
+    <ClInclude Include="DMA\Memory\Process.h" />
     <ClInclude Include="GUI\Color Picker\Color Picker.h" />
     <ClInclude Include="GUI\Debug GUI\Class List\Class List.h" />
     <ClInclude Include="GUI\Debug GUI\Player List\Player List.h" />
@@ -252,6 +254,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Deadlock_DMA.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DMA\base_spec.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

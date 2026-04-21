@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Input Manager.h"
-#include "SigScan.h"
+#include "DMA/Memory/SigScan.h"
 
 //TODO: Restart winlogon.exe when it doesn't exist.
 bool c_keys::InitKeyboard(DMA_Connection* Conn)
@@ -34,7 +34,7 @@ bool c_keys::InitKeyboard(DMA_Connection* Conn)
 			{
 				if (!VMMDLL_Map_GetModuleFromNameW(Conn->GetHandle(), pid, const_cast<LPWSTR>(L"win32k.sys"), &win32k_module_info, VMMDLL_MODULE_FLAG_NORMAL))
 				{
-					std::println("failed to get module win32k info");
+					Log::Warn("failed to get module win32k info");
 					return false;
 				}
 			}
@@ -48,7 +48,7 @@ bool c_keys::InitKeyboard(DMA_Connection* Conn)
 				g_session_ptr = FindSignature(Conn, "48 8B 05 ? ? ? ? FF C9", win32k_base, win32k_base + win32k_size, pid);
 				if (!g_session_ptr)
 				{
-					std::println("failed to find g_session_global_slots");
+					Log::Warn("failed to find g_session_global_slots");
 					return false;
 				}
 			}
@@ -75,7 +75,7 @@ bool c_keys::InitKeyboard(DMA_Connection* Conn)
 			PVMMDLL_MAP_MODULEENTRY win32kbase_module_info;
 			if (!VMMDLL_Map_GetModuleFromNameW(Conn->GetHandle(), pid, const_cast<LPWSTR>(L"win32kbase.sys"), &win32kbase_module_info, VMMDLL_MODULE_FLAG_NORMAL))
 			{
-				std::println("failed to get module win32kbase info");
+				Log::Warn("failed to get module win32kbase info");
 				return false;
 			}
 			uintptr_t win32kbase_base = win32kbase_module_info->vaBase;
@@ -94,7 +94,7 @@ bool c_keys::InitKeyboard(DMA_Connection* Conn)
 			}
 			else
 			{
-				std::println("failed to find offset for gafAyncKeyStateExport");
+				Log::Warn("failed to find offset for gafAsyncKeyStateExport");
 				return false;
 			}
 
@@ -145,24 +145,24 @@ bool c_keys::InitKeyboard(DMA_Connection* Conn)
 			auto result = VMMDLL_Map_GetModuleFromNameW(Conn->GetHandle(), PID | VMMDLL_PID_PROCESS_WITH_KERNELMEMORY, static_cast<LPCWSTR>(L"win32kbase.sys"), &module_info, VMMDLL_MODULE_FLAG_NORMAL);
 			if (!result)
 			{
-				std::println("failed to get module info");
+				Log::Warn("failed to get module info");
 				return false;
 			}
 
 			char str[261];
 			if (!VMMDLL_PdbLoad(Conn->GetHandle(), PID | VMMDLL_PID_PROCESS_WITH_KERNELMEMORY, module_info->vaBase, str))
 			{
-				std::println("failed to load pdb");
+				Log::Warn("failed to load pdb");
 				return false;
 			}
 
 			uintptr_t gafAsyncKeyState;
 			if (!VMMDLL_PdbSymbolAddress(Conn->GetHandle(), str, const_cast<LPSTR>("gafAsyncKeyState"), &gafAsyncKeyState))
 			{
-				std::println("failed to find gafAsyncKeyState");
+				Log::Warn("failed to find gafAsyncKeyState");
 				return false;
 			}
-			std::println("found gafAsyncKeyState at: 0x%p\n", gafAsyncKeyState);
+			Log::Info("found gafAsyncKeyState at: 0x{:X}", gafAsyncKeyState);
 		}
 		if (gafAsyncKeyStateExport > 0x7FFFFFFFFFFF)
 		{
@@ -214,7 +214,7 @@ std::string c_registry::QueryValue(DMA_Connection* Conn, const char* path, e_reg
 
 	if (!VMMDLL_WinReg_QueryValueExU(Conn->GetHandle(), const_cast<LPSTR>(path), &_type, buffer, &size))
 	{
-		std::println("[!] failed QueryValueExU call");
+		Log::Warn("[!] failed QueryValueExU call");
 		return "";
 	}
 	//TODO: implement something nicer & better than this.

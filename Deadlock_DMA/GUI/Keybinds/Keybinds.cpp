@@ -2,7 +2,7 @@
 
 #include "Keybinds.h"
 
-#include "DMA/Input Manager.h"
+#include "DMA/Input/Input Manager.h"
 
 #include "GUI/Aimbot/Aimbot.h"
 

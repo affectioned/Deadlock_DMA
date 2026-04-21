@@ -62,7 +62,7 @@ void Config::RefreshConfigFilesList(std::vector<std::string>& outList) {
 		}
 	}
 	catch (const std::filesystem::filesystem_error& e) {
-		std::println("[Config] Error listing config files: {}", e.what());
+		Log::Warn("[Config] Error listing config files: {}", e.what());
 	}
 }
 
@@ -486,7 +486,7 @@ void Config::DeserializeConfig(const json& j) {
 }
 
 void Config::SaveConfig(const std::string& configName) {
-	std::println("[Config] Saving config: {}", configName);
+	Log::Info("[Config] Saving config: {}", configName);
 	json j = SerializeConfig();
 	std::ofstream file(getConfigPath(configName));
 	if (!file.is_open())
@@ -496,11 +496,11 @@ void Config::SaveConfig(const std::string& configName) {
 }
 
 bool Config::LoadConfig(const std::string& configName) {
-	std::println("[Config] Loading config: {}", configName);
+	Log::Info("[Config] Loading config: {}", configName);
 	std::ifstream file(getConfigPath(configName));
 	if (!file.is_open())
 	{
-		std::println("[Config] Failed to open config file: {}", getConfigPath(configName));
+		Log::Warn("[Config] Failed to open config file: {}", getConfigPath(configName));
 		return false;
 	}
 	json j;

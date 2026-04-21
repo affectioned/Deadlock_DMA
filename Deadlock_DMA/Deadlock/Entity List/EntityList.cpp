@@ -12,23 +12,23 @@ void EntityList::InitScatterHandle(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 {
-	std::println("[EntityList] UpdateCrucialInformation...");
+	Log::Info("[EntityList] UpdateCrucialInformation...");
 	UpdateCrucialInformation(Conn, Proc);
-	std::println("[EntityList] UpdateEntityMap...");
+	Log::Info("[EntityList] UpdateEntityMap...");
 	UpdateEntityMap(Conn, Proc);
-	std::println("[EntityList] UpdateEntityClassMap...");
+	Log::Info("[EntityList] UpdateEntityClassMap...");
 	UpdateEntityClassMap(Conn, Proc);
 
 	if (!m_EntityClassMap.empty())
 	{
-		std::println("[EntityList] Class map ({} entries):", m_EntityClassMap.size());
+		Log::Info("[EntityList] Class map ({} entries):", m_EntityClassMap.size());
 		for (auto& [name, ptr] : m_EntityClassMap)
-			std::println("  {}", name);
+			Log::Info("  {}", name);
 	}
 
-	std::println("[EntityList] SortEntityList...");
+	Log::Info("[EntityList] SortEntityList...");
 	SortEntityList();
-	std::println("[EntityList] FullUpdate done.");
+	Log::Info("[EntityList] FullUpdate done.");
 }
 
 void EntityList::UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc)
@@ -47,7 +47,7 @@ void EntityList::GetEntitySystemAddress(DMA_Connection* Conn, Process* Proc)
 
 	m_EntitySystem_Address = LatestAddr;
 
-	std::println("Entity System Address: 0x{:X}", m_EntitySystem_Address);
+	Log::Info("Entity System Address: 0x{:X}", m_EntitySystem_Address);
 }
 
 void EntityList::GetEntityListAddresses(DMA_Connection* Conn, Process* Proc)
@@ -84,7 +84,7 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 
 	m_sr->Execute();
 
-	std::println("Entity Map Updated.");
+	Log::Info("Entity Map Updated.");
 }
 
 void EntityList::SortEntityList()
@@ -127,7 +127,7 @@ void EntityList::SortEntityList()
 		}
 	}
 
-	std::println("[EntityList] Sort: {} pawns, {} troopers, {} bosses, {} sinners, {} xporbs",
+	Log::Info("[EntityList] Sort: {} pawns, {} troopers, {} bosses, {} sinners, {} xporbs",
 		m_PlayerPawn_Addresses.size(), m_TrooperAddresses.size(),
 		m_MonsterCampAddresses.size(), m_SinnersAddresses.size(), m_XpOrbAddresses.size());
 }
@@ -157,7 +157,7 @@ void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 		}
 	}
 
-	DbgPrintln("[EntityList] ControllerRefresh: {} controller addresses from pawn handles", m_PlayerController_Addresses.size());
+	DbgLog("[EntityList] ControllerRefresh: {} controller addresses from pawn handles", m_PlayerController_Addresses.size());
 
 	for (auto& addr : m_PlayerController_Addresses)
 		m_PlayerControllers.emplace_back(CCitadelPlayerController(addr));
@@ -184,7 +184,7 @@ void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 		else if (i == (int)m_PlayerControllers.size() - 1 && m_LocalControllerIndex == -1)
 			m_LocalControllerIndex = -1;
 	}
-	DbgPrintln("[EntityList] ControllerRefresh: {}/{} valid, {} dead, local={}",
+	DbgLog("[EntityList] ControllerRefresh: {}/{} valid, {} dead, local={}",
 		validCount, m_PlayerControllers.size(), deadCount, m_LocalControllerIndex);
 }
 
@@ -213,7 +213,7 @@ void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	m_PlayerPawns.clear();
 
-	DbgPrintln("[EntityList] PawnRefresh: {} pawn addresses", m_PlayerPawn_Addresses.size());
+	DbgLog("[EntityList] PawnRefresh: {} pawn addresses", m_PlayerPawn_Addresses.size());
 
 	for (auto& addr : m_PlayerPawn_Addresses)
 		m_PlayerPawns.emplace_back(C_CitadelPlayerPawn(addr));
@@ -240,7 +240,7 @@ void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 		Pawn.CacheBoneData();
 		if (!Pawn.IsInvalid()) validPawns++;
 	}
-	DbgPrintln("[EntityList] PawnRefresh: {}/{} valid after reads", validPawns, m_PlayerPawns.size());
+	DbgLog("[EntityList] PawnRefresh: {}/{} valid after reads", validPawns, m_PlayerPawns.size());
 
 	for (int i = 0; i < (int)m_PlayerPawns.size(); i++)
 	{
@@ -332,7 +332,7 @@ void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 		Trooper.PrepareRead_2(*m_sr);
 	m_sr->Execute();
 
-	std::println("Trooper List Refreshed. Count: {}", m_Troopers.size());
+	Log::Info("Trooper List Refreshed. Count: {}", m_Troopers.size());
 }
 
 void EntityList::QuickTrooperRefresh(DMA_Connection* Conn, Process* Proc)
@@ -457,20 +457,20 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 		m_EntityClassMap[Name] = UniqueClassNames[i];
 	}
 
-	std::println("Entity Class Map Updated.");
+	Log::Info("Entity Class Map Updated.");
 }
 
 void EntityList::PrintPlayerControllerAddresses()
 {
 	for (auto& Addr : m_PlayerController_Addresses)
-		std::println("PlayerController: 0x{:X}", Addr);
+		Log::Info("PlayerController: 0x{:X}", Addr);
 }
 
 void EntityList::PrintPlayerControllers()
 {
 	if (m_PlayerControllers.empty())
 	{
-		std::println("No PlayerControllers found.");
+		Log::Info("No PlayerControllers found.");
 		return;
 	}
 
@@ -484,20 +484,20 @@ void EntityList::PrintPlayerControllers()
 
 		if (PawnIt->IsInvalid()) continue;
 
-		std::println("Player found! hPawn: {0:d}, hController {1:d}\n  Pawn @ {2:.0f} with {3:d} hp", PC.m_hHeroPawn.GetEntityEntryIndex(), PawnIt->m_hController.GetEntityEntryIndex(), PawnIt->m_BonePositions[0].z, PC.m_CurrentHealth);
+		Log::Info("Player found! hPawn: {0:d}, hController {1:d}  Pawn @ {2:.0f} with {3:d} hp", PC.m_hHeroPawn.GetEntityEntryIndex(), PawnIt->m_hController.GetEntityEntryIndex(), PawnIt->m_BonePositions[0].z, PC.m_CurrentHealth);
 	}
 }
 
 void EntityList::PrintPlayerPawns()
 {
 	for (auto& Pawn : m_PlayerPawns)
-		std::println("PlayerPawn: 0x{0:X} | GameSceneNode: {1:X}", Pawn.m_EntityAddress, Pawn.m_GameSceneNodeAddress);
+		Log::Info("PlayerPawn: 0x{0:X} | GameSceneNode: {1:X}", Pawn.m_EntityAddress, Pawn.m_GameSceneNodeAddress);
 }
 
 void EntityList::PrintClassMap()
 {
 	for (auto& [name, addr] : m_EntityClassMap)
-		std::println("Class: {} | Address: 0x{:X}", name, addr);
+		Log::Info("Class: {} | Address: 0x{:X}", name, addr);
 }
 
 ETeam EntityList::GetLocalPlayerTeam()

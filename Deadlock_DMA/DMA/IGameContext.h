@@ -5,7 +5,7 @@ class DMA_Connection;
 
 // Implement this interface in the game layer and assign g_GameContext before
 // launching DMA_Thread_Main. The DMA thread calls Initialize once, then Tick
-// every millisecond, then Shutdown on exit.
+// every millisecond until bRunning is false.
 struct IGameContext
 {
     // Called once after the DMA connection is established and keyboard is

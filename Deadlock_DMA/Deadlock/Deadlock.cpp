@@ -15,20 +15,20 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	Offsets::ResolveOffsets(Conn);
 
-	std::println("[+] Initializing scatter handle...");
+	Log::Info("[+] Initializing scatter handle...");
 	EntityList::InitScatterHandle(Conn, &Process);
 
-	std::println("[+] Running FullUpdate...");
+	Log::Info("[+] Running FullUpdate...");
 	EntityList::FullUpdate(Conn, &Process);
-	std::println("[+] FullUpdate complete.");
+	Log::Info("[+] FullUpdate complete.");
 
-	std::println("[+] Updating local player addresses...");
+	Log::Info("[+] Updating local player addresses...");
 	UpdateLocalPlayerAddresses(Conn);
 
-	std::println("[+] Resolving prediction address...");
+	Log::Info("[+] Resolving prediction address...");
 	GetPredictionAddress(Conn);
 
-	std::println("[+] Deadlock initialized.");
+	Log::Info("[+] Deadlock initialized.");
 
 	return true;
 }
@@ -85,7 +85,7 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 
 	uintptr_t LocalPlayerControllerAddress = Proc().GetModuleBase(GameModules::ClientDll) + Offsets::LocalController;
 	m_LocalPlayerControllerAddress = Proc().ReadMem<uintptr_t>(Conn, LocalPlayerControllerAddress);
-	std::println("Local Player Controller Address: 0x{:X}", m_LocalPlayerControllerAddress);
+	Log::Info("Local Player Controller Address: 0x{:X}", m_LocalPlayerControllerAddress);
 
 	auto LocalPlayerControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), m_LocalPlayerControllerAddress);
 
@@ -94,7 +94,7 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 
 	m_LocalPlayerPawnAddress = EntityList::GetEntityAddressFromHandle(LocalPlayerControllerIt->m_hHeroPawn);
 
-	std::println("Local Player Pawn Address: 0x{:X}", m_LocalPlayerPawnAddress);
+	Log::Info("Local Player Pawn Address: 0x{:X}", m_LocalPlayerPawnAddress);
 
 	return true;
 }
@@ -104,7 +104,7 @@ void Deadlock::GetPredictionAddress(DMA_Connection* Conn)
 	uintptr_t PredictionPtrAddress = Proc().GetModuleBase(GameModules::ClientDll) + Offsets::Prediction;
 	m_PredictionAddress = Proc().ReadMem<uintptr_t>(Conn, PredictionPtrAddress);
 
-	std::println("Prediction Address: 0x{:X}", m_PredictionAddress);
+	Log::Info("Prediction Address: 0x{:X}", m_PredictionAddress);
 }
 
 void Deadlock::UpdateServerTime(DMA_Connection* Conn)

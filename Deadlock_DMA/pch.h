@@ -13,12 +13,6 @@
 #define NOMINMAX
 #include <algorithm>
 
-#ifdef DBGPRINT
-#define DbgPrintln(...) std::println(__VA_ARGS__)
-#else
-#define DbgPrintln(...)
-#endif
-
 #include "vmmdll.h"
 
 #include <d3d11.h>
@@ -29,8 +23,9 @@
 #include "imgui_impl_dx11.h"
 
 #include "DMA/DMA.h"
-#include "DMA/ScatterRead.h"
-#include "DMA/Process.h"
+#include "DMA/Memory/ScatterRead.h"
+#include "DMA/Memory/Process.h"
+#include "DMA/Logging/Log.h"
 
 #include "Deadlock/Offsets.h"
 #include "Deadlock/Deadlock.h"

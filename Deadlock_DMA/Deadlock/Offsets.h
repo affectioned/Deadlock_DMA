@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "DMA/SigScan.h"
+#include "DMA/Memory/SigScan.h"
 
 namespace Offsets
 {

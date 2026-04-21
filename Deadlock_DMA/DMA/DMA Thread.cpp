@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include "DMA Thread.h"
-#include "Input Manager.h"
+#include "Input/Input Manager.h"
 #include "IGameContext.h"
 
 #pragma comment(lib, "Winmm.lib")
@@ -12,7 +12,7 @@ extern std::atomic<bool> bRunning;
 
 void DMA_Thread_Main()
 {
-	std::println("[DMA Thread] DMA Thread started.");
+	Log::Info("[DMA Thread] DMA Thread started.");
 
 	DMA_Connection* conn = DMA_Connection::GetInstance();
 
@@ -20,7 +20,7 @@ void DMA_Thread_Main()
 
 	if (!g_GameContext || !g_GameContext->Initialize(conn))
 	{
-		std::println("[DMA Thread] Game initialization failed, requesting exit.");
+		Log::Error("[DMA Thread] Game initialization failed, requesting exit.");
 		bRunning = false;
 		return;
 	}

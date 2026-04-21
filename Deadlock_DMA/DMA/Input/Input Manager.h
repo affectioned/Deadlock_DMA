@@ -1,5 +1,5 @@
 #pragma once
-#include "DMA.h"
+#include "DMA/DMA.h"
 
 #include <chrono>
 

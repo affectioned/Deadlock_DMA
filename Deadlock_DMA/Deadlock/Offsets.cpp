@@ -30,12 +30,12 @@ static void ResolveOffset(DMA_Connection* Conn, DWORD pid, uintptr_t clientBase,
 	if (offset)
 	{
 		target = offset;
-		std::println("[+] {} Offset: 0x{:X}", name, target);
+		Log::Info("[+] {} Offset: 0x{:X}", name, target);
 	}
 	else
 	{
 		target = fallback;
-		std::println("[!] {} sig failed, using fallback RVA: 0x{:X}", name, target);
+		Log::Warn("[!] {} sig failed, using fallback RVA: 0x{:X}", name, target);
 	}
 }
 
@@ -61,6 +61,6 @@ bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 		"CPrediction", Offsets::Prediction, 0x2E95F98,
 		"48 8B 05 ? ? ? ? 38 58", 3, 7);
 
-	DbgPrintln("All offsets resolved.");
+	DbgLog("All offsets resolved.");
 	return true;
 }

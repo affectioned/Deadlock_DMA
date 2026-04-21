@@ -1,13 +1,13 @@
 #include "pch.h"
 
-#include "DMA.h"
+#include "DMA/DMA.h"
 #include "Process.h"
 
 bool Process::GetProcessInfo(const std::string& processName,
                               const std::vector<std::string>& moduleNames,
                               DMA_Connection* conn)
 {
-	std::println("Waiting for process {}..", processName);
+	Log::Info("Waiting for process {}..", processName);
 
 	m_PID = 0;
 
@@ -17,7 +17,7 @@ bool Process::GetProcessInfo(const std::string& processName,
 
 		if (m_PID)
 		{
-			std::println("Found process `{}` with PID {}", processName, m_PID);
+			Log::Info("Found process `{}` with PID {}", processName, m_PID);
 			PopulateModules(moduleNames, conn);
 			break;
 		}
@@ -78,7 +78,7 @@ bool Process::PopulateModules(const std::vector<std::string>& names, DMA_Connect
 	}
 
 	for (const auto& [name, addr] : m_Modules)
-		std::println("Module `{}` at 0x{:X} size 0x{:X}", name, addr, m_ModuleSizes[name]);
+		Log::Info("Module `{}` at 0x{:X} size 0x{:X}", name, addr, m_ModuleSizes[name]);
 
 	return true;
 }

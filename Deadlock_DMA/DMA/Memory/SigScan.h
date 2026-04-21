@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "DMA.h"
+#include "DMA/DMA.h"
 
 // Returns all PIDs whose long process name contains 'name'.
 std::vector<int> GetPidListFromName(DMA_Connection* Conn, std::string name);
