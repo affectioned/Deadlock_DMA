@@ -61,13 +61,6 @@ Single-include precompiled header. Everything every translation unit needs lives
 
 #include "vmmdll.h"
 
-#include <d3d11.h>
-#pragma comment(lib, "d3d11.lib")
-
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
-
 // DMA layer — include order is mandatory: Log → DMA → Memory/ScatterRead → Memory/Process.
 #include "DMA/Logging/Log.h"
 #include "DMA/DMA.h"
