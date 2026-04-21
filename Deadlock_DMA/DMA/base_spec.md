@@ -462,9 +462,7 @@ Entry point. Opens the log, initialises subsystems in order, sets `g_GameContext
 #include "pch.h"
 #include <filesystem>
 
-#include "GUI/Main Window/Main Window.h"
 #include "DMA/DMA Thread.h"
-#include "GUI/Config/Config.h"
 #include "Game/GameContext.h"   // swap for your concrete IGameContext
 
 std::atomic<bool> bRunning{ true };
@@ -480,9 +478,6 @@ int main()
 
     Log::Info("Starting up...");
 
-    Config::LoadConfig("default");
-    MainWindow::Initialize();
-
     g_GameContext = new GameContext();
 
     std::thread DMAThread(DMA_Thread_Main);
@@ -491,7 +486,6 @@ int main()
     while (bRunning)
     {
         if (GetAsyncKeyState(VK_END) & 0x1) bRunning = false;
-        MainWindow::OnFrame();
     }
 
     DMAThread.join();
@@ -502,17 +496,14 @@ int main()
 ```
 
 ### Global ownership
-- `std::atomic<bool> bRunning{ true }` — **defined in `main.cpp`**, referenced as `extern` in `DMA Thread.cpp`. Controls both the acquisition loop and the main window loop. Set to `false` to trigger shutdown from either thread.
+- `std::atomic<bool> bRunning{ true }` — **defined in `main.cpp`**, referenced as `extern` in `DMA Thread.cpp`. Controls the acquisition loop. Set to `false` to trigger shutdown from either thread.
 
 ### Startup order (mandatory)
 1. `Log::Init` — must be first. Opens the log file before any other subsystem emits messages.
-2. `Config::LoadConfig` — config values must be ready before window/renderer init.
-3. `MainWindow::Initialize` — creates the D3D11 device and ImGui context.
-4. Any additional peripheral init (mouse emulation, etc.).
-5. `g_GameContext = new ...` — must be set before the thread starts.
-6. `std::thread(DMA_Thread_Main)` — DMA thread starts here.
-7. Main loop — `MainWindow::OnFrame()` each iteration, exit key check.
-8. `join()` — waits for `EndConnection()` to complete.
+2. Any additional peripheral init (mouse emulation, etc.).
+3. `g_GameContext = new ...` — must be set before the thread starts.
+4. `std::thread(DMA_Thread_Main)` — DMA thread starts here.
+5. `join()` — waits for `EndConnection()` to complete.
 
 ---
 
