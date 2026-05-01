@@ -48,8 +48,6 @@ void Aimbot::RenderSettings()
 	ImGui::Checkbox("Aim At Orbs", &bAimAtOrbs);
 
 	ImGui::Checkbox("Visible Only", &bVisibleOnly);
-	if (ImGui::IsItemHovered())
-		ImGui::SetTooltip("Skip targets that aren't on the team minimap (FOW)");
 
 	ImGui::End();
 }

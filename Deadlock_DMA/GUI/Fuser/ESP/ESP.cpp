@@ -98,8 +98,7 @@ void ESP::RenderSettings()
 		ImGui::Checkbox("Show Distance", &Draw_Players::bShowDistance);
 		ImGui::Checkbox("Bone Numbers", &Draw_Players::bBoneNumbers);
 		ImGui::Checkbox("Visible Only", &Draw_Players::bVisibleOnly);
-		if (ImGui::IsItemHovered())
-			ImGui::SetTooltip("Hide enemies that aren't on the team minimap (FOW)");
+
 		ImGui::Unindent();
 	}
 

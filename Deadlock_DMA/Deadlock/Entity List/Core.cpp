@@ -131,14 +131,15 @@ void EntityList::SortEntityList()
 		return it != m_EntityClassMap.end() ? it->second : 0;
 	};
 
-	uintptr_t PlayerPawnClassPtr    = FindClass("player");
-	uintptr_t TrooperClassPtr       = FindClass("npc_trooper");
-	uintptr_t TrooperBossClassPtr   = FindClass("npc_trooper_boss");
-	uintptr_t TrooperNeutralClassPtr= FindClass("npc_trooper_neutral");
-	uintptr_t BossTier2ClassPtr     = FindClass("npc_boss_tier2");
-	uintptr_t BossTier3ClassPtr     = FindClass("npc_boss_tier3");
-	uintptr_t SinnerClassPtr        = FindClass("npc_neutral_sinners_sacrifice");
-	uintptr_t XpOrbClassPtr         = FindClass("item_xp");
+	uintptr_t PlayerPawnClassPtr       = FindClass("player");
+	uintptr_t PlayerControllerClassPtr = FindClass("citadel_player_controller");
+	uintptr_t TrooperClassPtr          = FindClass("npc_trooper");
+	uintptr_t TrooperBossClassPtr      = FindClass("npc_trooper_boss");
+	uintptr_t TrooperNeutralClassPtr   = FindClass("npc_trooper_neutral");
+	uintptr_t BossTier2ClassPtr        = FindClass("npc_boss_tier2");
+	uintptr_t BossTier3ClassPtr        = FindClass("npc_boss_tier3");
+	uintptr_t SinnerClassPtr           = FindClass("npc_neutral_sinners_sacrifice");
+	uintptr_t XpOrbClassPtr            = FindClass("item_xp");
 
 	for (auto& List : m_CompleteEntityList)
 	{
@@ -146,14 +147,15 @@ void EntityList::SortEntityList()
 		{
 			if (!Entry.pEnt || !Entry.pName) continue;
 
-			if      (TrooperClassPtr        && Entry.pName == TrooperClassPtr)        m_TrooperAddresses.emplace_back(Entry.pEnt, nullptr);
-			else if (TrooperBossClassPtr     && Entry.pName == TrooperBossClassPtr)    m_TrooperAddresses.emplace_back(Entry.pEnt, "Walker");
-			else if (TrooperNeutralClassPtr  && Entry.pName == TrooperNeutralClassPtr) m_TrooperAddresses.emplace_back(Entry.pEnt, "Neutral");
-			else if (PlayerPawnClassPtr      && Entry.pName == PlayerPawnClassPtr)     m_PlayerPawn_Addresses.push_back(Entry.pEnt);
-			else if (BossTier2ClassPtr       && Entry.pName == BossTier2ClassPtr)      m_MonsterCampAddresses.emplace_back(Entry.pEnt, "Tier 2");
-			else if (BossTier3ClassPtr       && Entry.pName == BossTier3ClassPtr)      m_MonsterCampAddresses.emplace_back(Entry.pEnt, "Tier 3");
-			else if (SinnerClassPtr          && Entry.pName == SinnerClassPtr)         m_SinnersAddresses.push_back(Entry.pEnt);
-			else if (XpOrbClassPtr           && Entry.pName == XpOrbClassPtr)          m_XpOrbAddresses.push_back(Entry.pEnt);
+			if      (TrooperClassPtr           && Entry.pName == TrooperClassPtr)          m_TrooperAddresses.emplace_back(Entry.pEnt, nullptr);
+			else if (TrooperBossClassPtr        && Entry.pName == TrooperBossClassPtr)      m_TrooperAddresses.emplace_back(Entry.pEnt, "Walker");
+			else if (TrooperNeutralClassPtr     && Entry.pName == TrooperNeutralClassPtr)   m_TrooperAddresses.emplace_back(Entry.pEnt, "Neutral");
+			else if (PlayerPawnClassPtr         && Entry.pName == PlayerPawnClassPtr)       m_PlayerPawn_Addresses.push_back(Entry.pEnt);
+			else if (PlayerControllerClassPtr   && Entry.pName == PlayerControllerClassPtr) m_PlayerController_Addresses.push_back(Entry.pEnt);
+			else if (BossTier2ClassPtr          && Entry.pName == BossTier2ClassPtr)        m_MonsterCampAddresses.emplace_back(Entry.pEnt, "Tier 2");
+			else if (BossTier3ClassPtr          && Entry.pName == BossTier3ClassPtr)        m_MonsterCampAddresses.emplace_back(Entry.pEnt, "Tier 3");
+			else if (SinnerClassPtr             && Entry.pName == SinnerClassPtr)           m_SinnersAddresses.push_back(Entry.pEnt);
+			else if (XpOrbClassPtr              && Entry.pName == XpOrbClassPtr)            m_XpOrbAddresses.push_back(Entry.pEnt);
 		}
 	}
 

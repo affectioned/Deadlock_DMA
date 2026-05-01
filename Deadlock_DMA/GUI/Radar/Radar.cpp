@@ -111,8 +111,7 @@ void Radar::DrawEntities()
 	const auto RadarCenterGamePos = GetRadarCenterScreenPos();
 
 	// Take both atomically — DrawPlayer (called below) needs Controller too.
-	// Sequential Pawn-then-Controller would deadlock against
-	// FullControllerRefresh_lk's reverse order.
+	// scoped_lock uses std::lock's deadlock-avoidance algorithm so order is irrelevant.
 	std::scoped_lock Lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
 	for (auto& Pawn : EntityList::m_PlayerPawns)

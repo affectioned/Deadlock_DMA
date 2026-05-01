@@ -7,9 +7,7 @@ void EntityList::FullControllerRefresh_lk(DMA_Connection* Conn, Process* Proc)
 {
 	if (Query::IsUsingPlayers() == false) return;
 
-	// Acquire both atomically (Pawn, Controller) to match every other call site
-	// and avoid lock-order inversion against Radar (Pawn-then-Controller).
-	std::scoped_lock Lock(m_PawnMutex, m_ControllerMutex);
+	std::scoped_lock Lock(m_ControllerMutex);
 
 	FullControllerRefresh(Conn, Proc);
 }
@@ -17,18 +15,8 @@ void EntityList::FullControllerRefresh_lk(DMA_Connection* Conn, Process* Proc)
 void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	m_PlayerControllers.clear();
-	m_PlayerController_Addresses.clear();
 
-	// Controllers don't register a class name in the entity system (pName == 0),
-	// so derive their addresses from pawn m_hController handles instead.
-	// Caller must hold m_PawnMutex + m_ControllerMutex.
-	for (auto& Pawn : m_PlayerPawns)
-	{
-		uintptr_t addr = GetEntityAddressFromHandle(Pawn.m_hController);
-		if (addr) m_PlayerController_Addresses.push_back(addr);
-	}
-
-	DbgLog("[EntityList] ControllerRefresh: {} controller addresses from pawn handles", m_PlayerController_Addresses.size());
+	DbgLog("[EntityList] ControllerRefresh: {} controller addresses", m_PlayerController_Addresses.size());
 
 	for (auto& addr : m_PlayerController_Addresses)
 		m_PlayerControllers.emplace_back(CCitadelPlayerController(addr));

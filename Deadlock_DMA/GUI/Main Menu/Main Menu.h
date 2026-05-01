@@ -4,7 +4,6 @@ class MainMenu
 {
 public:
 	static void Render();
-	static inline bool bVSync{ false };
+	static inline bool bVSync{ true };
 	static inline int iTargetFPS{ 144 };
-
 };

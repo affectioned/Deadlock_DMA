@@ -71,9 +71,15 @@ namespace Offsets
 		inline constexpr std::ptrdiff_t m_hController = 0x10A8; // CHandle< CBasePlayerController > (4b)
 	}
 
-	namespace C_CitadelTeam 
+	namespace C_CitadelTeam
 	{
 		constexpr std::ptrdiff_t m_vecFOWEntities = 0x6C8; // C_UtlVectorEmbeddedNetworkVar< STeamFOWEntity > (104b)
 
+	}
+
+	namespace STeamFOWEntity
+	{
+		constexpr std::ptrdiff_t m_nEntIndex     = 0x30; // CEntityIndex (4b)
+		constexpr std::ptrdiff_t m_bVisibleOnMap = 0x41; // bool (1b)
 	}
 }

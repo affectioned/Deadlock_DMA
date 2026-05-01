@@ -34,8 +34,7 @@ void Draw_Players::operator()()
 
 		// FOW gate: when enabled, skip enemies the team minimap doesn't see.
 		// Friendlies always render — bypass the gate for them.
-		if (bVisibleOnly && !ControllerIt->IsFriendly()
-			&& !EntityList::IsEntityVisible(Pawn.m_EntityAddress))
+		if (bVisibleOnly && !ControllerIt->IsFriendly() && !EntityList::IsEntityVisible(Pawn.m_EntityAddress))
 			continue;
 
 		DrawPlayer(*ControllerIt, Pawn);
@@ -125,7 +124,12 @@ void Draw_Players::DrawBox(const CCitadelPlayerController& PC, const C_CitadelPl
 	float bottomY = Feet2D.y + WindowPos.y;
 	if (bottomY <= topY) return; // pawn upside-down on screen — bail
 
+	// Head bone sits inside the skull, not at the crown — push the top up so
+	// the box covers the visible head instead of cutting through it.
 	float height = bottomY - topY;
+	topY -= height * 0.08f;
+	height = bottomY - topY;
+
 	float halfWidth = height * 0.25f; // typical humanoid aspect, ~1:2
 	float centerX = ((Head2D.x + Feet2D.x) * 0.5f) + WindowPos.x;
 
