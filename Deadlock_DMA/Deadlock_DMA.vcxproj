@@ -155,7 +155,24 @@
     <ClCompile Include="Deadlock\Deadlock.cpp" />
     <ClCompile Include="Deadlock\DeadlockContext.cpp" />
     <ClCompile Include="Deadlock\Engine\CHandle.cpp" />
-    <ClCompile Include="Deadlock\Entity List\EntityList.cpp" />
+    <ClCompile Include="Deadlock\Entity List\Camps.cpp">
+      <ObjectFileName>$(IntDir)EntityList_Camps.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="Deadlock\Entity List\Core.cpp" />
+    <ClCompile Include="Deadlock\Entity List\Debug.cpp" />
+    <ClCompile Include="Deadlock\Entity List\Fow.cpp" />
+    <ClCompile Include="Deadlock\Entity List\Players.cpp">
+      <ObjectFileName>$(IntDir)EntityList_Players.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="Deadlock\Entity List\Sinners.cpp">
+      <ObjectFileName>$(IntDir)EntityList_Sinners.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="Deadlock\Entity List\Troopers.cpp">
+      <ObjectFileName>$(IntDir)EntityList_Troopers.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="Deadlock\Entity List\XpOrbs.cpp">
+      <ObjectFileName>$(IntDir)EntityList_XpOrbs.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="Deadlock\Offsets.cpp" />
     <ClCompile Include="DMA\DMA Thread.cpp" />
     <ClCompile Include="DMA\DMA.cpp" />

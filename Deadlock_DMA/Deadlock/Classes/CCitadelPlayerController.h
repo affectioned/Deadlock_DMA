@@ -14,9 +14,6 @@ public:
 	int32_t  m_MaxHealth{ 0 };
 	int32_t  m_TotalSouls{ 0 };
 	HeroId   m_HeroID{ 0 };
-	bool     m_bUltimateTrained{ false };
-	float    m_flUltimateCooldownStart{ 0.f };
-	float    m_flUltimateCooldownEnd{ 0.f };
 
 public:
 	const bool IsDead() const { return m_CurrentHealth <= 0; }
@@ -57,15 +54,6 @@ public:
 
 		uintptr_t TotalSoulsAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_nTotalSouls;
 		sr.Add(TotalSoulsAddress, &m_TotalSouls);
-
-		uintptr_t UltTrainedAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_bUltimateTrained;
-		sr.Add(UltTrainedAddress, &m_bUltimateTrained);
-
-		uintptr_t UltCDStartAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_flUltimateCooldownStart;
-		sr.Add(UltCDStartAddress, &m_flUltimateCooldownStart);
-
-		uintptr_t UltCDEndAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_flUltimateCooldownEnd;
-		sr.Add(UltCDEndAddress, &m_flUltimateCooldownEnd);
 	}
 
 	void QuickRead(ScatterRead& sr)

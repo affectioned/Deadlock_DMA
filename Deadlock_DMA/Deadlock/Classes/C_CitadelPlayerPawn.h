@@ -77,13 +77,13 @@ public:
 	{
 		C_BaseEntity::PrepareRead_1(sr, false);
 
-		uintptr_t hControllerPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_hController;
+		uintptr_t hControllerPtr = m_EntityAddress + Offsets::C_BasePlayerPawn::m_hController;
 		sr.Add(hControllerPtr, &m_hController.Data);
 
 		uintptr_t UnsecuredSoulsPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_nUnsecuredSouls;
 		sr.Add(UnsecuredSoulsPtr, &m_UnsecuredSouls);
 
-		uintptr_t TotalUnspentSoulsPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_nTotalUnspentSouls;
+		uintptr_t TotalUnspentSoulsPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_nCurrencies;
 		sr.Add(TotalUnspentSoulsPtr, &m_TotalUnspentSouls);
 
 		uintptr_t VelocityPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_vecVelocity;
@@ -106,11 +106,11 @@ public:
 		if (IsInvalid())
 			return;
 
-		uintptr_t BoneArrayPtrAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_modelState + Offsets::CModelState::m_pBones;
+		uintptr_t BoneArrayPtrAddress = m_GameSceneNodeAddress + Offsets::CSkeletonInstance::m_modelState + Offsets::CModelState::m_pBones;
 		sr.Add(BoneArrayPtrAddress, &m_BoneArrayAddress);
 
 		// Read m_ModelName pointer (CUtlSymbolLarge = char* in Source 2)
-		uintptr_t ModelNamePtrAddress = m_GameSceneNodeAddress + Offsets::CGameSceneNode::m_modelState + Offsets::CModelState::m_ModelName;
+		uintptr_t ModelNamePtrAddress = m_GameSceneNodeAddress + Offsets::CSkeletonInstance::m_modelState + Offsets::CModelState::m_ModelName;
 		sr.Add(ModelNamePtrAddress, &m_ModelNamePtr);
 	}
 
