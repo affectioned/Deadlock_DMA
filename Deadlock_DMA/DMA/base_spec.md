@@ -120,19 +120,21 @@ private:
 ```
 
 ### Output format
-Each line is prefixed with a fixed-width level tag:
+Each line is prefixed with a wall-clock timestamp and a fixed-width level tag:
 ```
-[INFO] message
-[WARN] message
-[ERR ] message
-[DBG ] message    (DBGPRINT builds only)
+HH:MM:SS.mmm [INFO] message
+HH:MM:SS.mmm [WARN] message
+HH:MM:SS.mmm [ERR ] message
+HH:MM:SS.mmm [DBG ] message    (DBGPRINT builds only)
 ```
+
+The timestamp uses local time via `localtime_s` + milliseconds from `std::chrono::system_clock`. It is generated inside `Write` before the mutex is released, so every line reflects the exact wall time of the call.
 
 ### Implementation rules
 - A single `static std::mutex` serialises all writes — safe to call from both the DMA thread and the GUI thread.
 - `Init` opens the file with `std::ios::trunc` so each run starts a fresh log.
-- `Write` calls `std::println` for the console and `ofstream <<` + `flush()` for the file. Both happen inside the lock.
-- `<fstream>` is only included in `Log.cpp`, not in `Log.h`.
+- `Write` generates a timestamp, then calls `std::println` for the console and `ofstream <<` + `flush()` for the file. Both happen inside the lock.
+- `<fstream>` and `<chrono>` are only included in `Log.cpp`, not in `Log.h`.
 - `Log.h` includes `<format>` and `<string>` for `std::format_string` and `std::string`. All other STL headers come from `pch.h`.
 
 ### Notes
@@ -162,7 +164,7 @@ public:
     bool EndConnection();
 
 private:
-    DMA_Connection();   // calls VMMDLL_Initialize("-device", "fpga", "-waitinitialize")
+    DMA_Connection();   // calls VMMDLL_Initialize("-device", "fpga", "-memmap", "auto", "-waitinitialize")
     ~DMA_Connection();  // calls VMMDLL_Close
 
     static inline DMA_Connection* m_Instance = nullptr;
@@ -174,6 +176,8 @@ private:
 - `GetInstance()` creates `m_Instance` with `new` on first call; never recreates it.
 - Constructor failure must throw — callers have no way to check a partially-constructed singleton.
 - The `"fpga"` device string is currently hardcoded. To support other devices (USB3380, file replay) without recompiling, expose a `SetDevice(const char*)` that must be called before `GetInstance()`.
+- `-memmap auto` lets LeechCore auto-detect the physical memory map from the FPGA, improving read reliability on some system configs.
+- `-waitinitialize` blocks until VMM has completed async init (virtual memory compression, registry, etc.) before returning, preventing scatter reads from firing against a partially-ready handle.
 
 ---
 
@@ -533,14 +537,23 @@ Common patterns by engine:
 - **Unity / custom** — varies; add whatever modules your offset resolution needs
 
 ### Const/Config.h
-Game-specific constants used as loop bounds and array sizes throughout the game layer. Every game needs at least the maximum number of objects the engine can hold in a single iteration pass — without this the object-list reading loop has no upper bound.
+Game-specific constants and enums used throughout the game layer. Every game needs at least the maximum number of objects the engine can hold in a single iteration pass — without this the object-list reading loop has no upper bound. Game-specific enums (team IDs, team sides, object types) also live here so magic numbers never appear in game-layer code.
 
 ```cpp
 // Game/Const/Config.h
 // Values are engine-specific. Check the SDK or reverse the entity system to find them.
+#include <cstdint>
 
 inline constexpr size_t MAX_ACTORS      = 2048;  // upper bound for a single object-list pass
 inline constexpr size_t MAX_ACTOR_LISTS = 64;    // number of sub-lists (Source 2 only)
+
+// Example: Source 2 / CS2 team IDs (m_iTeamNum values)
+enum TeamID : uint8_t {
+    TEAM_UNASSIGNED = 0,
+    TEAM_SPECTATOR  = 1,
+    TEAM_T          = 2,
+    TEAM_CT         = 3,
+};
 ```
 
 Common values by engine:
@@ -552,7 +565,7 @@ Common values by engine:
 | Unreal Engine | `MAX_UOBJECTS`     | 65536+        |
 | Unity IL2CPP  | `MAX_OBJECTS`      | varies        |
 
-Do **not** put these constants in `pch.h`. They belong in the game layer only.
+Do **not** put these constants in `pch.h`. They belong in the game layer only. Include `<cstdint>` directly in `Config.h` to make it self-contained — do not rely on `pch.h` for `uint8_t` and similar types used in enum declarations.
 
 ### GameContext : IGameContext
 Concrete context. `Initialize` calls game-state init and registers all `CTimer`s. `Tick` fires each timer every millisecond.

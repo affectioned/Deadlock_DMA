@@ -62,6 +62,16 @@ public: /* Interface variables */
 	static inline std::mutex m_ClassMapMutex{};
 	static inline std::unordered_map<std::string, uintptr_t> m_EntityClassMap{};
 
+	// FOW (fog-of-war / minimap visibility), CS2-style. Populated from a
+	// C_CitadelTeam's m_vecFOWEntities. Address-keyed for cheap pawn lookup.
+	static inline std::mutex m_FOWMutex{};
+	static inline uintptr_t m_FOWTeamAddress = 0;
+	static inline std::unordered_map<uintptr_t, bool> m_FOWVisibleByAddr{};
+
+	static void DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc);
+	static void FullFOWRefresh(DMA_Connection* Conn, Process* Proc);
+	static bool IsEntityVisible(uintptr_t entityAddress);
+
 private: /* Internal variables */
 	static inline uintptr_t m_EntitySystem_Address = 0;
 	static inline std::array<uintptr_t, MAX_ENTITY_LISTS> m_EntityList_Addresses{};

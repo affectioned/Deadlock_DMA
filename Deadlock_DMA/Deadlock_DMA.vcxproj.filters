@@ -105,6 +105,9 @@
     <ClCompile Include="GUI\Aimbot\Aimbot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Watchdog\GuiWatchdog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GUI\Config\Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -300,6 +303,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deadlock\Classes\C_NPC_Trooper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Watchdog\GuiWatchdog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Fuser\ESP\Draw\XpOrbs.h">

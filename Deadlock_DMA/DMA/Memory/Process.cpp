@@ -51,8 +51,10 @@ bool Process::PopulateModules(const std::vector<std::string>& names, DMA_Connect
 
 	auto allResolved = [&]
 	{
-		for (const auto& name : names)
-			if (!m_Modules[name]) return false;
+		for (const auto& name : names) {
+			auto it = m_Modules.find(name);
+			if (it == m_Modules.end() || !it->second) return false;
+		}
 		return true;
 	};
 
@@ -77,8 +79,11 @@ bool Process::PopulateModules(const std::vector<std::string>& names, DMA_Connect
 		}
 	}
 
-	for (const auto& [name, addr] : m_Modules)
-		Log::Info("Module `{}` at 0x{:X} size 0x{:X}", name, addr, m_ModuleSizes[name]);
+	for (const auto& [name, addr] : m_Modules) {
+		auto sit = m_ModuleSizes.find(name);
+		Log::Info("Module `{}` at 0x{:X} size 0x{:X}", name, addr,
+		          sit != m_ModuleSizes.end() ? sit->second : 0);
+	}
 
 	return true;
 }

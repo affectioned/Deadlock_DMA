@@ -4,6 +4,7 @@
 #include "GUI/Main Window/Main Window.h"
 #include "DMA/DMA Thread.h"
 #include "GUI/Config/Config.h"
+#include "GUI/Watchdog/GuiWatchdog.h"
 #include "Makcu/MyMakcu.h"
 #include "Deadlock/DeadlockContext.h"
 
@@ -27,6 +28,8 @@ int main()
 	MyMakcu::Initialize();
 
 	g_GameContext = new DeadlockContext();
+
+	GuiWatchdog::Start();
 
 	std::thread DMAThread(DMA_Thread_Main);
 

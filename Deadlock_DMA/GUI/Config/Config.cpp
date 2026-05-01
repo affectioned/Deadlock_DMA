@@ -256,11 +256,8 @@ json Config::SerializeConfig() {
 		{"fMaxPixelDistance", Aimbot::fMaxPixelDistance},
 		{"eHitboxSlot", static_cast<int>(Aimbot::eHitboxSlot)},
 		{"bDrawMaxFOV", Aimbot::bDrawMaxFOV},
-
-		// Prediction
-		{"bPrediction", Aimbot::bPrediction},
-		{"fBulletVelocity", Aimbot::fBulletVelocity},
-		{"fLatencyMs", Aimbot::fLatencyMs}
+		{"bAimAtOrbs", Aimbot::bAimAtOrbs},
+		{"bVisibleOnly", Aimbot::bVisibleOnly}
 	};
 
 	j["Fuser"] = {
@@ -281,6 +278,8 @@ json Config::SerializeConfig() {
 			{"bHideFriendly", Draw_Players::bHideFriendly},
 			{"bDrawBones", Draw_Players::bDrawBones},
 			{"fBonesThickness", Draw_Players::fBonesThickness},
+			{"bDrawBox", Draw_Players::bDrawBox},
+			{"fBoxThickness", Draw_Players::fBoxThickness},
 			{"bDrawHead", Draw_Players::bDrawHead},
 			{"bDrawVelocityVector", Draw_Players::bDrawVelocityVector},
 			{"bDrawUnsecuredSouls", Draw_Players::bDrawUnsecuredSouls},
@@ -289,7 +288,8 @@ json Config::SerializeConfig() {
 			{"bBoneNumbers", Draw_Players::bBoneNumbers},
 			{"bDrawHealthBar", Draw_Players::bDrawHealthBar},
 			{"bHideLocalPlayer", Draw_Players::bHideLocalPlayer},
-			{"bShowDistance", Draw_Players::bShowDistance}
+			{"bShowDistance", Draw_Players::bShowDistance},
+			{"bVisibleOnly", Draw_Players::bVisibleOnly}
 		}},
 
 		{"Draw_Sinners", {
@@ -368,11 +368,8 @@ void Config::DeserializeConfig(const json& j) {
 		if (ab.contains("fMaxPixelDistance")) Aimbot::fMaxPixelDistance = ab["fMaxPixelDistance"].get<float>();
 		if (ab.contains("eHitboxSlot")) Aimbot::eHitboxSlot = static_cast<HitboxSlot>(ab["eHitboxSlot"].get<int>());
 		if (ab.contains("bDrawMaxFOV")) Aimbot::bDrawMaxFOV = ab["bDrawMaxFOV"].get<bool>();
-
-		// Prediction
-		if (ab.contains("bPrediction")) Aimbot::bPrediction = ab["bPrediction"].get<bool>();
-		if (ab.contains("fBulletVelocity")) Aimbot::fBulletVelocity = ab["fBulletVelocity"].get<float>();
-		if (ab.contains("fLatencyMs")) Aimbot::fLatencyMs = ab["fLatencyMs"].get<float>();
+		if (ab.contains("bAimAtOrbs")) Aimbot::bAimAtOrbs = ab["bAimAtOrbs"].get<bool>();
+		if (ab.contains("bVisibleOnly")) Aimbot::bVisibleOnly = ab["bVisibleOnly"].get<bool>();
 	}
 
 	// Fuser
@@ -409,6 +406,8 @@ void Config::DeserializeConfig(const json& j) {
 			if (players.contains("bHideFriendly")) Draw_Players::bHideFriendly = players["bHideFriendly"].get<bool>();
 			if (players.contains("bDrawBones")) Draw_Players::bDrawBones = players["bDrawBones"].get<bool>();
 			if (players.contains("fBonesThickness")) Draw_Players::fBonesThickness = players["fBonesThickness"].get<float>();
+			if (players.contains("bDrawBox")) Draw_Players::bDrawBox = players["bDrawBox"].get<bool>();
+			if (players.contains("fBoxThickness")) Draw_Players::fBoxThickness = players["fBoxThickness"].get<float>();
 			if (players.contains("bDrawHead")) Draw_Players::bDrawHead = players["bDrawHead"].get<bool>();
 			if (players.contains("bDrawVelocityVector")) Draw_Players::bDrawVelocityVector = players["bDrawVelocityVector"].get<bool>();
 			if (players.contains("bDrawUnsecuredSouls")) Draw_Players::bDrawUnsecuredSouls = players["bDrawUnsecuredSouls"].get<bool>();
@@ -418,6 +417,7 @@ void Config::DeserializeConfig(const json& j) {
 			if (players.contains("bDrawHealthBar")) Draw_Players::bDrawHealthBar = players["bDrawHealthBar"].get<bool>();
 			if (players.contains("bHideLocalPlayer")) Draw_Players::bHideLocalPlayer = players["bHideLocalPlayer"].get<bool>();
 			if (players.contains("bShowDistance")) Draw_Players::bShowDistance = players["bShowDistance"].get<bool>();
+			if (players.contains("bVisibleOnly")) Draw_Players::bVisibleOnly = players["bVisibleOnly"].get<bool>();
 		}
 
 		// Draw_Sinners

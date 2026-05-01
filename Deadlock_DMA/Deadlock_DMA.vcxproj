@@ -145,6 +145,7 @@
     <ClCompile Include="Deadlock\Classes\C_BaseEntity.cpp" />
     <ClCompile Include="Deadlock\Classes\C_CitadelPlayerPawn.cpp" />
     <ClInclude Include="Deadlock\Classes\C_NPC_Trooper.h" />
+    <ClInclude Include="GUI\Watchdog\GuiWatchdog.h" />
     <ClInclude Include="Deadlock\Const\BoneListTypes.hpp" />
     <ClInclude Include="Deadlock\Const\EntityConfig.h" />
     <ClInclude Include="Deadlock\Const\ETeam.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="DMA\Memory\Process.cpp" />
     <ClCompile Include="DMA\Memory\SigScan.cpp" />
     <ClCompile Include="GUI\Aimbot\Aimbot.cpp" />
+    <ClCompile Include="GUI\Watchdog\GuiWatchdog.cpp" />
     <ClCompile Include="GUI\Color Picker\Color Picker.cpp" />
     <ClCompile Include="GUI\Config\Config.cpp" />
     <ClCompile Include="GUI\Debug GUI\Class List\Class List.cpp" />

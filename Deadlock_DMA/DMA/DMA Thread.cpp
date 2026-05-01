@@ -12,7 +12,7 @@ extern std::atomic<bool> bRunning;
 
 void DMA_Thread_Main()
 {
-	Log::Info("[DMA Thread] DMA Thread started.");
+	Log::Info("[DMAThread]: Started.");
 
 	DMA_Connection* conn = DMA_Connection::GetInstance();
 
@@ -20,7 +20,7 @@ void DMA_Thread_Main()
 
 	if (!g_GameContext || !g_GameContext->Initialize(conn))
 	{
-		Log::Error("[DMA Thread] Game initialization failed, requesting exit.");
+		Log::Error("[DMAThread]: Game initialization failed, requesting exit.");
 		bRunning = false;
 		return;
 	}

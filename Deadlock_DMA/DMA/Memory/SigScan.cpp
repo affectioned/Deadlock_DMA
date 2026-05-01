@@ -35,7 +35,7 @@ std::vector<int> GetPidListFromName(DMA_Connection* Conn, std::string name)
 
 	if (!VMMDLL_ProcessGetInformationAll(Conn->GetHandle(), &process_info, &total_processes))
 	{
-		Log::Warn("[!] Failed to get process list");
+		Log::Warn("[SigScan]: Failed to enumerate processes while searching for \"{}\"", name);
 		return list;
 	}
 
@@ -45,6 +45,7 @@ std::vector<int> GetPidListFromName(DMA_Connection* Conn, std::string name)
 			list.push_back(process_info[i].dwPID);
 	}
 
+	VMMDLL_MemFree(process_info);
 	return list;
 }
 
@@ -61,6 +62,7 @@ uint64_t FindSignature(DMA_Connection* Conn, const char* signature,
 
 	const char* pat = signature;
 	uint64_t first_match = 0;
+	bool fullMatch = false;
 
 	for (uint64_t i = range_start; i < range_end; i++)
 	{
@@ -69,8 +71,7 @@ uint64_t FindSignature(DMA_Connection* Conn, const char* signature,
 			if (!first_match)
 				first_match = i;
 
-			if (!pat[2])
-				break;
+			if (!pat[2]) { fullMatch = true; break; }
 
 			pat += (*pat == '?') ? 2 : 3;
 		}
@@ -81,7 +82,7 @@ uint64_t FindSignature(DMA_Connection* Conn, const char* signature,
 		}
 	}
 
-	return first_match;
+	return fullMatch ? first_match : 0;
 }
 
 bool IsAddressReadable(DMA_Connection* Conn, uint64_t addr, DWORD PID)

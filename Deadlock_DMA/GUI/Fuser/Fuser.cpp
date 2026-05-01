@@ -4,8 +4,9 @@
 #include "Deadlock/Entity List/EntityList.h"
 #include "Status Bars/Status Bars.h"
 #include "GUI/Aimbot/Aimbot.h"
+#include "GUI/Watchdog/GuiWatchdog.h"
 
-void Fuser::Render() 
+void Fuser::Render()
 {
 	if (!bMasterToggle) return;
 
@@ -16,12 +17,16 @@ void Fuser::Render()
 	auto WindowPos = ImGui::GetWindowPos();
 	auto DrawList = ImGui::GetWindowDrawList();
 
+	GuiWatchdog::GuiStage("Fuser/AimbotFOV");
 	Aimbot::RenderFOVCircle();
 
+	GuiWatchdog::GuiStage("Fuser/ESP");
 	ESP::OnFrame();
 
+	GuiWatchdog::GuiStage("Fuser/SoulsPerMin");
 	RenderSoulsPerMinute();
 
+	GuiWatchdog::GuiStage("Fuser/StatusBars");
 	StatusBars::Render();
 
 	ImGui::End();

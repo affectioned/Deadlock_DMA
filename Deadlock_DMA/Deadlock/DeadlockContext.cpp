@@ -38,6 +38,8 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 		{ ms(500),   [conn, proc] { EntityList::FullXpOrbRefresh(conn, proc); } },
 		{ ms(16),    [conn, proc] { EntityList::QuickXpOrbRefresh(conn, proc); } },
 
+		{ ms(16),    [conn, proc] { EntityList::FullFOWRefresh(conn, proc); } },
+
 		{ ms(5000),  [conn, proc] { EntityList::FullUpdate(conn, proc); } },
 
 		{ ms(5),     [conn]       { Keybinds::OnDMAFrame(conn); } },

@@ -84,17 +84,24 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 	std::scoped_lock Lock(m_LocalAddressMutex);
 
 	uintptr_t LocalPlayerControllerAddress = Proc().GetModuleBase(GameModules::ClientDll) + Offsets::LocalController;
-	m_LocalPlayerControllerAddress = Proc().ReadMem<uintptr_t>(Conn, LocalPlayerControllerAddress);
-	Log::Info("Local Player Controller Address: 0x{:X}", m_LocalPlayerControllerAddress);
+	uintptr_t newCtrl = Proc().ReadMem<uintptr_t>(Conn, LocalPlayerControllerAddress);
+	if (newCtrl != m_LocalPlayerControllerAddress)
+	{
+		m_LocalPlayerControllerAddress = newCtrl;
+		Log::Info("Local Player Controller: 0x{:X}", m_LocalPlayerControllerAddress);
+	}
 
 	auto LocalPlayerControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), m_LocalPlayerControllerAddress);
 
 	if (LocalPlayerControllerIt == EntityList::m_PlayerControllers.end())
 		return false;
 
-	m_LocalPlayerPawnAddress = EntityList::GetEntityAddressFromHandle(LocalPlayerControllerIt->m_hHeroPawn);
-
-	Log::Info("Local Player Pawn Address: 0x{:X}", m_LocalPlayerPawnAddress);
+	uintptr_t newPawn = EntityList::GetEntityAddressFromHandle(LocalPlayerControllerIt->m_hHeroPawn);
+	if (newPawn != m_LocalPlayerPawnAddress)
+	{
+		m_LocalPlayerPawnAddress = newPawn;
+		Log::Info("Local Player Pawn: 0x{:X}", m_LocalPlayerPawnAddress);
+	}
 
 	return true;
 }

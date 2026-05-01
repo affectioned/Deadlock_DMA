@@ -36,6 +36,8 @@ Low-level memory access via MemProcFS (VMMDLL). Subfolders:
 
 **`DMA Thread.h/cpp`** — main acquisition loop on a dedicated thread. One persistent `ScatterRead sr` is created once and reused. The loop runs every 1 ms; individual update functions are gated by `CTimer` intervals. `Keybinds::OnDMAFrame` is called last and fires the aimbot if active.
 
+**`DMA.cpp`** — `VMMDLL_Initialize` args are `{"-device", "FPGA", "-waitinitialize"}`. Do **not** add `-memmap auto` — it intermittently fails to bring up the FPGA and a normal MemProcFS test will work while the app fails. If a saved memmap file is needed for stability, use `-memmap path\to\mmap.txt` instead of `auto`.
+
 ### 2. Game Layer (`Deadlock/`)
 Translates raw memory into game objects. All class and field names match the exact Valve/Source 2 SDK names from the schema dump at `C:\Users\admin\Downloads\schema-dump\deadlock\`.
 
@@ -44,6 +46,8 @@ Translates raw memory into game objects. All class and field names match the exa
 **`Deadlock.h/cpp`** — global game state (view matrix, local player addresses, server time, client yaw). All fields are mutex-protected for cross-thread access.
 
 **`Entity List/EntityList.h/cpp`** — scans the game's entity system and maintains six mutex-protected entity vectors: `m_PlayerControllers`, `m_PlayerPawns`, `m_Troopers`, `m_MonsterCamps`, `m_Sinners`, `m_XpOrbs`. `FullUpdate` rebuilds the entity list (called every tick). The per-type Refresh functions (`PawnRefresh`, `ControllerRefresh`, etc.) do incremental updates — adding new entities with full 2–3 stage init, quick-updating existing ones.
+
+**FOW (minimap visibility)** — `m_FOWVisibleByAddr` (under `m_FOWMutex`) maps entity address → `m_bVisibleOnMap`, sourced from the local team's `C_CitadelTeam::m_vecFOWEntities` (offset `0x6C8`, wrapper layout `[0x00] int count, [0x08] T* data, [0x10] int max`; entries are `STeamFOWEntity` size `0x60` with `m_nEntIndex` at `0x30`, `m_bVisibleOnMap` at `0x41`). `DiscoverFOWTeam` (called from `FullUpdate` every 5 s) scans low entity indices for the populated team — only one of the 5 team entities has non-zero FOW data because the server only replicates the local team's view. `FullFOWRefresh` runs every 16 ms. `IsEntityVisible(addr)` is fail-open (returns true) when no FOW data is loaded yet, fail-closed otherwise. CS2 same idiom; `C_CitadelTeam` does not register a class string in the entity-class map, hence the discovery scan instead of `FindClass`.
 
 **Entity class name strings** — the strings used in `SortEntityList` / `FindClass()` do not follow a consistent naming pattern. Confirmed live entity name strings (from Debug GUI class list export):
 - `player` → `C_CitadelPlayerPawn` (player pawns)
@@ -73,7 +77,9 @@ All `PrepareRead_*` methods only *enqueue* reads into the caller's `ScatterRead&
 ### 3. GUI Layer (`GUI/`)
 ImGui + DirectX 11 overlay. The main GUI thread calls `MainWindow::OnFrame()` each frame, which calls into `Fuser::Render()`. `Query::IsUsing*()` functions gate which entity types are rendered (and also determine which entity types the DMA thread bothers refreshing). `Deadlock::WorldToScreen()` handles the view matrix projection.
 
-**Aimbot** — `Aimbot::OnFrame` is a single-frame function (no loop, no DMA reads). It reads only from mutex-protected cached entity data. `Keybinds::OnDMAFrame` manages `Aimbot::bIsActive` and calls `OnFrame` when the key is held.
+**Aimbot** — `Aimbot::OnFrame` is a single-frame function (no loop, no DMA reads). It reads only from mutex-protected cached entity data. `Keybinds::OnDMAFrame` manages `Aimbot::bIsActive` and calls `OnFrame` when the key is held. Toggles: `bAimAtOrbs` (XP orbs in the hideout test mode — gate is just `!IsInvalid() && !IsDormant()`; `m_flAttackableTime` looked promising but is a *next-cycle predictor*, not a current-state flag, so it's not used) and `bVisibleOnly` (FOW gate via `EntityList::IsEntityVisible(pawn.m_EntityAddress)`). The FOV slider (`fMaxPixelDistance`) drives both the targeting cutoff and the on-screen FOV circle.
+
+**Watchdog** (`GUI/Watchdog/GuiWatchdog.h/.cpp`) — debug-only stall detector. GUI thread sets `GuiStage(name)` breadcrumbs and calls `Tick()` once per frame; DMA thread sets `DmaStage(name)`. A separate watchdog thread polls the frame counter every 500 ms and if it hasn't advanced for 2 s it dumps `[Watchdog] GUI STALL: ...` plus a `try_lock` probe of every shared mutex (`PawnMutex`, `ControllerMutex`, `TrooperMutex`, `MonsterCampMutex`, `SinnerMutex`, `XpOrbMutex`, `ClassMapMutex`, `ServerTimeMutex`) so we know which one is held. Heartbeat at 5 s. Started from `main`.
 
 ## Key Patterns
 
@@ -97,4 +103,10 @@ ImGui + DirectX 11 overlay. The main GUI thread calls `MainWindow::OnFrame()` ea
 
 **Player health** — player health/max health come from `PlayerDataGlobal_t` (inline struct at `controller + 0x8F0`), not from `C_BaseEntity::m_iHealth`. The pawn's engine-level health field is unreliable for players. NPC health (troopers, bosses) uses `C_BaseEntity::m_iHealth` (0x354) and `m_iMaxHealth` (0x350) directly.
 
-**DMA thread timer intervals** — `ViewMatrix`: 2ms, `Yaw`: 10ms, `ServerTime`: 1s, `LocalControllerAddress`: 15s, `FullTrooper`: 3s, `QuickTrooper`: 16ms, `FullPawn`: 2s, `QuickPawn`: 8ms, `FullMonsterCamp`: 2s, `QuickMonsterCamp`: 100ms, `FullController`: 2s, `QuickController`: 150ms, `FullSinner`: 1s, `FullXpOrb`: 500ms, `QuickXpOrb`: 16ms, `FullUpdate`: 5s, `Keybinds`: 5ms. Verbose per-refresh log lines use `DbgLog` (no-op in Release) to avoid I/O pressure.
+**DMA thread timer intervals** — `ViewMatrix`: 2ms, `Yaw`: 10ms, `ServerTime`: 1s, `LocalControllerAddress`: 15s, `FullTrooper`: 3s, `QuickTrooper`: 16ms, `FullPawn`: 2s, `QuickPawn`: 8ms, `FullMonsterCamp`: 2s, `QuickMonsterCamp`: 100ms, `FullController`: 2s, `QuickController`: 150ms, `FullSinner`: 1s, `FullXpOrb`: 500ms, `QuickXpOrb`: 16ms, `FullFOWRefresh`: 16ms, `FullUpdate`: 5s, `Keybinds`: 5ms. Verbose per-refresh log lines use `DbgLog` (no-op in Release) to avoid I/O pressure.
+
+**Lock-order audit** — entity mutexes that are ever held simultaneously must be acquired via a single `std::scoped_lock(a, b)` (uses `std::lock`'s deadlock-avoidance algorithm). Every site that needs both Pawn and Controller does it this way: `Aimbot::GetAimDelta`, `Players::operator()`, `StatusBars`, `Player List`, `EntityList::UpdateEntityMap`, `EntityList::FullControllerRefresh_lk`, `Radar::DrawEntities`. Do **not** lock them sequentially — `FullControllerRefresh_lk` (Controller→Pawn) and `Radar::DrawEntities` (Pawn→Controller) used to do that and produced an AB/BA deadlock against each other across the GUI/DMA threads. `m_FOWMutex` is taken alone — never nested with Pawn/Controller. `m_ServerTimeMutex` is taken alone or briefly inside the Aimbot orb pass.
+
+**Aimbot orb scan** — splits Pawn+Controller and XpOrb into two separate scopes inside `GetAimDelta` so we never hold three entity mutexes at once. Releases Pawn+Controller before grabbing XpOrb to keep the GUI's ESP path from blocking on stale Aimbot work.
+
+**Console hygiene** — most per-cycle entity-list logs (`UpdateCrucialInformation`, `UpdateEntityMap`, `UpdateEntityClassMap`, `SortEntityList`, `FullUpdate done`, `Trooper List Refreshed`, `Entity Map Updated`, `Entity Class Map Updated`) are silent in Release; the per-name class-map dump was removed (the game churns its class registry mid-read and was leaking garbled strings into the log). The `[EntityList] N pawns, M troopers, ...` summary fires only when any count changes; `Local Player Controller/Pawn` fires only on change; `[FOW] Team entity` fires only on change. When adding new logs in the DMA hot path, prefer `DbgLog` unless it's an event/transition.

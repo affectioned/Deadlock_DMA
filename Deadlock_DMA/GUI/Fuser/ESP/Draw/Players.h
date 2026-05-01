@@ -11,6 +11,8 @@ public:
 	static inline bool bHideFriendly{ false };
 	static inline bool bDrawBones{ true };
 	static inline float fBonesThickness{ 3.f };
+	static inline bool bDrawBox{ true };
+	static inline float fBoxThickness{ 1.5f };
 	static inline bool bDrawHead{ true };
 	static inline bool bDrawVelocityVector{ false };
 	static inline bool bDrawUnsecuredSouls{ true };
@@ -20,11 +22,13 @@ public:
 	static inline bool bDrawHealthBar{ true };
 	static inline bool bHideLocalPlayer{ true };
 	static inline bool bShowDistance{ true };
+	static inline bool bVisibleOnly{ false };
 
 private:
 	static void DrawPlayer(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn);
 	static void DrawHealthBar(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, const ImVec2& PawnScreenPos, ImDrawList* DrawList, int& LineNumber);
 	static void DrawSkeleton(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
+	static void DrawBox(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
 	static void DrawHeadCircle(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
 	static void DrawVelocityVector(const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos);
 	static void DrawBoneNumbers(const C_CitadelPlayerPawn& Pawn);

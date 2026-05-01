@@ -2,7 +2,8 @@ name: Build & Release
 
 on:
   push:
-    branches: [master]
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -34,11 +35,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $sha  = "${{ github.sha }}".Substring(0, 7)
-          $date = Get-Date -Format "yyyy-MM-dd"
-          $tag  = "build-$sha"
-          $name = "Build $sha ($date)"
-          $msg  = "Automated build from commit ${{ github.sha }}`n`n${{ github.event.head_commit.message }}"
+          $tag  = "${{ github.ref_name }}"
+          $name = "Release $tag"
+          $msg  = "Build from tag $tag (commit ${{ github.sha }})"
 
           gh release create $tag "x64\Release\Deadlock_DMA.exe" `
             --title $name `

@@ -110,7 +110,10 @@ void Radar::DrawEntities()
 
 	const auto RadarCenterGamePos = GetRadarCenterScreenPos();
 
-	std::scoped_lock Lock(EntityList::m_PawnMutex);
+	// Take both atomically — DrawPlayer (called below) needs Controller too.
+	// Sequential Pawn-then-Controller would deadlock against
+	// FullControllerRefresh_lk's reverse order.
+	std::scoped_lock Lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
 	for (auto& Pawn : EntityList::m_PlayerPawns)
 	{
@@ -158,8 +161,7 @@ void Radar::DrawLocalPlayerViewRay(ImDrawList* DrawList, const ImVec2& ScreenPos
 
 void Radar::DrawPlayer(const C_CitadelPlayerPawn& Pawn, const ImVec2& RadarPos)
 {
-	std::scoped_lock Lock(EntityList::m_ControllerMutex);
-
+	// Caller (DrawEntities) holds m_PawnMutex + m_ControllerMutex.
 	auto PC = EntityList::GetAssociatedPC(Pawn);
 
 	if (!PC)

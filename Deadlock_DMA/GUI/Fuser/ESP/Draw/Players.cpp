@@ -32,6 +32,12 @@ void Draw_Players::operator()()
 
 		if (ControllerIt->IsDead()) continue;
 
+		// FOW gate: when enabled, skip enemies the team minimap doesn't see.
+		// Friendlies always render — bypass the gate for them.
+		if (bVisibleOnly && !ControllerIt->IsFriendly()
+			&& !EntityList::IsEntityVisible(Pawn.m_EntityAddress))
+			continue;
+
 		DrawPlayer(*ControllerIt, Pawn);
 	}
 }
@@ -46,6 +52,9 @@ void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const C_Citade
 
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
+
+	if (bDrawBox)
+		DrawBox(PC, Pawn, DrawList, WindowPos);
 
 	if (bDrawBones)
 		DrawSkeleton(PC, Pawn, DrawList, WindowPos);
@@ -96,6 +105,39 @@ void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const C_Cit
 	ImGui::PopFont();
 
 	LineNumber++;
+}
+
+void Draw_Players::DrawBox(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
+{
+	// Vertical extent: head bone (top) → pawn origin (feet). Width derived
+	// from the on-screen height — keeps the box proportional regardless of
+	// distance / FOV. Falls back gracefully when the head bone is missing.
+	if (!Pawn.m_pBoneData) return;
+	const auto& headSlot = Pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
+	if (headSlot.empty()) return;
+	int HeadBoneIndex = headSlot[0];
+
+	Vector2 Head2D, Feet2D;
+	if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[HeadBoneIndex], Head2D)) return;
+	if (!Deadlock::WorldToScreen(Pawn.m_Position, Feet2D)) return;
+
+	float topY = Head2D.y + WindowPos.y;
+	float bottomY = Feet2D.y + WindowPos.y;
+	if (bottomY <= topY) return; // pawn upside-down on screen — bail
+
+	float height = bottomY - topY;
+	float halfWidth = height * 0.25f; // typical humanoid aspect, ~1:2
+	float centerX = ((Head2D.x + Feet2D.x) * 0.5f) + WindowPos.x;
+
+	auto BoxColor = PC.m_TeamNum == ETeam::HIDDEN_KING
+		? ColorPicker::HiddenKingTeamColor
+		: ColorPicker::ArchMotherTeamColor;
+
+	DrawList->AddRect(
+		ImVec2(centerX - halfWidth, topY),
+		ImVec2(centerX + halfWidth, bottomY),
+		BoxColor,
+		0.0f, 0, fBoxThickness);
 }
 
 void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)

@@ -1,6 +1,4 @@
 #include "pch.h"
-#include <iostream>
-
 #include "DMA.h"
 
 DMA_Connection* DMA_Connection::GetInstance()
@@ -18,8 +16,8 @@ VMM_HANDLE DMA_Connection::GetHandle() const
 
 bool DMA_Connection::EndConnection()
 {
-	this->~DMA_Connection();
-
+	delete m_Instance;
+	m_Instance = nullptr;
 	return true;
 }
 
@@ -29,13 +27,8 @@ DMA_Connection::DMA_Connection()
     Log::Info("Connecting to DMA...");
 
     try {
-        LPCSTR args[] = {
-            "-device",
-            "fpga",
-            "-waitinitialize"
-        };
-
-        m_VMMHandle = VMMDLL_Initialize(3, args);
+        LPCSTR args[] = { "", "-device", "FPGA", "-waitinitialize" };
+        m_VMMHandle = VMMDLL_Initialize(4, args);
 
         if (!m_VMMHandle)
             throw std::runtime_error("VMMDLL_Initialize failed (Check FPGA connection/drivers)");
@@ -45,12 +38,6 @@ DMA_Connection::DMA_Connection()
     catch (const std::exception& e) {
         Log::Error("--- CRITICAL ERROR ---");
         Log::Error("{}", e.what());
-        Log::Error("Press ENTER to exit...");
-
-        // Wait for user input so the window stays open
-        std::cin.get();
-
-        // Re-throw so the program doesn't try to use a null handle
         throw;
     }
 }
