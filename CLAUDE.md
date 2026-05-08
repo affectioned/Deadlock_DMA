@@ -4,18 +4,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build
 
-Open `Deadlock_DMA.sln` in Visual Studio 2022 and build with **Release | x64**. There is no command-line shorthand configured — use the IDE or MSBuild directly:
+Open `Deadlock_DMA.sln` in Visual Studio 2022/2026 and build with **Release | x64**. There is no command-line shorthand configured — use the IDE or MSBuild directly:
 
 ```
 msbuild Deadlock_DMA.sln /p:Configuration=Release /p:Platform=x64
 ```
 
 **Build configurations:**
-- `Release | x64` — production build
-- `Debug | x64` — debug build (no optimizations)
+- `Release | x64` — production build (toolset `v145`, WPO disabled, `/LTCG:OFF`)
+- `Debug | x64` — debug build (toolset `v143`, no optimizations)
 
 **Runtime DLLs required** (from `Dependencies/MemProcFS/`, copied automatically by post-build step):
 `FTD3XX.dll`, `leechcore.dll`, `leechcore_driver.dll`, `vmm.dll`, `makcu-cpp.dll`
+
+**Build-time gotchas** —
+- `makcu-cpp.lib` ships prebuilt with `/GL`. WPO is disabled in Release (`<WholeProgramOptimization>false</WholeProgramOptimization>`) to dodge the C1047 cross-version check, and `/LTCG:OFF` is added to the linker so the prebuilt `/GL` bits don't trigger an implicit LTCG re-link (which used to add ~7 minutes to every build).
+- `/MP` (multi-processor compilation) is **off** intentionally. Each `cl.exe` worker can use 0.5–1 GB at C++23 + heavy headers, and machine load was unacceptable. The header blast-radius reduction (TU-private state in anonymous namespaces) is the better lever for incremental build speed.
 
 ## Architecture
 
@@ -47,6 +51,8 @@ Translates raw memory into game objects. All class and field names match the exa
 
 **`Entity List/EntityList.h/cpp`** — scans the game's entity system and maintains six mutex-protected entity vectors: `m_PlayerControllers`, `m_PlayerPawns`, `m_Troopers`, `m_MonsterCamps`, `m_Sinners`, `m_XpOrbs`. `FullUpdate` rebuilds the entity list (called every tick). The per-type Refresh functions (`PawnRefresh`, `ControllerRefresh`, etc.) do incremental updates — adding new entities with full 2–3 stage init, quick-updating existing ones.
 
+Also tracked but not as a wrapper-vector: `m_PrimaryWeaponAbilityAddresses` (raw addresses of every `citadel_ability_primary_weapon` ability entity), used solely by `RefreshPrimaryWeaponBulletSpeed` (see `Entity List/PrimaryWeapon.cpp`) to find the local pawn's weapon and read its base bullet speed from VData. Result is latched into `EntityList::g_LocalBulletSpeed` (`std::atomic<float>`, hu/s) so the Aimbot can read lock-free; 0 means "not yet resolved" and the Aimbot falls back to its default. Reset to 0 on any failure path so a hero swap doesn't keep the previous hero's stale value.
+
 **FOW (minimap visibility)** — `m_FOWVisibleByAddr` (under `m_FOWMutex`) maps entity address → `m_bVisibleOnMap`, sourced from the local team's `C_CitadelTeam::m_vecFOWEntities` (offset `0x6C8`, wrapper layout `[0x00] int count, [0x08] T* data, [0x10] int max`; entries are `STeamFOWEntity` size `0x60` with `m_nEntIndex` at `0x30`, `m_bVisibleOnMap` at `0x41`). `DiscoverFOWTeam` (called from `FullUpdate` every 5 s) scans low entity indices for the populated team — only one of the 5 team entities has non-zero FOW data because the server only replicates the local team's view. `FullFOWRefresh` runs every 16 ms. `IsEntityVisible(addr)` is fail-open (returns true) when no FOW data is loaded yet, fail-closed otherwise. CS2 same idiom; `C_CitadelTeam` does not register a class string in the entity-class map, hence the discovery scan instead of `FindClass`.
 
 **Entity class name strings** — the strings used in `SortEntityList` / `FindClass()` do not follow a consistent naming pattern. Confirmed live entity name strings (from Debug GUI class list export):
@@ -60,7 +66,9 @@ Translates raw memory into game objects. All class and field names match the exa
 - `item_xp` → XP orbs
 - `citadel_item_pickup_rejuv_herotest` → Rejuvenator pickups (note `_herotest` suffix is the real entity name)
 - `destroyable_building` → shrines, guardians, destructible objectives
+- `citadel_ability_primary_weapon` → primary weapon ability entity (one per pawn; owned-via-`m_hOwnerEntity` filter picks the local one)
 - Punchable buff boxes (`C_Citadel_PunchablePowerup`) do **not** appear in the entity class map
+- Deadlock primary fire is **hitscan** — no `C_CitadelProjectile` entities ever spawn for normal bullets. Only ability projectiles (Hook, Vindicta arrow, McGinnis grenade, etc.) instantiate them, and only while in flight. An earlier projectile-entity scan was removed because of this; bullet speed comes from the weapon ability's VData instead.
 
 **Entity labels** — `C_BaseEntity` has a `const char* m_Label` field set at sort time. `m_TrooperAddresses` and `m_MonsterCampAddresses` are `vector<pair<uintptr_t, const char*>>`. Labels: regular troopers = `nullptr`, Walkers = `"Walker"`, neutrals = `"Neutral"`, tier-2 boss = `"Tier 2"`, tier-3 boss = `"Tier 3"`. `C_NPC_Trooper::PrepareRead_1` uses `m_Label != nullptr` to gate the `m_iMaxHealth` read (Walkers only).
 
@@ -78,6 +86,10 @@ All `PrepareRead_*` methods only *enqueue* reads into the caller's `ScatterRead&
 ImGui + DirectX 11 overlay. The main GUI thread calls `MainWindow::OnFrame()` each frame, which calls into `Fuser::Render()`. `Query::IsUsing*()` functions gate which entity types are rendered (and also determine which entity types the DMA thread bothers refreshing). `Deadlock::WorldToScreen()` handles the view matrix projection.
 
 **Aimbot** — `Aimbot::OnFrame` is a single-frame function (no loop, no DMA reads). It reads only from mutex-protected cached entity data. `Keybinds::OnDMAFrame` manages `Aimbot::bIsActive` and calls `OnFrame` when the key is held. Toggles: `bAimAtOrbs` (XP orbs in the hideout test mode — gate is just `!IsInvalid() && !IsDormant()`; `m_flAttackableTime` looked promising but is a *next-cycle predictor*, not a current-state flag, so it's not used) and `bVisibleOnly` (FOW gate via `EntityList::IsEntityVisible(pawn.m_EntityAddress)`). The FOV slider (`fMaxPixelDistance`) drives both the targeting cutoff and the on-screen FOV circle.
+
+**Lead prediction** — `bUsePrediction` enables iterative lead in `GetAimDelta`. Two-iteration fixed-point: `t = dist / bulletSpeed; predicted = bone + velocity * t; repeat`. Bullet speed priority chain: manual override (`fManualBulletSpeedMs` > 0) → auto-detected from VData (`EntityList::g_LocalBulletSpeed`) → default (`kDefaultBulletSpeedMs = 480 m/s`). All UI values are in m/s and converted at use site via `HammerUnitsPerMeter` (52, defined in `C_BaseEntity.h`). The local pawn position used as the shooter origin is fetched from `m_PlayerPawns[m_LocalPawnIndex]` *inside* the existing `scoped_lock` — don't add a separate `GetLocalPawnPosition()` call, that re-locks `m_PawnMutex`.
+
+**Bullet speed source** — read from the local pawn's `citadel_ability_primary_weapon` entity → `m_pSubclassVData` (+0x390, non-schema slot) → `CitadelAbilityVData::m_WeaponInfo` (+0x158, inline `CCitadelWeaponInfo`) → `m_flBulletSpeed` (+0xB4 inside, = +0x20C absolute). This is the *base* template value — hero-level scaling and item modifiers (stat 76 `EBulletSpeed`, stat 77 `EBulletSpeedIncrease`) aren't applied. Hero scaling lives in `CitadelHeroData_t::m_mapStartingStats`/`m_mapScalingStats` (`CUtlOrderedMap<EStatsType, …>`); item bonuses are server-side computed and not replicated under any stat-keyed cache. Manual override is the practical path to perfect accuracy.
 
 **Watchdog** (`GUI/Watchdog/GuiWatchdog.h/.cpp`) — debug-only stall detector. GUI thread sets `GuiStage(name)` breadcrumbs and calls `Tick()` once per frame; DMA thread sets `DmaStage(name)`. A separate watchdog thread polls the frame counter every 500 ms and if it hasn't advanced for 2 s it dumps `[Watchdog] GUI STALL: ...` plus a `try_lock` probe of every shared mutex (`PawnMutex`, `ControllerMutex`, `TrooperMutex`, `MonsterCampMutex`, `SinnerMutex`, `XpOrbMutex`, `ClassMapMutex`, `ServerTimeMutex`) so we know which one is held. Heartbeat at 5 s. Started from `main`.
 
@@ -97,16 +109,22 @@ ImGui + DirectX 11 overlay. The main GUI thread calls `MainWindow::OnFrame()` ea
 
 **Entity list addresses** — `GetEntityListAddresses` does a single bulk scatter read of `MAX_ENTITY_LISTS * 8` bytes directly into `m_EntityList_Addresses.data()` (contiguous `std::array<uintptr_t>`), not 32 individual reads.
 
-**`C_CitadelPlayerPawn` fields read** — `PrepareRead_1` reads: `m_hController` (0x10A8), `m_nUnsecuredSouls` (0x12E4), `m_nTotalUnspentSouls` (0x12D8), `m_vecVelocity` (0x438), `m_angEyeAngles` (0x11B0), `m_flRespawnTime` (0x130C).
+**`C_CitadelPlayerPawn` fields read** — `PrepareRead_1` reads: `m_hController` (0x10A8), `m_nUnsecuredSouls` (0x12E4), `m_nTotalUnspentSouls` (0x12D8), `m_vecVelocity` (0x438). `m_angEyeAngles` and `m_flRespawnTime` were removed as dead reads; re-add the offsets to `Offsets.h` if a feature actually consumes them.
 
-**GUI** — `Fuser::Render()` is a black, fullscreen, no-decoration ImGui window that acts as the ESP overlay. It must always cover the entire screen. Never add decoration, input handling, or non-zero window padding to it. The main menu is a separate OS window (via `ImGuiConfigFlags_ViewportsEnable`) toggled with Insert.
+**GUI** — `Fuser::Render()` is a black, fullscreen, no-decoration ImGui window that acts as the ESP overlay. It must always cover the entire screen. Never add decoration, input handling, or non-zero window padding to it. The Fuser settings panel has a "Center on Screen" button that re-snaps the overlay to (0,0) on the next frame (it has `NoDecoration` but not `NoMove`, so empty-area drag can shift it).
+
+**Main menu** — single resizable ImGui window titled `DEADLOCK DMA` hosting one TabItem per panel: General, Aimbot, Fuser, ESP, Colors, Keybinds, Config, Players, Troopers, Classes. Each panel's `Render`/`RenderSettings` is a *body-only* function (no `Begin/End`, no `bSettings` early-return) intended to be called from inside a TabItem. `MainWindow::Render` only drives the overlay layer (`Fuser::Render`, `Radar::Render`) plus `MainMenu::Render` — there is no longer a separate floating window per panel. The legacy `bSettings`/`bMasterToggle` visibility flags on each panel are unused but kept on the struct for backward-compat with old config files. Window geometry (`MainMenu::WindowPos`, `MainMenu::WindowSize`) is captured each frame and persisted via Config.
+
+**ESP healthbar position** — `Draw_Players::eHealthBarPosition` (`Top` / `Bottom` / `Left` / `Right`). Top/Bottom are 80×textHeight horizontal bars above the head or at the feet. Left/Right are vertical bars matching the head-to-feet box height (`8 px` thick, fills bottom→top like a thermometer). Geometry derives from the head bone + pawn position, *not* from `bDrawBox` — bars stay on the side even with the box hidden. Falls back to Bottom layout if bones aren't ready that frame.
 
 **Player health** — player health/max health come from `PlayerDataGlobal_t` (inline struct at `controller + 0x8F0`), not from `C_BaseEntity::m_iHealth`. The pawn's engine-level health field is unreliable for players. NPC health (troopers, bosses) uses `C_BaseEntity::m_iHealth` (0x354) and `m_iMaxHealth` (0x350) directly.
 
-**DMA thread timer intervals** — `ViewMatrix`: 8ms, `Yaw`: 8ms, `ServerTime`: 1s, `LocalControllerAddress`: 30s, `FullTrooper`: 3s, `QuickTrooper`: 16ms, `FullPawn`: 2s, `QuickPawn`: 8ms, `FullMonsterCamp`: 3s, `QuickMonsterCamp`: 250ms, `FullController`: 2s, `QuickController`: 300ms, `FullSinner`: 2s, `FullXpOrb`: 1s, `QuickXpOrb`: 16ms, `FullFOWRefresh`: 16ms, `FullUpdate`: 1s, `Keybinds`: 8ms. Tuned for latency-bound DMA (~166μs/scatter on PCIe gen1 x1) — total scatter rate ~700/s, ~12% of measured 6034/s ceiling. Verbose per-refresh log lines use `DbgLog` (no-op in Release) to avoid I/O pressure.
+**DMA thread timer intervals** — `ViewMatrix`: 8ms, `Yaw`: 8ms, `ServerTime`: 1s, `LocalControllerAddress`: 30s, `FullTrooper`: 3s, `QuickTrooper`: 16ms, `FullPawn`: 2s, `QuickPawn`: 8ms, `FullMonsterCamp`: 3s, `QuickMonsterCamp`: 250ms, `FullController`: 2s, `QuickController`: 300ms, `FullSinner`: 2s, `FullXpOrb`: 1s, `QuickXpOrb`: 16ms, `RefreshPrimaryWeaponBulletSpeed`: 2s, `FullFOWRefresh`: 16ms, `FullUpdate`: 1s, `Keybinds`: 8ms. Tuned for latency-bound DMA (~166μs/scatter on PCIe gen1 x1) — total scatter rate ~700/s, ~12% of measured 6034/s ceiling. Verbose per-refresh log lines use `DbgLog` (no-op in Release) to avoid I/O pressure.
 
 **Lock-order audit** — entity mutexes that are ever held simultaneously must be acquired via a single `std::scoped_lock(a, b)` (uses `std::lock`'s deadlock-avoidance algorithm). Every site that needs both Pawn and Controller does it this way: `Aimbot::GetAimDelta`, `Players::operator()`, `StatusBars`, `Player List`, `EntityList::UpdateEntityMap`, `Radar::DrawEntities`. `FullControllerRefresh_lk` only takes `m_ControllerMutex` since controllers are now sourced from `SortEntityList` (via `citadel_player_controller`) rather than walked from pawn handles. `m_FOWMutex` is taken alone — never nested with Pawn/Controller. `m_ServerTimeMutex` is taken alone or briefly inside the Aimbot orb pass.
 
 **Aimbot orb scan** — splits Pawn+Controller and XpOrb into two separate scopes inside `GetAimDelta` so we never hold three entity mutexes at once. Releases Pawn+Controller before grabbing XpOrb to keep the GUI's ESP path from blocking on stale Aimbot work.
+
+**Config persistence** — JSON files live in `%APPDATA%\DEADLOCK-DMA\Configs\` (Roaming, swapped from `Documents\` so existing user configs need manual migration). `Config::LoadConfig("default")` runs at startup; `Config::SaveActive()` runs on exit, writing back to the most recently loaded/saved config name (TU-private `s_ActiveConfig` in `Config.cpp`, set by both `LoadConfig` and `SaveConfig`). Two exit paths trigger save: the END key falls through the main loop (post-loop `SaveActive`), and `OnConsoleExit` (registered via `SetConsoleCtrlHandler`) catches Ctrl+C / Ctrl+Break / window-close / logoff / shutdown — which fires before the OS terminates the process (~5 s grace period for `CTRL_CLOSE_EVENT`). The double-save on console-close is intentional and idempotent.
 
 **Console hygiene** — most per-cycle entity-list logs (`UpdateCrucialInformation`, `UpdateEntityMap`, `UpdateEntityClassMap`, `SortEntityList`, `FullUpdate done`, `Trooper List Refreshed`, `Entity Map Updated`, `Entity Class Map Updated`) are silent in Release; the per-name class-map dump was removed (the game churns its class registry mid-read and was leaking garbled strings into the log). The `[EntityList] N pawns, M troopers, ...` summary fires only when any count changes; `Local Player Controller/Pawn` fires only on change; `[FOW] Team entity` fires only on change. When adding new logs in the DMA hot path, prefer `DbgLog` unless it's an event/transition.
