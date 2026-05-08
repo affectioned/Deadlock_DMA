@@ -4,10 +4,6 @@
 
 void TrooperList::Render()
 {
-	if (!bSettings) return;
-
-	ImGui::Begin("Trooper List", &bSettings);
-
 	/* m_ControllerMutex is required for friendly check */
 	std::scoped_lock Lock(EntityList::m_TrooperMutex, EntityList::m_ControllerMutex);
 
@@ -103,6 +99,4 @@ void TrooperList::Render()
 
 		ImGui::EndTable();
 	}
-
-	ImGui::End();
 }

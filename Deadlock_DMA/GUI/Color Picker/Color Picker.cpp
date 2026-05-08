@@ -4,10 +4,6 @@
 
 void ColorPicker::Render()
 {
-	if (!bMasterToggle)	return;
-
-	ImGui::Begin("Color Picker", &bMasterToggle);
-
 	MyColorPicker("Sinner's Sacrifice", ColorPicker::SinnersColor);
 
 	MyColorPicker("Boss", ColorPicker::BossColor);
@@ -35,8 +31,6 @@ void ColorPicker::Render()
 	MyColorPicker("Aimbot FOV Circle Active", ColorPicker::AimbotFOVCircleActive);
 
 	MyColorPicker("Radar Background", ColorPicker::RadarBackgroundColor);
-
-	ImGui::End();
 }
 
 void ColorPicker::MyColorPicker(const char* label, ImColor& color)

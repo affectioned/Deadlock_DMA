@@ -2,6 +2,11 @@
 #include "Deadlock/Engine/Vector3.h"
 #include "Deadlock/Const/ETeam.h"
 
+// Source 2 default world units. Used wherever speeds/distances cross the
+// memory ↔ player-facing boundary (Aimbot bullet-speed display, ESP nametag
+// distance, etc.).
+inline constexpr float HammerUnitsPerMeter = 52.0f;
+
 class C_BaseEntity
 {
 public:

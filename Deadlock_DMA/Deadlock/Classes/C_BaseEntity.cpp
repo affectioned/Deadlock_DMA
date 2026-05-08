@@ -18,7 +18,6 @@ const bool C_BaseEntity::IsLocalPlayer() const
 	return m_EntityAddress == Deadlock::m_LocalPlayerControllerAddress || m_EntityAddress == Deadlock::m_LocalPlayerPawnAddress;
 }
 
-constexpr uint32_t HammerUnitsPerMeter = 52;
 const float C_BaseEntity::DistanceFromLocalPlayer(bool bInMeters) const
 {
 	if (EntityList::m_LocalPawnIndex < 0)
@@ -29,7 +28,7 @@ const float C_BaseEntity::DistanceFromLocalPlayer(bool bInMeters) const
 	auto Distance = m_Position.Distance(LocalPawn.m_Position);
 
 	if (bInMeters)
-		return Distance / HammerUnitsPerMeter; 
+		return Distance / HammerUnitsPerMeter;
 
 	return Distance;
 }

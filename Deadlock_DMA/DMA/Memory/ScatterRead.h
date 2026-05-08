@@ -16,7 +16,19 @@
 class ScatterRead
 {
 public:
-	ScatterRead(VMM_HANDLE hVMM, DWORD pid, DWORD flags = VMMDLL_FLAG_NOCACHE)
+	// Default flags tuned for live-game DMA reads:
+	//   NOCACHE       — bypass MemProcFS data cache; we always want fresh values.
+	//   NOPAGING      — game memory is always resident, skip the pagefile/compressed
+	//                   probe path entirely (would never succeed for our PID anyway).
+	//   PREPAREEX_NOMEMZERO — don't zero output buffers in PrepareEx; we overwrite
+	//                   them on Execute(). Saves the per-call memzero, which adds
+	//                   up across the bone-buffer reads (~0x320 bytes per survivor).
+	static constexpr DWORD kDefaultFlags =
+		VMMDLL_FLAG_NOCACHE
+		| VMMDLL_FLAG_NOPAGING
+		| VMMDLL_FLAG_SCATTER_PREPAREEX_NOMEMZERO;
+
+	ScatterRead(VMM_HANDLE hVMM, DWORD pid, DWORD flags = kDefaultFlags)
 		: m_Pid(pid), m_Flags(flags)
 		, m_Handle(VMMDLL_Scatter_Initialize(hVMM, pid, flags)) {}
 

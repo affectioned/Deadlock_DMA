@@ -4,10 +4,6 @@
 
 void ClassList::Render()
 {
-	if (!bSettings) return;
-
-	ImGui::Begin("Class List", &bSettings);
-
 	std::scoped_lock Lock(EntityList::m_ClassMapMutex);
 
 	// Display total count
@@ -83,6 +79,4 @@ void ClassList::Render()
 
 		ImGui::EndTable();
 	}
-
-	ImGui::End();
 }

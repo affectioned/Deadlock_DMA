@@ -18,10 +18,8 @@ public:
 
 	Vector3   m_BonePositions[MAX_BONES]{ 0.0f };
 	Vector3   m_Velocity{ 0.0f };
-	Vector3   m_EyeAngles{ 0.0f };
 	uintptr_t m_BoneArrayAddress{ 0 };
 	CHandle   m_hController{ 0 };
-	float     m_flRespawnTime{ 0.0f };
 	int32_t   m_TotalUnspentSouls{ 0 };
 	int32_t   m_UnsecuredSouls{ 0 };
 
@@ -88,12 +86,6 @@ public:
 
 		uintptr_t VelocityPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_vecVelocity;
 		sr.Add(VelocityPtr, &m_Velocity);
-
-		uintptr_t EyeAnglesPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_angEyeAngles;
-		sr.Add(EyeAnglesPtr, &m_EyeAngles);
-
-		uintptr_t RespawnTimePtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_flRespawnTime;
-		sr.Add(RespawnTimePtr, &m_flRespawnTime);
 	}
 
 	void PrepareRead_2(ScatterRead& sr)

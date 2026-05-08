@@ -45,6 +45,9 @@
     <ClCompile Include="Deadlock\Entity List\XpOrbs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Deadlock\Entity List\PrimaryWeapon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Deadlock\Entity List\Fow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

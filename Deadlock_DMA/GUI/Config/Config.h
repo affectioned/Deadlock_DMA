@@ -9,6 +9,9 @@ public:
 	static void Render();
 	static void SaveConfig(const std::string& configName);
 	static bool LoadConfig(const std::string& configName);
+	// Saves to the most recently loaded/saved config name (defaults to "default").
+	// Called from main on exit to auto-persist GUI tweaks made during the session.
+	static void SaveActive();
 
 private:
 	static std::string getConfigDir();

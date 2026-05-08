@@ -143,21 +143,14 @@ const char* CKeybind::GetKeyName(uint32_t vkCode)
 
 void Keybinds::Render()
 {
-	if (!bSettings) return;
-
-	ImGui::Begin("Keybinds", &bSettings);
-
 	if (c_keys::IsInitialized() == false)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.3f, 0.3f, 1.0f));
 		ImGui::Text("Input Manager not initialized!");
 		ImGui::PopStyleColor();
-		ImGui::End();
 		return;
 	}
 
-	ImGui::SeparatorText("Keybinds");
-	// Table for better layout
 	if (ImGui::BeginTable("##KeybindsTable", 4, ImGuiTableFlags_SizingStretchProp))
 	{
 		ImGui::TableSetupColumn("Action", ImGuiTableColumnFlags_WidthFixed, 120.0f);
@@ -170,8 +163,6 @@ void Keybinds::Render()
 
 		ImGui::EndTable();
 	}
-
-	ImGui::End();
 }
 
 void CKeybind::Render()

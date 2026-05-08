@@ -24,6 +24,15 @@ public:
 	static inline bool bVisibleOnly{ false };
 	static inline bool bIsActive = false;
 
+	// Lead prediction. Auto-detect path reads the base bullet speed from the
+	// local pawn's primary-weapon-ability VData (CCitadelWeaponInfo). That's
+	// the *template* base — hero stat scaling and item bonuses aren't applied;
+	// use the manual override for exact accuracy.
+	// All speeds in m/s; converted to hammer-units/sec at use site.
+	static inline bool bUsePrediction{ true };
+	static inline float fManualBulletSpeedMs{ 0.0f };   // 0 = auto-detect; >0 = override
+	static constexpr float kDefaultBulletSpeedMs = 480.0f; // ~25000 hu/s baseline
+
 private:
 	static inline Vector2 GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen);
 	static inline std::random_device rd;

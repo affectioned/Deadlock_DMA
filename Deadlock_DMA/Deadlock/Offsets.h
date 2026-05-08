@@ -36,10 +36,25 @@ namespace Offsets
 
 	namespace C_BaseEntity
 	{
-		inline constexpr std::ptrdiff_t m_pGameSceneNode = 0x330; // CGameSceneNode* (8b)
-		inline constexpr std::ptrdiff_t m_iMaxHealth     = 0x350; // int32 (4b)
-		inline constexpr std::ptrdiff_t m_iHealth        = 0x354; // int32 (4b)
-		inline constexpr std::ptrdiff_t m_iTeamNum       = 0x3F3; // uint8 (1b)
+		inline constexpr std::ptrdiff_t m_pGameSceneNode  = 0x330; // CGameSceneNode* (8b)
+		inline constexpr std::ptrdiff_t m_iMaxHealth      = 0x350; // int32 (4b)
+		inline constexpr std::ptrdiff_t m_iHealth         = 0x354; // int32 (4b)
+		inline constexpr std::ptrdiff_t m_iTeamNum        = 0x3F3; // uint8 (1b)
+		// Non-schema slot between m_nSubclassID (0x388) and m_nSimulationTick (0x398).
+		// Set at runtime; null until the engine populates the subclass data table.
+		// Source: github.com/neverlosecc/source2sdk (deadlock branch).
+		inline constexpr std::ptrdiff_t m_pSubclassVData  = 0x390; // void* (8b)
+		inline constexpr std::ptrdiff_t m_hOwnerEntity    = 0x51C; // CHandle< C_BaseEntity > (4b)
+	}
+
+	// Inside CitadelAbilityVData (the subclass-data type for ability entities
+	// like citadel_ability_primary_weapon). m_WeaponInfo is an inline
+	// CCitadelWeaponInfo (1912 bytes) at +0x158; m_flBulletSpeed is at +0xB4
+	// inside it = +0x20C absolute. This is the muzzle speed for hitscan bullets,
+	// not entity projectiles.
+	namespace CitadelAbilityVData
+	{
+		inline constexpr std::ptrdiff_t m_flBulletSpeed = 0x20C; // float32 (4b) — base bullet speed in hu/s
 	}
 
 	namespace CCitadelPlayerController
@@ -49,10 +64,9 @@ namespace Offsets
 
 		namespace PlayerDataGlobal_t
 		{
-			inline constexpr std::ptrdiff_t m_iLevel                  = 0x8; // int32 (4b)
 			inline constexpr std::ptrdiff_t m_iHealthMax               = 0x10; // int32 (4b)
 			inline constexpr std::ptrdiff_t m_nHeroID                  = 0x1C; // HeroID_t (4b)
-			inline constexpr std::ptrdiff_t m_nTotalSouls              = 0x24; 
+			inline constexpr std::ptrdiff_t m_nTotalSouls              = 0x24;
 			inline constexpr std::ptrdiff_t m_iHealth                  = 0x4C; // int32 (4b)
 		}
 	}
@@ -60,8 +74,6 @@ namespace Offsets
 	namespace C_CitadelPlayerPawn
 	{
 		inline constexpr std::ptrdiff_t m_vecVelocity        = 0x438; // CNetworkVelocityVector (40b)
-		inline constexpr std::ptrdiff_t m_angEyeAngles       = 0x11B0; // QAngle (12b)
-		inline constexpr std::ptrdiff_t m_flRespawnTime      = 0x130C; // GameTime_t (4b)
 		inline constexpr std::ptrdiff_t m_nCurrencies		 = 0x12D8; // int32[6] (24b)
 		inline constexpr std::ptrdiff_t m_nUnsecuredSouls    = 0x12E4;
 	}

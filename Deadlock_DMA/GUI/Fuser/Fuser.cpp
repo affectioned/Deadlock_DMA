@@ -6,11 +6,20 @@
 #include "GUI/Aimbot/Aimbot.h"
 #include "GUI/Watchdog/GuiWatchdog.h"
 
+namespace
+{
+	// Set by the "Center on Screen" button; consumed (cleared) on the next Render()
+	// to force the overlay back to (0,0). TU-private so toggling it doesn't trigger
+	// a rebuild of every header consumer.
+	bool s_bRequestRecenter = false;
+}
+
 void Fuser::Render()
 {
 	if (!bMasterToggle) return;
 
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(0, 0), s_bRequestRecenter ? ImGuiCond_Always : ImGuiCond_FirstUseEver);
+	s_bRequestRecenter = false;
 	ImGui::SetNextWindowSize(Fuser::m_ScreenSize);
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 255.0f));
 	ImGui::Begin("Fuser", nullptr, ImGuiWindowFlags_NoDecoration);
@@ -35,10 +44,6 @@ void Fuser::Render()
 
 void Fuser::RenderSettings()
 {
-	if (!bSettings) return;
-
-	ImGui::Begin("Fuser Settings", &bSettings);
-
 	ImGui::Checkbox("Enable Fuser", &bMasterToggle);
 
 	ImGui::Spacing();
@@ -54,6 +59,9 @@ void Fuser::RenderSettings()
 	ImGui::InputFloat("Height##Screen", &m_ScreenSize.y, 0.0f, 0.0f, "%.0f");
 	ImGui::TextDisabled("(Match your game resolution)");
 
+	if (ImGui::Button("Center on Screen"))
+		s_bRequestRecenter = true;
+
 	ImGui::Spacing();
 
 	ImGui::SeparatorText("HUD Elements");
@@ -62,8 +70,6 @@ void Fuser::RenderSettings()
 	ImGui::Checkbox("Team Health Bar", &StatusBars::bRenderTeamHealthBar);
 	ImGui::Checkbox("Team Souls Bar", &StatusBars::bRenderTeamSoulsBar);
 	ImGui::Checkbox("Unspent Souls Bar", &StatusBars::bRenderUnspentSoulsBar);
-
-	ImGui::End();
 }
 
 void Fuser::RenderSoulsPerMinute()

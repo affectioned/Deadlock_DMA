@@ -5,15 +5,7 @@
 #include "GUI/Main Menu/Main Menu.h"
 #include "GUI/Fonts/Fonts.h"
 #include "GUI/Radar/Radar.h"
-#include "GUI/Fuser/ESP/ESP.h"
-#include "GUI/Debug GUI/Player List/Player List.h"
-#include "GUI/Debug GUI/Trooper List/Trooper List.h"
-#include "GUI/Debug GUI/Class List/Class List.h"
 #include "GUI/Fuser/Fuser.h"
-#include "GUI/Aimbot/Aimbot.h"
-#include "GUI/Color Picker/Color Picker.h"
-#include "GUI/Keybinds/Keybinds.h"
-#include "GUI/Config/Config.h"
 #include "GUI/Watchdog/GuiWatchdog.h"
 
 void Render(ImGuiContext* ctx)
@@ -26,31 +18,15 @@ void Render(ImGuiContext* ctx)
 	ImGui::PushFont(Fonts::m_IBMPlexMonoSemiBold, 16.0f);
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
+	// Overlay layer — fullscreen ESP draw + minimap. Always on (gated by their
+	// own master toggles).
 	GuiWatchdog::GuiStage("Fuser::Render");
 	Fuser::Render();
 	GuiWatchdog::GuiStage("Radar::Render");
 	Radar::Render();
 
-	GuiWatchdog::GuiStage("PlayerList::Render");
-	PlayerList::Render();
-	GuiWatchdog::GuiStage("TrooperList::Render");
-	TrooperList::Render();
-	GuiWatchdog::GuiStage("ClassList::Render");
-	ClassList::Render();
-
-	GuiWatchdog::GuiStage("Fuser::RenderSettings");
-	Fuser::RenderSettings();
-	GuiWatchdog::GuiStage("ESP::RenderSettings");
-	ESP::RenderSettings();
-	GuiWatchdog::GuiStage("Aimbot::RenderSettings");
-	Aimbot::RenderSettings();
-
-	GuiWatchdog::GuiStage("ColorPicker::Render");
-	ColorPicker::Render();
-	GuiWatchdog::GuiStage("Keybinds::Render");
-	Keybinds::Render();
-	GuiWatchdog::GuiStage("Config::Render");
-	Config::Render();
+	// Settings layer — single tabbed window hosts every panel's body
+	// (Aimbot/Fuser/ESP/Colors/Keybinds/Config/PlayerList/TrooperList/ClassList).
 	GuiWatchdog::GuiStage("MainMenu::Render");
 	MainMenu::Render();
 

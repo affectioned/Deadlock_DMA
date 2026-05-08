@@ -125,6 +125,7 @@ void EntityList::SortEntityList()
 	m_MonsterCampAddresses.clear();
 	m_SinnersAddresses.clear();
 	m_XpOrbAddresses.clear();
+	m_PrimaryWeaponAbilityAddresses.clear();
 
 	auto FindClass = [&](const std::string& name) -> uintptr_t {
 		auto it = m_EntityClassMap.find(name);
@@ -138,8 +139,9 @@ void EntityList::SortEntityList()
 	uintptr_t TrooperNeutralClassPtr   = FindClass("npc_trooper_neutral");
 	uintptr_t BossTier2ClassPtr        = FindClass("npc_boss_tier2");
 	uintptr_t BossTier3ClassPtr        = FindClass("npc_boss_tier3");
-	uintptr_t SinnerClassPtr           = FindClass("npc_neutral_sinners_sacrifice");
-	uintptr_t XpOrbClassPtr            = FindClass("item_xp");
+	uintptr_t SinnerClassPtr             = FindClass("npc_neutral_sinners_sacrifice");
+	uintptr_t XpOrbClassPtr              = FindClass("item_xp");
+	uintptr_t PrimaryWeaponAbilityClass  = FindClass("citadel_ability_primary_weapon");
 
 	for (auto& List : m_CompleteEntityList)
 	{
@@ -156,6 +158,7 @@ void EntityList::SortEntityList()
 			else if (BossTier3ClassPtr          && Entry.pName == BossTier3ClassPtr)        m_MonsterCampAddresses.emplace_back(Entry.pEnt, "Tier 3");
 			else if (SinnerClassPtr             && Entry.pName == SinnerClassPtr)           m_SinnersAddresses.push_back(Entry.pEnt);
 			else if (XpOrbClassPtr              && Entry.pName == XpOrbClassPtr)            m_XpOrbAddresses.push_back(Entry.pEnt);
+			else if (PrimaryWeaponAbilityClass  && Entry.pName == PrimaryWeaponAbilityClass) m_PrimaryWeaponAbilityAddresses.push_back(Entry.pEnt);
 		}
 	}
 

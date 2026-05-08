@@ -28,16 +28,24 @@
 #include <shlobj.h>
 #include <fstream>
 
+namespace
+{
+	// Tracks the last successfully loaded or saved config so SaveActive() (called
+	// on exit) writes back to the same file the user is working with, instead of
+	// always clobbering "default".
+	std::string s_ActiveConfig = "default";
+}
+
 std::string Config::getConfigDir() {
 	char path[MAX_PATH];
-	if (SUCCEEDED(SHGetFolderPathA(nullptr, CSIDL_PERSONAL, nullptr, 0, path))) {
-		std::filesystem::path docPath(path);
-		docPath /= "DEADLOCK-DMA";
-		docPath /= "Configs";
-		if (!std::filesystem::exists(docPath)) {
-			std::filesystem::create_directories(docPath);
+	if (SUCCEEDED(SHGetFolderPathA(nullptr, CSIDL_APPDATA, nullptr, 0, path))) {
+		std::filesystem::path appDataPath(path);
+		appDataPath /= "DEADLOCK-DMA";
+		appDataPath /= "Configs";
+		if (!std::filesystem::exists(appDataPath)) {
+			std::filesystem::create_directories(appDataPath);
 		}
-		return docPath.string();
+		return appDataPath.string();
 	}
 
 	std::filesystem::path fallback("Configs");
@@ -68,8 +76,6 @@ void Config::RefreshConfigFilesList(std::vector<std::string>& outList) {
 
 void Config::Render()
 {
-	ImGui::Begin("Configuration Manager");
-
 	static char configNameBuf[128] = "default";
 	static int selectedConfig = -1;
 	static std::vector<std::string> configFiles;
@@ -196,8 +202,6 @@ void Config::Render()
 	}
 
 	ImGui::EndChild();
-
-	ImGui::End();
 }
 
 static void DeserializeKeybindObj(const json& Table, const std::string& Name, CKeybind& Out)
@@ -242,6 +246,8 @@ json Config::SerializeConfig() {
 	j["MainMenu"] = {
 		{"bVSync", MainMenu::bVSync},
 		{"iTargetFPS", MainMenu::iTargetFPS},
+		{"WindowPos",  {MainMenu::WindowPos.x,  MainMenu::WindowPos.y}},
+		{"WindowSize", {MainMenu::WindowSize.x, MainMenu::WindowSize.y}},
 	};
 
 	// Aimbot
@@ -257,7 +263,9 @@ json Config::SerializeConfig() {
 		{"eHitboxSlot", static_cast<int>(Aimbot::eHitboxSlot)},
 		{"bDrawMaxFOV", Aimbot::bDrawMaxFOV},
 		{"bAimAtOrbs", Aimbot::bAimAtOrbs},
-		{"bVisibleOnly", Aimbot::bVisibleOnly}
+		{"bVisibleOnly", Aimbot::bVisibleOnly},
+		{"bUsePrediction", Aimbot::bUsePrediction},
+		{"fManualBulletSpeedMs", Aimbot::fManualBulletSpeedMs}
 	};
 
 	j["Fuser"] = {
@@ -287,6 +295,7 @@ json Config::SerializeConfig() {
 			{"UnsecuredSoulsHighlightThreshold", Draw_Players::UnsecuredSoulsHighlightThreshold},
 			{"bBoneNumbers", Draw_Players::bBoneNumbers},
 			{"bDrawHealthBar", Draw_Players::bDrawHealthBar},
+			{"eHealthBarPosition", static_cast<int>(Draw_Players::eHealthBarPosition)},
 			{"bHideLocalPlayer", Draw_Players::bHideLocalPlayer},
 			{"bShowDistance", Draw_Players::bShowDistance},
 			{"bVisibleOnly", Draw_Players::bVisibleOnly}
@@ -352,6 +361,10 @@ void Config::DeserializeConfig(const json& j) {
 
 		if (m.contains("bVSync")) MainMenu::bVSync = m["bVSync"].get<bool>();
 		if (m.contains("iTargetFPS")) MainMenu::iTargetFPS = m["iTargetFPS"].get<int>();
+		if (m.contains("WindowPos") && m["WindowPos"].is_array() && m["WindowPos"].size() == 2)
+			MainMenu::WindowPos = ImVec2(m["WindowPos"][0].get<float>(), m["WindowPos"][1].get<float>());
+		if (m.contains("WindowSize") && m["WindowSize"].is_array() && m["WindowSize"].size() == 2)
+			MainMenu::WindowSize = ImVec2(m["WindowSize"][0].get<float>(), m["WindowSize"][1].get<float>());
 	}
 
 	// Aimbot
@@ -370,6 +383,8 @@ void Config::DeserializeConfig(const json& j) {
 		if (ab.contains("bDrawMaxFOV")) Aimbot::bDrawMaxFOV = ab["bDrawMaxFOV"].get<bool>();
 		if (ab.contains("bAimAtOrbs")) Aimbot::bAimAtOrbs = ab["bAimAtOrbs"].get<bool>();
 		if (ab.contains("bVisibleOnly")) Aimbot::bVisibleOnly = ab["bVisibleOnly"].get<bool>();
+		if (ab.contains("bUsePrediction")) Aimbot::bUsePrediction = ab["bUsePrediction"].get<bool>();
+		if (ab.contains("fManualBulletSpeedMs")) Aimbot::fManualBulletSpeedMs = ab["fManualBulletSpeedMs"].get<float>();
 	}
 
 	// Fuser
@@ -415,6 +430,7 @@ void Config::DeserializeConfig(const json& j) {
 			if (players.contains("UnsecuredSoulsHighlightThreshold")) Draw_Players::UnsecuredSoulsHighlightThreshold = players["UnsecuredSoulsHighlightThreshold"].get<int>();
 			if (players.contains("bBoneNumbers")) Draw_Players::bBoneNumbers = players["bBoneNumbers"].get<bool>();
 			if (players.contains("bDrawHealthBar")) Draw_Players::bDrawHealthBar = players["bDrawHealthBar"].get<bool>();
+			if (players.contains("eHealthBarPosition")) Draw_Players::eHealthBarPosition = static_cast<EHealthBarPosition>(players["eHealthBarPosition"].get<int>());
 			if (players.contains("bHideLocalPlayer")) Draw_Players::bHideLocalPlayer = players["bHideLocalPlayer"].get<bool>();
 			if (players.contains("bShowDistance")) Draw_Players::bShowDistance = players["bShowDistance"].get<bool>();
 			if (players.contains("bVisibleOnly")) Draw_Players::bVisibleOnly = players["bVisibleOnly"].get<bool>();
@@ -493,6 +509,7 @@ void Config::SaveConfig(const std::string& configName) {
 		return;
 	file << std::setw(4) << j;
 	file.close();
+	s_ActiveConfig = configName;
 }
 
 bool Config::LoadConfig(const std::string& configName) {
@@ -513,5 +530,10 @@ bool Config::LoadConfig(const std::string& configName) {
 	}
 	file.close();
 	DeserializeConfig(j);
+	s_ActiveConfig = configName;
 	return true;
+}
+
+void Config::SaveActive() {
+	SaveConfig(s_ActiveConfig);
 }

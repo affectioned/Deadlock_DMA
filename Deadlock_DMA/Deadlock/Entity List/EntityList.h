@@ -38,6 +38,11 @@ public: /* Interface methods */
 	static void FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc);
 	static void QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc);
 
+	// Reads base bullet speed for primary fire from the local pawn's
+	// citadel_ability_primary_weapon -> m_pSubclassVData -> CCitadelWeaponInfo
+	// at +0x158 -> m_flBulletSpeed at +0xB4. Latches into g_LocalBulletSpeed.
+	static void RefreshPrimaryWeaponBulletSpeed(DMA_Connection* Conn, Process* Proc);
+
 public: /* Interface variables */
 	static inline std::mutex m_PawnMutex{};
 	static inline int32_t m_LocalPawnIndex = -1;
@@ -58,6 +63,12 @@ public: /* Interface variables */
 
 	static inline std::mutex m_XpOrbMutex{};
 	static inline std::vector<C_BaseEntity> m_XpOrbs{};
+
+	// Base muzzle speed for the local pawn's primary weapon, in hu/s. Latched
+	// from the weapon ability's VData by RefreshPrimaryWeaponBulletSpeed. Atomic
+	// so the GUI/Aimbot thread can read without a mutex. 0 means "not resolved
+	// yet" — Aimbot falls back to its default until the first read lands.
+	static inline std::atomic<float> g_LocalBulletSpeed{ 0.0f };
 
 	static inline std::mutex m_ClassMapMutex{};
 	static inline std::unordered_map<std::string, uintptr_t> m_EntityClassMap{};
@@ -83,6 +94,7 @@ private: /* Internal variables */
 	static inline std::vector<std::pair<uintptr_t, const char*>> m_MonsterCampAddresses{};
 	static inline std::vector<uintptr_t> m_SinnersAddresses{};
 	static inline std::vector<uintptr_t> m_XpOrbAddresses{};
+	static inline std::vector<uintptr_t> m_PrimaryWeaponAbilityAddresses{};
 
 	// Single ScatterRead shared across all DMA operations on the DMA thread.
 	// Initialized once via InitScatterHandle(); cleared before each batch.

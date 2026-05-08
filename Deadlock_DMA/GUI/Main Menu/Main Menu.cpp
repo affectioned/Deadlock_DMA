@@ -7,41 +7,74 @@
 #include "GUI/Radar/Radar.h"
 #include "GUI/Aimbot/Aimbot.h"
 #include "GUI/Keybinds/Keybinds.h"
+#include "GUI/Config/Config.h"
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Debug GUI/Class List/Class List.h"
 #include "GUI/Debug GUI/Trooper List/Trooper List.h"
 
+namespace
+{
+	void DrawGeneralTab()
+	{
+		ImGui::SeparatorText("Performance");
+		ImGui::Checkbox("VSync", &MainMenu::bVSync);
+		ImGui::SetNextItemWidth(100.0f);
+		ImGui::SliderInt("Target FPS", &MainMenu::iTargetFPS, 60, 240);
+
+		ImGui::Spacing();
+		ImGuiIO& io = ImGui::GetIO();
+		ImGui::Text("ImGui IO FPS: %.1f", io.Framerate);
+		ImGui::Text("Frame Time: %.3f ms", 1000.0f / io.Framerate);
+		ImGui::Text("Delta Time: %.3f ms", io.DeltaTime * 1000.0f);
+	}
+
+	struct Tab
+	{
+		const char* label;
+		void (*draw)();
+	};
+
+	// Order here is the tab order in the menu. Each draw fn writes only the
+	// body — the panel functions had their ImGui::Begin/End stripped so they
+	// can be hosted inside our shared TabItem.
+	const Tab kTabs[] = {
+		{ "General",  DrawGeneralTab },
+		{ "Aimbot",   Aimbot::RenderSettings },
+		{ "Fuser",    Fuser::RenderSettings },
+		{ "ESP",      ESP::RenderSettings },
+		{ "Colors",   ColorPicker::Render },
+		{ "Keybinds", Keybinds::Render },
+		{ "Config",   Config::Render },
+		{ "Players",  PlayerList::Render },
+		{ "Troopers", TrooperList::Render },
+		{ "Classes",  ClassList::Render },
+	};
+}
+
 void MainMenu::Render()
 {
-	ImGui::Begin("Main Menu", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SetNextWindowPos(WindowPos, ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(WindowSize, ImGuiCond_FirstUseEver);
 
-	ImGui::SeparatorText("Performance");
-	ImGui::Checkbox("VSync", &bVSync);
-	ImGui::SetNextItemWidth(100.0f);
-	// 1280x960@240Hz, 1920x1080@240/165/144/120Hz, 2560x1440@144/120Hz, 2560x1080@165/144Hz, 3440x1440@100/60Hz
-	ImGui::SliderInt("Target FPS", &iTargetFPS, 60, 240);
+	if (ImGui::Begin("DEADLOCK DMA"))
+	{
+		if (ImGui::BeginTabBar("##MainTabs", ImGuiTabBarFlags_Reorderable))
+		{
+			for (const auto& tab : kTabs)
+			{
+				if (ImGui::BeginTabItem(tab.label))
+				{
+					tab.draw();
+					ImGui::EndTabItem();
+				}
+			}
+			ImGui::EndTabBar();
+		}
 
-	ImGui::Spacing();
-	ImGuiIO& io = ImGui::GetIO();
-	ImGui::Text("ImGui IO FPS: %.1f", io.Framerate);
-	ImGui::Text("Frame Time: %.3f ms", 1000.0f / io.Framerate);
-	ImGui::Text("Delta Time: %.3f ms", io.DeltaTime * 1000.0f);
-
-	ImGui::SeparatorText("Main Features");
-	ImGui::Checkbox("Aimbot Settings", &Aimbot::bSettings);
-	ImGui::Checkbox("Fuser Settings", &Fuser::bSettings);
-	ImGui::Spacing();
-
-	ImGui::SeparatorText("Configuration");
-	ImGui::Checkbox("Keybinds", &Keybinds::bSettings);
-	ImGui::Checkbox("Color Picker", &ColorPicker::bMasterToggle);
-
-	ImGui::Spacing();
-
-	ImGui::SeparatorText("Debug Tools");
-	ImGui::Checkbox("Player List", &PlayerList::bSettings);
-	ImGui::Checkbox("Class List", &ClassList::bSettings);
-	ImGui::Checkbox("Trooper List", &TrooperList::bSettings);
-
+		// Capture window geometry every frame so Config::SaveActive() picks up
+		// the current pos/size on exit.
+		WindowPos  = ImGui::GetWindowPos();
+		WindowSize = ImGui::GetWindowSize();
+	}
 	ImGui::End();
 }

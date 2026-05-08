@@ -45,6 +45,10 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 		{ ms(1000),  [conn, proc] { EntityList::FullXpOrbRefresh(conn, proc); } },
 		{ ms(16),    [conn, proc] { EntityList::QuickXpOrbRefresh(conn, proc); } },
 
+		// Primary-weapon ability VData read. Base bullet speed only changes on
+		// hero swap or build change, so a slow cadence is fine.
+		{ ms(2000),  [conn, proc] { EntityList::RefreshPrimaryWeaponBulletSpeed(conn, proc); } },
+
 		// Visibility: 60 Hz keeps "visible only" gating responsive when enemies
 		// duck behind walls or step out of vision.
 		{ ms(16),    [conn, proc] { EntityList::FullFOWRefresh(conn, proc); } },

@@ -77,33 +77,126 @@ void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const C_Citade
 
 void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, const ImVec2& PawnScreenPos, ImDrawList* DrawList, int& LineNumber)
 {
-	constexpr float HealthBarWidth = 80.0f;
+	constexpr float HorizontalWidth = 80.0f;
+	constexpr float VerticalThickness = 8.0f;
+	constexpr float SideGap = 4.0f;
 	constexpr float Padding = 2.0f;
-	constexpr float UnpaddedWidth = HealthBarWidth - (Padding * 2.0f);
 
-	auto TextLineHeight = ImGui::GetTextLineHeight();
+	const float TextLineHeight = ImGui::GetTextLineHeight();
+	const float HealthPercent  = PC.m_MaxHealth > 0
+		? static_cast<float>(PC.m_CurrentHealth) / static_cast<float>(PC.m_MaxHealth)
+		: 0.0f;
 
-	float HealthPercent = static_cast<float>(PC.m_CurrentHealth) / static_cast<float>(PC.m_MaxHealth);
+	const bool bVertical = (eHealthBarPosition == EHealthBarPosition::Left ||
+	                        eHealthBarPosition == EHealthBarPosition::Right);
 
-	ImVec2 BarTopLeft = ImVec2(PawnScreenPos.x - (HealthBarWidth / 2.0f), PawnScreenPos.y + (LineNumber * TextLineHeight));
-	ImVec2 BarBottomRight = ImVec2(BarTopLeft.x + HealthBarWidth, BarTopLeft.y + TextLineHeight);
+	// For vertical layouts the bar height tracks the on-screen player box
+	// (head bone → feet). Falls back to Bottom if bones aren't ready yet.
+	float BoxTopY = 0.0f, BoxBottomY = 0.0f, BoxHalfWidth = 0.0f;
+	bool bHaveBoxBounds = false;
+	if (bVertical && Pawn.m_pBoneData)
+	{
+		const auto& headSlot = Pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
+		if (!headSlot.empty())
+		{
+			Vector2 Head2D, Feet2D;
+			if (Deadlock::WorldToScreen(Pawn.m_BonePositions[headSlot[0]], Head2D) &&
+			    Deadlock::WorldToScreen(Pawn.m_Position, Feet2D))
+			{
+				const ImVec2 WindowPos = ImGui::GetWindowPos();
+				float topY    = Head2D.y + WindowPos.y;
+				float bottomY = Feet2D.y + WindowPos.y;
+				if (bottomY > topY)
+				{
+					float height = bottomY - topY;
+					topY -= height * 0.08f; // match DrawBox: head bone sits inside the skull
+					BoxTopY      = topY;
+					BoxBottomY   = bottomY;
+					BoxHalfWidth = (bottomY - topY) * 0.25f;
+					bHaveBoxBounds = true;
+				}
+			}
+		}
+	}
+
+	const EHealthBarPosition Pos = (bVertical && !bHaveBoxBounds)
+		? EHealthBarPosition::Bottom
+		: eHealthBarPosition;
+
+	ImVec2 BarTopLeft, BarBottomRight;
+	switch (Pos)
+	{
+	case EHealthBarPosition::Top:
+	{
+		const float TopY = bHaveBoxBounds ? BoxTopY : PawnScreenPos.y - TextLineHeight - SideGap;
+		BarTopLeft     = ImVec2(PawnScreenPos.x - HorizontalWidth * 0.5f, TopY - TextLineHeight - SideGap);
+		BarBottomRight = ImVec2(BarTopLeft.x + HorizontalWidth, BarTopLeft.y + TextLineHeight);
+		break;
+	}
+	case EHealthBarPosition::Bottom:
+	{
+		BarTopLeft     = ImVec2(PawnScreenPos.x - HorizontalWidth * 0.5f, PawnScreenPos.y + LineNumber * TextLineHeight);
+		BarBottomRight = ImVec2(BarTopLeft.x + HorizontalWidth, BarTopLeft.y + TextLineHeight);
+		break;
+	}
+	case EHealthBarPosition::Left:
+	{
+		const float CenterX = PawnScreenPos.x;
+		BarTopLeft     = ImVec2(CenterX - BoxHalfWidth - SideGap - VerticalThickness, BoxTopY);
+		BarBottomRight = ImVec2(BarTopLeft.x + VerticalThickness, BoxBottomY);
+		break;
+	}
+	case EHealthBarPosition::Right:
+	{
+		const float CenterX = PawnScreenPos.x;
+		BarTopLeft     = ImVec2(CenterX + BoxHalfWidth + SideGap, BoxTopY);
+		BarBottomRight = ImVec2(BarTopLeft.x + VerticalThickness, BoxBottomY);
+		break;
+	}
+	}
+
+	// Background frame.
 	DrawList->AddRectFilled(BarTopLeft, BarBottomRight, ColorPicker::HealthBarBackgroundColor);
 
-	BarTopLeft.x += Padding;
-	BarTopLeft.y += Padding;
-	BarBottomRight.x = BarTopLeft.x + (UnpaddedWidth * HealthPercent);
-	BarBottomRight.y -= Padding;
-	DrawList->AddRectFilled(BarTopLeft, BarBottomRight, ColorPicker::HealthBarForegroundColor);
+	// Foreground fill: horizontal grows left→right; vertical grows bottom→top
+	// (depleting health drops the level like a thermometer).
+	const ImVec2 InnerTL(BarTopLeft.x + Padding,     BarTopLeft.y + Padding);
+	const ImVec2 InnerBR(BarBottomRight.x - Padding, BarBottomRight.y - Padding);
+	const float InnerW = InnerBR.x - InnerTL.x;
+	const float InnerH = InnerBR.y - InnerTL.y;
 
-	ImGui::PushFont(nullptr, ImGui::GetTextLineHeight() - Padding);
+	if (Pos == EHealthBarPosition::Left || Pos == EHealthBarPosition::Right)
+	{
+		const float FillH = InnerH * HealthPercent;
+		DrawList->AddRectFilled(ImVec2(InnerTL.x, InnerBR.y - FillH), InnerBR,
+		                        ColorPicker::HealthBarForegroundColor);
+	}
+	else
+	{
+		DrawList->AddRectFilled(InnerTL, ImVec2(InnerTL.x + InnerW * HealthPercent, InnerBR.y),
+		                        ColorPicker::HealthBarForegroundColor);
+	}
 
+	// Numeric label: centered inside horizontal bars; floated above for verticals
+	// since the column is too narrow for legible text.
 	std::string HealthText = std::format("{0:d}", PC.m_CurrentHealth);
-	auto TextSize = ImGui::CalcTextSize(HealthText.c_str());
-	DrawList->AddText(ImVec2(PawnScreenPos.x - (TextSize.x / 2.0f), PawnScreenPos.y + Padding + (LineNumber * TextLineHeight)), IM_COL32(255, 255, 255, 255), HealthText.c_str());
+	const float LabelHeight = TextLineHeight - Padding;
+	ImGui::PushFont(nullptr, LabelHeight);
+	const ImVec2 TextSize = ImGui::CalcTextSize(HealthText.c_str());
 
+	ImVec2 TextPos;
+	if (Pos == EHealthBarPosition::Left || Pos == EHealthBarPosition::Right)
+		TextPos = ImVec2(BarTopLeft.x + (VerticalThickness - TextSize.x) * 0.5f,
+		                 BarTopLeft.y - TextSize.y - 1.0f);
+	else
+		TextPos = ImVec2((BarTopLeft.x + BarBottomRight.x - TextSize.x) * 0.5f,
+		                 BarTopLeft.y + Padding);
+
+	DrawList->AddText(TextPos, IM_COL32(255, 255, 255, 255), HealthText.c_str());
 	ImGui::PopFont();
 
-	LineNumber++;
+	if (Pos == EHealthBarPosition::Bottom)
+		LineNumber++;
 }
 
 void Draw_Players::DrawBox(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)

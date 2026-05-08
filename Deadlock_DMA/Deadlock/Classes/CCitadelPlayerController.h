@@ -10,7 +10,6 @@ public:
 	using C_BaseEntity::C_BaseEntity;
 
 	CHandle  m_hHeroPawn{ 0 };
-	int32_t  m_CurrentLevel{ 0 };
 	int32_t  m_MaxHealth{ 0 };
 	int32_t  m_TotalSouls{ 0 };
 	HeroId   m_HeroID{ 0 };
@@ -39,9 +38,6 @@ public:
 		sr.Add(PawnHandleAddress, &m_hHeroPawn);
 
 		uintptr_t PlayerDataAddress = m_EntityAddress + Offsets::CCitadelPlayerController::m_PlayerDataGlobal;
-
-		uintptr_t LevelAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_iLevel;
-		sr.Add(LevelAddress, &m_CurrentLevel);
 
 		uintptr_t MaxHealthAddress = PlayerDataAddress + Offsets::CCitadelPlayerController::PlayerDataGlobal_t::m_iHealthMax;
 		sr.Add(MaxHealthAddress, &m_MaxHealth);

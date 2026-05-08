@@ -58,8 +58,6 @@ void ESP::OnFrame()
 
 void ESP::RenderSettings()
 {
-	ImGui::Begin("ESP Settings");
-
 	ImGui::Checkbox("Enable ESP", &bMasterToggle);
 
 	if (ImGui::CollapsingHeader("Players", ImGuiTreeNodeFlags_DefaultOpen))
@@ -87,6 +85,16 @@ void ESP::RenderSettings()
 		ImGui::Checkbox("Head Circle", &Draw_Players::bDrawHead);
 		ImGui::Checkbox("Velocity Vector", &Draw_Players::bDrawVelocityVector);
 		ImGui::Checkbox("Health Bars", &Draw_Players::bDrawHealthBar);
+		if (Draw_Players::bDrawHealthBar)
+		{
+			ImGui::Indent();
+			static constexpr const char* kHealthBarPositions[] = { "Top", "Bottom", "Left", "Right" };
+			int hbPos = static_cast<int>(Draw_Players::eHealthBarPosition);
+			ImGui::SetNextItemWidth(120.0f);
+			if (ImGui::Combo("Position", &hbPos, kHealthBarPositions, IM_ARRAYSIZE(kHealthBarPositions)))
+				Draw_Players::eHealthBarPosition = static_cast<EHealthBarPosition>(hbPos);
+			ImGui::Unindent();
+		}
 		ImGui::Checkbox("Unsecured Souls", &Draw_Players::bDrawUnsecuredSouls);
 		ImGui::Indent();
 		ImGui::SetNextItemWidth(50.0f);
@@ -110,6 +118,4 @@ void ESP::RenderSettings()
 	ImGui::Checkbox("Draw Sinners", &Draw_Sinners::bMasterToggle);
 
 	ImGui::Checkbox("Draw XP Orbs", &Draw_XpOrbs::bMasterToggle);
-
-	ImGui::End();
 }

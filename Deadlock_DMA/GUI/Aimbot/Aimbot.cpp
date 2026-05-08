@@ -6,19 +6,16 @@
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Watchdog/GuiWatchdog.h"
 #include "Makcu/MyMakcu.h"
+#include "Deadlock/Entity List/EntityList.h"
 
 void Aimbot::RenderSettings()
 {
-	if (!bSettings) return;
-
 	static bool bFirstFrame{ true };
 	if (bFirstFrame)
 	{
 		(void)MyMakcu::m_Device.connect();
 		bFirstFrame = false;
 	}
-
-	ImGui::Begin("Aimbot", &bSettings);
 
 	if (MyMakcu::m_Device.isConnected()) {
 		ImGui::TextColored(ImColor(0, 255, 0), "Makcu Connected!");
@@ -49,11 +46,25 @@ void Aimbot::RenderSettings()
 
 	ImGui::Checkbox("Visible Only", &bVisibleOnly);
 
-	ImGui::End();
+	ImGui::Checkbox("Lead Prediction", &bUsePrediction);
+	if (bUsePrediction)
+	{
+		ImGui::SetNextItemWidth(120.0f);
+		ImGui::SliderFloat("Manual Speed (m/s)", &fManualBulletSpeedMs, 0.0f, 1500.0f, "%.0f");
+		ImGui::SameLine();
+		ImGui::TextDisabled("(0 = auto)");
+
+		const float liveHu = EntityList::g_LocalBulletSpeed.load(std::memory_order_relaxed);
+
+		if (fManualBulletSpeedMs > 0.0f)
+			ImGui::TextColored(ImColor(80, 180, 255), "Using manual: %.0f m/s", fManualBulletSpeedMs);
+		else if (liveHu > 0.0f)
+			ImGui::TextColored(ImColor(0, 255, 0), "Auto-detected: %.0f m/s (from VData)", liveHu / HammerUnitsPerMeter);
+		else
+			ImGui::TextColored(ImColor(255, 200, 0), "Auto-detect pending — defaulting to %.0f m/s.", kDefaultBulletSpeedMs);
+	}
 }
 
-
-#include "Deadlock/Entity List/EntityList.h"
 
 Vector2 Aimbot::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen)
 {
@@ -82,6 +93,30 @@ Vector2 Aimbot::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen)
 		std::scoped_lock lk(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 		GuiWatchdog::DmaStage("Aimbot/scanning pawns");
 
+		// Resolve lead-prediction inputs while the pawn lock is held, so the
+		// shooter position and the target bones come from the same snapshot.
+		// Internal math is hu/s to match memory units; UI exposes m/s.
+		const bool bPredictEnabled = bUsePrediction && EntityList::m_LocalPawnIndex >= 0;
+		const Vector3 LocalPos = bPredictEnabled
+			? EntityList::m_PlayerPawns[EntityList::m_LocalPawnIndex].m_Position
+			: Vector3{};
+		const float BulletSpeed = [&] {
+			if (!bPredictEnabled) return 0.0f;
+			if (fManualBulletSpeedMs > 0.0f) return fManualBulletSpeedMs * HammerUnitsPerMeter;
+			float liveHu = EntityList::g_LocalBulletSpeed.load(std::memory_order_relaxed);
+			return liveHu > 0.0f ? liveHu : kDefaultBulletSpeedMs * HammerUnitsPerMeter;
+		}();
+
+		auto LeadPredict = [&](const Vector3& WorldPos, const Vector3& Velocity) -> Vector3
+		{
+			// Two-iteration fixed-point: t = dist / v, predicted = bone + vel * t.
+			// Converges well within a pixel at typical engagement ranges.
+			Vector3 pred = WorldPos;
+			for (int i = 0; i < 2; i++)
+				pred = WorldPos + Velocity * (pred.Distance(LocalPos) / BulletSpeed);
+			return pred;
+		};
+
 		for (auto& Pawn : EntityList::m_PlayerPawns)
 		{
 			if (Pawn.IsInvalid() || Pawn.IsLocalPlayer() || Pawn.IsFriendly())
@@ -107,7 +142,8 @@ Vector2 Aimbot::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen)
 			int FinalAimpointIndex = GetHeroBoneSlot(Pawn.GetModelPath(), slot);
 			if (FinalAimpointIndex < 0) continue;
 
-			Consider(Pawn.m_BonePositions[FinalAimpointIndex]);
+			const Vector3& Bone = Pawn.m_BonePositions[FinalAimpointIndex];
+			Consider(bPredictEnabled ? LeadPredict(Bone, Pawn.m_Velocity) : Bone);
 		}
 	}
 

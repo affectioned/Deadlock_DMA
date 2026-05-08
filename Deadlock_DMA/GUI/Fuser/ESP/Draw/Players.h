@@ -1,6 +1,14 @@
 #pragma once
 #include "Deadlock/Classes/Classes.h"
 
+enum class EHealthBarPosition : int
+{
+	Top    = 0,
+	Bottom = 1,
+	Left   = 2,
+	Right  = 3,
+};
+
 class Draw_Players
 {
 public:
@@ -20,6 +28,7 @@ public:
 	static inline int32_t UnsecuredSoulsHighlightThreshold{ 400 };
 	static inline bool bBoneNumbers{ false };
 	static inline bool bDrawHealthBar{ true };
+	static inline EHealthBarPosition eHealthBarPosition{ EHealthBarPosition::Bottom };
 	static inline bool bHideLocalPlayer{ true };
 	static inline bool bShowDistance{ true };
 	static inline bool bVisibleOnly{ false };

@@ -27,8 +27,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v145</PlatformToolset>
+    <!-- Disabled: /GL + /LTCG cross-check the toolset version of every prebuilt .lib
+         and reject makcu-cpp.lib (shipped prebuilt against an older toolset) with
+         fatal error C1047. -->
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -87,6 +90,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\MemProcFS;$(SolutionDir)Dependencies\Makcu\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>leechcore.lib;vmm.lib;makcu-cpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!-- /LTCG:OFF tells the linker to ignore the /GL bits embedded in
+           makcu-cpp.lib instead of restarting the link as a full LTCG pass.
+           Without this the link spends ~7 min in "Generating code". -->
+      <AdditionalOptions>/LTCG:OFF %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -172,6 +179,9 @@
     </ClCompile>
     <ClCompile Include="Deadlock\Entity List\XpOrbs.cpp">
       <ObjectFileName>$(IntDir)EntityList_XpOrbs.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="Deadlock\Entity List\PrimaryWeapon.cpp">
+      <ObjectFileName>$(IntDir)EntityList_PrimaryWeapon.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="Deadlock\Offsets.cpp" />
     <ClCompile Include="DMA\DMA Thread.cpp" />

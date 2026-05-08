@@ -6,10 +6,6 @@
 
 void PlayerList::Render()
 {
-	if (!bSettings) return;
-
-	ImGui::Begin("Controller List", &bSettings);
-
 	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
 	if (ImGui::BeginTable("Players Table", 7))
@@ -56,6 +52,4 @@ void PlayerList::Render()
 
 		ImGui::EndTable();
 	}
-
-	ImGui::End();
 }
