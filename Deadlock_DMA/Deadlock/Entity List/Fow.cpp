@@ -89,13 +89,35 @@ void EntityList::FullFOWRefresh(DMA_Connection* Conn, Process* Proc)
 	}
 	if (!teamAddr) return;
 
+	// `m_pData` and `m_nMaxCount` only change when the FOW vector reallocates
+	// — rare. Cache them and read the entry buffer from the cached pointer in
+	// the SAME scatter that fetches the new count/ptr/max. Steady state is one
+	// Execute() instead of two; on reallocation we fall back to a second pass.
+	// Cache is per-team-address so a team-switch invalidates it cleanly.
+	static uintptr_t s_CachedTeamAddr = 0;
+	static uintptr_t s_CachedDataPtr  = 0;
+	static int32_t   s_CachedMaxCount = 0;
+
+	if (s_CachedTeamAddr != teamAddr)
+	{
+		s_CachedTeamAddr = teamAddr;
+		s_CachedDataPtr  = 0;
+		s_CachedMaxCount = 0;
+	}
+
 	int32_t  count = 0;
-	uint64_t ptr = 0;
-	int32_t  max = 0;
+	uint64_t ptr   = 0;
+	int32_t  max   = 0;
+
+	const size_t cachedBytes = static_cast<size_t>(s_CachedMaxCount) * kSTeamFOWEntitySize;
+	std::vector<uint8_t> raw(cachedBytes);
+
 	m_sr->Clear();
 	m_sr->Add(teamAddr + Offsets::C_CitadelTeam::m_vecFOWEntities + kFOWCountOff,   &count);
 	m_sr->Add(teamAddr + Offsets::C_CitadelTeam::m_vecFOWEntities + kFOWDataPtrOff, &ptr);
 	m_sr->Add(teamAddr + Offsets::C_CitadelTeam::m_vecFOWEntities + kFOWMaxOff,     &max);
+	if (s_CachedDataPtr && cachedBytes > 0)
+		m_sr->AddRaw(s_CachedDataPtr, static_cast<DWORD>(cachedBytes), raw.data());
 	m_sr->Execute();
 
 	if (count <= 0 || count > 500 || !ptr || max < count)
@@ -105,10 +127,18 @@ void EntityList::FullFOWRefresh(DMA_Connection* Conn, Process* Proc)
 		return;
 	}
 
-	std::vector<uint8_t> raw(static_cast<size_t>(count) * kSTeamFOWEntitySize);
-	m_sr->Clear();
-	m_sr->AddRaw(static_cast<uintptr_t>(ptr), static_cast<DWORD>(raw.size()), raw.data());
-	m_sr->Execute();
+	// Reallocation (or first run): the speculative read above used a stale ptr
+	// or undersized buffer — re-fetch from the new ptr in a second scatter and
+	// update the cache for next tick.
+	if (ptr != s_CachedDataPtr || max != s_CachedMaxCount)
+	{
+		s_CachedDataPtr  = static_cast<uintptr_t>(ptr);
+		s_CachedMaxCount = max;
+		raw.assign(static_cast<size_t>(max) * kSTeamFOWEntitySize, 0);
+		m_sr->Clear();
+		m_sr->AddRaw(static_cast<uintptr_t>(ptr), static_cast<DWORD>(raw.size()), raw.data());
+		m_sr->Execute();
+	}
 
 	// Resolve entIndex -> entity address. Entity indices in Source 2 are global
 	// (same scheme as CHandle): list = idx / MAX_ENTITIES, entry = idx % MAX_ENTITIES.

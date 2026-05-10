@@ -225,6 +225,7 @@
     <ClInclude Include="DMA\IGameContext.h" />
     <ClInclude Include="DMA\Input\Input Manager.h" />
     <ClInclude Include="DMA\Logging\Log.h" />
+    <ClInclude Include="DMA\Memory\PhaseTimings.h" />
     <ClInclude Include="DMA\Memory\ScatterRead.h" />
     <ClInclude Include="DMA\Memory\SigScan.h" />
     <ClInclude Include="GUI\Aimbot\Aimbot.h" />

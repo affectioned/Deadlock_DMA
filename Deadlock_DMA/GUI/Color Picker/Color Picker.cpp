@@ -31,6 +31,10 @@ void ColorPicker::Render()
 	MyColorPicker("Aimbot FOV Circle Active", ColorPicker::AimbotFOVCircleActive);
 
 	MyColorPicker("Radar Background", ColorPicker::RadarBackgroundColor);
+
+	MyColorPicker("Skeleton (Visible)", ColorPicker::SkeletonColorVisible);
+
+	MyColorPicker("Skeleton (Invisible)", ColorPicker::SkeletonColorInvisible);
 }
 
 void ColorPicker::MyColorPicker(const char* label, ImColor& color)

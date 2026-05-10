@@ -40,7 +40,6 @@ private:
 	static inline float m_ClientYaw = 0.0f;
 
 public:
-	static void UpdateClientYaw(DMA_Connection* Conn);
 	static void SetClientYaw(float NewYaw);
 	static float GetClientYaw();
 	static float GetClientYawDegrees();

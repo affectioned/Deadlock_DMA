@@ -28,5 +28,6 @@ public:
 public:
 	static inline ImColor ArchMotherTeamColor{ 78, 118, 196 };
 	static inline ImColor HiddenKingTeamColor{ 212, 135, 12 };
-	static inline ImColor SkeletonColor{ 255,255,255 };
+	static inline ImColor SkeletonColorVisible{ 255,255,255 };
+	static inline ImColor SkeletonColorInvisible{ 255,80,80 };
 };

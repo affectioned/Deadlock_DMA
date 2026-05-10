@@ -40,9 +40,19 @@ Process& Deadlock::Proc()
 
 void Deadlock::UpdateViewMatrix(DMA_Connection* Conn)
 {
-	std::scoped_lock lock(ViewMatrixMutex);
 	uintptr_t ViewMatrixAddress = Proc().GetModuleBase(GameModules::ClientDll) + Offsets::ViewMatrix;
-	m_ViewMatrix = Proc().ReadMem<Matrix44>(Conn, ViewMatrixAddress);
+	Matrix44 NewMatrix = Proc().ReadMem<Matrix44>(Conn, ViewMatrixAddress);
+
+	// Yaw is purely a function of the view matrix's first row — derive it here
+	// instead of scheduling a separate timer, which used to round-trip through
+	// GetViewMatrix()/SetClientYaw() (~1080 redundant ticks per 10 s).
+	float NewYaw = atan2(NewMatrix.m01, NewMatrix.m00);
+
+	{
+		std::scoped_lock lock(ViewMatrixMutex);
+		m_ViewMatrix = NewMatrix;
+	}
+	SetClientYaw(NewYaw);
 }
 
 Matrix44 Deadlock::GetViewMatrix()
@@ -122,13 +132,6 @@ void Deadlock::UpdateServerTime(DMA_Connection* Conn)
 
 	std::scoped_lock lock(m_ServerTimeMutex);
 	m_ServerTime = Proc().ReadMem<float>(Conn, ServerTimeAddress);
-}
-
-void Deadlock::UpdateClientYaw(DMA_Connection* Conn)
-{
-	auto Mat = GetViewMatrix();
-
-	SetClientYaw(atan2(Mat.m01, Mat.m00));
 }
 
 void Deadlock::SetClientYaw(float NewYaw)

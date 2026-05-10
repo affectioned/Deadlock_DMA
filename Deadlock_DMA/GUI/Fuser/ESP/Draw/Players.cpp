@@ -241,6 +241,11 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const C_Cita
 {
 	if (!Pawn.m_pBoneData || Pawn.m_pBoneData->pairs.empty()) return;
 
+	// Friendlies aren't in the local team's FOW list so IsEntityVisible would
+	// fail-closed for them — keep them on the Visible color unconditionally.
+	const bool bVisible = PC.IsFriendly() || EntityList::IsEntityVisible(Pawn.m_EntityAddress);
+	const ImU32 BoneColor = bVisible ? ColorPicker::SkeletonColorVisible : ColorPicker::SkeletonColorInvisible;
+
 	for (const auto& [StartBone, EndBone] : Pawn.m_pBoneData->pairs)
 	{
 		if (StartBone >= MAX_BONES || EndBone >= MAX_BONES) continue;
@@ -252,7 +257,7 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const C_Cita
 
 		ImVec2 Start = ImVec2(Start2D.x + WindowPos.x, Start2D.y + WindowPos.y);
 		ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
-		DrawList->AddLine(Start, End, ColorPicker::SkeletonColor, fBonesThickness);
+		DrawList->AddLine(Start, End, BoneColor, fBonesThickness);
 	}
 }
 
@@ -277,7 +282,10 @@ void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const C_Ci
 	float DistanceScale = 1000.f / (Distance + 100.f);
 	float HeadRadius = BaseRadius * DistanceScale;
 
-	DrawList->AddCircle(HeadPos, HeadRadius, ColorPicker::SkeletonColor, 32, fBonesThickness);
+	const bool bVisible = PC.IsFriendly() || EntityList::IsEntityVisible(Pawn.m_EntityAddress);
+	const ImU32 HeadColor = bVisible ? ColorPicker::SkeletonColorVisible : ColorPicker::SkeletonColorInvisible;
+
+	DrawList->AddCircle(HeadPos, HeadRadius, HeadColor, 32, fBonesThickness);
 }
 
 void Draw_Players::DrawVelocityVector(const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)

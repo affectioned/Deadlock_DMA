@@ -345,7 +345,9 @@ json Config::SerializeConfig() {
 		{"HealthBarBackgroundColor", static_cast<uint32_t>(ColorPicker::HealthBarBackgroundColor)},
 		{"AimbotFOVCircle", static_cast<uint32_t>(ColorPicker::AimbotFOVCircle)},
 		{"AimbotFOVCircleActive", static_cast<uint32_t>(ColorPicker::AimbotFOVCircleActive)},
-		{"RadarBackgroundColor", static_cast<uint32_t>(ColorPicker::RadarBackgroundColor)}
+		{"RadarBackgroundColor", static_cast<uint32_t>(ColorPicker::RadarBackgroundColor)},
+		{"SkeletonColorVisible", static_cast<uint32_t>(ColorPicker::SkeletonColorVisible)},
+		{"SkeletonColorInvisible", static_cast<uint32_t>(ColorPicker::SkeletonColorInvisible)}
 	};
 
 	SerializeKeybinds(j);
@@ -493,6 +495,8 @@ void Config::DeserializeConfig(const json& j) {
 		if (colors.contains("AimbotFOVCircle")) ColorPicker::AimbotFOVCircle = colors["AimbotFOVCircle"].get<uint32_t>();
 		if (colors.contains("AimbotFOVCircleActive")) ColorPicker::AimbotFOVCircleActive = colors["AimbotFOVCircleActive"].get<uint32_t>();
 		if (colors.contains("RadarBackgroundColor")) ColorPicker::RadarBackgroundColor = colors["RadarBackgroundColor"].get<uint32_t>();
+		if (colors.contains("SkeletonColorVisible")) ColorPicker::SkeletonColorVisible = colors["SkeletonColorVisible"].get<uint32_t>();
+		if (colors.contains("SkeletonColorInvisible")) ColorPicker::SkeletonColorInvisible = colors["SkeletonColorInvisible"].get<uint32_t>();
 	}
 
 	// Keybinds

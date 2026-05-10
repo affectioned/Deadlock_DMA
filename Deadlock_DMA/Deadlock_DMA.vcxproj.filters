@@ -362,6 +362,9 @@
     <ClInclude Include="DMA\Input\Input Manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DMA\Memory\PhaseTimings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="DMA\Memory\ScatterRead.h">
       <Filter>Header Files</Filter>
     </ClInclude>
