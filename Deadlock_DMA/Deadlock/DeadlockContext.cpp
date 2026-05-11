@@ -4,6 +4,7 @@
 #include "Deadlock.h"
 #include "Entity List/EntityList.h"
 #include "GUI/Keybinds/Keybinds.h"
+#include "GUI/ParryWarn/ParryWarn.h"
 #include "DMA/Memory/PhaseTimings.h"
 
 bool DeadlockContext::Initialize(DMA_Connection* conn)
@@ -70,6 +71,11 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 		{ ms(1000),  timed("FullUpdate",      [conn, proc] { EntityList::FullUpdate(conn, proc); }) },
 
 		{ ms(8),     timed("Keybinds",        [conn]       { Keybinds::OnDMAFrame(conn); }) },
+
+		// Heavy-melee parry warning: scan a few nearby enemy pawns for the
+		// MeleeCharge modifier. 33ms = 30Hz keeps DMA cost modest while
+		// staying responsive enough to flash before the swing lands.
+		{ ms(33),    timed("ParryWarn",       [conn, proc] { ParryWarn::RefreshState(conn, proc); }) },
 
 		// Periodic bottleneck summary — totals over the prior 10s window.
 		{ ms(10000), [] { PhaseTimings::DumpAndReset(); } },

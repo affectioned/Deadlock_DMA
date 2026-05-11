@@ -2,6 +2,7 @@
 
 #include "XpOrbs.h"
 
+#include "Deadlock/Deadlock.h"
 #include "Deadlock/Entity List/EntityList.h"
 
 #include "GUI/Color Picker/Color Picker.h"

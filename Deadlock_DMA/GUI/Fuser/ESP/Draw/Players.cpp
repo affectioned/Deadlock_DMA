@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Players.h"
+#include "Deadlock/Deadlock.h"
 #include "Deadlock/Entity List/EntityList.h"
 #include "Deadlock/Const/HeroEnum.hpp"
 #include "Deadlock/Const/BoneLists.hpp"

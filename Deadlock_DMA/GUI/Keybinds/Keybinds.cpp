@@ -143,12 +143,13 @@ const char* CKeybind::GetKeyName(uint32_t vkCode)
 
 void Keybinds::Render()
 {
-	if (c_keys::IsInitialized() == false)
+	const bool inputReady = c_keys::IsInitialized();
+	if (!inputReady)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.3f, 0.3f, 1.0f));
-		ImGui::Text("Input Manager not initialized!");
+		ImGui::Text("Input Manager not initialized — Target PC bindings won't fire.");
 		ImGui::PopStyleColor();
-		return;
+		ImGui::Spacing();
 	}
 
 	if (ImGui::BeginTable("##KeybindsTable", 4, ImGuiTableFlags_SizingStretchProp))
@@ -159,6 +160,9 @@ void Keybinds::Render()
 		ImGui::TableSetupColumn("Radar PC", ImGuiTableColumnFlags_WidthFixed, 80.0f);
 		ImGui::TableHeadersRow();
 
+		// Local-only rows render unconditionally — they don't depend on the
+		// target-PC input reader and should be rebindable even before DMA is up.
+		Menu.Render();
 		Aimbot.Render();
 
 		ImGui::EndTable();
@@ -225,17 +229,31 @@ void CKeybind::Render()
 	}
 
 	ImGui::TableNextColumn();
-	ImGui::Checkbox(("##TargetPC_" + m_Name).c_str(), &m_bTargetPC);
-	if (ImGui::IsItemHovered())
+	if (m_bLocalOnly)
 	{
-		ImGui::SetTooltip("Read key state from target computer");
+		ImGui::TextDisabled("local");
+	}
+	else
+	{
+		ImGui::Checkbox(("##TargetPC_" + m_Name).c_str(), &m_bTargetPC);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Read key state from target computer");
+		}
 	}
 
 	ImGui::TableNextColumn();
-	ImGui::Checkbox(("##RadarPC_" + m_Name).c_str(), &m_bRadarPC);
-	if (ImGui::IsItemHovered())
+	if (m_bLocalOnly)
 	{
-		ImGui::SetTooltip("Read key state from radar computer");
+		ImGui::TextDisabled("—");
+	}
+	else
+	{
+		ImGui::Checkbox(("##RadarPC_" + m_Name).c_str(), &m_bRadarPC);
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Read key state from radar computer");
+		}
 	}
 }
 

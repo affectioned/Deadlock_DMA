@@ -123,10 +123,16 @@
     <ClCompile Include="GUI\Fuser\Status Bars\Status Bars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Input\KeyboardPump.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GUI\Keybinds\Keybinds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GUI\Aimbot\Aimbot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\ParryWarn\ParryWarn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GUI\Watchdog\GuiWatchdog.cpp">
@@ -293,10 +299,16 @@
     <ClInclude Include="GUI\Fuser\Status Bars\Status Bars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\Input\KeyboardPump.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="GUI\Keybinds\Keybinds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Aimbot\Aimbot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\ParryWarn\ParryWarn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">

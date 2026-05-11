@@ -3,6 +3,7 @@
 #include "Config.h"
 
 #include "GUI/Aimbot/Aimbot.h"
+#include "GUI/ParryWarn/ParryWarn.h"
 #include "Deadlock/Const/BoneListTypes.hpp"
 
 #include "GUI/Fuser/Fuser.h"
@@ -24,6 +25,7 @@
 #include "GUI/Color Picker/Color Picker.h"
 
 #include "GUI/Main Menu/Main Menu.h"
+#include "GUI/Main Window/Main Window.h"
 
 #include <shlobj.h>
 #include <fstream>
@@ -221,6 +223,7 @@ void Config::DeserializeKeybinds(const json& Table) {
 	}
 	DeserializeKeybindObj(Table, "Debug", Keybinds::Debug);
 	DeserializeKeybindObj(Table, "Aimbot", Keybinds::Aimbot);
+	DeserializeKeybindObj(Table, "Menu", Keybinds::Menu);
 }
 
 static json SerializeKeybindEntryObj(const CKeybind& kb) {
@@ -235,7 +238,8 @@ json Config::SerializeKeybinds(json& j) {
 	j["Keybinds"] = {
 		{ "bSettings", Keybinds::bSettings },
 		{ "Debug", SerializeKeybindEntryObj(Keybinds::Debug) },
-		{ "Aimbot", SerializeKeybindEntryObj(Keybinds::Aimbot) }
+		{ "Aimbot", SerializeKeybindEntryObj(Keybinds::Aimbot) },
+		{ "Menu", SerializeKeybindEntryObj(Keybinds::Menu) }
 	};
 	return j;
 }
@@ -248,6 +252,7 @@ json Config::SerializeConfig() {
 		{"iTargetFPS", MainMenu::iTargetFPS},
 		{"WindowPos",  {MainMenu::WindowPos.x,  MainMenu::WindowPos.y}},
 		{"WindowSize", {MainMenu::WindowSize.x, MainMenu::WindowSize.y}},
+		{"MonitorIndex", MainWindow::g_MonitorIndex},
 	};
 
 	// Aimbot
@@ -266,6 +271,11 @@ json Config::SerializeConfig() {
 		{"bVisibleOnly", Aimbot::bVisibleOnly},
 		{"bUsePrediction", Aimbot::bUsePrediction},
 		{"fManualBulletSpeedMs", Aimbot::fManualBulletSpeedMs}
+	};
+
+	j["ParryWarn"] = {
+		{"bMasterToggle", ParryWarn::bMasterToggle},
+		{"fMaxRangeHu", ParryWarn::fMaxRangeHu}
 	};
 
 	j["Fuser"] = {
@@ -332,6 +342,7 @@ json Config::SerializeConfig() {
 	};
 
 	j["ColorPicker"] = {
+		{"MenuAccent", static_cast<uint32_t>(ColorPicker::MenuAccent)},
 		{"SinnersColor", static_cast<uint32_t>(ColorPicker::SinnersColor)},
 		{"BossColor", static_cast<uint32_t>(ColorPicker::BossColor)},
 		{"XpOrbColor", static_cast<uint32_t>(ColorPicker::XpOrbColor)},
@@ -367,6 +378,7 @@ void Config::DeserializeConfig(const json& j) {
 			MainMenu::WindowPos = ImVec2(m["WindowPos"][0].get<float>(), m["WindowPos"][1].get<float>());
 		if (m.contains("WindowSize") && m["WindowSize"].is_array() && m["WindowSize"].size() == 2)
 			MainMenu::WindowSize = ImVec2(m["WindowSize"][0].get<float>(), m["WindowSize"][1].get<float>());
+		if (m.contains("MonitorIndex")) MainWindow::g_MonitorIndex = m["MonitorIndex"].get<int>();
 	}
 
 	// Aimbot
@@ -387,6 +399,12 @@ void Config::DeserializeConfig(const json& j) {
 		if (ab.contains("bVisibleOnly")) Aimbot::bVisibleOnly = ab["bVisibleOnly"].get<bool>();
 		if (ab.contains("bUsePrediction")) Aimbot::bUsePrediction = ab["bUsePrediction"].get<bool>();
 		if (ab.contains("fManualBulletSpeedMs")) Aimbot::fManualBulletSpeedMs = ab["fManualBulletSpeedMs"].get<float>();
+	}
+
+	if (j.contains("ParryWarn")) {
+		const auto& ap = j["ParryWarn"];
+		if (ap.contains("bMasterToggle")) ParryWarn::bMasterToggle = ap["bMasterToggle"].get<bool>();
+		if (ap.contains("fMaxRangeHu")) ParryWarn::fMaxRangeHu = ap["fMaxRangeHu"].get<float>();
 	}
 
 	// Fuser
@@ -481,6 +499,7 @@ void Config::DeserializeConfig(const json& j) {
 	// ColorPicker
 	if (j.contains("ColorPicker")) {
 		const auto& colors = j["ColorPicker"];
+		if (colors.contains("MenuAccent")) ColorPicker::MenuAccent = colors["MenuAccent"].get<uint32_t>();
 		if (colors.contains("SinnersColor")) ColorPicker::SinnersColor = colors["SinnersColor"].get<uint32_t>();
 		if (colors.contains("BossColor")) ColorPicker::BossColor = colors["BossColor"].get<uint32_t>();
 		if (colors.contains("XpOrbColor")) ColorPicker::XpOrbColor = colors["XpOrbColor"].get<uint32_t>();

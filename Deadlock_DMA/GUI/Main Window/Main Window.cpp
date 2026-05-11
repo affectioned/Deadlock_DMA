@@ -2,11 +2,52 @@
 
 #include "Main Window.h"
 
+#include <dwmapi.h>
+#pragma comment(lib, "dwmapi.lib")
+
 #include "GUI/Main Menu/Main Menu.h"
 #include "GUI/Fonts/Fonts.h"
 #include "GUI/Radar/Radar.h"
 #include "GUI/Fuser/Fuser.h"
 #include "GUI/Watchdog/GuiWatchdog.h"
+#include "GUI/Input/KeyboardPump.h"
+
+namespace
+{
+	// -1 means "no apply pending". Drained in PreFrame between frames.
+	int s_PendingMonitorIndex = -1;
+
+	BOOL CALLBACK MonitorEnumProc(HMONITOR hMon, HDC, LPRECT, LPARAM lp)
+	{
+		auto& list = *reinterpret_cast<std::vector<MainWindow::MonitorInfo>*>(lp);
+		MONITORINFOEXW mi{};
+		mi.cbSize = sizeof(mi);
+		if (::GetMonitorInfoW(hMon, &mi))
+		{
+			list.push_back(MainWindow::MonitorInfo{
+				mi.rcMonitor.left,
+				mi.rcMonitor.top,
+				mi.rcMonitor.right - mi.rcMonitor.left,
+				mi.rcMonitor.bottom - mi.rcMonitor.top,
+				(mi.dwFlags & MONITORINFOF_PRIMARY) != 0,
+				std::wstring{ mi.szDevice }
+			});
+		}
+		return TRUE;
+	}
+}
+
+std::vector<MainWindow::MonitorInfo> MainWindow::EnumerateMonitors()
+{
+	std::vector<MonitorInfo> list;
+	::EnumDisplayMonitors(nullptr, nullptr, MonitorEnumProc, reinterpret_cast<LPARAM>(&list));
+	return list;
+}
+
+void MainWindow::RequestMonitorApply(int index)
+{
+	s_PendingMonitorIndex = index;
+}
 
 void Render(ImGuiContext* ctx)
 {
@@ -16,7 +57,6 @@ void Render(ImGuiContext* ctx)
 		Fonts::Initialize(ImGui::GetIO());
 
 	ImGui::PushFont(Fonts::m_IBMPlexMonoSemiBold, 16.0f);
-	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
 	// Overlay layer — fullscreen ESP draw + minimap. Always on (gated by their
 	// own master toggles).
@@ -142,9 +182,37 @@ bool MainWindow::Initialize()
 
 	float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
 
+	int originX = 0, originY = 0;
+	int screenW = ::GetSystemMetrics(SM_CXSCREEN);
+	int screenH = ::GetSystemMetrics(SM_CYSCREEN);
+	{
+		auto monitors = EnumerateMonitors();
+		if (g_MonitorIndex >= 0 && g_MonitorIndex < (int)monitors.size())
+		{
+			const auto& m = monitors[g_MonitorIndex];
+			originX = m.x; originY = m.y;
+			screenW = m.w; screenH = m.h;
+		}
+	}
+
 	wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"MainWindow", nullptr };
 	::RegisterClassExW(&wc);
-	g_hWnd = ::CreateWindowEx(NULL, wc.lpszClassName, L"DEADLOCK DMA", WS_OVERLAPPEDWINDOW, 100, 100, 800, 800, nullptr, nullptr, wc.hInstance, nullptr);
+
+	// Layered fullscreen overlay: WS_POPUP for no chrome; WS_EX_LAYERED + LWA_ALPHA(255)
+	// + DwmExtendFrameIntoClientArea makes DWM honor the swap chain's per-pixel alpha so
+	// transparent pixels (clear_color a=0) actually pass through. WS_EX_NOACTIVATE keeps
+	// focus on the game; WS_EX_TOPMOST keeps the overlay above borderless game windows.
+	g_hWnd = ::CreateWindowExW(
+		WS_EX_LAYERED | WS_EX_NOACTIVATE | WS_EX_TOPMOST,
+		wc.lpszClassName, L"DEADLOCK DMA",
+		WS_POPUP,
+		originX, originY, screenW, screenH,
+		nullptr, nullptr, wc.hInstance, nullptr);
+
+	MARGINS margins{ -1, -1, -1, -1 };
+	::DwmExtendFrameIntoClientArea(g_hWnd, &margins);
+	::SetLayeredWindowAttributes(g_hWnd, 0, 255, LWA_ALPHA);
+
 	// Initialize Direct3D
 	if (!CreateDeviceD3D(g_hWnd))
 	{
@@ -164,8 +232,8 @@ bool MainWindow::Initialize()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+	// Docking + multi-viewport disabled: viewports reparent ImGui windows as native OS
+	// windows, which fights the single layered-overlay HWND we just created.
 
 	ImGui::StyleColorsDark();
 
@@ -173,14 +241,6 @@ bool MainWindow::Initialize()
 	style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
 	style.FontScaleDpi = main_scale;        // Set initial font scale. (using io.ConfigDpiScaleFonts=true makes this unnecessary. We leave both here for documentation purpose)
 	io.ConfigDpiScaleFonts = true;          // [Experimental] Automatically overwrite style.FontScaleDpi in Begin() when Monitor DPI changes. This will scale fonts but _NOT_ scale sizes/padding for now.
-	io.ConfigDpiScaleViewports = true;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
-
-	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-	}
 
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(g_hWnd);
@@ -223,6 +283,28 @@ bool MainWindow::PreFrame()
 		CreateRenderTarget();
 	}
 
+	// Drain pending monitor switch. Done between frames so no draws are mid-flight
+	// when the swap-chain back buffer is reallocated.
+	if (s_PendingMonitorIndex >= 0)
+	{
+		auto monitors = EnumerateMonitors();
+		if (s_PendingMonitorIndex < (int)monitors.size())
+		{
+			const auto& m = monitors[s_PendingMonitorIndex];
+			CleanupRenderTarget();
+			::SetWindowPos(g_hWnd, HWND_TOPMOST, m.x, m.y, m.w, m.h,
+				SWP_NOACTIVATE | SWP_SHOWWINDOW);
+			g_pSwapChain->ResizeBuffers(0, m.w, m.h, DXGI_FORMAT_UNKNOWN, 0);
+			CreateRenderTarget();
+			g_MonitorIndex = s_PendingMonitorIndex;
+		}
+		s_PendingMonitorIndex = -1;
+	}
+
+	// Pump keyboard state into ImGui IO. WS_EX_NOACTIVATE means WM_KEYDOWN/WM_CHAR
+	// never reach our WndProc, so we synthesize events from polled key state.
+	GuiInput::PumpKeyboard();
+
 	// Start the Dear ImGui frame
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -238,13 +320,6 @@ bool MainWindow::PostFrame()
 	g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
 	g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-	// Update and Render additional Platform Windows
-	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-	}
 
 	// Present with VSync toggle from Main Menu
 	HRESULT hr = g_pSwapChain->Present(MainMenu::bVSync ? 1 : 0, 0);

@@ -17,8 +17,6 @@ void Radar::Render()
 
 	DrawRadarBackground();
 
-	RenderSettings();
-
 	DrawEntities();
 
 	ImGui::End();
@@ -28,14 +26,17 @@ void Radar::Render()
 
 void Radar::RenderSettings()
 {
-	ImGui::PushFont(nullptr, 12.0f);
-	ImGui::SetCursorPos({ 10.0f, 10.0f });
-	ImGui::SetNextItemWidth(50.0f);
+	ImGui::Checkbox("Enable Radar", &bMasterToggle);
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	ImGui::SetNextItemWidth(150.0f);
 	ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
 	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
 	ImGui::Checkbox("MOBA Style", &bMobaStyle);
 	ImGui::Checkbox("Player-Centered", &bPlayerCentered);
-	ImGui::PopFont();
 }
 
 ImVec2 Radar::GetLocalPlayerScreenPos(const ImVec2& RadarWindowCenter, const Vector3& RadarCenterGamePos) {

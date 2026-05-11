@@ -1,5 +1,6 @@
 #pragma once
 #include "Deadlock/Classes/Classes.h"
+#include "Deadlock/Engine/Vector2.h"
 
 enum class EHealthBarPosition : int
 {

@@ -191,6 +191,7 @@
     <ClCompile Include="DMA\Memory\Process.cpp" />
     <ClCompile Include="DMA\Memory\SigScan.cpp" />
     <ClCompile Include="GUI\Aimbot\Aimbot.cpp" />
+    <ClCompile Include="GUI\ParryWarn\ParryWarn.cpp" />
     <ClCompile Include="GUI\Watchdog\GuiWatchdog.cpp" />
     <ClCompile Include="GUI\Color Picker\Color Picker.cpp" />
     <ClCompile Include="GUI\Config\Config.cpp" />
@@ -206,6 +207,7 @@
     <ClCompile Include="GUI\Fuser\ESP\ESP.cpp" />
     <ClCompile Include="GUI\Fuser\Fuser.cpp" />
     <ClCompile Include="GUI\Fuser\Status Bars\Status Bars.cpp" />
+    <ClCompile Include="GUI\Input\KeyboardPump.cpp" />
     <ClCompile Include="GUI\Keybinds\Keybinds.cpp" />
     <ClCompile Include="GUI\Main Menu\Main Menu.cpp" />
     <ClCompile Include="GUI\Main Window\Main Window.cpp" />
@@ -229,6 +231,7 @@
     <ClInclude Include="DMA\Memory\ScatterRead.h" />
     <ClInclude Include="DMA\Memory\SigScan.h" />
     <ClInclude Include="GUI\Aimbot\Aimbot.h" />
+    <ClInclude Include="GUI\ParryWarn\ParryWarn.h" />
     <ClInclude Include="GUI\Config\Config.h" />
     <ClInclude Include="GUI\Fonts\Data\IBMPlexMono.h" />
     <ClInclude Include="GUI\Fonts\Fonts.h" />
@@ -238,6 +241,7 @@
     <ClInclude Include="GUI\Fuser\ESP\Draw\Troopers.h" />
     <ClInclude Include="GUI\Fuser\ESP\Draw\XpOrbs.h" />
     <ClInclude Include="GUI\Fuser\Status Bars\Status Bars.h" />
+    <ClInclude Include="GUI\Input\KeyboardPump.h" />
     <ClInclude Include="GUI\Keybinds\Keybinds.h" />
     <ClInclude Include="GUI\Main Menu\Main Menu.h" />
     <ClInclude Include="GUI\Query.h" />

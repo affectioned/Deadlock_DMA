@@ -28,5 +28,6 @@
 #include "DMA/Memory/Process.h"
 #include "DMA/Logging/Log.h"
 
-#include "Deadlock/Offsets.h"
-#include "Deadlock/Deadlock.h"
+// Deadlock/Offsets.h and Deadlock/Deadlock.h are deliberately NOT in the PCH.
+// Both change often; including them here forced a full PCH rebuild (which
+// invalidates every TU) on every edit. Consumers include them explicitly.

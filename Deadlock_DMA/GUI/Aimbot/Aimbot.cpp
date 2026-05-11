@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "DMA/DMA.h"
+#include "Deadlock/Deadlock.h"
 #include "GUI/Keybinds/Keybinds.h"
 #include "Aimbot.h"
 #include "GUI/Fuser/Fuser.h"

@@ -3,6 +3,7 @@
 #include "Deadlock/Engine/CHandle.h"
 #include "Deadlock/Const/HeroMap.hpp"
 #include "Deadlock/Const/HeroEnum.hpp"
+#include "Deadlock/Offsets.h"
 
 class CCitadelPlayerController : public C_BaseEntity
 {

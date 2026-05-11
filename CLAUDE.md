@@ -19,7 +19,8 @@ msbuild Deadlock_DMA.sln /p:Configuration=Release /p:Platform=x64
 
 **Build-time gotchas** —
 - `makcu-cpp.lib` ships prebuilt with `/GL`. WPO is disabled in Release (`<WholeProgramOptimization>false</WholeProgramOptimization>`) to dodge the C1047 cross-version check, and `/LTCG:OFF` is added to the linker so the prebuilt `/GL` bits don't trigger an implicit LTCG re-link (which used to add ~7 minutes to every build).
-- `/MP` (multi-processor compilation) is **off** intentionally. Each `cl.exe` worker can use 0.5–1 GB at C++23 + heavy headers, and machine load was unacceptable. The header blast-radius reduction (TU-private state in anonymous namespaces) is the better lever for incremental build speed.
+- `/MP` (multi-processor compilation) is **off** intentionally. Each `cl.exe` worker can use 0.5–1 GB at C++23 + heavy headers, and machine load was unacceptable on lower-end machines (this is an educational repo — anyone should be able to build it). The header blast-radius reduction (TU-private state in anonymous namespaces) is the better lever for incremental build speed.
+- **PCH discipline:** `pch.h` deliberately **excludes** `Deadlock/Offsets.h` and `Deadlock/Deadlock.h` even though most TUs use them. Those two change as the project evolves; if they were in the PCH, every edit to them would rebuild `pch.pch` and force a full 48-TU recompile (~8 min). Now consumers include them directly — edits to `Deadlock.h` recompile only the ~14 cpp files that use it, and the precompiled header itself stays warm. When adding new project-internal headers, prefer per-TU includes over adding to `pch.h`; only stable third-party headers belong in the PCH.
 
 ## Architecture
 

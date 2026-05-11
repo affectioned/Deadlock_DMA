@@ -8,6 +8,10 @@ public:
 
 public:
 	static inline bool bMasterToggle{ true };
+
+	// Menu accent — drives Header/Button/Slider/CheckMark/etc. in the main menu.
+	static inline ImColor MenuAccent{ 0.20f, 0.55f, 0.95f, 1.0f };
+
 	static inline ImColor SinnersColor{ 0.65f,0.05f,0.7f,1.0f };
 	static inline ImColor BossColor{ 1.0f,0.4f,0.0f,1.0f };
 	static inline ImColor XpOrbColor{ 1.0f,0.85f,0.0f,1.0f };

@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Deadlock/Engine/CHandle.h"
 #include "Deadlock/Const/HeroSkeletonMap.hpp"
+#include "Deadlock/Offsets.h"
 #include "C_BaseEntity.h"
 #include "CCitadelPlayerController.h"
 

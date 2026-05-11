@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "C_BaseEntity.h"
+#include "Deadlock/Deadlock.h"
 #include "Deadlock/Entity List/EntityList.h"
 
 const bool C_BaseEntity::IsFriendly() const

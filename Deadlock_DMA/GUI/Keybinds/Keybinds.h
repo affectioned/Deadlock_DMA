@@ -8,6 +8,10 @@ public:
 	bool m_bTargetPC{ false };
 	bool m_bRadarPC{ false };
 	bool m_bWaitingForKey{ false };
+	// Local-only keybinds (e.g. the GUI menu toggle) are read from the source PC
+	// running this app and have no Target/Radar variants. Render hides the PC
+	// columns for these rows.
+	bool m_bLocalOnly{ false };
 
 public:
 	void Render();
@@ -23,6 +27,7 @@ public:
 
 public:
 	static inline bool bSettings{ true };
-	static inline CKeybind Debug = { "Debug", VK_F12, true, true };
-	static inline CKeybind Aimbot = { "Aimbot", VK_XBUTTON2, true, true };
+	static inline CKeybind Debug  = { "Debug",  VK_F12,      true,  true,  false, false };
+	static inline CKeybind Aimbot = { "Aimbot", VK_XBUTTON2, true,  true,  false, false };
+	static inline CKeybind Menu   = { "Menu",   VK_INSERT,   false, false, false, true  };
 };

@@ -11,6 +11,19 @@ namespace Offsets
 	inline std::ptrdiff_t ViewMatrix = 0;
 	inline std::ptrdiff_t Prediction = 0; // client.dll::CPrediction (pointer to CPrediction instance)
 
+	// Absolute address of CCitadel_Modifier_MeleeCharge::`vftable'. Resolved at startup
+	// as clientBase + RVA. Used by ParryWarn to identify "enemy is charging heavy melee"
+	// modifier instances by comparing the first 8 bytes of each modifier in the target's
+	// modifier list. RVA-only — no sig — so update on game patch (see schema dump:
+	// internal-sdk/client/CCitadel_Modifier_MeleeCharge.hpp).
+	inline uintptr_t MeleeChargeVTable = 0;
+	inline constexpr std::ptrdiff_t MeleeChargeVTableRVA = 0x21F0768;
+
+	namespace CModifierProperty
+	{
+		inline constexpr std::ptrdiff_t m_vecModifiers = 0x38; // CUtlVector<CBaseModifier*> (count @+0, data @+8)
+	}
+
 	namespace CPrediction
 	{
 		// Field name unconfirmed — not exposed in schema dump, falls in unnamed padding at +0x68 of CPrediction.
@@ -37,6 +50,7 @@ namespace Offsets
 	namespace C_BaseEntity
 	{
 		inline constexpr std::ptrdiff_t m_pGameSceneNode  = 0x330; // CGameSceneNode* (8b)
+		inline constexpr std::ptrdiff_t m_pModifierProp   = 0x348; // CModifierProperty* (8b)
 		inline constexpr std::ptrdiff_t m_iMaxHealth      = 0x350; // int32 (4b)
 		inline constexpr std::ptrdiff_t m_iHealth         = 0x354; // int32 (4b)
 		inline constexpr std::ptrdiff_t m_iTeamNum        = 0x3F3; // uint8 (1b)

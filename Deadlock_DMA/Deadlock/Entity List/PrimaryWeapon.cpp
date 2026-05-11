@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include "Deadlock/Deadlock.h"
 #include "EntityList.h"
 
 // Resolves the local pawn's primary-weapon base bullet speed from the ability

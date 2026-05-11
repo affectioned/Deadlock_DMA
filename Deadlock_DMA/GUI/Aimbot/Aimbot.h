@@ -2,6 +2,7 @@
 
 #include "makcu/makcu.h"
 #include "Deadlock/Const/BoneListTypes.hpp"
+#include "Deadlock/Engine/Vector2.h"
 #include <random>
 
 
