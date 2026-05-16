@@ -25,6 +25,9 @@ void Aimbot::RenderSettings()
 		ImGui::TextColored(ImColor(255, 0, 0), "Makcu Disconnected!");
 	}
 
+	ImGui::Checkbox("Enable Aimbot", &bMasterToggle);
+	ImGui::Separator();
+
 	ImGui::SliderFloat("Alpha X", &fAlphaX, 0.01f, 1.0f, "%.2f");
 
 	ImGui::SliderFloat("Alpha Y", &fAlphaY, 0.01f, 1.0f, "%.2f");

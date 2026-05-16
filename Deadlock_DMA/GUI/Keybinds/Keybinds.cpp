@@ -259,7 +259,7 @@ void CKeybind::Render()
 
 void Keybinds::OnDMAFrame(DMA_Connection* Conn)
 {
-	Aimbot::bIsActive = Aimbot.IsActive(Conn);
+	Aimbot::bIsActive = Aimbot::bMasterToggle && Aimbot.IsActive(Conn);
 	if (Aimbot::bIsActive)
 		Aimbot::OnFrame(Conn);
 }

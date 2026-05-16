@@ -259,6 +259,7 @@ json Config::SerializeConfig() {
 	j["Aimbot"] = {
 		// General
 		{"bSettings", Aimbot::bSettings},
+		{"bMasterToggle", Aimbot::bMasterToggle},
 
 		// Targetting
 		{"fAlphaX", Aimbot::fAlphaX},
@@ -387,6 +388,7 @@ void Config::DeserializeConfig(const json& j) {
 
 		// General
 		if (ab.contains("bSettings")) Aimbot::bSettings = ab["bSettings"].get<bool>();
+		if (ab.contains("bMasterToggle")) Aimbot::bMasterToggle = ab["bMasterToggle"].get<bool>();
 
 		// Targeting
 		if (ab.contains("fAlphaX")) Aimbot::fAlphaX = ab["fAlphaX"].get<float>();
