@@ -2,19 +2,19 @@
 
 #include "Config.h"
 
-#include "GUI/Aimbot/Aimbot.h"
+#include "GUI/Aim Assist/Aim Assist.h"
 #include "GUI/ParryWarn/ParryWarn.h"
 #include "Deadlock/Const/BoneListTypes.hpp"
 
 #include "GUI/Fuser/Fuser.h"
 
-#include "GUI/Fuser/ESP/ESP.h"
+#include "GUI/Fuser/Visuals/Visuals.h"
 
-#include "GUI/Fuser/ESP/Draw/Camps.h"
-#include "GUI/Fuser/ESP/Draw/Players.h"
-#include "GUI/Fuser/ESP/Draw/Sinners.h"
-#include "GUI/Fuser/ESP/Draw/Troopers.h"
-#include "GUI/Fuser/ESP/Draw/XpOrbs.h"
+#include "GUI/Fuser/Visuals/Draw/Camps.h"
+#include "GUI/Fuser/Visuals/Draw/Players.h"
+#include "GUI/Fuser/Visuals/Draw/Sinners.h"
+#include "GUI/Fuser/Visuals/Draw/Troopers.h"
+#include "GUI/Fuser/Visuals/Draw/XpOrbs.h"
 
 #include "GUI/Fuser/Status Bars/Status Bars.h"
 
@@ -219,10 +219,10 @@ static void DeserializeKeybindObj(const json& Table, const std::string& Name, CK
 
 void Config::DeserializeKeybinds(const json& Table) {
 	if (Table.contains("bSettings")) {
-		Aimbot::bSettings = Table["bSettings"].get<bool>();
+		AimAssist::bSettings = Table["bSettings"].get<bool>();
 	}
 	DeserializeKeybindObj(Table, "Debug", Keybinds::Debug);
-	DeserializeKeybindObj(Table, "Aimbot", Keybinds::Aimbot);
+	DeserializeKeybindObj(Table, "AimAssist", Keybinds::AimAssist);
 	DeserializeKeybindObj(Table, "Menu", Keybinds::Menu);
 }
 
@@ -238,7 +238,7 @@ json Config::SerializeKeybinds(json& j) {
 	j["Keybinds"] = {
 		{ "bSettings", Keybinds::bSettings },
 		{ "Debug", SerializeKeybindEntryObj(Keybinds::Debug) },
-		{ "Aimbot", SerializeKeybindEntryObj(Keybinds::Aimbot) },
+		{ "AimAssist", SerializeKeybindEntryObj(Keybinds::AimAssist) },
 		{ "Menu", SerializeKeybindEntryObj(Keybinds::Menu) }
 	};
 	return j;
@@ -255,23 +255,23 @@ json Config::SerializeConfig() {
 		{"MonitorIndex", MainWindow::g_MonitorIndex},
 	};
 
-	// Aimbot
-	j["Aimbot"] = {
+	// AimAssist
+	j["AimAssist"] = {
 		// General
-		{"bSettings", Aimbot::bSettings},
-		{"bMasterToggle", Aimbot::bMasterToggle},
+		{"bSettings", AimAssist::bSettings},
+		{"bMasterToggle", AimAssist::bMasterToggle},
 
 		// Targetting
-		{"fAlphaX", Aimbot::fAlphaX},
-		{"fAlphaY", Aimbot::fAlphaY},
-		{"fGaussianNoise", Aimbot::fGaussianNoise},
-		{"fMaxPixelDistance", Aimbot::fMaxPixelDistance},
-		{"eHitboxSlot", static_cast<int>(Aimbot::eHitboxSlot)},
-		{"bDrawMaxFOV", Aimbot::bDrawMaxFOV},
-		{"bAimAtOrbs", Aimbot::bAimAtOrbs},
-		{"bVisibleOnly", Aimbot::bVisibleOnly},
-		{"bUsePrediction", Aimbot::bUsePrediction},
-		{"fManualBulletSpeedMs", Aimbot::fManualBulletSpeedMs}
+		{"fAlphaX", AimAssist::fAlphaX},
+		{"fAlphaY", AimAssist::fAlphaY},
+		{"fGaussianNoise", AimAssist::fGaussianNoise},
+		{"fMaxPixelDistance", AimAssist::fMaxPixelDistance},
+		{"eHitboxSlot", static_cast<int>(AimAssist::eHitboxSlot)},
+		{"bDrawMaxFOV", AimAssist::bDrawMaxFOV},
+		{"bAimAtOrbs", AimAssist::bAimAtOrbs},
+		{"bVisibleOnly", AimAssist::bVisibleOnly},
+		{"bUsePrediction", AimAssist::bUsePrediction},
+		{"fManualBulletSpeedMs", AimAssist::fManualBulletSpeedMs}
 	};
 
 	j["ParryWarn"] = {
@@ -284,8 +284,8 @@ json Config::SerializeConfig() {
 		{"bDrawSoulsPerMinute", Fuser::bDrawSoulsPerMinute},
 		{"bMasterToggle", Fuser::bMasterToggle},
 
-		{"ESP", {
-			{"bMasterToggle", ESP::bMasterToggle}
+		{"Visuals", {
+			{"bMasterToggle", Visuals::bMasterToggle}
 		}},
 
 		{"Draw_Camps", {
@@ -355,8 +355,8 @@ json Config::SerializeConfig() {
 		{"EnemySoulsStatusBarColor", static_cast<uint32_t>(ColorPicker::EnemySoulsStatusBarColor)},
 		{"HealthBarForegroundColor", static_cast<uint32_t>(ColorPicker::HealthBarForegroundColor)},
 		{"HealthBarBackgroundColor", static_cast<uint32_t>(ColorPicker::HealthBarBackgroundColor)},
-		{"AimbotFOVCircle", static_cast<uint32_t>(ColorPicker::AimbotFOVCircle)},
-		{"AimbotFOVCircleActive", static_cast<uint32_t>(ColorPicker::AimbotFOVCircleActive)},
+		{"AimAssistFOVCircle", static_cast<uint32_t>(ColorPicker::AimAssistFOVCircle)},
+		{"AimAssistFOVCircleActive", static_cast<uint32_t>(ColorPicker::AimAssistFOVCircleActive)},
 		{"RadarBackgroundColor", static_cast<uint32_t>(ColorPicker::RadarBackgroundColor)},
 		{"SkeletonColorVisible", static_cast<uint32_t>(ColorPicker::SkeletonColorVisible)},
 		{"SkeletonColorInvisible", static_cast<uint32_t>(ColorPicker::SkeletonColorInvisible)}
@@ -382,25 +382,25 @@ void Config::DeserializeConfig(const json& j) {
 		if (m.contains("MonitorIndex")) MainWindow::g_MonitorIndex = m["MonitorIndex"].get<int>();
 	}
 
-	// Aimbot
-	if (j.contains("Aimbot")) {
-		const auto& ab = j["Aimbot"];
+	// AimAssist
+	if (j.contains("AimAssist")) {
+		const auto& ab = j["AimAssist"];
 
 		// General
-		if (ab.contains("bSettings")) Aimbot::bSettings = ab["bSettings"].get<bool>();
-		if (ab.contains("bMasterToggle")) Aimbot::bMasterToggle = ab["bMasterToggle"].get<bool>();
+		if (ab.contains("bSettings")) AimAssist::bSettings = ab["bSettings"].get<bool>();
+		if (ab.contains("bMasterToggle")) AimAssist::bMasterToggle = ab["bMasterToggle"].get<bool>();
 
 		// Targeting
-		if (ab.contains("fAlphaX")) Aimbot::fAlphaX = ab["fAlphaX"].get<float>();
-		if (ab.contains("fAlphaY")) Aimbot::fAlphaY = ab["fAlphaY"].get<float>();
-		if (ab.contains("fGaussianNoise")) Aimbot::fGaussianNoise = ab["fGaussianNoise"].get<float>();
-		if (ab.contains("fMaxPixelDistance")) Aimbot::fMaxPixelDistance = ab["fMaxPixelDistance"].get<float>();
-		if (ab.contains("eHitboxSlot")) Aimbot::eHitboxSlot = static_cast<HitboxSlot>(ab["eHitboxSlot"].get<int>());
-		if (ab.contains("bDrawMaxFOV")) Aimbot::bDrawMaxFOV = ab["bDrawMaxFOV"].get<bool>();
-		if (ab.contains("bAimAtOrbs")) Aimbot::bAimAtOrbs = ab["bAimAtOrbs"].get<bool>();
-		if (ab.contains("bVisibleOnly")) Aimbot::bVisibleOnly = ab["bVisibleOnly"].get<bool>();
-		if (ab.contains("bUsePrediction")) Aimbot::bUsePrediction = ab["bUsePrediction"].get<bool>();
-		if (ab.contains("fManualBulletSpeedMs")) Aimbot::fManualBulletSpeedMs = ab["fManualBulletSpeedMs"].get<float>();
+		if (ab.contains("fAlphaX")) AimAssist::fAlphaX = ab["fAlphaX"].get<float>();
+		if (ab.contains("fAlphaY")) AimAssist::fAlphaY = ab["fAlphaY"].get<float>();
+		if (ab.contains("fGaussianNoise")) AimAssist::fGaussianNoise = ab["fGaussianNoise"].get<float>();
+		if (ab.contains("fMaxPixelDistance")) AimAssist::fMaxPixelDistance = ab["fMaxPixelDistance"].get<float>();
+		if (ab.contains("eHitboxSlot")) AimAssist::eHitboxSlot = static_cast<HitboxSlot>(ab["eHitboxSlot"].get<int>());
+		if (ab.contains("bDrawMaxFOV")) AimAssist::bDrawMaxFOV = ab["bDrawMaxFOV"].get<bool>();
+		if (ab.contains("bAimAtOrbs")) AimAssist::bAimAtOrbs = ab["bAimAtOrbs"].get<bool>();
+		if (ab.contains("bVisibleOnly")) AimAssist::bVisibleOnly = ab["bVisibleOnly"].get<bool>();
+		if (ab.contains("bUsePrediction")) AimAssist::bUsePrediction = ab["bUsePrediction"].get<bool>();
+		if (ab.contains("fManualBulletSpeedMs")) AimAssist::fManualBulletSpeedMs = ab["fManualBulletSpeedMs"].get<float>();
 	}
 
 	if (j.contains("ParryWarn")) {
@@ -424,10 +424,10 @@ void Config::DeserializeConfig(const json& j) {
 		if (fuser.contains("bDrawSoulsPerMinute")) Fuser::bDrawSoulsPerMinute = fuser["bDrawSoulsPerMinute"].get<bool>();
 		if (fuser.contains("bMasterToggle")) Fuser::bMasterToggle = fuser["bMasterToggle"].get<bool>();
 
-		// ESP
-		if (fuser.contains("ESP")) {
-			const auto& esp = fuser["ESP"];
-			if (esp.contains("bMasterToggle")) ESP::bMasterToggle = esp["bMasterToggle"].get<bool>();
+		// Visuals
+		if (fuser.contains("Visuals")) {
+			const auto& vis = fuser["Visuals"];
+			if (vis.contains("bMasterToggle")) Visuals::bMasterToggle = vis["bMasterToggle"].get<bool>();
 		}
 
 		// Draw_Camps
@@ -513,8 +513,8 @@ void Config::DeserializeConfig(const json& j) {
 		if (colors.contains("EnemySoulsStatusBarColor")) ColorPicker::EnemySoulsStatusBarColor = colors["EnemySoulsStatusBarColor"].get<uint32_t>();
 		if (colors.contains("HealthBarForegroundColor")) ColorPicker::HealthBarForegroundColor = colors["HealthBarForegroundColor"].get<uint32_t>();
 		if (colors.contains("HealthBarBackgroundColor")) ColorPicker::HealthBarBackgroundColor = colors["HealthBarBackgroundColor"].get<uint32_t>();
-		if (colors.contains("AimbotFOVCircle")) ColorPicker::AimbotFOVCircle = colors["AimbotFOVCircle"].get<uint32_t>();
-		if (colors.contains("AimbotFOVCircleActive")) ColorPicker::AimbotFOVCircleActive = colors["AimbotFOVCircleActive"].get<uint32_t>();
+		if (colors.contains("AimAssistFOVCircle")) ColorPicker::AimAssistFOVCircle = colors["AimAssistFOVCircle"].get<uint32_t>();
+		if (colors.contains("AimAssistFOVCircleActive")) ColorPicker::AimAssistFOVCircleActive = colors["AimAssistFOVCircleActive"].get<uint32_t>();
 		if (colors.contains("RadarBackgroundColor")) ColorPicker::RadarBackgroundColor = colors["RadarBackgroundColor"].get<uint32_t>();
 		if (colors.contains("SkeletonColorVisible")) ColorPicker::SkeletonColorVisible = colors["SkeletonColorVisible"].get<uint32_t>();
 		if (colors.contains("SkeletonColorInvisible")) ColorPicker::SkeletonColorInvisible = colors["SkeletonColorInvisible"].get<uint32_t>();

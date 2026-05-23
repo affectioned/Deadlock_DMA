@@ -3,10 +3,10 @@
 #include "GUI/Main Window/Main Window.h"
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Fuser/Fuser.h"
-#include "GUI/Fuser/ESP/ESP.h"
+#include "GUI/Fuser/Visuals/Visuals.h"
 #include "GUI/Fuser/Status Bars/Status Bars.h"
 #include "GUI/Radar/Radar.h"
-#include "GUI/Aimbot/Aimbot.h"
+#include "GUI/Aim Assist/Aim Assist.h"
 #include "GUI/ParryWarn/ParryWarn.h"
 #include "GUI/Keybinds/Keybinds.h"
 #include "Deadlock/Offsets.h"
@@ -54,7 +54,7 @@ namespace
 		}
 	}
 
-	void Icon_Aimbot(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
+	void Icon_AimAssist(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
 	{
 		// Crosshair: circle + 4 ticks + center dot
 		const float r = s * 0.5f;
@@ -84,7 +84,7 @@ namespace
 		}
 	}
 
-	void Icon_ESP(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
+	void Icon_Visuals(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
 	{
 		// Eye: two arcs forming an almond + iris dot
 		const float r = s * 0.5f;
@@ -226,10 +226,10 @@ namespace
 	// can be hosted inside our shared sidebar layout.
 	const Tab kTabs[] = {
 		{ Icon_General,  "General",  DrawGeneralTab },
-		{ Icon_Aimbot,   "Aimbot",   Aimbot::RenderSettings },
+		{ Icon_AimAssist, "Aim Assist", AimAssist::RenderSettings },
 		{ Icon_Parry,    "Parry",    DrawParryTab },
 		{ Icon_Fuser,    "Fuser",    Fuser::RenderSettings },
-		{ Icon_ESP,      "ESP",      ESP::RenderSettings },
+		{ Icon_Visuals,  "Visuals",  Visuals::RenderSettings },
 		{ Icon_Radar,    "Radar",    Radar::RenderSettings },
 		{ Icon_Colors,   "Colors",   ColorPicker::Render },
 		{ Icon_Keybinds, "Keybinds", Keybinds::Render },

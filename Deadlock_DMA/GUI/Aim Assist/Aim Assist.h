@@ -6,7 +6,7 @@
 #include <random>
 
 
-class Aimbot
+class AimAssist
 {
 public:
 	static void RenderSettings();
@@ -15,7 +15,7 @@ public:
 
 public:
 	static inline bool bSettings{ true };
-	static inline bool bMasterToggle{ true };   // kill switch — when false the aimbot never activates
+	static inline bool bMasterToggle{ true };   // kill switch — when false aim assist never activates
 	static inline float fAlphaX{ 0.12f };
 	static inline float fAlphaY{ 0.10f };
 	static inline float fGaussianNoise{ 0.8f };

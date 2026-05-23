@@ -66,8 +66,8 @@ public: /* Interface variables */
 
 	// Base muzzle speed for the local pawn's primary weapon, in hu/s. Latched
 	// from the weapon ability's VData by RefreshPrimaryWeaponBulletSpeed. Atomic
-	// so the GUI/Aimbot thread can read without a mutex. 0 means "not resolved
-	// yet" — Aimbot falls back to its default until the first read lands.
+	// so the GUI/Aim Assist thread can read without a mutex. 0 means "not resolved
+	// yet" — Aim Assist falls back to its default until the first read lands.
 	static inline std::atomic<float> g_LocalBulletSpeed{ 0.0f };
 
 	static inline std::mutex m_ClassMapMutex{};

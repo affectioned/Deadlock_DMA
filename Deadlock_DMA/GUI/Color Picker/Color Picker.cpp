@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Color Picker.h"
-#include "GUI/Fuser/ESP/ESP.h"
+#include "GUI/Fuser/Visuals/Visuals.h"
 
 #include <cctype>
 #include <cstring>
@@ -96,17 +96,17 @@ void ColorPicker::Render()
 
 	if (SectionVisible(sFilter, { "Health Bar Foreground", "Health Bar Background" }))
 	{
-		ImGui::SeparatorText("ESP Health Bar");
+		ImGui::SeparatorText("Visuals Health Bar");
 		Row("Health Bar Foreground", HealthBarForegroundColor, sFilter);
 		Row("Health Bar Background", HealthBarBackgroundColor, sFilter);
 		ImGui::Spacing();
 	}
 
-	if (SectionVisible(sFilter, { "Aimbot FOV Circle", "Aimbot FOV Circle Active" }))
+	if (SectionVisible(sFilter, { "Aim Assist FOV Circle", "Aim Assist FOV Circle Active" }))
 	{
-		ImGui::SeparatorText("Aimbot");
-		Row("Aimbot FOV Circle",        AimbotFOVCircle,       sFilter);
-		Row("Aimbot FOV Circle Active", AimbotFOVCircleActive, sFilter);
+		ImGui::SeparatorText("Aim Assist");
+		Row("Aim Assist FOV Circle",        AimAssistFOVCircle,       sFilter);
+		Row("Aim Assist FOV Circle Active", AimAssistFOVCircleActive, sFilter);
 		ImGui::Spacing();
 	}
 

@@ -2,14 +2,14 @@
 #include "DMA/DMA.h"
 #include "Deadlock/Deadlock.h"
 #include "GUI/Keybinds/Keybinds.h"
-#include "Aimbot.h"
+#include "Aim Assist.h"
 #include "GUI/Fuser/Fuser.h"
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Watchdog/GuiWatchdog.h"
 #include "Makcu/MyMakcu.h"
 #include "Deadlock/Entity List/EntityList.h"
 
-void Aimbot::RenderSettings()
+void AimAssist::RenderSettings()
 {
 	static bool bFirstFrame{ true };
 	if (bFirstFrame)
@@ -25,7 +25,7 @@ void Aimbot::RenderSettings()
 		ImGui::TextColored(ImColor(255, 0, 0), "Makcu Disconnected!");
 	}
 
-	ImGui::Checkbox("Enable Aimbot", &bMasterToggle);
+	ImGui::Checkbox("Enable Aim Assist", &bMasterToggle);
 	ImGui::Separator();
 
 	ImGui::SliderFloat("Alpha X", &fAlphaX, 0.01f, 1.0f, "%.2f");
@@ -70,7 +70,7 @@ void Aimbot::RenderSettings()
 }
 
 
-Vector2 Aimbot::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen)
+Vector2 AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen)
 {
 	Vector2 BestTargetDelta{};
 	float BestDistance = FLT_MAX;
@@ -93,9 +93,9 @@ Vector2 Aimbot::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen)
 	};
 
 	{
-		GuiWatchdog::DmaStage("Aimbot/awaiting Pawn+Controller");
+		GuiWatchdog::DmaStage("Aim Assist/awaiting Pawn+Controller");
 		std::scoped_lock lk(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
-		GuiWatchdog::DmaStage("Aimbot/scanning pawns");
+		GuiWatchdog::DmaStage("Aim Assist/scanning pawns");
 
 		// Resolve lead-prediction inputs while the pawn lock is held, so the
 		// shooter position and the target bones come from the same snapshot.
@@ -153,9 +153,9 @@ Vector2 Aimbot::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen)
 
 	if (bAimAtOrbs)
 	{
-		GuiWatchdog::DmaStage("Aimbot/awaiting XpOrb");
+		GuiWatchdog::DmaStage("Aim Assist/awaiting XpOrb");
 		std::scoped_lock orbLk(EntityList::m_XpOrbMutex);
-		GuiWatchdog::DmaStage("Aimbot/scanning orbs");
+		GuiWatchdog::DmaStage("Aim Assist/scanning orbs");
 
 		for (auto& Orb : EntityList::m_XpOrbs)
 		{
@@ -164,11 +164,11 @@ Vector2 Aimbot::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen)
 		}
 	}
 
-	GuiWatchdog::DmaStage("Aimbot/done");
+	GuiWatchdog::DmaStage("Aim Assist/done");
 	return BestTargetDelta;
 }
 
-void Aimbot::OnFrame(DMA_Connection* Conn)
+void AimAssist::OnFrame(DMA_Connection* Conn)
 {
 	if (MyMakcu::m_Device.isConnected() == false) return;
 
@@ -202,7 +202,7 @@ void Aimbot::OnFrame(DMA_Connection* Conn)
 	(void)MyMakcu::m_Device.mouseMove(static_cast<int32_t>(MoveAmount.x), static_cast<int32_t>(MoveAmount.y));
 }
 
-void Aimbot::RenderFOVCircle()
+void AimAssist::RenderFOVCircle()
 {
 	if (!bDrawMaxFOV)
 		return;
@@ -211,7 +211,7 @@ void Aimbot::RenderFOVCircle()
 	auto WindowPos = ImGui::GetWindowPos();
 	ImVec2 CenterScreen{ WindowPos.x + (WindowSize.x / 2.0f), WindowPos.y + (WindowSize.y / 2.0f) };
 
-	ImColor circleColor = bIsActive ? ColorPicker::AimbotFOVCircleActive : ColorPicker::AimbotFOVCircle;
+	ImColor circleColor = bIsActive ? ColorPicker::AimAssistFOVCircleActive : ColorPicker::AimAssistFOVCircle;
 
 	ImGui::GetWindowDrawList()->AddCircle(CenterScreen, fMaxPixelDistance, circleColor, 100, 1.5f);
 }

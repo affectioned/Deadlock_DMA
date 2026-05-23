@@ -2,7 +2,7 @@
 
 #include "Deadlock/Classes/Classes.h"
 
-class ESP
+class Visuals
 {
 public:
 	static inline bool bMasterToggle{ true };

@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "ESP.h"
+#include "Visuals.h"
 
 #include "Deadlock/Entity List/EntityList.h"
 
@@ -13,7 +13,7 @@
 #include "Draw/Sinners.h"
 #include "Draw/XpOrbs.h"
 
-void ESP::OnFrame()
+void Visuals::OnFrame()
 {
 	if (!bMasterToggle)
 		return;
@@ -25,40 +25,40 @@ void ESP::OnFrame()
 
 	if (Draw_Players::bMasterToggle)
 	{
-		GuiWatchdog::GuiStage("ESP/Players");
+		GuiWatchdog::GuiStage("Visuals/Players");
 		Draw_Players::operator()();
 	}
 
 	if (Draw_Troopers::bMasterToggle)
 	{
-		GuiWatchdog::GuiStage("ESP/Troopers");
+		GuiWatchdog::GuiStage("Visuals/Troopers");
 		Draw_Troopers::operator()();
 	}
 
 	if (Draw_Camps::bMasterToggle)
 	{
-		GuiWatchdog::GuiStage("ESP/Camps");
+		GuiWatchdog::GuiStage("Visuals/Camps");
 		Draw_Camps::operator()();
 	}
 
 	if (Draw_Sinners::bMasterToggle)
 	{
-		GuiWatchdog::GuiStage("ESP/Sinners");
+		GuiWatchdog::GuiStage("Visuals/Sinners");
 		Draw_Sinners::operator()();
 	}
 
 	if (Draw_XpOrbs::bMasterToggle)
 	{
-		GuiWatchdog::GuiStage("ESP/XpOrbs");
+		GuiWatchdog::GuiStage("Visuals/XpOrbs");
 		Draw_XpOrbs::operator()();
 	}
 
 	ImGui::PopFont();
 }
 
-void ESP::RenderSettings()
+void Visuals::RenderSettings()
 {
-	ImGui::Checkbox("Enable ESP", &bMasterToggle);
+	ImGui::Checkbox("Enable Visuals", &bMasterToggle);
 
 	if (ImGui::CollapsingHeader("Players", ImGuiTreeNodeFlags_DefaultOpen))
 	{

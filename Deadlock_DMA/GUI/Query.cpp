@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "Query.h"
 #include "GUI/Fuser/Fuser.h"
-#include "GUI/Fuser/ESP/Draw/Players.h"
-#include "GUI/Fuser/ESP/Draw/Troopers.h"
-#include "GUI/Fuser/ESP/Draw/Camps.h"
-#include "GUI/Fuser/ESP/Draw/Sinners.h"
-#include "GUI/Fuser/ESP/Draw/XpOrbs.h"
+#include "GUI/Fuser/Visuals/Draw/Players.h"
+#include "GUI/Fuser/Visuals/Draw/Troopers.h"
+#include "GUI/Fuser/Visuals/Draw/Camps.h"
+#include "GUI/Fuser/Visuals/Draw/Sinners.h"
+#include "GUI/Fuser/Visuals/Draw/XpOrbs.h"
 
 bool Query::IsUsingPlayers()
 {

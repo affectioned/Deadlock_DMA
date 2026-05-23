@@ -4,7 +4,7 @@
 
 #include "DMA/Input/Input Manager.h"
 
-#include "GUI/Aimbot/Aimbot.h"
+#include "GUI/Aim Assist/Aim Assist.h"
 
 const char* CKeybind::GetKeyName(uint32_t vkCode)
 {
@@ -163,7 +163,7 @@ void Keybinds::Render()
 		// Local-only rows render unconditionally — they don't depend on the
 		// target-PC input reader and should be rebindable even before DMA is up.
 		Menu.Render();
-		Aimbot.Render();
+		AimAssist.Render();
 
 		ImGui::EndTable();
 	}
@@ -259,9 +259,9 @@ void CKeybind::Render()
 
 void Keybinds::OnDMAFrame(DMA_Connection* Conn)
 {
-	Aimbot::bIsActive = Aimbot::bMasterToggle && Aimbot.IsActive(Conn);
-	if (Aimbot::bIsActive)
-		Aimbot::OnFrame(Conn);
+	AimAssist::bIsActive = AimAssist::bMasterToggle && AimAssist.IsActive(Conn);
+	if (AimAssist::bIsActive)
+		AimAssist::OnFrame(Conn);
 }
 
 const bool CKeybind::IsActive(DMA_Connection* Conn) const

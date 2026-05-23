@@ -28,6 +28,6 @@ public:
 public:
 	static inline bool bSettings{ true };
 	static inline CKeybind Debug  = { "Debug",  VK_F12,      true,  true,  false, false };
-	static inline CKeybind Aimbot = { "Aimbot", VK_XBUTTON2, true,  true,  false, false };
+	static inline CKeybind AimAssist = { "Aim Assist", VK_XBUTTON2, true,  true,  false, false };
 	static inline CKeybind Menu   = { "Menu",   VK_INSERT,   false, false, false, true  };
 };

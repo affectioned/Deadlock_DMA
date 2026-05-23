@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "Fuser.h"
-#include "ESP/ESP.h"
+#include "Visuals/Visuals.h"
 #include "Deadlock/Deadlock.h"
 #include "Deadlock/Entity List/EntityList.h"
 #include "Status Bars/Status Bars.h"
-#include "GUI/Aimbot/Aimbot.h"
+#include "GUI/Aim Assist/Aim Assist.h"
 #include "GUI/ParryWarn/ParryWarn.h"
 #include "GUI/Main Window/Main Window.h"
 #include "GUI/Watchdog/GuiWatchdog.h"
@@ -30,11 +30,11 @@ void Fuser::Render()
 	auto WindowPos = ImGui::GetWindowPos();
 	auto DrawList = ImGui::GetWindowDrawList();
 
-	GuiWatchdog::GuiStage("Fuser/AimbotFOV");
-	Aimbot::RenderFOVCircle();
+	GuiWatchdog::GuiStage("Fuser/AimAssistFOV");
+	AimAssist::RenderFOVCircle();
 
-	GuiWatchdog::GuiStage("Fuser/ESP");
-	ESP::OnFrame();
+	GuiWatchdog::GuiStage("Fuser/Visuals");
+	Visuals::OnFrame();
 
 	GuiWatchdog::GuiStage("Fuser/SoulsPerMin");
 	RenderSoulsPerMinute();
@@ -101,7 +101,7 @@ void Fuser::RenderSettings()
 				m_ScreenSize.y = (float)monitors[curr].h;
 			}
 			ImGui::SameLine();
-			ImGui::TextDisabled("Sets ESP resolution to %dx%d", monitors[curr].w, monitors[curr].h);
+			ImGui::TextDisabled("Sets Visuals resolution to %dx%d", monitors[curr].w, monitors[curr].h);
 		}
 	}
 
