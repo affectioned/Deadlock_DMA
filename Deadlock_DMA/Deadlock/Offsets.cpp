@@ -61,21 +61,6 @@ bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 		"CPrediction", Offsets::Prediction, 0x2E95F98,
 		"48 8B 05 ? ? ? ? 38 58", 3, 7);
 
-	{
-		uintptr_t addr = clientBase + Offsets::MeleeChargeVTableRVA;
-		if (IsAddressReadable(Conn, addr, pid))
-		{
-			Offsets::MeleeChargeVTable = addr;
-			Log::Info("[+] MeleeChargeVTable: 0x{:X}", addr);
-		}
-		else
-		{
-			Offsets::MeleeChargeVTable = 0;
-			Log::Warn("[!] MeleeChargeVTable RVA 0x{:X} unreadable — ParryWarn disabled until offsets are updated.",
-				Offsets::MeleeChargeVTableRVA);
-		}
-	}
-
 	DbgLog("All offsets resolved.");
 	return true;
 }

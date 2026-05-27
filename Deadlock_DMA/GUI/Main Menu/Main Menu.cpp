@@ -7,9 +7,7 @@
 #include "GUI/Fuser/Status Bars/Status Bars.h"
 #include "GUI/Radar/Radar.h"
 #include "GUI/Aim Assist/Aim Assist.h"
-#include "GUI/ParryWarn/ParryWarn.h"
 #include "GUI/Keybinds/Keybinds.h"
-#include "Deadlock/Offsets.h"
 #include "GUI/Config/Config.h"
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Debug GUI/Class List/Class List.h"
@@ -177,43 +175,6 @@ namespace
 		}
 	}
 
-	void Icon_Parry(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
-	{
-		// Shield with center dot — defensive posture
-		const float r = s * 0.5f;
-		dl->PathClear();
-		dl->PathLineTo(ImVec2(c.x,         c.y - r * 0.95f));
-		dl->PathLineTo(ImVec2(c.x + r,     c.y - r * 0.45f));
-		dl->PathLineTo(ImVec2(c.x + r * 0.6f, c.y + r * 0.6f));
-		dl->PathLineTo(ImVec2(c.x,         c.y + r * 0.95f));
-		dl->PathLineTo(ImVec2(c.x - r * 0.6f, c.y + r * 0.6f));
-		dl->PathLineTo(ImVec2(c.x - r,     c.y - r * 0.45f));
-		dl->PathStroke(col, ImDrawFlags_Closed, 1.5f);
-		dl->AddCircleFilled(c, r * 0.18f, col);
-	}
-
-	void DrawParryTab()
-	{
-		ImGui::Checkbox("Enable Parry Warning", &ParryWarn::bMasterToggle);
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
-
-		ImGui::SetNextItemWidth(220.0f);
-		ImGui::SliderFloat("Max Range (hu)", &ParryWarn::fMaxRangeHu, 100.0f, 1000.0f, "%.0f");
-		ImGui::TextDisabled("Heavy-melee reach is ~260 hu. 400 gives a small lead.");
-
-		ImGui::Spacing();
-		ImGui::SeparatorText("Status");
-		const bool offsetsOk = Offsets::MeleeChargeVTable != 0;
-		if (offsetsOk)
-			ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), "MeleeCharge vtable: 0x%llX",
-				(unsigned long long)Offsets::MeleeChargeVTable);
-		else
-			ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f),
-				"MeleeCharge vtable unresolved — update Offsets::MeleeChargeVTableRVA after patches.");
-	}
-
 	struct Tab
 	{
 		IconFn      icon;
@@ -227,7 +188,6 @@ namespace
 	const Tab kTabs[] = {
 		{ Icon_General,  "General",  DrawGeneralTab },
 		{ Icon_AimAssist, "Aim Assist", AimAssist::RenderSettings },
-		{ Icon_Parry,    "Parry",    DrawParryTab },
 		{ Icon_Fuser,    "Fuser",    Fuser::RenderSettings },
 		{ Icon_Visuals,  "Visuals",  Visuals::RenderSettings },
 		{ Icon_Radar,    "Radar",    Radar::RenderSettings },

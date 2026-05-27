@@ -3,7 +3,6 @@
 #include "Config.h"
 
 #include "GUI/Aim Assist/Aim Assist.h"
-#include "GUI/ParryWarn/ParryWarn.h"
 #include "Deadlock/Const/BoneListTypes.hpp"
 
 #include "GUI/Fuser/Fuser.h"
@@ -274,11 +273,6 @@ json Config::SerializeConfig() {
 		{"fManualBulletSpeedMs", AimAssist::fManualBulletSpeedMs}
 	};
 
-	j["ParryWarn"] = {
-		{"bMasterToggle", ParryWarn::bMasterToggle},
-		{"fMaxRangeHu", ParryWarn::fMaxRangeHu}
-	};
-
 	j["Fuser"] = {
 		{"ScreenSize", {Fuser::m_ScreenSize.x, Fuser::m_ScreenSize.y}},
 		{"bDrawSoulsPerMinute", Fuser::bDrawSoulsPerMinute},
@@ -401,12 +395,6 @@ void Config::DeserializeConfig(const json& j) {
 		if (ab.contains("bVisibleOnly")) AimAssist::bVisibleOnly = ab["bVisibleOnly"].get<bool>();
 		if (ab.contains("bUsePrediction")) AimAssist::bUsePrediction = ab["bUsePrediction"].get<bool>();
 		if (ab.contains("fManualBulletSpeedMs")) AimAssist::fManualBulletSpeedMs = ab["fManualBulletSpeedMs"].get<float>();
-	}
-
-	if (j.contains("ParryWarn")) {
-		const auto& ap = j["ParryWarn"];
-		if (ap.contains("bMasterToggle")) ParryWarn::bMasterToggle = ap["bMasterToggle"].get<bool>();
-		if (ap.contains("fMaxRangeHu")) ParryWarn::fMaxRangeHu = ap["fMaxRangeHu"].get<float>();
 	}
 
 	// Fuser

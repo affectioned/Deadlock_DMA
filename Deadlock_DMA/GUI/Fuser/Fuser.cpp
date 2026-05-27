@@ -5,7 +5,6 @@
 #include "Deadlock/Entity List/EntityList.h"
 #include "Status Bars/Status Bars.h"
 #include "GUI/Aim Assist/Aim Assist.h"
-#include "GUI/ParryWarn/ParryWarn.h"
 #include "GUI/Main Window/Main Window.h"
 #include "GUI/Watchdog/GuiWatchdog.h"
 
@@ -41,9 +40,6 @@ void Fuser::Render()
 
 	GuiWatchdog::GuiStage("Fuser/StatusBars");
 	StatusBars::Render();
-
-	GuiWatchdog::GuiStage("Fuser/ParryWarn");
-	ParryWarn::Render();
 
 	ImGui::End();
 	ImGui::PopStyleVar();
