@@ -34,6 +34,19 @@ DMA_Connection::DMA_Connection()
             throw std::runtime_error("VMMDLL_Initialize failed (Check FPGA connection/drivers)");
 
         Log::Info("Connected to DMA!");
+
+        // Extend the TLB (page-table) cache TTL so VMMDLL doesn't re-walk
+        // Deadlock's full page tables every ~10 s and stall scatter reads for
+        // ~200 ms. Game entity pages are stable for the lifetime of a match.
+        ULONG64 tickMs = 0, tlbTicks = 0;
+        if (VMMDLL_ConfigGet(m_VMMHandle, VMMDLL_OPT_CONFIG_TICK_PERIOD, &tickMs) &&
+            VMMDLL_ConfigGet(m_VMMHandle, VMMDLL_OPT_CONFIG_TLBCACHE_TICKS, &tlbTicks))
+        {
+            Log::Info("VMMDLL: tick={}ms tlbcache={} ticks ({}s TTL)",
+                tickMs, tlbTicks, tickMs * tlbTicks / 1000);
+            VMMDLL_ConfigSet(m_VMMHandle, VMMDLL_OPT_CONFIG_TLBCACHE_TICKS, 6000);
+            Log::Info("VMMDLL: TLB cache extended to {}s", tickMs * 6000 / 1000);
+        }
     }
     catch (const std::exception& e) {
         Log::Error("--- CRITICAL ERROR ---");
