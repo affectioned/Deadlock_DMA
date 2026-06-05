@@ -5,6 +5,7 @@
 #include "Entity List/EntityList.h"
 #include "GUI/Keybinds/Keybinds.h"
 #include "DMA/Memory/PhaseTimings.h"
+#include "GUI/Watchdog/GuiWatchdog.h"
 
 bool DeadlockContext::Initialize(DMA_Connection* conn)
 {
@@ -21,8 +22,9 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 	// pays for two clock reads + an int add.
 	auto timed = [](const char* name, std::function<void()> f) {
 		PhaseUs& phase = PhaseTimings::Get(name);
-		return [&phase, f = std::move(f)] {
-			ScopedUs scope(phase);
+		return [&phase, name, f = std::move(f)] {
+			GuiWatchdog::DmaStage(name);
+			ScopedUs scope(phase, name);
 			f();
 		};
 	};

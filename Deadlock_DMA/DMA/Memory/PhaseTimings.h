@@ -30,14 +30,20 @@ struct PhaseUs {
 
 // RAII timer — adds elapsed microseconds to a PhaseUs on destruction. Works
 // across `goto`/early-return because destructors fire on any scope exit.
+// Pass an optional name to get a warn log when the phase exceeds 50 ms
+// (helps distinguish DMA-bus latency bursts from mutex contention).
 struct ScopedUs {
 	std::chrono::steady_clock::time_point start;
 	PhaseUs& dst;
-	explicit ScopedUs(PhaseUs& d) : start(std::chrono::steady_clock::now()), dst(d) {}
+	const char* name;
+	explicit ScopedUs(PhaseUs& d, const char* n = nullptr)
+		: start(std::chrono::steady_clock::now()), dst(d), name(n) {}
 	~ScopedUs() {
 		const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
 			std::chrono::steady_clock::now() - start).count();
 		dst.add(us);
+		if (us > 50'000 && name)
+			Log::Warn("[PhaseTimings] {} stalled {}ms", name, us / 1000);
 	}
 };
 

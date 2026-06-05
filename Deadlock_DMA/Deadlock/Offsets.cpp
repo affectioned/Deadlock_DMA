@@ -46,11 +46,11 @@ bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 	uintptr_t clientEnd  = clientBase + Deadlock::Proc().GetModuleSize(GameModules::ClientDll);
 
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
-		"GameEntitySystem", Offsets::GameEntitySystem, 0x38A7C98,
+		"GameEntitySystem", Offsets::GameEntitySystem, 0x31CC400,
 		"48 8B 0D ? ? ? ? 8B FD C1 EF", 3, 7);
 
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
-		"LocalController", Offsets::LocalController, 0x2DC5258,
+		"LocalController", Offsets::LocalController, 0x3754C00,
 		"48 3B 35 ? ? ? ? 75 ? 48 C7 05", 3, 7);
 
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
