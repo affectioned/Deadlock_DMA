@@ -33,6 +33,8 @@ public:
 	static inline bool bHideLocalPlayer{ true };
 	static inline bool bShowDistance{ true };
 	static inline bool bVisibleOnly{ false };
+	static inline bool bShowHeroLevel{ true };
+	static inline bool bShowRespawnTimer{ true };
 
 private:
 	static void DrawPlayer(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn);
@@ -44,4 +46,5 @@ private:
 	static void DrawBoneNumbers(const C_CitadelPlayerPawn& Pawn);
 	static void DrawNameTag(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos, int& LineNumber);
 	static void DrawUnsecuredSouls(const C_CitadelPlayerPawn& Pawn, const Vector2& ScreenPos, int& LineNumber);
+	static void DrawRespawnTimer(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, float serverTime);
 };

@@ -303,7 +303,9 @@ json Config::SerializeConfig() {
 			{"eHealthBarPosition", static_cast<int>(Draw_Players::eHealthBarPosition)},
 			{"bHideLocalPlayer", Draw_Players::bHideLocalPlayer},
 			{"bShowDistance", Draw_Players::bShowDistance},
-			{"bVisibleOnly", Draw_Players::bVisibleOnly}
+			{"bVisibleOnly", Draw_Players::bVisibleOnly},
+			{"bShowHeroLevel", Draw_Players::bShowHeroLevel},
+			{"bShowRespawnTimer", Draw_Players::bShowRespawnTimer}
 		}},
 
 		{"Draw_Sinners", {
@@ -444,6 +446,8 @@ void Config::DeserializeConfig(const json& j) {
 			if (players.contains("bHideLocalPlayer")) Draw_Players::bHideLocalPlayer = players["bHideLocalPlayer"].get<bool>();
 			if (players.contains("bShowDistance")) Draw_Players::bShowDistance = players["bShowDistance"].get<bool>();
 			if (players.contains("bVisibleOnly")) Draw_Players::bVisibleOnly = players["bVisibleOnly"].get<bool>();
+			if (players.contains("bShowHeroLevel")) Draw_Players::bShowHeroLevel = players["bShowHeroLevel"].get<bool>();
+			if (players.contains("bShowRespawnTimer")) Draw_Players::bShowRespawnTimer = players["bShowRespawnTimer"].get<bool>();
 		}
 
 		// Draw_Sinners

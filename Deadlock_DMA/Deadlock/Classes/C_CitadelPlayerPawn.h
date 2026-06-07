@@ -23,6 +23,8 @@ public:
 	CHandle   m_hController{ 0 };
 	int32_t   m_TotalUnspentSouls{ 0 };
 	int32_t   m_UnsecuredSouls{ 0 };
+	int32_t   m_nLevel{ 0 };
+	float     m_flRespawnTime{ 0.0f };
 
 	// Model path: two-hop read (SceneNode + ModelState + ModelName → char*)
 	uintptr_t m_ModelNamePtr{ 0 };
@@ -87,6 +89,9 @@ public:
 
 		uintptr_t VelocityPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_vecVelocity;
 		sr.Add(VelocityPtr, &m_Velocity);
+
+		sr.Add(m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_nLevel,        &m_nLevel);
+		sr.Add(m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_flRespawnTime, &m_flRespawnTime);
 	}
 
 	void PrepareRead_2(ScatterRead& sr)
@@ -131,6 +136,8 @@ public:
 
 		uintptr_t VelocityPtr = m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_vecVelocity;
 		sr.Add(VelocityPtr, &m_Velocity);
+
+		sr.Add(m_EntityAddress + Offsets::C_CitadelPlayerPawn::m_flRespawnTime, &m_flRespawnTime);
 
 		PrepareBoneRead(sr);
 	}

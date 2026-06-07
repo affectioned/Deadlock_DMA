@@ -104,6 +104,8 @@ void Visuals::RenderSettings()
 		ImGui::Unindent();
 		ImGui::Checkbox("Hide Local", &Draw_Players::bHideLocalPlayer);
 		ImGui::Checkbox("Show Distance", &Draw_Players::bShowDistance);
+		ImGui::Checkbox("Hero Level", &Draw_Players::bShowHeroLevel);
+		ImGui::Checkbox("Respawn Timer", &Draw_Players::bShowRespawnTimer);
 		ImGui::Checkbox("Bone Numbers", &Draw_Players::bBoneNumbers);
 		ImGui::Checkbox("Visible Only", &Draw_Players::bVisibleOnly);
 

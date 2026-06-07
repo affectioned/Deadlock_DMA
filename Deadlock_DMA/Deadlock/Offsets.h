@@ -73,9 +73,11 @@ namespace Offsets
 
 	namespace C_CitadelPlayerPawn
 	{
-		inline constexpr std::ptrdiff_t m_vecVelocity        = 0x438; // CNetworkVelocityVector (40b)
-		inline constexpr std::ptrdiff_t m_nCurrencies		 = 0x12E0; // int32[6] (24b)
+		inline constexpr std::ptrdiff_t m_vecVelocity        = 0x438;  // CNetworkVelocityVector (40b)
+		inline constexpr std::ptrdiff_t m_nCurrencies        = 0x12E0; // int32[6] (24b)
 		inline constexpr std::ptrdiff_t m_nUnsecuredSouls    = 0x12EC; // m_nCurrencies[3]
+		inline constexpr std::ptrdiff_t m_nLevel             = 0x12DC; // int32 (4b)
+		inline constexpr std::ptrdiff_t m_flRespawnTime      = 0x1314; // GameTime_t / float (4b)
 	}
 
 	namespace C_BasePlayerPawn

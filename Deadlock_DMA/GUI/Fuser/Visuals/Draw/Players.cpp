@@ -9,6 +9,12 @@
 
 void Draw_Players::operator()()
 {
+	float serverTime = 0.0f;
+	{
+		std::lock_guard timeLock(Deadlock::m_ServerTimeMutex);
+		serverTime = Deadlock::m_ServerTime;
+	}
+
 	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
 	auto WindowPos = ImGui::GetWindowPos();
@@ -31,7 +37,12 @@ void Draw_Players::operator()()
 
 		if (ControllerIt->IsInvalid()) continue;
 
-		if (ControllerIt->IsDead()) continue;
+		if (ControllerIt->IsDead())
+		{
+			if (bShowRespawnTimer)
+				DrawRespawnTimer(*ControllerIt, Pawn, serverTime);
+			continue;
+		}
 
 		// FOW gate: when enabled, skip enemies the team minimap doesn't see.
 		// Friendlies always render — bypass the gate for them.
@@ -326,6 +337,9 @@ void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const C_Citad
 
 	std::string NameTagString{};
 
+	if (bShowHeroLevel && Pawn.m_nLevel > 0)
+		NameTagString += std::format("[{0:d}] ", Pawn.m_nLevel);
+
 	NameTagString += std::format("{0:s} ", PC.GetHeroName());
 
 	if (bShowDistance)
@@ -344,6 +358,33 @@ void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const C_Citad
 
 	if (bDrawUnsecuredSouls)
 		DrawUnsecuredSouls(Pawn, ScreenPos, LineNumber);
+}
+
+void Draw_Players::DrawRespawnTimer(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, float serverTime)
+{
+	if (bHideFriendly && PC.IsFriendly()) return;
+
+	Vector2 ScreenPos{};
+	if (!Deadlock::WorldToScreen(Pawn.m_Position, ScreenPos)) return;
+
+	auto DrawList = ImGui::GetWindowDrawList();
+	auto WindowPos = ImGui::GetWindowPos();
+
+	int lineNum = 0;
+	DrawNameTag(PC, Pawn, DrawList, WindowPos, lineNum);
+
+	float remaining = Pawn.m_flRespawnTime - serverTime;
+	std::string timerText = remaining > 0.0f
+		? std::format("DEAD ({:.1f}s)", remaining)
+		: "DEAD";
+
+	auto timerColor = PC.m_TeamNum == ETeam::HIDDEN_KING
+		? ColorPicker::HiddenKingTeamColor
+		: ColorPicker::ArchMotherTeamColor;
+
+	auto textSize = ImGui::CalcTextSize(timerText.c_str());
+	ImGui::SetCursorPos(ImVec2(ScreenPos.x - textSize.x * 0.5f, ScreenPos.y + lineNum * textSize.y));
+	ImGui::TextColored(timerColor, timerText.c_str());
 }
 
 void Draw_Players::DrawUnsecuredSouls(const C_CitadelPlayerPawn& Pawn, const Vector2& ScreenPos, int& LineNumber)
