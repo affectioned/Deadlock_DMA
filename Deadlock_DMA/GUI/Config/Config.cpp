@@ -249,6 +249,7 @@ json Config::SerializeConfig() {
 	j["MainMenu"] = {
 		{"bVSync", MainMenu::bVSync},
 		{"iTargetFPS", MainMenu::iTargetFPS},
+		{"bOpen", MainMenu::bOpen},
 		{"WindowPos",  {MainMenu::WindowPos.x,  MainMenu::WindowPos.y}},
 		{"WindowSize", {MainMenu::WindowSize.x, MainMenu::WindowSize.y}},
 		{"MonitorIndex", MainWindow::g_MonitorIndex},
@@ -371,6 +372,7 @@ void Config::DeserializeConfig(const json& j) {
 
 		if (m.contains("bVSync")) MainMenu::bVSync = m["bVSync"].get<bool>();
 		if (m.contains("iTargetFPS")) MainMenu::iTargetFPS = m["iTargetFPS"].get<int>();
+		if (m.contains("bOpen")) MainMenu::bOpen = m["bOpen"].get<bool>();
 		if (m.contains("WindowPos") && m["WindowPos"].is_array() && m["WindowPos"].size() == 2)
 			MainMenu::WindowPos = ImVec2(m["WindowPos"][0].get<float>(), m["WindowPos"][1].get<float>());
 		if (m.contains("WindowSize") && m["WindowSize"].is_array() && m["WindowSize"].size() == 2)
