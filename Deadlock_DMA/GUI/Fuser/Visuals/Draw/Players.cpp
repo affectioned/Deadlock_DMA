@@ -13,6 +13,8 @@ void Draw_Players::operator()()
 	{
 		std::lock_guard timeLock(Deadlock::m_ServerTimeMutex);
 		serverTime = Deadlock::m_ServerTime;
+		auto elapsed = std::chrono::duration<float>(std::chrono::steady_clock::now() - Deadlock::m_ServerTimeUpdatedAt).count();
+		serverTime += elapsed;
 	}
 
 	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);

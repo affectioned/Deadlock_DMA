@@ -31,6 +31,7 @@ public:
 	static inline std::mutex m_ServerTimeMutex{};
 	static inline uintptr_t m_PredictionAddress = 0;
 	static inline float m_ServerTime = 0.0f;
+	static inline std::chrono::steady_clock::time_point m_ServerTimeUpdatedAt{};
 	static void GetPredictionAddress(DMA_Connection* Conn);
 	static void UpdateServerTime(DMA_Connection* Conn);
 

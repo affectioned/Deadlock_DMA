@@ -132,6 +132,7 @@ void Deadlock::UpdateServerTime(DMA_Connection* Conn)
 
 	std::scoped_lock lock(m_ServerTimeMutex);
 	m_ServerTime = Proc().ReadMem<float>(Conn, ServerTimeAddress);
+	m_ServerTimeUpdatedAt = std::chrono::steady_clock::now();
 }
 
 void Deadlock::SetClientYaw(float NewYaw)
