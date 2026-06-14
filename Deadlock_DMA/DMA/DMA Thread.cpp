@@ -27,10 +27,28 @@ void DMA_Thread_Main()
 
 	timeBeginPeriod(1);
 
+	auto lastTlbRefresh = std::chrono::steady_clock::now();
+	auto lastMemRefresh = lastTlbRefresh;
+
 	while (bRunning)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		g_GameContext->Tick(conn, std::chrono::steady_clock::now());
+
+		auto now = std::chrono::steady_clock::now();
+
+		if (now - lastMemRefresh >= std::chrono::milliseconds(100))
+		{
+			VMMDLL_ConfigSet(conn->GetHandle(), VMMDLL_OPT_REFRESH_FREQ_MEM, 1);
+			lastMemRefresh = now;
+		}
+
+		if (now - lastTlbRefresh >= std::chrono::seconds(5))
+		{
+			VMMDLL_ConfigSet(conn->GetHandle(), VMMDLL_OPT_REFRESH_FREQ_TLB, 1);
+			lastTlbRefresh = now;
+		}
+
+		g_GameContext->Tick(conn, now);
 	}
 
 	timeEndPeriod(1);

@@ -27,8 +27,8 @@ DMA_Connection::DMA_Connection()
     Log::Info("Connecting to DMA...");
 
     try {
-        LPCSTR args[] = { "", "-device", "FPGA", "-waitinitialize" };
-        m_VMMHandle = VMMDLL_Initialize(4, args);
+        LPCSTR args[] = { "", "-device", "FPGA", "-waitinitialize", "-norefresh" };
+        m_VMMHandle = VMMDLL_Initialize(5, args);
 
         if (!m_VMMHandle)
             throw std::runtime_error("VMMDLL_Initialize failed (Check FPGA connection/drivers)");
