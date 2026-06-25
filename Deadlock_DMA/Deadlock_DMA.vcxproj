@@ -180,6 +180,9 @@
     <ClCompile Include="Deadlock\Entity List\XpOrbs.cpp">
       <ObjectFileName>$(IntDir)EntityList_XpOrbs.obj</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="Deadlock\Entity List\Powerups.cpp">
+      <ObjectFileName>$(IntDir)EntityList_Powerups.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="Deadlock\Entity List\PrimaryWeapon.cpp">
       <ObjectFileName>$(IntDir)EntityList_PrimaryWeapon.obj</ObjectFileName>
     </ClCompile>
@@ -203,6 +206,7 @@
     <ClCompile Include="GUI\Fuser\Visuals\Draw\Sinners.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\Draw\Troopers.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\Draw\XpOrbs.cpp" />
+    <ClCompile Include="GUI\Fuser\Visuals\Draw\Powerups.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\Visuals.cpp" />
     <ClCompile Include="GUI\Fuser\Fuser.cpp" />
     <ClCompile Include="GUI\Fuser\Status Bars\Status Bars.cpp" />
@@ -238,6 +242,7 @@
     <ClInclude Include="GUI\Fuser\Visuals\Draw\Sinners.h" />
     <ClInclude Include="GUI\Fuser\Visuals\Draw\Troopers.h" />
     <ClInclude Include="GUI\Fuser\Visuals\Draw\XpOrbs.h" />
+    <ClInclude Include="GUI\Fuser\Visuals\Draw\Powerups.h" />
     <ClInclude Include="GUI\Fuser\Status Bars\Status Bars.h" />
     <ClInclude Include="GUI\Input\KeyboardPump.h" />
     <ClInclude Include="GUI\Keybinds\Keybinds.h" />

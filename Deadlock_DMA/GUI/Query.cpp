@@ -6,6 +6,7 @@
 #include "GUI/Fuser/Visuals/Draw/Camps.h"
 #include "GUI/Fuser/Visuals/Draw/Sinners.h"
 #include "GUI/Fuser/Visuals/Draw/XpOrbs.h"
+#include "GUI/Fuser/Visuals/Draw/Powerups.h"
 
 bool Query::IsUsingPlayers()
 {
@@ -38,6 +39,13 @@ bool Query::IsUsingSinners()
 bool Query::IsUsingXpOrbs()
 {
 	if (Fuser::bMasterToggle && Draw_XpOrbs::bMasterToggle) return true;
+
+	return false;
+}
+
+bool Query::IsUsingPowerups()
+{
+	if (Fuser::bMasterToggle && Draw_Powerups::bMasterToggle) return true;
 
 	return false;
 }

@@ -28,6 +28,9 @@ public: /* Interface methods */
 	static void FullXpOrbRefresh(DMA_Connection* Conn, Process* Proc);
 	static void QuickXpOrbRefresh(DMA_Connection* Conn, Process* Proc);
 
+	static void FullPowerupRefresh(DMA_Connection* Conn, Process* Proc);
+	static void QuickPowerupRefresh(DMA_Connection* Conn, Process* Proc);
+
 	static void FullPawnRefresh_lk(DMA_Connection* Conn, Process* Proc);
 	static void FullPawnRefresh(DMA_Connection* Conn, Process* Proc);
 	static void QuickPawnRefresh(DMA_Connection* Conn, Process* Proc);
@@ -64,6 +67,12 @@ public: /* Interface variables */
 	static inline std::mutex m_XpOrbMutex{};
 	static inline std::vector<C_BaseEntity> m_XpOrbs{};
 
+	// Breakable boxes / on-map powerups (souls crates, health pickups, modifier
+	// buffs, punchable powerups). All variants of CCitadel_BreakableProp* share
+	// this bucket — Draw_Powerups colors by m_Label.
+	static inline std::mutex m_PowerupMutex{};
+	static inline std::vector<C_BaseEntity> m_Powerups{};
+
 	// Base muzzle speed for the local pawn's primary weapon, in hu/s. Latched
 	// from the weapon ability's VData by RefreshPrimaryWeaponBulletSpeed. Atomic
 	// so the GUI/Aim Assist thread can read without a mutex. 0 means "not resolved
@@ -94,6 +103,9 @@ private: /* Internal variables */
 	static inline std::vector<std::pair<uintptr_t, const char*>> m_MonsterCampAddresses{};
 	static inline std::vector<uintptr_t> m_SinnersAddresses{};
 	static inline std::vector<uintptr_t> m_XpOrbAddresses{};
+	// Stored as (address, label) so Draw_Powerups can color-code by type
+	// without re-reading the entity classname every frame.
+	static inline std::vector<std::pair<uintptr_t, const char*>> m_PowerupAddresses{};
 	static inline std::vector<uintptr_t> m_PrimaryWeaponAbilityAddresses{};
 
 	// Single ScatterRead shared across all DMA operations on the DMA thread.

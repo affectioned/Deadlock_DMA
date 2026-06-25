@@ -125,6 +125,7 @@ void EntityList::SortEntityList()
 	m_MonsterCampAddresses.clear();
 	m_SinnersAddresses.clear();
 	m_XpOrbAddresses.clear();
+	m_PowerupAddresses.clear();
 	m_PrimaryWeaponAbilityAddresses.clear();
 
 	auto FindClass = [&](const std::string& name) -> uintptr_t {
@@ -143,6 +144,19 @@ void EntityList::SortEntityList()
 	uintptr_t XpOrbClassPtr              = FindClass("item_xp");
 	uintptr_t PrimaryWeaponAbilityClass  = FindClass("citadel_ability_primary_weapon");
 
+	// Breakable boxes / powerups. The Source 2 network classnames follow the
+	// snake_case-of-C++-classname convention (e.g. CCitadel_BreakablePropGoldPickup
+	// -> citadel_breakable_prop_gold_pickup). All variants land in one bucket.
+	// If a future build renames any of these, PrintClassMap() in-game will show
+	// the live strings.
+	uintptr_t BreakableBaseClass         = FindClass("citadel_breakable_prop");
+	uintptr_t BreakableGoldClass         = FindClass("citadel_breakable_prop_gold_pickup");
+	uintptr_t BreakableHealthClass       = FindClass("citadel_breakable_prop_health_pickup");
+	uintptr_t BreakableModifierClass     = FindClass("citadel_breakable_prop_modifier_pickup");
+	uintptr_t PunchablePowerupClass      = FindClass("citadel_punchable_powerup");
+	uintptr_t DroppedGoldClass           = FindClass("citadel_breakable_dropped_gold_pickup");
+	uintptr_t DroppedNecroClass          = FindClass("citadel_breakable_dropped_necro_pickup");
+
 	for (auto& List : m_CompleteEntityList)
 	{
 		for (auto& Entry : List)
@@ -158,20 +172,28 @@ void EntityList::SortEntityList()
 			else if (BossTier3ClassPtr          && Entry.pName == BossTier3ClassPtr)        m_MonsterCampAddresses.emplace_back(Entry.pEnt, "Tier 3");
 			else if (SinnerClassPtr             && Entry.pName == SinnerClassPtr)           m_SinnersAddresses.push_back(Entry.pEnt);
 			else if (XpOrbClassPtr              && Entry.pName == XpOrbClassPtr)            m_XpOrbAddresses.push_back(Entry.pEnt);
+			else if (BreakableGoldClass         && Entry.pName == BreakableGoldClass)       m_PowerupAddresses.emplace_back(Entry.pEnt, "Souls");
+			else if (BreakableHealthClass       && Entry.pName == BreakableHealthClass)     m_PowerupAddresses.emplace_back(Entry.pEnt, "Health");
+			else if (BreakableModifierClass     && Entry.pName == BreakableModifierClass)   m_PowerupAddresses.emplace_back(Entry.pEnt, "Powerup");
+			else if (PunchablePowerupClass      && Entry.pName == PunchablePowerupClass)    m_PowerupAddresses.emplace_back(Entry.pEnt, "Powerup");
+			else if (DroppedGoldClass           && Entry.pName == DroppedGoldClass)         m_PowerupAddresses.emplace_back(Entry.pEnt, "Souls");
+			else if (DroppedNecroClass          && Entry.pName == DroppedNecroClass)        m_PowerupAddresses.emplace_back(Entry.pEnt, "Necro");
+			else if (BreakableBaseClass         && Entry.pName == BreakableBaseClass)       m_PowerupAddresses.emplace_back(Entry.pEnt, "Crate");
 			else if (PrimaryWeaponAbilityClass  && Entry.pName == PrimaryWeaponAbilityClass) m_PrimaryWeaponAbilityAddresses.push_back(Entry.pEnt);
 		}
 	}
 
 	// Log only when the entity-count fingerprint changes — most cycles are no-ops.
-	struct Counts { size_t pawns, troopers, bosses, sinners, orbs; };
-	static Counts s_prev{ ~0ull, ~0ull, ~0ull, ~0ull, ~0ull };
+	struct Counts { size_t pawns, troopers, bosses, sinners, orbs, powerups; };
+	static Counts s_prev{ ~0ull, ~0ull, ~0ull, ~0ull, ~0ull, ~0ull };
 	Counts cur{ m_PlayerPawn_Addresses.size(), m_TrooperAddresses.size(),
-		m_MonsterCampAddresses.size(), m_SinnersAddresses.size(), m_XpOrbAddresses.size() };
+		m_MonsterCampAddresses.size(), m_SinnersAddresses.size(), m_XpOrbAddresses.size(),
+		m_PowerupAddresses.size() };
 	if (cur.pawns != s_prev.pawns || cur.troopers != s_prev.troopers || cur.bosses != s_prev.bosses
-		|| cur.sinners != s_prev.sinners || cur.orbs != s_prev.orbs)
+		|| cur.sinners != s_prev.sinners || cur.orbs != s_prev.orbs || cur.powerups != s_prev.powerups)
 	{
-		Log::Info("[EntityList] {} pawns, {} troopers, {} bosses, {} sinners, {} xporbs",
-			cur.pawns, cur.troopers, cur.bosses, cur.sinners, cur.orbs);
+		Log::Info("[EntityList] {} pawns, {} troopers, {} bosses, {} sinners, {} xporbs, {} powerups",
+			cur.pawns, cur.troopers, cur.bosses, cur.sinners, cur.orbs, cur.powerups);
 		s_prev = cur;
 	}
 }

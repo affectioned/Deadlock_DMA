@@ -12,6 +12,7 @@
 #include "Draw/Camps.h"
 #include "Draw/Sinners.h"
 #include "Draw/XpOrbs.h"
+#include "Draw/Powerups.h"
 
 void Visuals::OnFrame()
 {
@@ -51,6 +52,12 @@ void Visuals::OnFrame()
 	{
 		GuiWatchdog::GuiStage("Visuals/XpOrbs");
 		Draw_XpOrbs::operator()();
+	}
+
+	if (Draw_Powerups::bMasterToggle)
+	{
+		GuiWatchdog::GuiStage("Visuals/Powerups");
+		Draw_Powerups::operator()();
 	}
 
 	ImGui::PopFont();
@@ -120,4 +127,14 @@ void Visuals::RenderSettings()
 	ImGui::Checkbox("Draw Sinners", &Draw_Sinners::bMasterToggle);
 
 	ImGui::Checkbox("Draw XP Orbs", &Draw_XpOrbs::bMasterToggle);
+
+	if (ImGui::CollapsingHeader("Powerups / Breakables", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Indent();
+		ImGui::Checkbox("Master Toggle##Powerups", &Draw_Powerups::bMasterToggle);
+		ImGui::Checkbox("Show Label##Powerups", &Draw_Powerups::bShowLabel);
+		ImGui::Checkbox("Show Distance##Powerups", &Draw_Powerups::bShowDistance);
+		ImGui::SliderFloat("Circle Radius##Powerups", &Draw_Powerups::fCircleRadius, 1.0f, 12.0f, "%.1f");
+		ImGui::Unindent();
+	}
 }

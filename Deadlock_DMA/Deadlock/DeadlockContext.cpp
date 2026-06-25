@@ -60,6 +60,12 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 		{ ms(1000),  timed("FullXpOrb",       [conn, proc] { EntityList::FullXpOrbRefresh(conn, proc); }) },
 		{ ms(16),    timed("QuickXpOrb",      [conn, proc] { EntityList::QuickXpOrbRefresh(conn, proc); }) },
 
+		// Breakable crates/powerups don't move once spawned (except dropped pickups
+		// which briefly vacuum toward the player). 1s full / 16ms quick mirrors XP
+		// orbs — same scatter cost, same responsiveness for the vacuum animation.
+		{ ms(1000),  timed("FullPowerup",     [conn, proc] { EntityList::FullPowerupRefresh(conn, proc); }) },
+		{ ms(16),    timed("QuickPowerup",    [conn, proc] { EntityList::QuickPowerupRefresh(conn, proc); }) },
+
 		// Primary-weapon ability VData read. Base bullet speed only changes on
 		// hero swap or build change, so a slow cadence is fine.
 		{ ms(2000),  timed("BulletSpeed",     [conn, proc] { EntityList::RefreshPrimaryWeaponBulletSpeed(conn, proc); }) },

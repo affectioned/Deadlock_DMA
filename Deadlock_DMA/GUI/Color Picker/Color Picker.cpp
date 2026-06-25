@@ -74,6 +74,16 @@ void ColorPicker::Render()
 		ImGui::Spacing();
 	}
 
+	if (SectionVisible(sFilter, { "Powerup (Default)", "Powerup Souls", "Powerup Health", "Powerup Necro" }))
+	{
+		ImGui::SeparatorText("Powerups / Breakables");
+		Row("Powerup (Default)", PowerupColor,       sFilter);
+		Row("Powerup Souls",     PowerupSoulsColor,  sFilter);
+		Row("Powerup Health",    PowerupHealthColor, sFilter);
+		Row("Powerup Necro",     PowerupNecroColor,  sFilter);
+		ImGui::Spacing();
+	}
+
 	if (SectionVisible(sFilter, { "Skeleton (Visible)", "Skeleton (Invisible)", "Unsecured Souls Text", "Unsecured Souls Highlighted Text" }))
 	{
 		ImGui::SeparatorText("Players");

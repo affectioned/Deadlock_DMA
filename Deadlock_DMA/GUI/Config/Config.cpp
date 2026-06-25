@@ -14,6 +14,7 @@
 #include "GUI/Fuser/Visuals/Draw/Sinners.h"
 #include "GUI/Fuser/Visuals/Draw/Troopers.h"
 #include "GUI/Fuser/Visuals/Draw/XpOrbs.h"
+#include "GUI/Fuser/Visuals/Draw/Powerups.h"
 
 #include "GUI/Fuser/Status Bars/Status Bars.h"
 
@@ -317,6 +318,13 @@ json Config::SerializeConfig() {
 			{"bMasterToggle", Draw_XpOrbs::bMasterToggle}
 		}},
 
+		{"Draw_Powerups", {
+			{"bMasterToggle", Draw_Powerups::bMasterToggle},
+			{"bShowLabel", Draw_Powerups::bShowLabel},
+			{"bShowDistance", Draw_Powerups::bShowDistance},
+			{"fCircleRadius", Draw_Powerups::fCircleRadius}
+		}},
+
 		{"Draw_Troopers", {
 			{"bMasterToggle", Draw_Troopers::bMasterToggle},
 			{"bHideFriendly", Draw_Troopers::bHideFriendly}
@@ -344,6 +352,10 @@ json Config::SerializeConfig() {
 		{"SinnersColor", static_cast<uint32_t>(ColorPicker::SinnersColor)},
 		{"BossColor", static_cast<uint32_t>(ColorPicker::BossColor)},
 		{"XpOrbColor", static_cast<uint32_t>(ColorPicker::XpOrbColor)},
+		{"PowerupColor", static_cast<uint32_t>(ColorPicker::PowerupColor)},
+		{"PowerupSoulsColor", static_cast<uint32_t>(ColorPicker::PowerupSoulsColor)},
+		{"PowerupHealthColor", static_cast<uint32_t>(ColorPicker::PowerupHealthColor)},
+		{"PowerupNecroColor", static_cast<uint32_t>(ColorPicker::PowerupNecroColor)},
 		{"UnsecuredSoulsTextColor", static_cast<uint32_t>(ColorPicker::UnsecuredSoulsTextColor)},
 		{"UnsecuredSoulsHighlightedTextColor", static_cast<uint32_t>(ColorPicker::UnsecuredSoulsHighlightedTextColor)},
 		{"FriendlyHealthStatusBarColor", static_cast<uint32_t>(ColorPicker::FriendlyHealthStatusBarColor)},
@@ -464,6 +476,15 @@ void Config::DeserializeConfig(const json& j) {
 			if (xporbs.contains("bMasterToggle")) Draw_XpOrbs::bMasterToggle = xporbs["bMasterToggle"].get<bool>();
 		}
 
+		// Draw_Powerups
+		if (fuser.contains("Draw_Powerups")) {
+			const auto& pups = fuser["Draw_Powerups"];
+			if (pups.contains("bMasterToggle")) Draw_Powerups::bMasterToggle = pups["bMasterToggle"].get<bool>();
+			if (pups.contains("bShowLabel")) Draw_Powerups::bShowLabel = pups["bShowLabel"].get<bool>();
+			if (pups.contains("bShowDistance")) Draw_Powerups::bShowDistance = pups["bShowDistance"].get<bool>();
+			if (pups.contains("fCircleRadius")) Draw_Powerups::fCircleRadius = pups["fCircleRadius"].get<float>();
+		}
+
 		// Draw_Troopers
 		if (fuser.contains("Draw_Troopers")) {
 			const auto& troopers = fuser["Draw_Troopers"];
@@ -499,6 +520,10 @@ void Config::DeserializeConfig(const json& j) {
 		if (colors.contains("SinnersColor")) ColorPicker::SinnersColor = colors["SinnersColor"].get<uint32_t>();
 		if (colors.contains("BossColor")) ColorPicker::BossColor = colors["BossColor"].get<uint32_t>();
 		if (colors.contains("XpOrbColor")) ColorPicker::XpOrbColor = colors["XpOrbColor"].get<uint32_t>();
+		if (colors.contains("PowerupColor")) ColorPicker::PowerupColor = colors["PowerupColor"].get<uint32_t>();
+		if (colors.contains("PowerupSoulsColor")) ColorPicker::PowerupSoulsColor = colors["PowerupSoulsColor"].get<uint32_t>();
+		if (colors.contains("PowerupHealthColor")) ColorPicker::PowerupHealthColor = colors["PowerupHealthColor"].get<uint32_t>();
+		if (colors.contains("PowerupNecroColor")) ColorPicker::PowerupNecroColor = colors["PowerupNecroColor"].get<uint32_t>();
 		if (colors.contains("UnsecuredSoulsTextColor")) ColorPicker::UnsecuredSoulsTextColor = colors["UnsecuredSoulsTextColor"].get<uint32_t>();
 		if (colors.contains("UnsecuredSoulsHighlightedTextColor")) ColorPicker::UnsecuredSoulsHighlightedTextColor = colors["UnsecuredSoulsHighlightedTextColor"].get<uint32_t>();
 		if (colors.contains("FriendlyHealthStatusBarColor")) ColorPicker::FriendlyHealthStatusBarColor = colors["FriendlyHealthStatusBarColor"].get<uint32_t>();

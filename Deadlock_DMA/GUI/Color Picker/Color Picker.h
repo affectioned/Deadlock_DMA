@@ -15,6 +15,13 @@ public:
 	static inline ImColor SinnersColor{ 0.65f,0.05f,0.7f,1.0f };
 	static inline ImColor BossColor{ 1.0f,0.4f,0.0f,1.0f };
 	static inline ImColor XpOrbColor{ 1.0f,0.85f,0.0f,1.0f };
+
+	// Breakable crates / on-map pickups. PowerupColor is the fallback for any
+	// variant that isn't one of the four specifically-colored types.
+	static inline ImColor PowerupColor      { 0.85f,0.30f,0.85f,1.0f };
+	static inline ImColor PowerupSoulsColor { 1.00f,0.85f,0.10f,1.0f };
+	static inline ImColor PowerupHealthColor{ 0.20f,1.00f,0.20f,1.0f };
+	static inline ImColor PowerupNecroColor { 0.55f,0.20f,0.85f,1.0f };
 	static inline ImColor MonsterCampColor{ 0.8f,0.8f,0.8f,1.0f };
 	static inline ImColor LocalPlayerRadar{ 0.0f,1.0f,0.0f,1.0f };
 	static inline ImColor UnsecuredSoulsTextColor{ 1.0f,1.0f,1.0f,1.0f };

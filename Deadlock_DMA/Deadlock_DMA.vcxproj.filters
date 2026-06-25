@@ -45,6 +45,9 @@
     <ClCompile Include="Deadlock\Entity List\XpOrbs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Deadlock\Entity List\Powerups.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Deadlock\Entity List\PrimaryWeapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -157,6 +160,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GUI\Fuser\Visuals\Draw\XpOrbs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Fuser\Visuals\Draw\Powerups.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Deadlock\DeadlockContext.cpp">
@@ -339,6 +345,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Fuser\Visuals\Draw\XpOrbs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Fuser\Visuals\Draw\Powerups.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deadlock\Classes\C_BaseEntity.h">
