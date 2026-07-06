@@ -36,13 +36,20 @@ void DMA_Thread_Main()
 
 		auto now = std::chrono::steady_clock::now();
 
-		if (now - lastMemRefresh >= std::chrono::milliseconds(100))
+		// MEM cache: physical-page contents. 50ms keeps scatter reads fresh
+		// enough that per-frame QuickPawn/ViewMatrix never see stale values.
+		if (now - lastMemRefresh >= std::chrono::milliseconds(50))
 		{
 			VMMDLL_ConfigSet(conn->GetHandle(), VMMDLL_OPT_REFRESH_FREQ_MEM, 1);
 			lastMemRefresh = now;
 		}
 
-		if (now - lastTlbRefresh >= std::chrono::seconds(5))
+		// TLB cache: virtual→physical page translations. Was 5s, which meant
+		// after a map/session transition (page tables shift) VMMDLL kept using
+		// stale mappings and entities appeared to vanish until the next flush.
+		// 250ms full refresh caps that stall at a quarter second — indistinguishable
+		// from live to the ESP. TLB refresh is heavier than MEM but still cheap.
+		if (now - lastTlbRefresh >= std::chrono::milliseconds(250))
 		{
 			VMMDLL_ConfigSet(conn->GetHandle(), VMMDLL_OPT_REFRESH_FREQ_TLB, 1);
 			lastTlbRefresh = now;

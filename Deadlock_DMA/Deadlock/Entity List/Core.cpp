@@ -1,5 +1,7 @@
 #include "pch.h"
 
+#include <unordered_set>
+
 #include "EntityList.h"
 
 void EntityList::InitScatterHandle(DMA_Connection* Conn, Process* Proc)
@@ -74,6 +76,11 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 {
+	// Source 2 class-name pointers are static globals in client.dll — once resolved
+	// for a given class ptr, the string never moves. Cache resolved ptrs so we only
+	// scatter-read genuinely new classes; steady-state FullUpdate skips the read.
+	static std::unordered_set<uintptr_t> s_ResolvedClassPtrs;
+
 	std::vector<uintptr_t> UniqueClassNames{};
 
 	for (auto& List : m_CompleteEntityList)
@@ -81,6 +88,7 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 		for (auto& Entry : List)
 		{
 			if (Entry.pEnt == 0 || Entry.pName == 0) continue;
+			if (s_ResolvedClassPtrs.contains(Entry.pName)) continue;
 
 			if (std::find(UniqueClassNames.begin(), UniqueClassNames.end(), Entry.pName) != UniqueClassNames.end())
 				continue;
@@ -88,6 +96,8 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 			UniqueClassNames.push_back(Entry.pName);
 		}
 	}
+
+	if (UniqueClassNames.empty()) return;
 
 	struct NameBuffer
 	{
@@ -112,9 +122,10 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 		if (Name.empty()) continue;
 
 		m_EntityClassMap[Name] = UniqueClassNames[i];
+		s_ResolvedClassPtrs.insert(UniqueClassNames[i]);
 	}
 
-	DbgLog("Entity Class Map Updated.");
+	DbgLog("Entity Class Map Updated ({} new classes).", UniqueClassNames.size());
 }
 
 void EntityList::SortEntityList()
@@ -144,18 +155,11 @@ void EntityList::SortEntityList()
 	uintptr_t XpOrbClassPtr              = FindClass("item_xp");
 	uintptr_t PrimaryWeaponAbilityClass  = FindClass("citadel_ability_primary_weapon");
 
-	// Breakable boxes / powerups. The Source 2 network classnames follow the
-	// snake_case-of-C++-classname convention (e.g. CCitadel_BreakablePropGoldPickup
-	// -> citadel_breakable_prop_gold_pickup). All variants land in one bucket.
-	// If a future build renames any of these, PrintClassMap() in-game will show
-	// the live strings.
-	uintptr_t BreakableBaseClass         = FindClass("citadel_breakable_prop");
-	uintptr_t BreakableGoldClass         = FindClass("citadel_breakable_prop_gold_pickup");
-	uintptr_t BreakableHealthClass       = FindClass("citadel_breakable_prop_health_pickup");
-	uintptr_t BreakableModifierClass     = FindClass("citadel_breakable_prop_modifier_pickup");
-	uintptr_t PunchablePowerupClass      = FindClass("citadel_punchable_powerup");
-	uintptr_t DroppedGoldClass           = FindClass("citadel_breakable_dropped_gold_pickup");
-	uintptr_t DroppedNecroClass          = FindClass("citadel_breakable_dropped_necro_pickup");
+	// On-map breakable pickups. Names verified live via ClassProbe on 2026-07-06.
+	// If a future build renames any of these, re-enable a ClassProbe pass to find
+	// the new strings.
+	uintptr_t PunchableGoldClass         = FindClass("citadel_item_punchable_gold");
+	uintptr_t PickupIdolClass            = FindClass("citadel_item_pickup_idol");
 
 	for (auto& List : m_CompleteEntityList)
 	{
@@ -172,13 +176,8 @@ void EntityList::SortEntityList()
 			else if (BossTier3ClassPtr          && Entry.pName == BossTier3ClassPtr)        m_MonsterCampAddresses.emplace_back(Entry.pEnt, "Tier 3");
 			else if (SinnerClassPtr             && Entry.pName == SinnerClassPtr)           m_SinnersAddresses.push_back(Entry.pEnt);
 			else if (XpOrbClassPtr              && Entry.pName == XpOrbClassPtr)            m_XpOrbAddresses.push_back(Entry.pEnt);
-			else if (BreakableGoldClass         && Entry.pName == BreakableGoldClass)       m_PowerupAddresses.emplace_back(Entry.pEnt, "Souls");
-			else if (BreakableHealthClass       && Entry.pName == BreakableHealthClass)     m_PowerupAddresses.emplace_back(Entry.pEnt, "Health");
-			else if (BreakableModifierClass     && Entry.pName == BreakableModifierClass)   m_PowerupAddresses.emplace_back(Entry.pEnt, "Powerup");
-			else if (PunchablePowerupClass      && Entry.pName == PunchablePowerupClass)    m_PowerupAddresses.emplace_back(Entry.pEnt, "Powerup");
-			else if (DroppedGoldClass           && Entry.pName == DroppedGoldClass)         m_PowerupAddresses.emplace_back(Entry.pEnt, "Souls");
-			else if (DroppedNecroClass          && Entry.pName == DroppedNecroClass)        m_PowerupAddresses.emplace_back(Entry.pEnt, "Necro");
-			else if (BreakableBaseClass         && Entry.pName == BreakableBaseClass)       m_PowerupAddresses.emplace_back(Entry.pEnt, "Crate");
+			else if (PunchableGoldClass         && Entry.pName == PunchableGoldClass)       m_PowerupAddresses.emplace_back(Entry.pEnt, "Souls");
+			else if (PickupIdolClass            && Entry.pName == PickupIdolClass)          m_PowerupAddresses.emplace_back(Entry.pEnt, "Idol");
 			else if (PrimaryWeaponAbilityClass  && Entry.pName == PrimaryWeaponAbilityClass) m_PrimaryWeaponAbilityAddresses.push_back(Entry.pEnt);
 		}
 	}

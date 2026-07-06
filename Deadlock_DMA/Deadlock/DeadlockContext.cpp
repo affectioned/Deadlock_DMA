@@ -47,7 +47,10 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 		{ ms(16),    timed("QuickTrooper",    [conn, proc] { EntityList::QuickTrooperRefresh(conn, proc); }) },
 
 		{ ms(2000),  timed("FullPawn",        [conn, proc] { EntityList::FullPawnRefresh_lk(conn, proc); }) },
-		{ ms(8),     timed("QuickPawn",       [conn, proc] { EntityList::QuickPawnRefresh(conn, proc); }) },
+		// 4ms = 250 Hz, one fresh sample per 240Hz frame. ~1.2ms/tick * 250 = 30% of
+		// the DMA thread, but still leaves headroom and eliminates jitter on
+		// high-refresh monitors.
+		{ ms(4),     timed("QuickPawn",       [conn, proc] { EntityList::QuickPawnRefresh(conn, proc); }) },
 
 		{ ms(3000),  timed("FullCamp",        [conn, proc] { EntityList::FullMonsterCampRefresh(conn, proc); }) },
 		{ ms(250),   timed("QuickCamp",       [conn, proc] { EntityList::QuickMonsterCampRefresh(conn, proc); }) },
