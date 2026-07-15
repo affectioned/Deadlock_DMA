@@ -3,6 +3,7 @@
 #include <unordered_set>
 
 #include "EntityList.h"
+#include "DMA/Memory/PhaseTimings.h"
 
 void EntityList::InitScatterHandle(DMA_Connection* Conn, Process* Proc)
 {
@@ -11,11 +12,16 @@ void EntityList::InitScatterHandle(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 {
+	// UpdateCrucialInformation is two pointer reads — measurement noise floor,
+	// deliberately not scoped. The four scoped children sum to ~FullUpdate.
+	// EntityMap and FOW use SCATTER_SCOPE so the dump also carries batch
+	// size; ClassMap's scatter is small and dwarfed by the new-class-name
+	// filtering CPU work, so plain PHASE_SCOPE is fine there.
 	UpdateCrucialInformation(Conn, Proc);
-	UpdateEntityMap(Conn, Proc);
-	UpdateEntityClassMap(Conn, Proc);
-	SortEntityList();
-	DiscoverFOWTeam(Conn, Proc);
+	{ SCATTER_SCOPE("FullUpdate::EntityMap", *m_sr); UpdateEntityMap(Conn, Proc); }
+	{ PHASE_SCOPE ("FullUpdate::ClassMap");          UpdateEntityClassMap(Conn, Proc); }
+	{ PHASE_SCOPE ("FullUpdate::Sort");               SortEntityList(); }
+	{ SCATTER_SCOPE("FullUpdate::FOW", *m_sr);       DiscoverFOWTeam(Conn, Proc); }
 }
 
 void EntityList::UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc)
@@ -122,7 +128,20 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 		if (Name.empty()) continue;
 
 		m_EntityClassMap[Name] = UniqueClassNames[i];
+		m_EntityClassNameByPtr[UniqueClassNames[i]] = Name;
 		s_ResolvedClassPtrs.insert(UniqueClassNames[i]);
+
+		// TEMP ClassProbe — remove once real powerup class names are wired in
+		// SortEntityList. Filters to breakable/item/pickup/powerup families so
+		// the log isn't flooded by every prop_dynamic on the map.
+		if (Name.find("breakable") != std::string::npos
+			|| Name.find("item_")   != std::string::npos
+			|| Name.find("pickup")  != std::string::npos
+			|| Name.find("powerup") != std::string::npos
+			|| Name.find("punchable") != std::string::npos)
+		{
+			Log::Info("[ClassProbe] {}", Name);
+		}
 	}
 
 	DbgLog("Entity Class Map Updated ({} new classes).", UniqueClassNames.size());
@@ -146,6 +165,23 @@ void EntityList::SortEntityList()
 
 	uintptr_t PlayerPawnClassPtr       = FindClass("player");
 	uintptr_t PlayerControllerClassPtr = FindClass("citadel_player_controller");
+	// Diagnostic: if the controller class hasn't been resolved yet, no pawn
+	// will find its matching controller in Draw_Players and the ESP will
+	// draw nothing. Log once when we detect the missing class to make the
+	// symptom easy to spot in the console.
+	{
+		static bool s_LoggedMissingCtrlClass = false;
+		if (!PlayerControllerClassPtr && !s_LoggedMissingCtrlClass)
+		{
+			Log::Warn("[EntityList] citadel_player_controller class ptr not in class map — no players will render");
+			s_LoggedMissingCtrlClass = true;
+		}
+		if (PlayerControllerClassPtr && s_LoggedMissingCtrlClass)
+		{
+			Log::Info("[EntityList] citadel_player_controller class ptr resolved");
+			s_LoggedMissingCtrlClass = false;
+		}
+	}
 	uintptr_t TrooperClassPtr          = FindClass("npc_trooper");
 	uintptr_t TrooperBossClassPtr      = FindClass("npc_trooper_boss");
 	uintptr_t TrooperNeutralClassPtr   = FindClass("npc_trooper_neutral");
@@ -160,6 +196,11 @@ void EntityList::SortEntityList()
 	// the new strings.
 	uintptr_t PunchableGoldClass         = FindClass("citadel_item_punchable_gold");
 	uintptr_t PickupIdolClass            = FindClass("citadel_item_pickup_idol");
+	// World-space UI panel Valve attaches to every interactable pickup (see
+	// sdk client/CInWorldItemPanel.hpp). We render the panel's own position
+	// as a proxy for "there's a pickup here"; resolving m_hTrackedEntity to
+	// color-code by the underlying item is a later refinement.
+	uintptr_t InWorldItemPanelClass      = FindClass("in_world_item_panel");
 
 	for (auto& List : m_CompleteEntityList)
 	{
@@ -178,21 +219,23 @@ void EntityList::SortEntityList()
 			else if (XpOrbClassPtr              && Entry.pName == XpOrbClassPtr)            m_XpOrbAddresses.push_back(Entry.pEnt);
 			else if (PunchableGoldClass         && Entry.pName == PunchableGoldClass)       m_PowerupAddresses.emplace_back(Entry.pEnt, "Souls");
 			else if (PickupIdolClass            && Entry.pName == PickupIdolClass)          m_PowerupAddresses.emplace_back(Entry.pEnt, "Idol");
+			else if (InWorldItemPanelClass      && Entry.pName == InWorldItemPanelClass)    m_PowerupAddresses.emplace_back(Entry.pEnt, "Panel");
 			else if (PrimaryWeaponAbilityClass  && Entry.pName == PrimaryWeaponAbilityClass) m_PrimaryWeaponAbilityAddresses.push_back(Entry.pEnt);
 		}
 	}
 
 	// Log only when the entity-count fingerprint changes — most cycles are no-ops.
-	struct Counts { size_t pawns, troopers, bosses, sinners, orbs, powerups; };
-	static Counts s_prev{ ~0ull, ~0ull, ~0ull, ~0ull, ~0ull, ~0ull };
-	Counts cur{ m_PlayerPawn_Addresses.size(), m_TrooperAddresses.size(),
-		m_MonsterCampAddresses.size(), m_SinnersAddresses.size(), m_XpOrbAddresses.size(),
-		m_PowerupAddresses.size() };
-	if (cur.pawns != s_prev.pawns || cur.troopers != s_prev.troopers || cur.bosses != s_prev.bosses
+	struct Counts { size_t pawns, ctrls, troopers, bosses, sinners, orbs, powerups; };
+	static Counts s_prev{ ~0ull, ~0ull, ~0ull, ~0ull, ~0ull, ~0ull, ~0ull };
+	Counts cur{ m_PlayerPawn_Addresses.size(), m_PlayerController_Addresses.size(),
+		m_TrooperAddresses.size(), m_MonsterCampAddresses.size(),
+		m_SinnersAddresses.size(), m_XpOrbAddresses.size(), m_PowerupAddresses.size() };
+	if (cur.pawns != s_prev.pawns || cur.ctrls != s_prev.ctrls
+		|| cur.troopers != s_prev.troopers || cur.bosses != s_prev.bosses
 		|| cur.sinners != s_prev.sinners || cur.orbs != s_prev.orbs || cur.powerups != s_prev.powerups)
 	{
-		Log::Info("[EntityList] {} pawns, {} troopers, {} bosses, {} sinners, {} xporbs, {} powerups",
-			cur.pawns, cur.troopers, cur.bosses, cur.sinners, cur.orbs, cur.powerups);
+		Log::Info("[EntityList] {} pawns, {} ctrls, {} troopers, {} bosses, {} sinners, {} xporbs, {} powerups",
+			cur.pawns, cur.ctrls, cur.troopers, cur.bosses, cur.sinners, cur.orbs, cur.powerups);
 		s_prev = cur;
 	}
 }

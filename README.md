@@ -28,19 +28,19 @@ This project is intended **strictly for educational and research purposes** — 
 2. Select **Release | x64**
 3. Build (**Ctrl+Shift+B**)
 
-The post-build step automatically copies the required DLLs next to the executable.
-
 ## Runtime DLLs
 
-Place the following files from [MemProcFS](https://github.com/ufrisk/MemProcFS) and [Makcu C++](https://github.com/K4HVH/makcu-cpp) next to the executable (handled automatically by the post-build step if the `Dependencies/` folder is populated):
+On first launch the built-in bootstrapper downloads the latest MemProcFS Windows release from GitHub and drops the required DLLs next to the executable. Delete any of them to force a re-download on the next run.
 
 | File | Source |
 |------|--------|
-| `FTD3XX.dll` | MemProcFS |
+| `vmm.dll` | MemProcFS |
 | `leechcore.dll` | MemProcFS |
 | `leechcore_driver.dll` | MemProcFS |
-| `vmm.dll` | MemProcFS |
-| `makcu-cpp.dll` | Makcu C++ |
+| `FTD3XX.dll` | MemProcFS |
+| `FTD3XXWU.dll` | MemProcFS |
+
+Makcu C++ is linked statically, so no `makcu-cpp.dll` is needed at runtime.
 
 ## Credits
 

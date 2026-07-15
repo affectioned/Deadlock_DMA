@@ -22,6 +22,16 @@ public:
 	static inline ImColor PowerupSoulsColor { 1.00f,0.85f,0.10f,1.0f };
 	static inline ImColor PowerupHealthColor{ 0.20f,1.00f,0.20f,1.0f };
 	static inline ImColor PowerupNecroColor { 0.55f,0.20f,0.85f,1.0f };
+	// Labels resolved from in_world_item_panel's m_hTrackedEntity. "Item"
+	// is the fallback when the tracked class name doesn't match any of
+	// the friendly buckets in FriendlyLabelForClass().
+	static inline ImColor PowerupIdolColor  { 1.00f,0.55f,0.10f,1.0f };
+	static inline ImColor PowerupRejuvColor { 1.00f,0.20f,0.35f,1.0f };
+	static inline ImColor PowerupXpColor    { 1.00f,0.85f,0.00f,1.0f };
+	static inline ImColor PowerupItemColor  { 0.10f,0.65f,1.00f,1.0f };
+	// Unresolved / not-yet-classified panels. Kept distinct from PowerupItemColor
+	// so it's obvious when panel labels aren't being resolved.
+	static inline ImColor PowerupPanelColor { 0.55f,0.55f,0.55f,1.0f };
 	static inline ImColor MonsterCampColor{ 0.8f,0.8f,0.8f,1.0f };
 	static inline ImColor LocalPlayerRadar{ 0.0f,1.0f,0.0f,1.0f };
 	static inline ImColor UnsecuredSoulsTextColor{ 1.0f,1.0f,1.0f,1.0f };

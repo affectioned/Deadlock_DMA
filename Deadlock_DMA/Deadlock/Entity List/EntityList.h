@@ -81,6 +81,11 @@ public: /* Interface variables */
 
 	static inline std::mutex m_ClassMapMutex{};
 	static inline std::unordered_map<std::string, uintptr_t> m_EntityClassMap{};
+	// Reverse index maintained alongside m_EntityClassMap. Consumers that
+	// already hold a class-name pointer (e.g. from a CEntityIdentity or a
+	// resolved CHandle) can go straight to the class name without linear-
+	// scanning the forward map.
+	static inline std::unordered_map<uintptr_t, std::string> m_EntityClassNameByPtr{};
 
 	// FOW (fog-of-war / minimap visibility), CS2-style. Populated from a
 	// C_CitadelTeam's m_vecFOWEntities. Address-keyed for cheap pawn lookup.

@@ -43,22 +43,35 @@ public:
 	void Add(uintptr_t addr, T* out)
 	{
 		VMMDLL_Scatter_PrepareEx(m_Handle, addr, sizeof(T), reinterpret_cast<PBYTE>(out), nullptr);
+		m_LifetimeBytes  += sizeof(T);
+		m_LifetimeRanges += 1;
 	}
 
 	// Queue a raw byte-range read (bones, strings, bulk arrays).
 	void AddRaw(uintptr_t addr, DWORD cb, void* out)
 	{
 		VMMDLL_Scatter_PrepareEx(m_Handle, addr, cb, reinterpret_cast<PBYTE>(out), nullptr);
+		m_LifetimeBytes  += cb;
+		m_LifetimeRanges += 1;
 	}
 
 	// Fire all queued reads.
 	void Execute() { VMMDLL_Scatter_ExecuteRead(m_Handle); }
 
-	// Reset for the next batch — keeps the same pid and flags.
+	// Reset for the next batch — keeps the same pid and flags. Lifetime
+	// counters intentionally survive Clear() so SCATTER_SCOPE can snapshot
+	// them on entry / exit and compute the delta for the wrapped batch(es).
 	void Clear() { VMMDLL_Scatter_Clear(m_Handle, m_Pid, m_Flags); }
+
+	// Monotonically-increasing totals since construction. Used by
+	// SCATTER_SCOPE to attribute bytes and range counts to a named phase.
+	uint64_t LifetimeBytes()  const { return m_LifetimeBytes; }
+	uint64_t LifetimeRanges() const { return m_LifetimeRanges; }
 
 private:
 	DWORD                 m_Pid;
 	DWORD                 m_Flags;
 	VMMDLL_SCATTER_HANDLE m_Handle;
+	uint64_t              m_LifetimeBytes  = 0;
+	uint64_t              m_LifetimeRanges = 0;
 };

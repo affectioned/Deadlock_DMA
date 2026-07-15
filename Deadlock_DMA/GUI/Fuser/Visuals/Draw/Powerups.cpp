@@ -17,6 +17,11 @@ namespace
 		if (std::strcmp(Label, "Souls")   == 0) return ImGui::ColorConvertFloat4ToU32(ColorPicker::PowerupSoulsColor.Value);
 		if (std::strcmp(Label, "Health")  == 0) return ImGui::ColorConvertFloat4ToU32(ColorPicker::PowerupHealthColor.Value);
 		if (std::strcmp(Label, "Necro")   == 0) return ImGui::ColorConvertFloat4ToU32(ColorPicker::PowerupNecroColor.Value);
+		if (std::strcmp(Label, "Idol")    == 0) return ImGui::ColorConvertFloat4ToU32(ColorPicker::PowerupIdolColor.Value);
+		if (std::strcmp(Label, "Rejuv")   == 0) return ImGui::ColorConvertFloat4ToU32(ColorPicker::PowerupRejuvColor.Value);
+		if (std::strcmp(Label, "XP")      == 0) return ImGui::ColorConvertFloat4ToU32(ColorPicker::PowerupXpColor.Value);
+		if (std::strcmp(Label, "Item")    == 0) return ImGui::ColorConvertFloat4ToU32(ColorPicker::PowerupItemColor.Value);
+		if (std::strcmp(Label, "Panel")   == 0) return ImGui::ColorConvertFloat4ToU32(ColorPicker::PowerupPanelColor.Value);
 		return ImGui::ColorConvertFloat4ToU32(ColorPicker::PowerupColor.Value);
 	}
 }

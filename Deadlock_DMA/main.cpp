@@ -7,6 +7,7 @@
 #include "GUI/Watchdog/GuiWatchdog.h"
 #include "Makcu/MyMakcu.h"
 #include "Deadlock/DeadlockContext.h"
+#include "Bootstrap/Bootstrap.h"
 
 std::atomic<bool> bRunning{ true };
 
@@ -44,6 +45,16 @@ int main()
 	Log::Info("Hello, DEADLOCK_DMA!");
 
 	SetConsoleCtrlHandler(OnConsoleExit, TRUE);
+
+	// Must run before anything touches vmm.dll — the DLL is delay-loaded so
+	// the process reaches this point even if the DLLs are missing, but the
+	// first VMMDLL_* call will fault otherwise.
+	if (!Bootstrap::EnsureRuntimeDlls())
+	{
+		Log::Error("Bootstrap failed; MemProcFS DLLs unavailable. Aborting.");
+		system("pause");
+		return 1;
+	}
 
 	Config::LoadConfig("default");
 

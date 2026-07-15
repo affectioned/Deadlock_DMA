@@ -64,12 +64,12 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\MemProcFS;$(SolutionDir)Dependencies\Makcu\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>leechcore.lib;vmm.lib;makcu-cpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>leechcore.lib;vmm.lib;makcu-cpp.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!-- Delay-load vmm.dll so the process can reach main() when the DLL
+           is missing; the in-exe bootstrapper downloads it and only then
+           are the first VMMDLL calls made. -->
+      <DelayLoadDLLs>vmm.dll</DelayLoadDLLs>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /Y /D "$(ProjectDir)..\Dependencies\MemProcFS\*.dll" "$(TargetDir)"
-</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -89,16 +89,16 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\MemProcFS;$(SolutionDir)Dependencies\Makcu\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>leechcore.lib;vmm.lib;makcu-cpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>leechcore.lib;vmm.lib;makcu-cpp.lib;delayimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!-- Delay-load vmm.dll so the process can reach main() when the DLL
+           is missing; the in-exe bootstrapper downloads it and only then
+           are the first VMMDLL calls made. -->
+      <DelayLoadDLLs>vmm.dll</DelayLoadDLLs>
       <!-- /LTCG:OFF tells the linker to ignore the /GL bits embedded in
            makcu-cpp.lib instead of restarting the link as a full LTCG pass.
            Without this the link spends ~7 min in "Generating code". -->
       <AdditionalOptions>/LTCG:OFF %(AdditionalOptions)</AdditionalOptions>
     </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Dependencies\ImGui\imgui.cpp">
@@ -217,6 +217,7 @@
     <ClCompile Include="GUI\Query.cpp" />
     <ClCompile Include="GUI\Radar\Radar.cpp" />
     <ClCompile Include="GUI\Utils\ImageLoading.cpp" />
+    <ClCompile Include="Bootstrap\Bootstrap.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Makcu\MyMakcu.cpp" />
     <ClCompile Include="pch.cpp">
@@ -250,6 +251,7 @@
     <ClInclude Include="GUI\Query.h" />
     <ClInclude Include="GUI\Utils\ImageLoading.h" />
     <ClInclude Include="Makcu\MyMakcu.h" />
+    <ClInclude Include="Bootstrap\Bootstrap.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

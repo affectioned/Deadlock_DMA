@@ -120,7 +120,15 @@ void Visuals::RenderSettings()
 	}
 
 	ImGui::Checkbox("Draw Troopers", &Draw_Troopers::bMasterToggle);
-	ImGui::Checkbox("Hide Friendly Troopers", &Draw_Troopers::bHideFriendly);
+	if (Draw_Troopers::bMasterToggle)
+	{
+		ImGui::Indent();
+		ImGui::Checkbox("Hide Friendly##Troopers", &Draw_Troopers::bHideFriendly);
+		ImGui::Checkbox("Lane Troopers",           &Draw_Troopers::bDrawLaneTroopers);
+		ImGui::Checkbox("Walkers",                 &Draw_Troopers::bDrawWalkers);
+		ImGui::Checkbox("Jungle Neutrals",         &Draw_Troopers::bDrawNeutrals);
+		ImGui::Unindent();
+	}
 
 	ImGui::Checkbox("Draw Bosses", &Draw_Camps::bMasterToggle);
 

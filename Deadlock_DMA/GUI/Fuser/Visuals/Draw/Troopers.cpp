@@ -20,6 +20,14 @@ void Draw_Troopers::operator()()
 
 		if (Trooper.IsDormant()) continue;
 
+		const bool isWalker  = Trooper.m_Label && std::strcmp(Trooper.m_Label, "Walker")  == 0;
+		const bool isNeutral = Trooper.m_Label && std::strcmp(Trooper.m_Label, "Neutral") == 0;
+		const bool isLane    = !isWalker && !isNeutral;
+
+		if (isLane    && !bDrawLaneTroopers) continue;
+		if (isWalker  && !bDrawWalkers)      continue;
+		if (isNeutral && !bDrawNeutrals)     continue;
+
 		auto bIsFriend = Trooper.IsFriendly();
 
 		if (bHideFriendly && bIsFriend)

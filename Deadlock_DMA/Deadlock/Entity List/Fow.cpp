@@ -32,6 +32,36 @@ void EntityList::DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc)
 		int32_t   max;
 	};
 
+	// The cached team address is stable for the whole match; the 512-slot
+	// full scan below was costing ~7-8ms per FullUpdate. Fast path re-probes
+	// only the cached address (one Execute, 3 targets). A tripwire runs the
+	// full scan every kFullScanInterval calls anyway, so if the game engine
+	// ever repurposes the slot with bytes that happen to pass the sanity
+	// check, we recover within ~kFullScanInterval seconds.
+	static int s_CallsSinceFullScan = 0;
+	constexpr int kFullScanInterval = 30;    // ~30s at the 1Hz FullUpdate cadence
+	auto ProbePassesSanity = [](int32_t count, uint64_t ptr, int32_t max) {
+		return count > 0 && count <= 500 && ptr != 0 && max >= count && max <= 500;
+	};
+
+	if (m_FOWTeamAddress != 0 && ++s_CallsSinceFullScan < kFullScanInterval)
+	{
+		int32_t  count = 0;
+		uint64_t ptr   = 0;
+		int32_t  max   = 0;
+
+		m_sr->Clear();
+		m_sr->Add(m_FOWTeamAddress + Offsets::C_CitadelTeam::m_vecFOWEntities + kFOWCountOff,   &count);
+		m_sr->Add(m_FOWTeamAddress + Offsets::C_CitadelTeam::m_vecFOWEntities + kFOWDataPtrOff, &ptr);
+		m_sr->Add(m_FOWTeamAddress + Offsets::C_CitadelTeam::m_vecFOWEntities + kFOWMaxOff,     &max);
+		m_sr->Execute();
+
+		if (ProbePassesSanity(count, ptr, max)) return;
+		// Cached address no longer looks like a team — fall through to a
+		// full scan and reset the tripwire.
+	}
+	s_CallsSinceFullScan = 0;
+
 	// Scan the entire list 0. Teams aren't guaranteed to live at low indices —
 	// in busy matches the early slots fill with troopers/pawns/etc. and team
 	// entities can land anywhere in the list.
@@ -58,9 +88,7 @@ void EntityList::DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc)
 	int32_t   bestCount = 0;
 	for (auto& p : probes)
 	{
-		if (p.count <= 0 || p.count > 500) continue;
-		if (p.max < p.count || p.max > 500) continue;
-		if (p.ptr == 0) continue;
+		if (!ProbePassesSanity(p.count, p.ptr, p.max)) continue;
 		if (p.count > bestCount)
 		{
 			bestCount = p.count;
