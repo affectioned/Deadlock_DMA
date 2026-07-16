@@ -22,11 +22,13 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 	EntityList::FullUpdate(Conn, &Process);
 	Log::Info("[+] FullUpdate complete.");
 
+	Log::Info("[+] Resolving prediction address...");
+	uintptr_t clientBase = Process.GetModuleBase(GameModules::ClientDll);
+	m_PredictionAddress = Process.ReadMem<uintptr_t>(Conn, clientBase + Offsets::Prediction);
+	Log::Info("Prediction Address: 0x{:X}", m_PredictionAddress);
+
 	Log::Info("[+] Updating local player addresses...");
 	UpdateLocalPlayerAddresses(Conn);
-
-	Log::Info("[+] Resolving prediction address...");
-	GetPredictionAddress(Conn);
 
 	Log::Info("[+] Deadlock initialized.");
 
@@ -93,20 +95,28 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 {
 	std::scoped_lock Lock(m_LocalAddressMutex);
 
-	uintptr_t LocalPlayerControllerAddress = Proc().GetModuleBase(GameModules::ClientDll) + Offsets::LocalController;
-	uintptr_t newCtrl = Proc().ReadMem<uintptr_t>(Conn, LocalPlayerControllerAddress);
+	uintptr_t clientBase = Proc().GetModuleBase(GameModules::ClientDll);
+
+	// Controller sits in a stable client.dll global; read it and follow
+	// m_hHeroPawn through the entity list to get the pawn pointer. Tried the
+	// CPrediction+LocalPlayerPawn chain from dezlock-dump too — in this build
+	// it lands on a field inside CPrediction itself (~+0x130) rather than a
+	// real pawn ptr, so nothing in the pawn scan ever matched and every
+	// DistanceFromLocalPlayer consumer (head circle, distance nametag) broke.
+	uintptr_t newCtrl = Proc().ReadMem<uintptr_t>(Conn, clientBase + Offsets::LocalController);
+	CHandle   hHeroPawn{ 0 };
+	if (newCtrl)
+		hHeroPawn = Proc().ReadMem<CHandle>(Conn,
+			newCtrl + Offsets::CCitadelPlayerController::m_hHeroPawn);
+
+	uintptr_t newPawn = EntityList::GetEntityAddressFromHandle(hHeroPawn);
+
 	if (newCtrl != m_LocalPlayerControllerAddress)
 	{
 		m_LocalPlayerControllerAddress = newCtrl;
 		Log::Info("Local Player Controller: 0x{:X}", m_LocalPlayerControllerAddress);
 	}
 
-	auto LocalPlayerControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), m_LocalPlayerControllerAddress);
-
-	if (LocalPlayerControllerIt == EntityList::m_PlayerControllers.end())
-		return false;
-
-	uintptr_t newPawn = EntityList::GetEntityAddressFromHandle(LocalPlayerControllerIt->m_hHeroPawn);
 	if (newPawn != m_LocalPlayerPawnAddress)
 	{
 		m_LocalPlayerPawnAddress = newPawn;
@@ -114,14 +124,6 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 	}
 
 	return true;
-}
-
-void Deadlock::GetPredictionAddress(DMA_Connection* Conn)
-{
-	uintptr_t PredictionPtrAddress = Proc().GetModuleBase(GameModules::ClientDll) + Offsets::Prediction;
-	m_PredictionAddress = Proc().ReadMem<uintptr_t>(Conn, PredictionPtrAddress);
-
-	Log::Info("Prediction Address: 0x{:X}", m_PredictionAddress);
 }
 
 void Deadlock::UpdateServerTime(DMA_Connection* Conn)
