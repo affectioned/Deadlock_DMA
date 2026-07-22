@@ -6,5 +6,5 @@ public:
 	static void operator()();
 
 public:
-	static inline bool bMasterToggle{ true };
+	static inline bool bMasterToggle{ false };
 };

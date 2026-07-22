@@ -6,7 +6,7 @@ public:
 	static void operator()();
 
 public:
-	static inline bool bMasterToggle{ true };
+	static inline bool bMasterToggle{ false };
 	static inline bool bHideFriendly{ false };
 
 	// Sub-filters keyed off C_NPC_Trooper::m_Label (populated by SortEntityList):

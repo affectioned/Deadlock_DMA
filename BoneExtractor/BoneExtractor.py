@@ -22,6 +22,16 @@ import struct
 import hashlib
 import winreg
 
+# keyvalues3 >= 0.4 is required for KV3 v4/v5 magic support (Deadlock's current
+# hero models). 0.4+ needs Python 3.12+; on older Pythons pip silently falls
+# back to 0.3, which rejects every hero model with "Invalid binary KV3 magic".
+if sys.version_info < (3, 12):
+    sys.exit(
+        f"[error] Python 3.12+ required (found {sys.version_info.major}.{sys.version_info.minor}).\n"
+        "        keyvalues3 >= 0.4 needs it for KV3 v4/v5 support; older wheels\n"
+        "        cannot parse Deadlock's current hero models."
+    )
+
 try:
     import vpk
 except ImportError:

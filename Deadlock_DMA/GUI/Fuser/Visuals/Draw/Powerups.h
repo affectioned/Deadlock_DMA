@@ -7,7 +7,7 @@ public:
 
 public:
 	static inline bool bMasterToggle{ true };
-	static inline bool bShowLabel{ true };
+	static inline bool bShowLabel{ false };
 	static inline bool bShowDistance{ false };
 	static inline float fCircleRadius{ 5.0f };
 };

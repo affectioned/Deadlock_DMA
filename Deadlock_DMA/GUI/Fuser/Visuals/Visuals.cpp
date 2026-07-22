@@ -67,30 +67,44 @@ void Visuals::RenderSettings()
 {
 	ImGui::Checkbox("Enable Visuals", &bMasterToggle);
 
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
 	if (ImGui::CollapsingHeader("Players", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
-		ImGui::Checkbox("Master Toggle", &Draw_Players::bMasterToggle);
-		ImGui::Checkbox("Hide Friendly", &Draw_Players::bHideFriendly);
+		ImGui::Checkbox("Enable##Players", &Draw_Players::bMasterToggle);
 
+		ImGui::SeparatorText("Filters");
+		ImGui::Checkbox("Hide Friendly",     &Draw_Players::bHideFriendly);
+		ImGui::Checkbox("Hide Local Player", &Draw_Players::bHideLocalPlayer);
+		ImGui::Checkbox("Visible Only",      &Draw_Players::bVisibleOnly);
+
+		ImGui::SeparatorText("Skeleton & Box");
 		ImGui::Checkbox("Bones", &Draw_Players::bDrawBones);
 		if (Draw_Players::bDrawBones)
 		{
 			ImGui::Indent();
+			ImGui::SetNextItemWidth(150.0f);
 			ImGui::SliderFloat("Bones Thickness", &Draw_Players::fBonesThickness, 0.1f, 5.0f, "%.1f");
 			ImGui::Unindent();
-		};
+		}
 
 		ImGui::Checkbox("Box", &Draw_Players::bDrawBox);
 		if (Draw_Players::bDrawBox)
 		{
 			ImGui::Indent();
+			ImGui::SetNextItemWidth(150.0f);
 			ImGui::SliderFloat("Box Thickness", &Draw_Players::fBoxThickness, 0.1f, 5.0f, "%.1f");
 			ImGui::Unindent();
-		};
+		}
 
-		ImGui::Checkbox("Head Circle", &Draw_Players::bDrawHead);
+		ImGui::Checkbox("Head Circle",     &Draw_Players::bDrawHead);
 		ImGui::Checkbox("Velocity Vector", &Draw_Players::bDrawVelocityVector);
+		ImGui::Checkbox("Bone Numbers",    &Draw_Players::bBoneNumbers);
+
+		ImGui::SeparatorText("Info Overlays");
 		ImGui::Checkbox("Health Bars", &Draw_Players::bDrawHealthBar);
 		if (Draw_Players::bDrawHealthBar)
 		{
@@ -102,27 +116,31 @@ void Visuals::RenderSettings()
 				Draw_Players::eHealthBarPosition = static_cast<EHealthBarPosition>(hbPos);
 			ImGui::Unindent();
 		}
+
 		ImGui::Checkbox("Unsecured Souls", &Draw_Players::bDrawUnsecuredSouls);
-		ImGui::Indent();
-		ImGui::SetNextItemWidth(50.0f);
-		ImGui::InputScalarN("Minimum Threshold", ImGuiDataType_S32, &Draw_Players::UnsecuredSoulsMinimumThreshold, 1);
-		ImGui::SetNextItemWidth(50.0f);
-		ImGui::InputScalarN("Highlight Threshold", ImGuiDataType_S32, &Draw_Players::UnsecuredSoulsHighlightThreshold, 1);
-		ImGui::Unindent();
-		ImGui::Checkbox("Hide Local", &Draw_Players::bHideLocalPlayer);
+		if (Draw_Players::bDrawUnsecuredSouls)
+		{
+			ImGui::Indent();
+			ImGui::SetNextItemWidth(80.0f);
+			ImGui::InputScalarN("Minimum Threshold",   ImGuiDataType_S32, &Draw_Players::UnsecuredSoulsMinimumThreshold,   1);
+			ImGui::SetNextItemWidth(80.0f);
+			ImGui::InputScalarN("Highlight Threshold", ImGuiDataType_S32, &Draw_Players::UnsecuredSoulsHighlightThreshold, 1);
+			ImGui::Unindent();
+		}
+
 		ImGui::Checkbox("Show Distance", &Draw_Players::bShowDistance);
-		ImGui::Checkbox("Hero Level", &Draw_Players::bShowHeroLevel);
+		ImGui::Checkbox("Hero Level",    &Draw_Players::bShowHeroLevel);
 		ImGui::Checkbox("Respawn Timer", &Draw_Players::bShowRespawnTimer);
-		ImGui::Checkbox("Bone Numbers", &Draw_Players::bBoneNumbers);
-		ImGui::Checkbox("Visible Only", &Draw_Players::bVisibleOnly);
 
 		ImGui::Unindent();
 	}
 
-	ImGui::Checkbox("Draw Troopers", &Draw_Troopers::bMasterToggle);
-	if (Draw_Troopers::bMasterToggle)
+	ImGui::Spacing();
+
+	if (ImGui::CollapsingHeader("Troopers"))
 	{
 		ImGui::Indent();
+		ImGui::Checkbox("Enable##Troopers",        &Draw_Troopers::bMasterToggle);
 		ImGui::Checkbox("Hide Friendly##Troopers", &Draw_Troopers::bHideFriendly);
 		ImGui::Checkbox("Lane Troopers",           &Draw_Troopers::bDrawLaneTroopers);
 		ImGui::Checkbox("Walkers",                 &Draw_Troopers::bDrawWalkers);
@@ -130,19 +148,22 @@ void Visuals::RenderSettings()
 		ImGui::Unindent();
 	}
 
-	ImGui::Checkbox("Draw Bosses", &Draw_Camps::bMasterToggle);
-
-	ImGui::Checkbox("Draw Sinners", &Draw_Sinners::bMasterToggle);
-
-	ImGui::Checkbox("Draw XP Orbs", &Draw_XpOrbs::bMasterToggle);
+	ImGui::Spacing();
 
 	if (ImGui::CollapsingHeader("Powerups / Breakables", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
-		ImGui::Checkbox("Master Toggle##Powerups", &Draw_Powerups::bMasterToggle);
-		ImGui::Checkbox("Show Label##Powerups", &Draw_Powerups::bShowLabel);
+		ImGui::Checkbox("Enable##Powerups",        &Draw_Powerups::bMasterToggle);
+		ImGui::Checkbox("Show Label##Powerups",    &Draw_Powerups::bShowLabel);
 		ImGui::Checkbox("Show Distance##Powerups", &Draw_Powerups::bShowDistance);
+		ImGui::SetNextItemWidth(150.0f);
 		ImGui::SliderFloat("Circle Radius##Powerups", &Draw_Powerups::fCircleRadius, 1.0f, 12.0f, "%.1f");
 		ImGui::Unindent();
 	}
+
+	ImGui::Spacing();
+	ImGui::SeparatorText("World");
+	ImGui::Checkbox("Bosses",  &Draw_Camps::bMasterToggle);
+	ImGui::Checkbox("Sinners", &Draw_Sinners::bMasterToggle);
+	ImGui::Checkbox("XP Orbs", &Draw_XpOrbs::bMasterToggle);
 }

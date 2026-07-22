@@ -18,23 +18,23 @@ public:
 public:
 	static inline bool bMasterToggle{ true };
 	static inline bool bHideFriendly{ false };
-	static inline bool bDrawBones{ true };
+	static inline bool bDrawBones{ false };
 	static inline float fBonesThickness{ 3.f };
 	static inline bool bDrawBox{ true };
 	static inline float fBoxThickness{ 1.5f };
-	static inline bool bDrawHead{ true };
+	static inline bool bDrawHead{ false };
 	static inline bool bDrawVelocityVector{ false };
-	static inline bool bDrawUnsecuredSouls{ true };
+	static inline bool bDrawUnsecuredSouls{ false };
 	static inline int32_t UnsecuredSoulsMinimumThreshold{ 1 };
 	static inline int32_t UnsecuredSoulsHighlightThreshold{ 400 };
 	static inline bool bBoneNumbers{ false };
 	static inline bool bDrawHealthBar{ true };
 	static inline EHealthBarPosition eHealthBarPosition{ EHealthBarPosition::Bottom };
 	static inline bool bHideLocalPlayer{ true };
-	static inline bool bShowDistance{ true };
+	static inline bool bShowDistance{ false };
 	static inline bool bVisibleOnly{ false };
 	static inline bool bShowHeroLevel{ true };
-	static inline bool bShowRespawnTimer{ true };
+	static inline bool bShowRespawnTimer{ false };
 
 private:
 	static void DrawPlayer(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn);
