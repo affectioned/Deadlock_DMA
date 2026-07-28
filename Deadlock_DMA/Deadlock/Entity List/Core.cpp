@@ -36,6 +36,9 @@ void EntityList::GetEntitySystemAddress(DMA_Connection* Conn, Process* Proc)
 	uintptr_t EntitySystemPointer = Proc->GetModuleBase("client.dll") + Offsets::GameEntitySystem;
 	uintptr_t LatestAddr = Proc->ReadMem<uintptr_t>(Conn, EntitySystemPointer);
 
+	// A 0 read is a transient scatter failure (e.g. game deprioritized while
+	// alt-tabbed) — keep the last-known-good pointer so visuals survive.
+	if (LatestAddr == 0) return;
 	if (LatestAddr == m_EntitySystem_Address) return;
 
 	m_EntitySystem_Address = LatestAddr;

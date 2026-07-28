@@ -111,13 +111,16 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 
 	uintptr_t newPawn = EntityList::GetEntityAddressFromHandle(hHeroPawn);
 
-	if (newCtrl != m_LocalPlayerControllerAddress)
+	// A 0 read here is almost always a transient scatter failure (alt-tab).
+	// Preserve the last-known-good ptrs so visuals don't disappear until the
+	// next successful read.
+	if (newCtrl && newCtrl != m_LocalPlayerControllerAddress)
 	{
 		m_LocalPlayerControllerAddress = newCtrl;
 		Log::Info("Local Player Controller: 0x{:X}", m_LocalPlayerControllerAddress);
 	}
 
-	if (newPawn != m_LocalPlayerPawnAddress)
+	if (newPawn && newPawn != m_LocalPlayerPawnAddress)
 	{
 		m_LocalPlayerPawnAddress = newPawn;
 		Log::Info("Local Player Pawn: 0x{:X}", m_LocalPlayerPawnAddress);
@@ -128,7 +131,16 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 
 void Deadlock::UpdateServerTime(DMA_Connection* Conn)
 {
-	if (!m_PredictionAddress) return;
+	// Initialize() reads m_PredictionAddress once at startup; if that read
+	// failed (transient scatter miss while the game was still spinning up),
+	// retry here so ServerTime doesn't stay dead for the whole session.
+	if (!m_PredictionAddress)
+	{
+		uintptr_t clientBase = Proc().GetModuleBase(GameModules::ClientDll);
+		m_PredictionAddress = Proc().ReadMem<uintptr_t>(Conn, clientBase + Offsets::Prediction);
+		if (!m_PredictionAddress) return;
+		Log::Info("Prediction Address: 0x{:X}", m_PredictionAddress);
+	}
 
 	uintptr_t ServerTimeAddress = m_PredictionAddress + Offsets::CPrediction::ServerTime;
 
