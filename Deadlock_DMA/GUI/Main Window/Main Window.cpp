@@ -2,6 +2,9 @@
 
 #include "Main Window.h"
 
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
 #include <dwmapi.h>
 #pragma comment(lib, "dwmapi.lib")
 

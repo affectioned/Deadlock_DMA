@@ -66,8 +66,8 @@ namespace Offsets
 		{
 			inline constexpr std::ptrdiff_t m_iHealthMax               = 0x10; // int32 (4b)
 			inline constexpr std::ptrdiff_t m_nHeroID                  = 0x1C; // HeroID_t (4b)
-			inline constexpr std::ptrdiff_t m_nTotalSouls              = 0x24;
-			inline constexpr std::ptrdiff_t m_iHealth                  = 0x4C; // int32 (4b)
+			inline constexpr std::ptrdiff_t m_nTotalSouls              = 0x28; // m_iGoldNetWorth (int32, 4b)
+			inline constexpr std::ptrdiff_t m_iHealth                  = 0x50; // int32 (4b)
 		}
 	}
 
@@ -77,7 +77,7 @@ namespace Offsets
 		inline constexpr std::ptrdiff_t m_nCurrencies        = 0x12E0; // int32[6] (24b)
 		inline constexpr std::ptrdiff_t m_nUnsecuredSouls    = 0x12EC; // m_nCurrencies[3]
 		inline constexpr std::ptrdiff_t m_nLevel             = 0x12DC; // int32 (4b)
-		inline constexpr std::ptrdiff_t m_flRespawnTime      = 0x1314; // GameTime_t / float (4b)
+		inline constexpr std::ptrdiff_t m_flRespawnTime      = 0x1318; // GameTime_t / float (4b)
 	}
 
 	namespace C_BasePlayerPawn

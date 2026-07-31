@@ -126,6 +126,14 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 		Log::Info("Local Player Pawn: 0x{:X}", m_LocalPlayerPawnAddress);
 	}
 
+	// Both pawn and controller no longer register a class name (pName == 0
+	// in CEntityIdentity), so every remote player is invisible to the class-
+	// map sort. Snapshot the vtables off the local player once and let
+	// EntityList::DiscoverPlayersByVTable classify the rest by vtable match.
+	uintptr_t pawnVT = newPawn ? Proc().ReadMem<uintptr_t>(Conn, newPawn) : 0;
+	uintptr_t ctrlVT = newCtrl ? Proc().ReadMem<uintptr_t>(Conn, newCtrl) : 0;
+	EntityList::CachePlayerVTables(pawnVT, ctrlVT);
+
 	return true;
 }
 

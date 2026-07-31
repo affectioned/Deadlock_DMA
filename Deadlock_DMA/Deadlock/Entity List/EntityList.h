@@ -16,7 +16,21 @@ public: /* Interface methods */
 	static void UpdateEntityMap(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc);
 	static void SortEntityList();
+	// Discovers pawns and controllers via vtable match against cached
+	// m_PlayerPawnVTable / m_PlayerControllerVTable. Called after SortEntityList
+	// because both entity classes have null pName in current builds and cannot
+	// be found through the class-name map.
+	static void DiscoverPlayersByVTable(DMA_Connection* Conn, Process* Proc);
 	static uintptr_t GetEntityAddressFromHandle(CHandle Handle);
+
+	// Cache vtable pointers observed on the local player. Called by
+	// Deadlock::UpdateLocalPlayerAddresses once local pawn/controller are known.
+	// Ignores zero values so a transient scatter miss doesn't poison the cache.
+	static void CachePlayerVTables(uintptr_t pawnVTable, uintptr_t ctrlVTable);
+
+	// Fires from FullUpdate after every sort + vtable-discovery pass. Emits a
+	// single log line when any bucket size changes — steady state is silent.
+	static void LogEntityCountsIfChanged();
 
 
 	static void FullControllerRefresh_lk(DMA_Connection* Conn, Process* Proc);
@@ -104,6 +118,13 @@ private: /* Internal variables */
 
 	static inline std::vector<uintptr_t> m_PlayerController_Addresses{};
 	static inline std::vector<uintptr_t> m_PlayerPawn_Addresses{};
+
+	// Both CCitadelPlayerController and C_CitadelPlayerPawn have no class-name
+	// registration in current builds (CEntityIdentity.pName == 0). Vtable
+	// pointers, on the other hand, are stable per-session — we snapshot them
+	// off the local player and match every null-pName entity against them.
+	static inline uintptr_t m_PlayerPawnVTable = 0;
+	static inline uintptr_t m_PlayerControllerVTable = 0;
 	static inline std::vector<std::pair<uintptr_t, const char*>> m_TrooperAddresses{};
 	static inline std::vector<std::pair<uintptr_t, const char*>> m_MonsterCampAddresses{};
 	static inline std::vector<uintptr_t> m_SinnersAddresses{};

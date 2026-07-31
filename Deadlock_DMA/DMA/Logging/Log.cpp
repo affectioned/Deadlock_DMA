@@ -2,6 +2,7 @@
 #include <fstream>
 #include <chrono>
 #include <format>
+#include <print>
 #include "Log.h"
 
 static std::ofstream s_LogFile;

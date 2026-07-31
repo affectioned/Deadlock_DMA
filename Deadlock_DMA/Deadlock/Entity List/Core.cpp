@@ -3,6 +3,7 @@
 #include <unordered_set>
 
 #include "EntityList.h"
+#include "Deadlock/Deadlock.h"
 #include "DMA/Memory/PhaseTimings.h"
 
 void EntityList::InitScatterHandle(DMA_Connection* Conn, Process* Proc)
@@ -21,7 +22,23 @@ void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 	{ SCATTER_SCOPE("FullUpdate::EntityMap", *m_sr); UpdateEntityMap(Conn, Proc); }
 	{ PHASE_SCOPE ("FullUpdate::ClassMap");          UpdateEntityClassMap(Conn, Proc); }
 	{ PHASE_SCOPE ("FullUpdate::Sort");               SortEntityList(); }
+	{ SCATTER_SCOPE("FullUpdate::Players", *m_sr);   DiscoverPlayersByVTable(Conn, Proc); }
 	{ SCATTER_SCOPE("FullUpdate::FOW", *m_sr);       DiscoverFOWTeam(Conn, Proc); }
+	LogEntityCountsIfChanged();
+}
+
+void EntityList::CachePlayerVTables(uintptr_t pawnVTable, uintptr_t ctrlVTable)
+{
+	if (pawnVTable && pawnVTable != m_PlayerPawnVTable)
+	{
+		m_PlayerPawnVTable = pawnVTable;
+		Log::Info("[EntityList] Cached pawn vtable: 0x{:X}", m_PlayerPawnVTable);
+	}
+	if (ctrlVTable && ctrlVTable != m_PlayerControllerVTable)
+	{
+		m_PlayerControllerVTable = ctrlVTable;
+		Log::Info("[EntityList] Cached controller vtable: 0x{:X}", m_PlayerControllerVTable);
+	}
 }
 
 void EntityList::UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc)
@@ -166,25 +183,13 @@ void EntityList::SortEntityList()
 		return it != m_EntityClassMap.end() ? it->second : 0;
 	};
 
+	// Class names for pawns and controllers ARE registered ("player" and
+	// "citadel_player_controller"), but the pName pointers live in the game's
+	// runtime string pool (heap 0x58...) instead of client.dll .rdata (0x7FFB...).
+	// The class-map read still resolves them correctly. DiscoverPlayersByVTable
+	// runs after this as a safety net in case the pool moves them again.
 	uintptr_t PlayerPawnClassPtr       = FindClass("player");
 	uintptr_t PlayerControllerClassPtr = FindClass("citadel_player_controller");
-	// Diagnostic: if the controller class hasn't been resolved yet, no pawn
-	// will find its matching controller in Draw_Players and the ESP will
-	// draw nothing. Log once when we detect the missing class to make the
-	// symptom easy to spot in the console.
-	{
-		static bool s_LoggedMissingCtrlClass = false;
-		if (!PlayerControllerClassPtr && !s_LoggedMissingCtrlClass)
-		{
-			Log::Warn("[EntityList] citadel_player_controller class ptr not in class map — no players will render");
-			s_LoggedMissingCtrlClass = true;
-		}
-		if (PlayerControllerClassPtr && s_LoggedMissingCtrlClass)
-		{
-			Log::Info("[EntityList] citadel_player_controller class ptr resolved");
-			s_LoggedMissingCtrlClass = false;
-		}
-	}
 	uintptr_t TrooperClassPtr          = FindClass("npc_trooper");
 	uintptr_t TrooperBossClassPtr      = FindClass("npc_trooper_boss");
 	uintptr_t TrooperNeutralClassPtr   = FindClass("npc_trooper_neutral");
@@ -227,6 +232,10 @@ void EntityList::SortEntityList()
 		}
 	}
 
+}
+
+void EntityList::LogEntityCountsIfChanged()
+{
 	// Log only when the entity-count fingerprint changes — most cycles are no-ops.
 	struct Counts { size_t pawns, ctrls, troopers, bosses, sinners, orbs, powerups; };
 	static Counts s_prev{ ~0ull, ~0ull, ~0ull, ~0ull, ~0ull, ~0ull, ~0ull };
@@ -240,6 +249,47 @@ void EntityList::SortEntityList()
 		Log::Info("[EntityList] {} pawns, {} ctrls, {} troopers, {} bosses, {} sinners, {} xporbs, {} powerups",
 			cur.pawns, cur.ctrls, cur.troopers, cur.bosses, cur.sinners, cur.orbs, cur.powerups);
 		s_prev = cur;
+	}
+}
+
+void EntityList::DiscoverPlayersByVTable(DMA_Connection* Conn, Process* Proc)
+{
+	// Bootstrap: nothing to match until Deadlock::UpdateLocalPlayerAddresses
+	// has snapshotted at least the pawn vtable off the local player. On the
+	// very first FullUpdate both caches are 0 and we exit — the local pawn
+	// resolves right after via the LocalController global, and the next
+	// FullUpdate lands here with a populated cache.
+	if (m_PlayerPawnVTable == 0 && m_PlayerControllerVTable == 0)
+		return;
+
+	std::vector<uintptr_t> candidates;
+	for (auto& List : m_CompleteEntityList)
+	{
+		for (auto& Entry : List)
+		{
+			if (Entry.pEnt && Entry.pName == 0)
+				candidates.push_back(Entry.pEnt);
+		}
+	}
+
+	if (candidates.empty()) return;
+
+	std::vector<uintptr_t> vtables(candidates.size(), 0);
+
+	m_sr->Clear();
+	for (size_t i = 0; i < candidates.size(); i++)
+		m_sr->Add(candidates[i], &vtables[i]);
+	m_sr->Execute();
+
+	std::scoped_lock Lock(m_PawnMutex, m_ControllerMutex);
+
+	for (size_t i = 0; i < candidates.size(); i++)
+	{
+		if (vtables[i] == 0) continue;
+		if (m_PlayerPawnVTable && vtables[i] == m_PlayerPawnVTable)
+			m_PlayerPawn_Addresses.push_back(candidates[i]);
+		else if (m_PlayerControllerVTable && vtables[i] == m_PlayerControllerVTable)
+			m_PlayerController_Addresses.push_back(candidates[i]);
 	}
 }
 

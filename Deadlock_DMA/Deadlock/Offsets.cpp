@@ -46,22 +46,22 @@ bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 	uintptr_t clientEnd  = clientBase + Deadlock::Proc().GetModuleSize(GameModules::ClientDll);
 
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
-		"GameEntitySystem", Offsets::GameEntitySystem, 0x3083188,
+		"GameEntitySystem", Offsets::GameEntitySystem, 0x30E3C70,
 		"48 8B 0D ? ? ? ? 8B FD C1 EF", 3, 7);
 
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
-		"LocalController", Offsets::LocalController, 0x37647A0,
+		"LocalController", Offsets::LocalController, 0x37C8A00,
 		"48 3B 35 ? ? ? ? 75 ? 48 C7 05", 3, 7);
 
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
-		"ViewMatrix", Offsets::ViewMatrix, 0x3799830,
+		"ViewMatrix", Offsets::ViewMatrix, 0x37FDA40,
 		"F3 0F 10 05 ? ? ? ? F3 0F 59 01", 4, 8);
 
 	// CPrediction sig has 3 hits in the current build (all `mov rax, [rip+X]; cmp [rax+58h], bl`) —
-	// they resolve to different globals. FindSignature returns first-match, currently 0x32514F8.
+	// they resolve to different globals. FindSignature returns first-match, currently 0x32B1FE8.
 	// If this ever drifts, tighten the pattern instead of chasing the RVA.
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
-		"CPrediction", Offsets::Prediction, 0x32514F8,
+		"CPrediction", Offsets::Prediction, 0x32B1FE8,
 		"48 8B 05 ? ? ? ? 38 58", 3, 7);
 
 	DbgLog("All offsets resolved.");
