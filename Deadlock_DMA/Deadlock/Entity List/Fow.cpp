@@ -44,7 +44,21 @@ void EntityList::DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc)
 		return count > 0 && count <= 500 && ptr != 0 && max >= count && max <= 500;
 	};
 
-	if (m_FOWTeamAddress != 0 && ++s_CallsSinceFullScan < kFullScanInterval)
+	// Menu ↔ match transitions can leave the previous state's team entity
+	// alive long enough to keep passing the fast-path sanity check, so we'd
+	// otherwise read FOW from the wrong team for up to kFullScanInterval
+	// ticks and every real pawn would fall out of m_FOWVisibleByAddr →
+	// IsEntityVisible → false → visuals hidden. A big pawn-count swing
+	// (menu ~3 → match 12+) is the reliable transition signal; respawn /
+	// disconnect noise moves the count by at most 1-2, so a threshold of
+	// >2 catches transitions without over-firing.
+	static size_t s_LastPawnCount = 0;
+	const size_t curPawnCount = m_PlayerPawn_Addresses.size();
+	const bool bigPawnShift =
+		curPawnCount > s_LastPawnCount + 2 || s_LastPawnCount > curPawnCount + 2;
+	s_LastPawnCount = curPawnCount;
+
+	if (!bigPawnShift && m_FOWTeamAddress != 0 && ++s_CallsSinceFullScan < kFullScanInterval)
 	{
 		int32_t  count = 0;
 		uint64_t ptr   = 0;
