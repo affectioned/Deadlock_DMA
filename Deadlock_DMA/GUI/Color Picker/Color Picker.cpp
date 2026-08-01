@@ -84,9 +84,11 @@ void ColorPicker::Render()
 		ImGui::Spacing();
 	}
 
-	if (SectionVisible(sFilter, { "Skeleton (Visible)", "Skeleton (Invisible)", "Unsecured Souls Text", "Unsecured Souls Highlighted Text" }))
+	if (SectionVisible(sFilter, { "Box (Visible)", "Box (Invisible)", "Skeleton (Visible)", "Skeleton (Invisible)", "Unsecured Souls Text", "Unsecured Souls Highlighted Text" }))
 	{
 		ImGui::SeparatorText("Players");
+		Row("Box (Visible)",                    BoxColorVisible,                     sFilter);
+		Row("Box (Invisible)",                  BoxColorInvisible,                   sFilter);
 		Row("Skeleton (Visible)",               SkeletonColorVisible,                sFilter);
 		Row("Skeleton (Invisible)",             SkeletonColorInvisible,              sFilter);
 		Row("Unsecured Souls Text",             UnsecuredSoulsTextColor,             sFilter);

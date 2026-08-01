@@ -51,4 +51,10 @@ public:
 	static inline ImColor HiddenKingTeamColor{ 212, 135, 12 };
 	static inline ImColor SkeletonColorVisible{ 255,255,255 };
 	static inline ImColor SkeletonColorInvisible{ 255,80,80 };
+	// Box mirrors the skeleton's visibility split: friendlies + visible enemies
+	// draw the Visible variant, enemies gated by FOW draw the Invisible variant.
+	// Team coloring is still available on the nametag / health bar / radar, so
+	// dropping it here doesn't lose the friendly-vs-enemy signal.
+	static inline ImColor BoxColorVisible{ 255,255,255 };
+	static inline ImColor BoxColorInvisible{ 255,80,80 };
 };

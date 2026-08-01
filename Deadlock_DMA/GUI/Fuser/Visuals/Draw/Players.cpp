@@ -240,9 +240,10 @@ void Draw_Players::DrawBox(const CCitadelPlayerController& PC, const C_CitadelPl
 	float halfWidth = height * 0.25f; // typical humanoid aspect, ~1:2
 	float centerX = ((Head2D.x + Feet2D.x) * 0.5f) + WindowPos.x;
 
-	auto BoxColor = PC.m_TeamNum == ETeam::HIDDEN_KING
-		? ColorPicker::HiddenKingTeamColor
-		: ColorPicker::ArchMotherTeamColor;
+	// Same visibility gate as DrawSkeleton — friendlies aren't in the local
+	// team's FOW list, so IsEntityVisible would fail-closed for them.
+	const bool bVisible = PC.IsFriendly() || EntityList::IsEntityVisible(Pawn.m_EntityAddress);
+	const ImU32 BoxColor = bVisible ? ColorPicker::BoxColorVisible : ColorPicker::BoxColorInvisible;
 
 	DrawList->AddRect(
 		ImVec2(centerX - halfWidth, topY),
