@@ -32,12 +32,12 @@ void EntityList::CachePlayerVTables(uintptr_t pawnVTable, uintptr_t ctrlVTable)
 	if (pawnVTable && pawnVTable != m_PlayerPawnVTable)
 	{
 		m_PlayerPawnVTable = pawnVTable;
-		Log::Info("[EntityList] Cached pawn vtable: 0x{:X}", m_PlayerPawnVTable);
+		Log::Info("[EL] pawnVT=0x{:X}", m_PlayerPawnVTable);
 	}
 	if (ctrlVTable && ctrlVTable != m_PlayerControllerVTable)
 	{
 		m_PlayerControllerVTable = ctrlVTable;
-		Log::Info("[EntityList] Cached controller vtable: 0x{:X}", m_PlayerControllerVTable);
+		Log::Info("[EL] ctrlVT=0x{:X}", m_PlayerControllerVTable);
 	}
 }
 
@@ -60,7 +60,7 @@ void EntityList::GetEntitySystemAddress(DMA_Connection* Conn, Process* Proc)
 
 	m_EntitySystem_Address = LatestAddr;
 
-	Log::Info("Entity System Address: 0x{:X}", m_EntitySystem_Address);
+	Log::Info("EntSys: 0x{:X}", m_EntitySystem_Address);
 }
 
 void EntityList::GetEntityListAddresses(DMA_Connection* Conn, Process* Proc)
@@ -246,7 +246,7 @@ void EntityList::LogEntityCountsIfChanged()
 		|| cur.troopers != s_prev.troopers || cur.bosses != s_prev.bosses
 		|| cur.sinners != s_prev.sinners || cur.orbs != s_prev.orbs || cur.powerups != s_prev.powerups)
 	{
-		Log::Info("[EntityList] {} pawns, {} ctrls, {} troopers, {} bosses, {} sinners, {} xporbs, {} powerups",
+		Log::Info("[EL] pawn={} ctrl={} troop={} boss={} sin={} orb={} pow={}",
 			cur.pawns, cur.ctrls, cur.troopers, cur.bosses, cur.sinners, cur.orbs, cur.powerups);
 		s_prev = cur;
 	}

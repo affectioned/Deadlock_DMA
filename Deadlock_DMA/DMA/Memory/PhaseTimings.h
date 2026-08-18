@@ -69,7 +69,7 @@ struct ScopedUs {
 			std::chrono::steady_clock::now() - start).count();
 		dst.add(us);
 		if (us > 50'000 && name)
-			Log::Warn("[PhaseTimings] {} stalled {}ms", name, us / 1000);
+			Log::Warn("[PT] {} stall {}ms", name, us / 1000);
 	}
 };
 
@@ -95,7 +95,7 @@ struct ScopedScatter {
 		const int64_t ranges = static_cast<int64_t>(sr.LifetimeRanges() - rangesAtEntry);
 		dst.addScatter(us, bytes, ranges);
 		if (us > 50'000 && name)
-			Log::Warn("[PhaseTimings] {} stalled {}ms", name, us / 1000);
+			Log::Warn("[PT] {} stall {}ms", name, us / 1000);
 	}
 };
 
@@ -125,20 +125,24 @@ public:
 		if (rows.empty()) return;
 		std::sort(rows.begin(), rows.end(),
 			[](const Row& a, const Row& b) { return a.phase->sum > b.phase->sum; });
-		Log::Info("[PhaseTimings] window summary (sorted by total time):");
+		// Filter rows below 500us total — measurement noise clogs the dump with
+		// zero-work phases. Reset those too so their counters don't leak into
+		// the next window.
+		Log::Info("[PT] (us; sum-sorted)");
 		for (auto& r : rows) {
+			if (r.phase->sum < 500) { r.phase->reset(); continue; }
 			if (r.phase->ranges_sum > 0)
 			{
-				Log::Info("  {:<24} avg={:>6}us max={:>7}us n={:>5} total={:>9}us  "
-					"{:>6}B/call {:>4}r  peak={:>6}B/{:>3}r",
-					r.name, r.phase->avg(), r.phase->max, r.phase->samples, r.phase->sum,
-					r.phase->bytesAvg(), r.phase->rangesAvg(),
-					r.phase->bytes_max, r.phase->ranges_max);
+				Log::Info("  {} {}ms {}x avg={} max={} {}B/{}r",
+					r.name, r.phase->sum / 1000, r.phase->samples,
+					r.phase->avg(), r.phase->max,
+					r.phase->bytesAvg(), r.phase->rangesAvg());
 			}
 			else
 			{
-				Log::Info("  {:<24} avg={:>6}us max={:>7}us n={:>5} total={:>9}us",
-					r.name, r.phase->avg(), r.phase->max, r.phase->samples, r.phase->sum);
+				Log::Info("  {} {}ms {}x avg={} max={}",
+					r.name, r.phase->sum / 1000, r.phase->samples,
+					r.phase->avg(), r.phase->max);
 			}
 			r.phase->reset();
 		}

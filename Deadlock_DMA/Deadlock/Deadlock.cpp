@@ -15,22 +15,16 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	Offsets::ResolveOffsets(Conn);
 
-	Log::Info("[+] Initializing scatter handle...");
 	EntityList::InitScatterHandle(Conn, &Process);
-
-	Log::Info("[+] Running FullUpdate...");
 	EntityList::FullUpdate(Conn, &Process);
-	Log::Info("[+] FullUpdate complete.");
 
-	Log::Info("[+] Resolving prediction address...");
 	uintptr_t clientBase = Process.GetModuleBase(GameModules::ClientDll);
 	m_PredictionAddress = Process.ReadMem<uintptr_t>(Conn, clientBase + Offsets::Prediction);
-	Log::Info("Prediction Address: 0x{:X}", m_PredictionAddress);
+	Log::Info("Prediction: 0x{:X}", m_PredictionAddress);
 
-	Log::Info("[+] Updating local player addresses...");
 	UpdateLocalPlayerAddresses(Conn);
 
-	Log::Info("[+] Deadlock initialized.");
+	Log::Info("[Init] ready");
 
 	return true;
 }
@@ -117,13 +111,13 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 	if (newCtrl && newCtrl != m_LocalPlayerControllerAddress)
 	{
 		m_LocalPlayerControllerAddress = newCtrl;
-		Log::Info("Local Player Controller: 0x{:X}", m_LocalPlayerControllerAddress);
+		Log::Info("LocalCtrl: 0x{:X}", m_LocalPlayerControllerAddress);
 	}
 
 	if (newPawn && newPawn != m_LocalPlayerPawnAddress)
 	{
 		m_LocalPlayerPawnAddress = newPawn;
-		Log::Info("Local Player Pawn: 0x{:X}", m_LocalPlayerPawnAddress);
+		Log::Info("LocalPawn: 0x{:X}", m_LocalPlayerPawnAddress);
 	}
 
 	// Both pawn and controller no longer register a class name (pName == 0
@@ -147,7 +141,7 @@ void Deadlock::UpdateServerTime(DMA_Connection* Conn)
 		uintptr_t clientBase = Proc().GetModuleBase(GameModules::ClientDll);
 		m_PredictionAddress = Proc().ReadMem<uintptr_t>(Conn, clientBase + Offsets::Prediction);
 		if (!m_PredictionAddress) return;
-		Log::Info("Prediction Address: 0x{:X}", m_PredictionAddress);
+		Log::Info("Prediction: 0x{:X}", m_PredictionAddress);
 	}
 
 	uintptr_t ServerTimeAddress = m_PredictionAddress + Offsets::CPrediction::ServerTime;

@@ -55,7 +55,7 @@ void EntityList::RefreshPrimaryWeaponBulletSpeed(DMA_Connection* Conn, Process* 
 	if (g_LocalBulletSpeed.load(std::memory_order_relaxed) != SpeedHu)
 	{
 		g_LocalBulletSpeed.store(SpeedHu, std::memory_order_relaxed);
-		Log::Info("[PrimaryWeapon] base bullet speed = {:.0f} hu/s ({:.0f} m/s)",
+		Log::Info("[Wpn] bulletSpd={:.0f}hu ({:.0f}m/s)",
 			SpeedHu, SpeedHu / HammerUnitsPerMeter);
 	}
 }

@@ -30,12 +30,12 @@ static void ResolveOffset(DMA_Connection* Conn, DWORD pid, uintptr_t clientBase,
 	if (offset)
 	{
 		target = offset;
-		Log::Info("[+] {} Offset: 0x{:X}", name, target);
+		Log::Info("[Off] {}=0x{:X}", name, target);
 	}
 	else
 	{
 		target = fallback;
-		Log::Warn("[!] {} sig failed, using fallback RVA: 0x{:X}", name, target);
+		Log::Warn("[Off] {}=0x{:X} (fallback, sig failed)", name, target);
 	}
 }
 

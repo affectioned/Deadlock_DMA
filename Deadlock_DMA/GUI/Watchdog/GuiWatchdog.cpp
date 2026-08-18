@@ -13,7 +13,7 @@ void GuiWatchdog::Start()
 	bool expected = false;
 	if (!s_Running.compare_exchange_strong(expected, true)) return;
 	std::thread(WatchdogLoop).detach();
-	Log::Info("[Watchdog] Started.");
+	Log::Info("[WD] started");
 }
 
 void GuiWatchdog::GuiStage(const char* name)
@@ -33,10 +33,10 @@ void GuiWatchdog::Tick()
 	using clk = std::chrono::steady_clock;
 	static auto lastLog = clk::time_point{};
 	auto now = clk::now();
-	if (now - lastLog >= std::chrono::seconds(5))
+	if (now - lastLog >= std::chrono::seconds(60))
 	{
 		lastLog = now;
-		Log::Info("[GUI] heartbeat frame={} stage={} dmaStage={}",
+		Log::Info("[GUI] hb f={} g={} d={}",
 			frame,
 			s_LastGuiStage.load(std::memory_order_relaxed),
 			s_LastDmaStage.load(std::memory_order_relaxed));
@@ -58,11 +58,11 @@ void GuiWatchdog::WatchdogLoop()
 		if (m.try_lock())
 		{
 			m.unlock();
-			Log::Info("[Watchdog]   {}: free", name);
+			Log::Info("[WD]  {}:free", name);
 		}
 		else
 		{
-			Log::Warn("[Watchdog]   {}: HELD", name);
+			Log::Warn("[WD]  {}:HELD", name);
 		}
 	};
 
@@ -79,7 +79,7 @@ void GuiWatchdog::WatchdogLoop()
 			lastSeenAt = now;
 			if (stalled)
 			{
-				Log::Info("[Watchdog] GUI recovered at frame={} stage={}",
+				Log::Info("[WD] recovered f={} g={}",
 					cur, s_LastGuiStage.load(std::memory_order_relaxed));
 				stalled = false;
 			}
@@ -98,7 +98,7 @@ void GuiWatchdog::WatchdogLoop()
 
 		const char* gstage = s_LastGuiStage.load(std::memory_order_relaxed);
 		const char* dstage = s_LastDmaStage.load(std::memory_order_relaxed);
-		Log::Warn("[Watchdog] GUI STALL: frame={} stuck {}ms guiStage={} dmaStage={}",
+		Log::Warn("[WD] STALL f={} {}ms g={} d={}",
 			cur, stalledFor.count(), gstage, dstage);
 
 		Probe("PawnMutex",        EntityList::m_PawnMutex);

@@ -7,7 +7,7 @@ bool Process::GetProcessInfo(const std::string& processName,
                               const std::vector<std::string>& moduleNames,
                               DMA_Connection* conn)
 {
-	Log::Info("Waiting for process {}..", processName);
+	Log::Info("Waiting for {}", processName);
 
 	m_PID = 0;
 
@@ -17,7 +17,7 @@ bool Process::GetProcessInfo(const std::string& processName,
 
 		if (m_PID)
 		{
-			Log::Info("Found process `{}` with PID {}", processName, m_PID);
+			Log::Info("{} pid={}", processName, m_PID);
 			PopulateModules(moduleNames, conn);
 			break;
 		}
@@ -81,7 +81,7 @@ bool Process::PopulateModules(const std::vector<std::string>& names, DMA_Connect
 
 	for (const auto& [name, addr] : m_Modules) {
 		auto sit = m_ModuleSizes.find(name);
-		Log::Info("Module `{}` at 0x{:X} size 0x{:X}", name, addr,
+		Log::Info("Mod {} 0x{:X}+{:X}", name, addr,
 		          sit != m_ModuleSizes.end() ? sit->second : 0);
 	}
 

@@ -25,7 +25,7 @@ static BOOL WINAPI OnConsoleExit(DWORD ctrlType)
 	case CTRL_CLOSE_EVENT:
 	case CTRL_LOGOFF_EVENT:
 	case CTRL_SHUTDOWN_EVENT:
-		Log::Info("[Exit] Console close detected; saving active config...");
+		Log::Info("[Exit] saving config");
 		Config::SaveActive();
 		bRunning = false;
 		return TRUE;
@@ -41,8 +41,6 @@ int main()
 		auto logPath = std::filesystem::path(exePath).parent_path() / "deadlock_dma.log";
 		Log::Init(logPath.wstring());
 	}
-
-	Log::Info("Hello, DEADLOCK_DMA!");
 
 	SetConsoleCtrlHandler(OnConsoleExit, TRUE);
 
@@ -68,7 +66,7 @@ int main()
 
 	std::thread DMAThread(DMA_Thread_Main);
 
-	Log::Info("Press END to exit...");
+	Log::Info("END to exit");
 
 	while (bRunning)
 	{
