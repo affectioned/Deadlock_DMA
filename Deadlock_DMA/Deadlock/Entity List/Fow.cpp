@@ -114,9 +114,9 @@ void EntityList::DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc)
 	if (bestAddr != m_FOWTeamAddress)
 	{
 		if (bestAddr)
-			Log::Info("[FOW] Team entity: 0x{:X} (count={})", bestAddr, bestCount);
+			Log::Info("[FOW] team=0x{:X} n={}", bestAddr, bestCount);
 		else
-			Log::Info("[FOW] Team entity lost (was 0x{:X})", m_FOWTeamAddress);
+			Log::Info("[FOW] team lost (was 0x{:X})", m_FOWTeamAddress);
 		m_FOWTeamAddress = bestAddr;
 		m_FOWVisibleByAddr.clear();
 	}
@@ -195,7 +195,13 @@ void EntityList::FullFOWRefresh(DMA_Connection* Conn, Process* Proc)
 		int32_t entIndex = 0;
 		std::memcpy(&entIndex, entry + Offsets::STeamFOWEntity::m_nEntIndex, 4);
 		bool visible = entry[Offsets::STeamFOWEntity::m_bVisibleOnMap] != 0;
-		if (entIndex < 0) continue;
+		// entIndex 0 is world / CGameRules — never a legitimate FOW entry. If
+		// the entry buffer scatter partially fails (game deprioritized on a
+		// second monitor), every entry decodes as 0 and would otherwise map
+		// slot 0's address to visible=false, leaving m_FOWVisibleByAddr
+		// non-empty but missing every real pawn — IsEntityVisible then
+		// returns false for every enemy and bVisibleOnly hides them all.
+		if (entIndex <= 0) continue;
 		size_t listIdx  = static_cast<size_t>(entIndex) / MAX_ENTITIES;
 		size_t entryIdx = static_cast<size_t>(entIndex) % MAX_ENTITIES;
 		if (listIdx >= MAX_ENTITY_LISTS) continue;
