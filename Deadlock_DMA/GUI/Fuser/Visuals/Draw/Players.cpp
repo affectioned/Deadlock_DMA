@@ -48,7 +48,7 @@ void Draw_Players::operator()()
 
 		// FOW gate: when enabled, skip enemies the team minimap doesn't see.
 		// Friendlies always render — bypass the gate for them.
-		if (bVisibleOnly && !ControllerIt->IsFriendly() && !EntityList::IsEntityVisible(Pawn.m_EntityAddress))
+		if (bVisibleOnly && !ControllerIt->IsFriendly() && !EntityList::IsEntityConfirmedVisible(Pawn.m_EntityAddress))
 			continue;
 
 		DrawPlayer(*ControllerIt, Pawn);

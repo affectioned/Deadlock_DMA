@@ -119,6 +119,9 @@ void EntityList::DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc)
 			Log::Info("[FOW] team lost (was 0x{:X})", m_FOWTeamAddress);
 		m_FOWTeamAddress = bestAddr;
 		m_FOWVisibleByAddr.clear();
+		// Data from the old team no longer applies; force aim/strict-hide
+		// to fail closed until FullFOWRefresh repopulates for the new team.
+		m_bFOWReady.store(false, std::memory_order_release);
 	}
 }
 
@@ -166,6 +169,7 @@ void EntityList::FullFOWRefresh(DMA_Connection* Conn, Process* Proc)
 	{
 		std::scoped_lock lk(m_FOWMutex);
 		m_FOWVisibleByAddr.clear();
+		m_bFOWReady.store(false, std::memory_order_release);
 		return;
 	}
 
@@ -209,6 +213,7 @@ void EntityList::FullFOWRefresh(DMA_Connection* Conn, Process* Proc)
 		if (!addr) continue;
 		m_FOWVisibleByAddr[addr] = visible;
 	}
+	m_bFOWReady.store(true, std::memory_order_release);
 }
 
 bool EntityList::IsEntityVisible(uintptr_t entityAddress)
@@ -217,5 +222,17 @@ bool EntityList::IsEntityVisible(uintptr_t entityAddress)
 	if (m_FOWVisibleByAddr.empty()) return true; // no FOW data — fall open
 	auto it = m_FOWVisibleByAddr.find(entityAddress);
 	if (it == m_FOWVisibleByAddr.end()) return false; // not tracked = not visible
+	return it->second;
+}
+
+bool EntityList::IsEntityConfirmedVisible(uintptr_t entityAddress)
+{
+	// Aim-assist / strict-hide path: unknown must never mean "aim at it."
+	// Skip the mutex entirely when FOW hasn't been populated for this team
+	// yet — the map lookup would answer "not tracked" anyway.
+	if (!m_bFOWReady.load(std::memory_order_acquire)) return false;
+	std::scoped_lock lk(m_FOWMutex);
+	auto it = m_FOWVisibleByAddr.find(entityAddress);
+	if (it == m_FOWVisibleByAddr.end()) return false;
 	return it->second;
 }

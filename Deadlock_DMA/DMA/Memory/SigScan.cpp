@@ -55,6 +55,22 @@ uint64_t FindSignature(DMA_Connection* Conn, const char* signature,
 	if (!signature || signature[0] == '\0' || range_start >= range_end)
 		return 0;
 
+	// Count pattern bytes up front so we can refuse to start a candidate too
+	// close to range_end. Without this, a sig whose first byte lands in the
+	// last (pattern_bytes-1) bytes of the range would run the loop past
+	// range_end before hitting the pat[2]==0 terminator, silently returning
+	// no-match even though the sig is present.
+	size_t pattern_bytes = 0;
+	for (const char* p = signature; *p; )
+	{
+		while (*p == ' ') p++;
+		if (!*p) break;
+		pattern_bytes++;
+		p += (*p == '?') ? 1 : 2;
+	}
+	if (pattern_bytes == 0 || range_end - range_start < pattern_bytes)
+		return 0;
+
 	std::vector<uint8_t> buffer(range_end - range_start);
 	if (!VMMDLL_MemReadEx(Conn->GetHandle(), PID, range_start,
 	                      buffer.data(), static_cast<DWORD>(buffer.size()), 0, VMMDLL_FLAG_NOCACHE))
@@ -63,9 +79,14 @@ uint64_t FindSignature(DMA_Connection* Conn, const char* signature,
 	const char* pat = signature;
 	uint64_t first_match = 0;
 	bool fullMatch = false;
+	const uint64_t last_start = range_end - pattern_bytes;
 
 	for (uint64_t i = range_start; i < range_end; i++)
 	{
+		// If no candidate is in progress and i is past the last legal start,
+		// no full match is possible from here on — bail early.
+		if (!first_match && i > last_start) break;
+
 		if (*pat == '?' || buffer[i - range_start] == GetByte(pat))
 		{
 			if (!first_match)

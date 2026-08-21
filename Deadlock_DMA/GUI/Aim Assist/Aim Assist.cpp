@@ -11,13 +11,8 @@
 
 void AimAssist::RenderSettings()
 {
-	static bool bFirstFrame{ true };
-	if (bFirstFrame)
-	{
-		(void)MyMakcu::m_Device.connect();
-		bFirstFrame = false;
-	}
-
+	// Reconnect is handled by OnFrame's throttled retry, not tied to opening
+	// this tab. Startup connect already ran via MyMakcu::Initialize().
 	if (MyMakcu::m_Device.isConnected()) {
 		ImGui::TextColored(ImColor(0, 255, 0), "Makcu Connected!");
 	}
@@ -139,7 +134,7 @@ Vector2 AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen
 			if (ControllerIt->IsDead())
 				continue;
 
-			if (bVisibleOnly && !EntityList::IsEntityVisible(Pawn.m_EntityAddress))
+			if (bVisibleOnly && !EntityList::IsEntityConfirmedVisible(Pawn.m_EntityAddress))
 				continue;
 
 			HitboxSlot slot = eHitboxSlot;
@@ -170,7 +165,21 @@ Vector2 AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen
 
 void AimAssist::OnFrame(DMA_Connection* Conn)
 {
-	if (MyMakcu::m_Device.isConnected() == false) return;
+	// Throttled reconnect: if the device was unplugged (or the startup
+	// connect from MyMakcu::Initialize failed because it wasn't plugged in
+	// yet), retry every 2s. Previously this retry lived in RenderSettings,
+	// so it only fired if the user opened the Aim Assist tab.
+	if (!MyMakcu::m_Device.isConnected())
+	{
+		static auto lastAttempt = std::chrono::steady_clock::time_point{};
+		auto now = std::chrono::steady_clock::now();
+		if (now - lastAttempt >= std::chrono::seconds(2))
+		{
+			(void)MyMakcu::m_Device.connect();
+			lastAttempt = now;
+		}
+		return;
+	}
 
 	static auto LastTime = std::chrono::steady_clock::time_point();
 

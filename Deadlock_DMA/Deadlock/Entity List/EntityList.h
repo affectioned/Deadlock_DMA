@@ -106,10 +106,22 @@ public: /* Interface variables */
 	static inline std::mutex m_FOWMutex{};
 	static inline uintptr_t m_FOWTeamAddress = 0;
 	static inline std::unordered_map<uintptr_t, bool> m_FOWVisibleByAddr{};
+	// True once FullFOWRefresh has written a populated map for the current
+	// team. Cleared when DiscoverFOWTeam sees the team address change. Lets
+	// callers distinguish "no data yet" from "have data, this entity isn't
+	// visible" — critical for aim-assist / strict-hide, which must fail
+	// closed rather than lock onto invisible enemies during startup or
+	// team-switch windows.
+	static inline std::atomic<bool> m_bFOWReady{ false };
 
 	static void DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc);
 	static void FullFOWRefresh(DMA_Connection* Conn, Process* Proc);
+	// Fail-open on unknown: used for visibility coloring where "no data"
+	// should render like "visible" rather than paint every enemy as hidden.
 	static bool IsEntityVisible(uintptr_t entityAddress);
+	// Fail-closed on unknown: used for aim-assist target gating and
+	// strict-hide ESP where we must never treat an unknown pawn as visible.
+	static bool IsEntityConfirmedVisible(uintptr_t entityAddress);
 
 private: /* Internal variables */
 	static inline uintptr_t m_EntitySystem_Address = 0;
