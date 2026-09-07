@@ -72,6 +72,22 @@ void EntityList::GetEntityListAddresses(DMA_Connection* Conn, Process* Proc)
 	m_sr->Clear();
 	m_sr->AddRaw(StartEntityListArray, MAX_ENTITY_LISTS * sizeof(uintptr_t), m_EntityList_Addresses.data());
 	m_sr->Execute();
+
+	// Self-heal: if two consecutive reads come back all-zero, the cached
+	// m_EntitySystem_Address is likely stale (game rebuilt the entity system
+	// on an internal transition). Clear it so GetEntitySystemAddress
+	// re-derives next cycle — its "skip if unchanged" guard would otherwise
+	// pin us to the stale value indefinitely.
+	static int s_ConsecutiveEmpty = 0;
+	bool empty = true;
+	for (auto a : m_EntityList_Addresses) if (a) { empty = false; break; }
+	if (!empty) { s_ConsecutiveEmpty = 0; return; }
+	if (++s_ConsecutiveEmpty == 2)
+	{
+		Log::Warn("[EL] empty 2x — clearing EntSys 0x{:X} to force re-read",
+			m_EntitySystem_Address);
+		m_EntitySystem_Address = 0;
+	}
 }
 
 void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
