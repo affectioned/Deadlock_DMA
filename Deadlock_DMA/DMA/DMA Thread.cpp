@@ -32,7 +32,9 @@ void DMA_Thread_Main()
 
 	while (bRunning)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		// yield() releases the timeslice without arming a Windows timer, so we
+		// don't eat a 1-15ms scheduler quantum every tick like sleep_for(1ms) did.
+		std::this_thread::yield();
 
 		auto now = std::chrono::steady_clock::now();
 
