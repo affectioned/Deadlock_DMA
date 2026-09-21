@@ -94,26 +94,34 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 {
 	std::scoped_lock Lock(m_PawnMutex, m_ControllerMutex);
 
-	for (auto& Arr : m_CompleteEntityList)
-		Arr.fill({});
+	static std::array<uintptr_t, MAX_ENTITY_LISTS> s_PrevAddrs{};
 
 	size_t EntityListSize = sizeof(CEntityIdentity) * MAX_ENTITIES;
+	int listsRead = 0;
 
 	m_sr->Clear();
 
 	for (int i = 0; i < MAX_ENTITY_LISTS; i++)
 	{
 		auto& Addr = m_EntityList_Addresses[i];
-		auto& WriteAddr = m_CompleteEntityList[i][0];
+		if (Addr == 0)
+		{
+			if (s_PrevAddrs[i] != 0)
+				m_CompleteEntityList[i].fill({});
+			s_PrevAddrs[i] = 0;
+			continue;
+		}
+		if (Addr == s_PrevAddrs[i]) continue;
 
-		if (Addr == 0) continue;
-
-		m_sr->AddRaw(Addr, static_cast<DWORD>(EntityListSize), &WriteAddr);
+		m_CompleteEntityList[i].fill({});
+		m_sr->AddRaw(Addr, static_cast<DWORD>(EntityListSize), &m_CompleteEntityList[i][0]);
+		s_PrevAddrs[i] = Addr;
+		++listsRead;
 	}
 
-	m_sr->Execute();
+	if (listsRead > 0) m_sr->Execute();
 
-	DbgLog("Entity Map Updated.");
+	DbgLog("Entity Map Updated ({} lists re-read).", listsRead);
 }
 
 void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)

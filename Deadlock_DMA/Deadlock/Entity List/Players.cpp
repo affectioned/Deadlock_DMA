@@ -1,6 +1,8 @@
 #include "pch.h"
 
 #include "EntityList.h"
+#include "Deadlock/Deadlock.h"
+#include "Deadlock/Offsets.h"
 #include "GUI/Query.h"
 #include "DMA/Memory/PhaseTimings.h"
 
@@ -122,18 +124,17 @@ void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)
 
 	std::scoped_lock Lock(m_PawnMutex);
 
-	// Split the DMA I/O from the CPU-side bone math. If Bones ever grows to a
-	// significant fraction of QuickPawn, we can drop its cadence independently
-	// of the position/health scatter. Scatter uses SCATTER_SCOPE so the dump
-	// also surfaces batch size (bytes / range count) — key for deciding
-	// between "pack more per Execute" and "lower cadence for cold fields".
+	Matrix44 viewMat{};
 	{
 		SCATTER_SCOPE("QuickPawn::Scatter", *m_sr);
 		m_sr->Clear();
 		for (auto& Pawn : m_PlayerPawns)
 			Pawn.QuickRead(*m_sr);
+		uintptr_t vmAddr = Proc->GetModuleBase("client.dll") + Offsets::ViewMatrix;
+		m_sr->Add(vmAddr, &viewMat);
 		m_sr->Execute();
 	}
+	Deadlock::ApplyViewMatrix(viewMat);
 	{
 		PHASE_SCOPE("QuickPawn::Bones");
 		for (auto& Pawn : m_PlayerPawns)

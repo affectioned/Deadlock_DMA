@@ -32,11 +32,10 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 
 	m_Timers =
 	{
-		// Render-driven values: overlay/aim-assist read these every frame. 8 ms = 125 Hz,
-		// already 2× any practical monitor rate. Aligned with Yaw + QuickPawn so
-		// they tend to fire on the same DMA tick.
-		// View matrix update also derives client yaw — no separate timer.
-		{ ms(8),     timed("ViewMatrix",      [conn]       { Deadlock::UpdateViewMatrix(conn); }) },
+		// ViewMatrix is piggybacked onto QuickPawn's scatter for free when
+		// players are active. This standalone timer is a slow fallback for
+		// when QuickPawn is disabled (no players on screen).
+		{ ms(1000),  timed("ViewMatrix",      [conn]       { Deadlock::UpdateViewMatrix(conn); }) },
 		{ ms(1000),  timed("ServerTime",      [conn]       { Deadlock::UpdateServerTime(conn); }) },
 		// Local controller pointer effectively never moves during a match.
 		{ ms(30000), timed("LocalAddrs",      [conn]       { Deadlock::UpdateLocalPlayerAddresses(conn); }) },
@@ -48,10 +47,9 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 		{ ms(16),    timed("QuickTrooper",    [conn, proc] { EntityList::QuickTrooperRefresh(conn, proc); }) },
 
 		{ ms(2000),  timed("FullPawn",        [conn, proc] { EntityList::FullPawnRefresh_lk(conn, proc); }) },
-		// 4ms = 250 Hz, one fresh sample per 240Hz frame. ~1.2ms/tick * 250 = 30% of
-		// the DMA thread, but still leaves headroom and eliminates jitter on
-		// high-refresh monitors.
-		{ ms(4),     timed("QuickPawn",       [conn, proc] { EntityList::QuickPawnRefresh(conn, proc); }) },
+		// 8ms = 125 Hz, one fresh sample per frame on a 120Hz display. Also
+		// piggybacks the ViewMatrix read onto the same scatter for free.
+		{ ms(8),     timed("QuickPawn",       [conn, proc] { EntityList::QuickPawnRefresh(conn, proc); }) },
 
 		{ ms(3000),  timed("FullCamp",        [conn, proc] { EntityList::FullMonsterCampRefresh(conn, proc); }) },
 		{ ms(250),   timed("QuickCamp",       [conn, proc] { EntityList::QuickMonsterCampRefresh(conn, proc); }) },
@@ -74,9 +72,9 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 		// hero swap or build change, so a slow cadence is fine.
 		{ ms(2000),  timed("BulletSpeed",     [conn, proc] { EntityList::RefreshPrimaryWeaponBulletSpeed(conn, proc); }) },
 
-		// Visibility: 60 Hz keeps "visible only" gating responsive when enemies
-		// duck behind walls or step out of vision.
-		{ ms(16),    timed("FullFOW",         [conn, proc] { EntityList::FullFOWRefresh(conn, proc); }) },
+		// Visibility: 30 Hz is plenty for "visible only" gating — enemies
+		// don't peek corners faster than human reaction time.
+		{ ms(32),    timed("FullFOW",         [conn, proc] { EntityList::FullFOWRefresh(conn, proc); }) },
 
 		// Discovers new entity addresses + scans for the populated FOW team.
 		{ ms(1000),  timed("FullUpdate",      [conn, proc] { EntityList::FullUpdate(conn, proc); }) },

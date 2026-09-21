@@ -44,11 +44,17 @@ void Deadlock::UpdateViewMatrix(DMA_Connection* Conn)
 	// GetViewMatrix()/SetClientYaw() (~1080 redundant ticks per 10 s).
 	float NewYaw = atan2(NewMatrix.m01, NewMatrix.m00);
 
+	ApplyViewMatrix(NewMatrix);
+}
+
+void Deadlock::ApplyViewMatrix(const Matrix44& mat)
+{
+	float yaw = atan2(mat.m01, mat.m00);
 	{
 		std::scoped_lock lock(ViewMatrixMutex);
-		m_ViewMatrix = NewMatrix;
+		m_ViewMatrix = mat;
 	}
-	SetClientYaw(NewYaw);
+	SetClientYaw(yaw);
 }
 
 Matrix44 Deadlock::GetViewMatrix()
