@@ -33,14 +33,48 @@ static BOOL WINAPI OnConsoleExit(DWORD ctrlType)
 	return FALSE;
 }
 
+static PROCESS_INFORMATION s_tracyProc{};
+
+static void LaunchTracyCapture(const std::filesystem::path& exeDir)
+{
+	auto capture = exeDir / "tracy-capture.exe";
+	if (!std::filesystem::exists(capture)) return;
+
+	auto traceFile = exeDir / "trace.tracy";
+	std::wstring cmd = L"\"" + capture.wstring() + L"\" -o \"" + traceFile.wstring() + L"\" -f";
+
+	STARTUPINFOW si{};
+	si.cb = sizeof(si);
+	if (CreateProcessW(nullptr, cmd.data(), nullptr, nullptr, FALSE,
+		CREATE_NO_WINDOW, nullptr, exeDir.wstring().c_str(), &si, &s_tracyProc))
+	{
+		Log::Info("[Tracy] capture started (pid=%lu)", s_tracyProc.dwProcessId);
+	}
+}
+
+static void StopTracyCapture()
+{
+	if (!s_tracyProc.hProcess) return;
+	GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, s_tracyProc.dwProcessId);
+	if (WaitForSingleObject(s_tracyProc.hProcess, 3000) == WAIT_TIMEOUT)
+		TerminateProcess(s_tracyProc.hProcess, 0);
+	CloseHandle(s_tracyProc.hProcess);
+	CloseHandle(s_tracyProc.hThread);
+	s_tracyProc = {};
+}
+
 int main()
 {
+	std::filesystem::path exeDir;
 	{
 		wchar_t exePath[MAX_PATH]{};
 		GetModuleFileNameW(nullptr, exePath, MAX_PATH);
-		auto logPath = std::filesystem::path(exePath).parent_path() / "deadlock_dma.log";
+		exeDir = std::filesystem::path(exePath).parent_path();
+		auto logPath = exeDir / "deadlock_dma.log";
 		Log::Init(logPath.wstring());
 	}
+
+	LaunchTracyCapture(exeDir);
 
 	SetConsoleCtrlHandler(OnConsoleExit, TRUE);
 
@@ -77,6 +111,8 @@ int main()
 	// Covers the END-key path. Console-close goes through OnConsoleExit which
 	// also saves; the resulting double-save is harmless and idempotent.
 	Config::SaveActive();
+
+	StopTracyCapture();
 
 	DMAThread.join();
 
