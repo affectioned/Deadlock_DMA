@@ -8,6 +8,7 @@
 #include "Makcu/MyMakcu.h"
 #include "Deadlock/DeadlockContext.h"
 #include "Bootstrap/Bootstrap.h"
+#include "DMA/Memory/PhaseTimings.h"
 
 std::atomic<bool> bRunning{ true };
 
@@ -78,7 +79,12 @@ int main(int argc, char** argv)
 	for (int i = 1; i < argc; ++i)
 		if (strcmp(argv[i], "--tracy") == 0) tracy = true;
 
-	if (tracy) LaunchTracyCapture(exeDir);
+	if (tracy)
+	{
+		LaunchTracyCapture(exeDir);
+		PhaseTimings::SetJsonPath(exeDir / "profiling_report.json");
+		Log::Info("[Tracy] profiling report -> profiling_report.json");
+	}
 
 	SetConsoleCtrlHandler(OnConsoleExit, TRUE);
 
@@ -116,6 +122,7 @@ int main(int argc, char** argv)
 	// also saves; the resulting double-save is harmless and idempotent.
 	Config::SaveActive();
 
+	PhaseTimings::FinalizeJson();
 	StopTracyCapture();
 
 	DMAThread.join();

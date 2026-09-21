@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include <filesystem>
 
 #include "DMA/Memory/ScatterRead.h"
 
@@ -100,10 +101,8 @@ struct ScopedScatter {
 };
 
 class PhaseTimings {
+	struct Row { std::string_view name; PhaseUs* phase; };
 public:
-	// Look up (or create) the named accumulator. Returned reference is stable
-	// for program lifetime — values live on the heap via unique_ptr, so map
-	// rehashes don't move them. Call sites can cache the reference.
 	static PhaseUs& Get(const std::string& name) {
 		std::scoped_lock lk(s_Mutex);
 		auto& slot = s_Phases[name];
@@ -111,11 +110,10 @@ public:
 		return *slot;
 	}
 
-	// Log every phase that recorded at least one sample (sorted by total
-	// descending) then reset the accumulators. Thread-safe.
+	static void SetJsonPath(const std::filesystem::path& path) { s_JsonPath = path; }
+
 	static void DumpAndReset() {
 		std::scoped_lock lk(s_Mutex);
-		struct Row { std::string_view name; PhaseUs* phase; };
 		std::vector<Row> rows;
 		rows.reserve(s_Phases.size());
 		for (auto& [name, p] : s_Phases) {
@@ -125,9 +123,7 @@ public:
 		if (rows.empty()) return;
 		std::sort(rows.begin(), rows.end(),
 			[](const Row& a, const Row& b) { return a.phase->sum > b.phase->sum; });
-		// Filter rows below 500us total — measurement noise clogs the dump with
-		// zero-work phases. Reset those too so their counters don't leak into
-		// the next window.
+
 		Log::Info("[PT] (us; sum-sorted)");
 		for (auto& r : rows) {
 			if (r.phase->sum < 500) { r.phase->reset(); continue; }
@@ -146,11 +142,63 @@ public:
 			}
 			r.phase->reset();
 		}
+
+		if (!s_JsonPath.empty())
+			WriteJson(rows);
 	}
 
 private:
 	static inline std::mutex s_Mutex;
 	static inline std::unordered_map<std::string, std::unique_ptr<PhaseUs>> s_Phases;
+	static inline std::filesystem::path s_JsonPath;
+	static inline int s_WindowIndex = 0;
+
+	static void WriteJson(const std::vector<Row>& rows) {
+		auto now = std::chrono::system_clock::now();
+		auto epoch_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+			now.time_since_epoch()).count();
+
+		bool firstWindow = (s_WindowIndex == 0);
+		FILE* f = nullptr;
+		if (firstWindow) {
+			f = _wfopen(s_JsonPath.wstring().c_str(), L"w");
+			if (!f) return;
+			fprintf(f, "{\n  \"tool\": \"Deadlock_DMA PhaseTimings\",\n  \"windows\": [\n");
+		} else {
+			f = _wfopen(s_JsonPath.wstring().c_str(), L"a");
+			if (!f) return;
+		}
+
+		if (!firstWindow) fprintf(f, ",\n");
+		fprintf(f, "    {\n      \"window\": %d,\n      \"timestamp_ms\": %lld,\n      \"phases\": [\n",
+			s_WindowIndex, epoch_ms);
+
+		bool first = true;
+		for (auto& r : rows) {
+			if (r.phase->sum < 500) continue;
+			if (!first) fprintf(f, ",\n");
+			first = false;
+			fprintf(f, "        { \"name\": \"%.*s\", \"sum_us\": %lld, \"calls\": %d, \"avg_us\": %lld, \"max_us\": %lld",
+				(int)r.name.size(), r.name.data(),
+				r.phase->sum, r.phase->samples, r.phase->avg(), r.phase->max);
+			if (r.phase->ranges_sum > 0)
+				fprintf(f, ", \"avg_bytes\": %lld, \"avg_ranges\": %lld",
+					r.phase->bytesAvg(), r.phase->rangesAvg());
+			fprintf(f, " }");
+		}
+		fprintf(f, "\n      ]\n    }");
+		fclose(f);
+		s_WindowIndex++;
+	}
+
+public:
+	static void FinalizeJson() {
+		if (s_JsonPath.empty()) return;
+		FILE* f = _wfopen(s_JsonPath.wstring().c_str(), L"a");
+		if (!f) return;
+		fprintf(f, "\n  ]\n}\n");
+		fclose(f);
+	}
 };
 
 #define PHASE_TOKEN_PASTE_INNER(a, b) a##b
