@@ -54,6 +54,7 @@ void MainWindow::RequestMonitorApply(int index)
 
 void Render(ImGuiContext* ctx)
 {
+	ZoneScopedN("Render");
 	ImGui::SetCurrentContext(ctx);
 
 	if (Fonts::m_IBMPlexMonoSemiBold == nullptr)
@@ -78,6 +79,7 @@ void Render(ImGuiContext* ctx)
 
 bool MainWindow::OnFrame()
 {
+	ZoneScopedN("OnFrame");
 	GuiWatchdog::GuiStage("MainWindow::PreFrame");
 	PreFrame();
 
@@ -318,6 +320,7 @@ bool MainWindow::PreFrame()
 
 bool MainWindow::PostFrame()
 {
+	ZoneScopedN("PostFrame");
 	ImGui::Render();
 	const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
 	g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
@@ -327,5 +330,6 @@ bool MainWindow::PostFrame()
 	// Present with VSync toggle from Main Menu
 	HRESULT hr = g_pSwapChain->Present(MainMenu::bVSync ? 1 : 0, 0);
 
+	FrameMark;
 	return true;
 }

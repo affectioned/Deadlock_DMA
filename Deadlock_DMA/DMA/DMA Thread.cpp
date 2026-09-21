@@ -36,6 +36,7 @@ void DMA_Thread_Main()
 		// don't eat a 1-15ms scheduler quantum every tick like sleep_for(1ms) did.
 		std::this_thread::yield();
 
+		FrameMarkStart("DMA");
 		auto now = std::chrono::steady_clock::now();
 
 		// MEM cache: physical-page contents. 50ms keeps scatter reads fresh
@@ -58,6 +59,7 @@ void DMA_Thread_Main()
 		}
 
 		g_GameContext->Tick(conn, now);
+		FrameMarkEnd("DMA");
 	}
 
 	timeEndPeriod(1);

@@ -63,6 +63,9 @@
     <ClCompile Include="GUI\Main Window\Main Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dependencies\Tracy\0.13.0\TracyClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\Dependencies\ImGui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

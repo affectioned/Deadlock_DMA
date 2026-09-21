@@ -23,6 +23,7 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 	auto timed = [](const char* name, std::function<void()> f) {
 		PhaseUs& phase = PhaseTimings::Get(name);
 		return [&phase, name, f = std::move(f)] {
+			ZoneTransientN(___tracy_zone, name, true);
 			GuiWatchdog::DmaStage(name);
 			ScopedUs scope(phase, name);
 			f();
