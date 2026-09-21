@@ -124,6 +124,9 @@ public:
 		std::sort(rows.begin(), rows.end(),
 			[](const Row& a, const Row& b) { return a.phase->sum > b.phase->sum; });
 
+		if (!s_JsonPath.empty())
+			WriteJson(rows);
+
 		Log::Info("[PT] (us; sum-sorted)");
 		for (auto& r : rows) {
 			if (r.phase->sum < 500) { r.phase->reset(); continue; }
@@ -142,9 +145,6 @@ public:
 			}
 			r.phase->reset();
 		}
-
-		if (!s_JsonPath.empty())
-			WriteJson(rows);
 	}
 
 private:
