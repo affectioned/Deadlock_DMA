@@ -31,7 +31,7 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 
 	m_Timers =
 	{
-		// Render-driven values: ESP/aimbot read these every frame. 8 ms = 125 Hz,
+		// Render-driven values: overlay/aim-assist read these every frame. 8 ms = 125 Hz,
 		// already 2× any practical monitor rate. Aligned with Yaw + QuickPawn so
 		// they tend to fire on the same DMA tick.
 		// View matrix update also derives client yaw — no separate timer.

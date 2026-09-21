@@ -1,6 +1,6 @@
 # Deadlock DMA
 
-An open-source DMA cheat client for Valve's **Deadlock**, written in **C++23**.
+An open-source DMA client for Valve's **Deadlock**, written in **C++23**.
 
 > **This is an actively maintained fork.** The [original repository](https://github.com/CyN1ckal/Deadlock_DMA) by CyN1ckal has been archived. All ongoing development and bug fixes happen here.
 
@@ -14,12 +14,12 @@ This project is intended **strictly for educational and research purposes** — 
 - How Source 2 entity systems, scatter reads, and networked field offsets are structured
 - How ImGui overlays and input emulation devices interface with game data
 
-**Do not use this software in online multiplayer games.** Using cheats in live games violates the terms of service of the game and the platform, harms other players, and may result in permanent bans or legal consequences. The authors take no responsibility for misuse.
+**Do not use this software in online multiplayer games.** Using this tool in live games violates the terms of service of the game and the platform, harms other players, and may result in permanent bans or legal consequences. The authors take no responsibility for misuse.
 
 ## Requirements
 
 - [MemProcFS FPGA](https://github.com/ufrisk/MemProcFS) — DMA hardware driver
-- [Makcu](https://github.com/K4HVH/makcu-cpp) — USB HID mouse controller for aimbot
+- [Makcu](https://github.com/K4HVH/makcu-cpp) — USB HID mouse controller for aim assist
 - Visual Studio 2022 with C++23 support
 
 ## Build

@@ -613,11 +613,11 @@ Every function registered as a timer needs a tuned interval. Fill these in for y
 - [ ] **View / camera matrix** — how often the projection matrix must be re-read. Typical: `2`–`8` ms.
 - [ ] **Local player address** — how often to re-resolve the local player pointer. Can be slow; re-read only on respawn or match start. Typical: `5000`–`15000` ms.
 - [ ] **Full actor/entity list rebuild** — scans the engine object list from scratch and re-populates all entity vectors. Expensive; run infrequently. Typical: `1000`–`5000` ms.
-- [ ] **Quick actor update** (positions, health, state) — reads only already-known object addresses; no list scan. Must be fast enough for smooth ESP. Typical: `8`–`16` ms.
+- [ ] **Quick actor update** (positions, health, state) — reads only already-known object addresses; no list scan. Must be fast enough for smooth overlay rendering. Typical: `8`–`16` ms.
 - [ ] **Full NPC / minion refresh** — if the game has NPC types tracked separately from players. Typical: `1000`–`3000` ms.
 - [ ] **Quick NPC update** — position-only pass on known NPC addresses. Typical: `16`–`100` ms.
 - [ ] **Server time / game clock** — how often to sync the server-side game clock. Typical: `500`–`1000` ms.
-- [ ] **Aimbot / keybind poll** — how often to check key state and fire aimbot logic. Must be tight. Typical: `5`–`16` ms.
+- [ ] **Aim-assist / keybind poll** — how often to check key state and fire aim-assist logic. Must be tight. Typical: `5`–`16` ms.
 - [ ] **Any other game-specific reads** — e.g. item pickups, world state, score. Set intervals based on how quickly the data changes and how stale it can be before it affects gameplay.
 
 Guideline: if a slow timer (> 500 ms) consistently blocks a fast one (< 16 ms), split them into separate `GameContext` implementations chained from the same `IGameContext`, or simply profile and reduce the slow function's work per call.

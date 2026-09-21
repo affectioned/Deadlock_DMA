@@ -61,7 +61,7 @@ void Render(ImGuiContext* ctx)
 
 	ImGui::PushFont(Fonts::m_IBMPlexMonoSemiBold, 16.0f);
 
-	// Overlay layer — fullscreen ESP draw + minimap. Always on (gated by their
+	// Overlay layer — fullscreen overlay draw + minimap. Always on (gated by their
 	// own master toggles).
 	GuiWatchdog::GuiStage("Fuser::Render");
 	Fuser::Render();
@@ -69,7 +69,7 @@ void Render(ImGuiContext* ctx)
 	Radar::Render();
 
 	// Settings layer — single tabbed window hosts every panel's body
-	// (Aimbot/Fuser/ESP/Colors/Keybinds/Config/PlayerList/TrooperList/ClassList).
+	// (AimAssist/Fuser/Visuals/Colors/Keybinds/Config/PlayerList/TrooperList/ClassList).
 	GuiWatchdog::GuiStage("MainMenu::Render");
 	MainMenu::Render();
 

@@ -188,7 +188,7 @@ void EntityList::FullFOWRefresh(DMA_Connection* Conn, Process* Proc)
 
 	// Resolve entIndex -> entity address. Entity indices in Source 2 are global
 	// (same scheme as CHandle): list = idx / MAX_ENTITIES, entry = idx % MAX_ENTITIES.
-	// Stash keyed by address so aimbot / ESP can do an O(1) lookup with the pawn
+	// Stash keyed by address so aim-assist / overlay can do an O(1) lookup with the pawn
 	// pointer they already hold.
 	std::scoped_lock lk(m_FOWMutex);
 	m_FOWVisibleByAddr.clear();

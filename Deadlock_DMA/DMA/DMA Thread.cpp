@@ -50,7 +50,7 @@ void DMA_Thread_Main()
 		// after a map/session transition (page tables shift) VMMDLL kept using
 		// stale mappings and entities appeared to vanish until the next flush.
 		// 250ms full refresh caps that stall at a quarter second — indistinguishable
-		// from live to the ESP. TLB refresh is heavier than MEM but still cheap.
+		// from live to the overlay. TLB refresh is heavier than MEM but still cheap.
 		if (now - lastTlbRefresh >= std::chrono::milliseconds(250))
 		{
 			VMMDLL_ConfigSet(conn->GetHandle(), VMMDLL_OPT_REFRESH_FREQ_TLB, 1);

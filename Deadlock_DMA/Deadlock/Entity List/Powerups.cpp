@@ -9,7 +9,7 @@ namespace
 {
 	// CInWorldItemPanel::m_hTrackedEntity offset (source2sdk client dump,
 	// CInWorldItemPanel.hpp). The handle resolves to the pickup the panel is
-	// floating above, which is what we actually want to name in the ESP.
+	// floating above, which is what we actually want to name in the overlay.
 	constexpr uintptr_t kInWorldItemPanel_hTrackedEntity = 0xBF0;
 
 	// Maps a tracked-entity class name (e.g. "citadel_item_pickup_idol") to a
@@ -77,7 +77,7 @@ void EntityList::FullPowerupRefresh(DMA_Connection* Conn, Process* Proc)
 
 	// Extra pass for in_world_item_panel: resolve m_hTrackedEntity → tracked
 	// pickup's class name → short label. Panels far outnumber crates, and
-	// leaving them all as "Panel" is useless visually; this turns the ESP
+	// leaving them all as "Panel" is useless visually; this turns the overlay
 	// into a labelled minimap of every interactive pickup on the map.
 	struct PanelWork
 	{

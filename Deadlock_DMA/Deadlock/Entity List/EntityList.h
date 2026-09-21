@@ -120,7 +120,7 @@ public: /* Interface variables */
 	// should render like "visible" rather than paint every enemy as hidden.
 	static bool IsEntityVisible(uintptr_t entityAddress);
 	// Fail-closed on unknown: used for aim-assist target gating and
-	// strict-hide ESP where we must never treat an unknown pawn as visible.
+	// strict-hide overlay where we must never treat an unknown pawn as visible.
 	static bool IsEntityConfirmedVisible(uintptr_t entityAddress);
 
 private: /* Internal variables */

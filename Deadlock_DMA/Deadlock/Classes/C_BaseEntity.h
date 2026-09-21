@@ -4,7 +4,7 @@
 #include "Deadlock/Offsets.h"
 
 // Source 2 default world units. Used wherever speeds/distances cross the
-// memory ↔ player-facing boundary (Aimbot bullet-speed display, ESP nametag
+// memory ↔ player-facing boundary (aim-assist bullet-speed display, overlay nametag
 // distance, etc.).
 inline constexpr float HammerUnitsPerMeter = 52.0f;
 

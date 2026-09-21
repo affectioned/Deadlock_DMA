@@ -6,7 +6,7 @@
 // Resolves the local pawn's primary-weapon base bullet speed from the ability
 // VData chain. This is the static-template value: hero stat scaling and item
 // %BulletSpeed bonuses (server-side) aren't included. Resets the cached value
-// to 0 on any failure so the Aimbot priority chain falls back to default
+// to 0 on any failure so the aim-assist priority chain falls back to default
 // instead of using a stale previous-hero value across hero swaps/respawns.
 void EntityList::RefreshPrimaryWeaponBulletSpeed(DMA_Connection* Conn, Process* Proc)
 {
