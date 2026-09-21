@@ -63,7 +63,7 @@ static void StopTracyCapture()
 	s_tracyProc = {};
 }
 
-int main()
+int main(int argc, char** argv)
 {
 	std::filesystem::path exeDir;
 	{
@@ -74,7 +74,11 @@ int main()
 		Log::Init(logPath.wstring());
 	}
 
-	LaunchTracyCapture(exeDir);
+	bool tracy = false;
+	for (int i = 1; i < argc; ++i)
+		if (strcmp(argv[i], "--tracy") == 0) tracy = true;
+
+	if (tracy) LaunchTracyCapture(exeDir);
 
 	SetConsoleCtrlHandler(OnConsoleExit, TRUE);
 
