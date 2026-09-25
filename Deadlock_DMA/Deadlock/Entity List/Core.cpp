@@ -94,8 +94,10 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 {
 	std::scoped_lock Lock(m_PawnMutex, m_ControllerMutex);
 
-	static std::array<uintptr_t, MAX_ENTITY_LISTS> s_PrevAddrs{};
-
+	// Chunk arrays are long-lived — their pointers don't change when entities
+	// spawn/despawn, only the slots inside do. Must re-read every cycle; caching
+	// by chunk address froze the map at attach time and killed visuals after
+	// the match ended.
 	size_t EntityListSize = sizeof(CEntityIdentity) * MAX_ENTITIES;
 	int listsRead = 0;
 
@@ -104,18 +106,10 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 	for (int i = 0; i < MAX_ENTITY_LISTS; i++)
 	{
 		auto& Addr = m_EntityList_Addresses[i];
-		if (Addr == 0)
-		{
-			if (s_PrevAddrs[i] != 0)
-				m_CompleteEntityList[i].fill({});
-			s_PrevAddrs[i] = 0;
-			continue;
-		}
-		if (Addr == s_PrevAddrs[i]) continue;
-
 		m_CompleteEntityList[i].fill({});
+		if (Addr == 0) continue;
+
 		m_sr->AddRaw(Addr, static_cast<DWORD>(EntityListSize), &m_CompleteEntityList[i][0]);
-		s_PrevAddrs[i] = Addr;
 		++listsRead;
 	}
 
