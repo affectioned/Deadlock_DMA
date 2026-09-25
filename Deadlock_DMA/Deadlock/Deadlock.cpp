@@ -132,6 +132,15 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 	// EntityList::DiscoverPlayersByVTable classify the rest by vtable match.
 	uintptr_t pawnVT = newPawn ? Proc().ReadMem<uintptr_t>(Conn, newPawn) : 0;
 	uintptr_t ctrlVT = newCtrl ? Proc().ReadMem<uintptr_t>(Conn, newCtrl) : 0;
+
+	// During lobby->game transitions the entity memory is being rebuilt and
+	// the read can land on uninitialised data (e.g. 0x3F80000000000000 = 1.0f).
+	// Reject anything outside client.dll so garbage doesn't poison the cache.
+	size_t clientSize = Proc().GetModuleSize(GameModules::ClientDll);
+	auto inClient = [&](uintptr_t vt) { return vt >= clientBase && vt < clientBase + clientSize; };
+	if (!inClient(pawnVT)) pawnVT = 0;
+	if (!inClient(ctrlVT)) ctrlVT = 0;
+
 	EntityList::CachePlayerVTables(pawnVT, ctrlVT);
 
 	return true;
