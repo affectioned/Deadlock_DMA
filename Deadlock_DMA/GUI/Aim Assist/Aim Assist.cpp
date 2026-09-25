@@ -5,6 +5,7 @@
 #include "Aim Assist.h"
 #include "GUI/Fuser/Fuser.h"
 #include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Theme/Theme.h"
 #include "GUI/Watchdog/GuiWatchdog.h"
 #include "Makcu/MyMakcu.h"
 #include "Deadlock/Entity List/EntityList.h"
@@ -14,10 +15,10 @@ void AimAssist::RenderSettings()
 	// Reconnect is handled by OnFrame's throttled retry, not tied to opening
 	// this tab. Startup connect already ran via MyMakcu::Initialize().
 	if (MyMakcu::m_Device.isConnected()) {
-		ImGui::TextColored(ImColor(0, 255, 0), "Makcu Connected!");
+		ImGui::TextColored(Theme::Ok(), "Makcu Connected!");
 	}
 	else {
-		ImGui::TextColored(ImColor(255, 0, 0), "Makcu Disconnected!");
+		ImGui::TextColored(Theme::Bad(), "Makcu Disconnected!");
 	}
 
 	ImGui::Checkbox("Enable Aim Assist", &bMasterToggle);
@@ -56,11 +57,11 @@ void AimAssist::RenderSettings()
 		const float liveHu = EntityList::g_LocalBulletSpeed.load(std::memory_order_relaxed);
 
 		if (fManualBulletSpeedMs > 0.0f)
-			ImGui::TextColored(ImColor(80, 180, 255), "Using manual: %.0f m/s", fManualBulletSpeedMs);
+			ImGui::TextColored(Theme::Info(), "Using manual: %.0f m/s", fManualBulletSpeedMs);
 		else if (liveHu > 0.0f)
-			ImGui::TextColored(ImColor(0, 255, 0), "Auto-detected: %.0f m/s (from VData)", liveHu / HammerUnitsPerMeter);
+			ImGui::TextColored(Theme::Ok(), "Auto-detected: %.0f m/s (from VData)", liveHu / HammerUnitsPerMeter);
 		else
-			ImGui::TextColored(ImColor(255, 200, 0), "Auto-detect pending — defaulting to %.0f m/s.", kDefaultBulletSpeedMs);
+			ImGui::TextColored(Theme::Warn(), "Auto-detect pending — defaulting to %.0f m/s.", kDefaultBulletSpeedMs);
 	}
 }
 

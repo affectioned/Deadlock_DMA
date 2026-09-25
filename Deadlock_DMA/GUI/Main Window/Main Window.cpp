@@ -14,6 +14,8 @@
 #include "GUI/Fuser/Fuser.h"
 #include "GUI/Watchdog/GuiWatchdog.h"
 #include "GUI/Input/KeyboardPump.h"
+#include "GUI/Fuser/Visuals/Snapshot.h"
+#include "GUI/Theme/Theme.h"
 
 namespace
 {
@@ -61,6 +63,12 @@ void Render(ImGuiContext* ctx)
 		Fonts::Initialize(ImGui::GetIO());
 
 	ImGui::PushFont(Fonts::m_IBMPlexMonoSemiBold, 16.0f);
+
+	// Copy every entity bucket and the view matrix out from under the DMA thread
+	// exactly once per frame, then draw everything lock-free from that copy. Has
+	// to happen before Fuser and Radar — both read it, and either can be disabled.
+	GuiWatchdog::GuiStage("Snapshot::Acquire");
+	Snapshot::Acquire();
 
 	// Overlay layer — fullscreen overlay draw + minimap. Always on (gated by their
 	// own master toggles).
@@ -240,10 +248,19 @@ bool MainWindow::Initialize()
 	// Docking + multi-viewport disabled: viewports reparent ImGui windows as native OS
 	// windows, which fights the single layered-overlay HWND we just created.
 
+	// Dark is only the baseline Theme::Apply() captures for the handful of style
+	// fields it doesn't set itself.
 	ImGui::StyleColorsDark();
 
+	// Deadlock's palette, not stock ImGui dark. Re-applied by Theme::EnsureApplied
+	// whenever the accent changes; this is just the initial write so the first
+	// frame is already themed. Apply() bakes main_scale into the metrics itself —
+	// calling ScaleAllSizes here as well would double-scale, and re-applying the
+	// theme later would compound it again.
+	Theme::SetScale(main_scale);
+	Theme::Apply();
+
 	ImGuiStyle& style = ImGui::GetStyle();
-	style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
 	style.FontScaleDpi = main_scale;        // Set initial font scale. (using io.ConfigDpiScaleFonts=true makes this unnecessary. We leave both here for documentation purpose)
 	io.ConfigDpiScaleFonts = true;          // [Experimental] Automatically overwrite style.FontScaleDpi in Begin() when Monitor DPI changes. This will scale fonts but _NOT_ scale sizes/padding for now.
 

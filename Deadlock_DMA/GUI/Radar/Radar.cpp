@@ -3,6 +3,9 @@
 #include "Deadlock/Deadlock.h"
 #include "Deadlock/Entity List/EntityList.h"
 #include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Fuser/Visuals/Snapshot.h"
+#include "GUI/Fuser/Visuals/WorldText.h"
+#include "GUI/Theme/Theme.h"
 #include "GUI/Utils/ImageLoading.h"
 #include "Deadlock/Const/ETeam.h"
 #include <numbers>
@@ -44,7 +47,8 @@ ImVec2 Radar::GetLocalPlayerScreenPos(const ImVec2& RadarWindowCenter, const Vec
 		return RadarWindowCenter;
 	}
 	else {
-		auto LocalPlayerPos = EntityList::GetLocalPawnPosition();
+		const FrameSnapshot& snap = Snapshot::Current();
+		const Vector3 LocalPlayerPos = snap.localPosition;
 
 		ImVec2 Delta = { LocalPlayerPos.x - RadarCenterGamePos.x, LocalPlayerPos.y - RadarCenterGamePos.y };
 
@@ -87,11 +91,13 @@ ImVec2 Radar::GetRadarSizeInGameUnits()
 	return ImVec2(WindowSize.x * fRadarScale, WindowSize.y * fRadarScale);
 }
 
-ImColor GetRadarColor(const C_CitadelPlayerPawn& Pawn) {
-	if (Pawn.IsLocalPlayer())
+// Takes the snapshot's precomputed view rather than calling Pawn.IsLocalPlayer(),
+// which reaches into the live EntityList without holding its lock.
+static ImColor GetRadarColor(const FrameSnapshot::PawnView& View) {
+	if (View.localPlayer)
 		return ColorPicker::LocalPlayerRadar;
 
-	if (Pawn.m_TeamNum == ETeam::HIDDEN_KING) {
+	if (View.pawn->m_TeamNum == ETeam::HIDDEN_KING) {
 		return ColorPicker::HiddenKingTeamColor;
 	}
 	else {
@@ -101,23 +107,25 @@ ImColor GetRadarColor(const C_CitadelPlayerPawn& Pawn) {
 
 void Radar::DrawEntities()
 {
+	const FrameSnapshot& snap = Snapshot::Current();
+
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
 	auto WindowSize = ImGui::GetWindowSize();
 
 	const ImVec2 RadarWindowCenter = { WindowPos.x + (WindowSize.x / 2.0f), WindowPos.y + (WindowSize.y / 2.0f) };
 
-	auto LocalPlayerTeam = EntityList::GetLocalPlayerTeam();
+	const ETeam LocalPlayerTeam = snap.haveLocalTeam ? snap.localTeam : ETeam::UNKNOWN;
 
 	const auto RadarCenterGamePos = GetRadarCenterScreenPos();
 
-	// Take both atomically — DrawPlayer (called below) needs Controller too.
-	// scoped_lock uses std::lock's deadlock-avoidance algorithm so order is irrelevant.
-	std::scoped_lock Lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
-
-	for (auto& Pawn : EntityList::m_PlayerPawns)
+	// No locks: pawns, controllers and the pawn↔controller join all come from the
+	// frame snapshot, which also means no linear GetAssociatedPC scan per entity.
+	for (const auto& View : snap.players)
 	{
-		if (Pawn.IsInvalid() || Pawn.IsDormant())
+		const C_CitadelPlayerPawn& Pawn = *View.pawn;
+
+		if (Pawn.IsDormant())
 			continue;
 
 		const Vector3 RawRelativePos = { Pawn.m_Position.x - RadarCenterGamePos.x, Pawn.m_Position.y - RadarCenterGamePos.y, Pawn.m_Position.z - RadarCenterGamePos.z };
@@ -134,15 +142,15 @@ void Radar::DrawEntities()
 
 		const ImVec2 FinalScreenPos = GetFinalScreenPos(RawRelativePos, RadarWindowCenter, fRadarScale, LocalPlayerTeam);
 
-		if (Pawn.IsLocalPlayer()) {
+		if (View.localPlayer) {
 			DrawLocalPlayerViewRay(DrawList, FinalScreenPos, LocalPlayerTeam);
 		}
 
-		if (bHideFriendly && Pawn.IsFriendly()) continue;
+		if (bHideFriendly && View.friendly) continue;
 
-		DrawList->AddCircleFilled(FinalScreenPos, 5.0f, GetRadarColor(Pawn));
+		DrawList->AddCircleFilled(FinalScreenPos, 5.0f, GetRadarColor(View));
 
-		DrawPlayer(Pawn, FinalScreenPos);
+		DrawPlayer(View, FinalScreenPos);
 	}
 }
 
@@ -156,42 +164,33 @@ void Radar::DrawLocalPlayerViewRay(ImDrawList* DrawList, const ImVec2& ScreenPos
 		LineEnd = { ScreenPos.x + (fRaySize * std::sin(Rad)), ScreenPos.y + (fRaySize * std::cos(Rad)) };
 	}
 
-	DrawList->AddLine(ScreenPos, LineEnd, IM_COL32(0, 255, 0, 255), 2.0f);
+	DrawList->AddLine(ScreenPos, LineEnd, ImGui::ColorConvertFloat4ToU32(ColorPicker::LocalPlayerRadar.Value), 2.0f);
 }
 
-void Radar::DrawPlayer(const C_CitadelPlayerPawn& Pawn, const ImVec2& RadarPos)
+void Radar::DrawPlayer(const FrameSnapshot::PawnView& View, const ImVec2& RadarPos)
 {
-	// Caller (DrawEntities) holds m_PawnMutex + m_ControllerMutex.
-	auto PC = EntityList::GetAssociatedPC(Pawn);
-
-	if (!PC)
-		return;
-
-	if (bHideFriendly && PC->IsFriendly())
-		return;
-
 	int LineNumber = 0;
 	auto DrawList = ImGui::GetWindowDrawList();
-	DrawNameTag(*PC, Pawn, DrawList, RadarPos, LineNumber);
+	DrawNameTag(View, DrawList, RadarPos, LineNumber);
 
 	if (bMobaStyle) {
-		DrawHealthBar(*PC, Pawn, DrawList, RadarPos, LineNumber);
+		DrawHealthBar(*View.controller, DrawList, RadarPos, LineNumber);
 	}
 }
 
-void Radar::DrawNameTag(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber) {
-	ImVec2 TextSize = ImGui::CalcTextSize(PC.GetHeroName().data());
+void Radar::DrawNameTag(const FrameSnapshot::PawnView& View, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber) {
+	const std::string_view Name = View.controller->GetHeroName();
+	const float LineH = ImGui::GetTextLineHeight();
 
-	ImU32 TextColor = GetRadarColor(Pawn);
-
-	ImVec2 FinalPos = { AnchorPos.x - (TextSize.x * 0.5f), AnchorPos.y + (LineNumber * TextSize.y) };
-
-	DrawList->AddText(FinalPos, TextColor, PC.GetHeroName().data());
+	// Outlined: radar labels sit on top of the map texture, where plain text in a
+	// team color is close to unreadable over light terrain.
+	WorldText::Draw(DrawList, ImVec2(AnchorPos.x, AnchorPos.y + LineNumber * LineH),
+		Name, GetRadarColor(View));
 
 	LineNumber++;
 }
 
-void Radar::DrawHealthBar(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber)
+void Radar::DrawHealthBar(const CCitadelPlayerController& PC, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber)
 {
 	constexpr float HealthBarWidth = 80.0f;
 	constexpr float Padding = 2.0f;
@@ -200,30 +199,25 @@ void Radar::DrawHealthBar(const CCitadelPlayerController& PC, const C_CitadelPla
 	const float LineH = ImGui::GetTextLineHeight();
 
 	const float maxHp = (PC.m_MaxHealth > 0) ? static_cast<float>(PC.m_MaxHealth) : 1.0f;
-	float hpPct = static_cast<float>(PC.m_CurrentHealth) / maxHp;
-	if (hpPct < 0.0f) hpPct = 0.0f;
-	if (hpPct > 1.0f) hpPct = 1.0f;
+	const float hpPct = std::clamp(static_cast<float>(PC.m_CurrentHealth) / maxHp, 0.0f, 1.0f);
 
 	// Bar rect under the anchor, centered
 	ImVec2 barTL = { AnchorPos.x - (HealthBarWidth * 0.5f), AnchorPos.y + (LineNumber * LineH) };
 	ImVec2 barBR = { barTL.x + HealthBarWidth,             barTL.y + LineH };
 
 	DrawList->AddRectFilled(barTL, barBR, ColorPicker::HealthBarBackgroundColor);
+	DrawList->AddRect(barTL, barBR, Theme::BrassDim, 0.0f, 0, 1.0f);
 
-	// Inner (filled) portion
+	// Inner (filled) portion, gradient-colored to match the world health bars.
 	ImVec2 fillTL = { barTL.x + Padding, barTL.y + Padding };
 	ImVec2 fillBR = { fillTL.x + (UnpaddedWidth * hpPct), barBR.y - Padding };
-	DrawList->AddRectFilled(fillTL, fillBR, ColorPicker::HealthBarForegroundColor);
+	const ImU32 fill = hpPct > 0.5f
+		? Theme::Mix(Theme::Amber, Theme::SoulGreen, (hpPct - 0.5f) * 2.0f)
+		: Theme::Mix(Theme::Danger, Theme::Amber, hpPct * 2.0f);
+	DrawList->AddRectFilled(fillTL, fillBR, fill);
 
-	// Health text centered over the bar
-	std::string hpText = std::format("{}", PC.m_CurrentHealth);
-	ImVec2 textSize = ImGui::CalcTextSize(hpText.c_str());
-	ImVec2 textPos = {
-		AnchorPos.x - (textSize.x * 0.5f),
-		barTL.y + Padding
-	};
-
-	DrawList->AddText(textPos, IM_COL32(255, 255, 255, 255), hpText.c_str());
+	WorldText::Draw(DrawList, ImVec2(AnchorPos.x, barTL.y + Padding),
+		std::format("{}", PC.m_CurrentHealth), Theme::Cream, LineH - Padding);
 
 	LineNumber++;
 }
@@ -246,7 +240,8 @@ void Radar::DrawRadarBackground() {
 
 	Vector3 CenterRadarGamePosition = GetRadarCenterScreenPos();
 
-	auto LocalTeam = EntityList::GetLocalPlayerTeam();
+	const FrameSnapshot& snap = Snapshot::Current();
+	const ETeam LocalTeam = snap.haveLocalTeam ? snap.localTeam : ETeam::UNKNOWN;
 
 	auto TopLeftGameCoords = FindRadarTopLeftCoords(CenterRadarGamePosition, LocalTeam);
 	auto BottomRightGameCoords = FindRadarBottomRightCoords(CenterRadarGamePosition, LocalTeam);
@@ -256,7 +251,7 @@ void Radar::DrawRadarBackground() {
 
 	ImGui::SetCursorPos({ 0.0f, 0.0f });
 	ImGui::Image(RadarBackgroundTexture.pTexture, WindowSize, UV_TL, UV_BR);
-	ImGui::GetWindowDrawList()->AddRectFilled(WindowPos, { WindowPos.x + WindowSize.x, WindowPos.y + WindowSize.y }, IM_COL32(55, 55, 55, 100));
+	ImGui::GetWindowDrawList()->AddRectFilled(WindowPos, { WindowPos.x + WindowSize.x, WindowPos.y + WindowSize.y }, IM_COL32(0x2C, 0x24, 0x1B, 90));
 }
 
 Vector3 Radar::GetRadarCenterScreenPos()
@@ -264,7 +259,9 @@ Vector3 Radar::GetRadarCenterScreenPos()
 	static const Vector3 DefaultCenter{ 0.0f, 0.0f, 0.0f };
 
 	if (bPlayerCentered) {
-		return EntityList::GetLocalPawnPosition();
+		// From the snapshot, so the radar centre moves with the same extrapolated
+		// origin the world ESP uses instead of lagging a poll behind it.
+		return Snapshot::Current().localPosition;
 	}
 
 	return DefaultCenter;

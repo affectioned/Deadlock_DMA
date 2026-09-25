@@ -17,10 +17,4 @@ private:
 	static std::string getConfigDir();
 	static std::string getConfigPath(const std::string& configName);
 	static void RefreshConfigFilesList(std::vector<std::string>& outList);
-
-private:
-	static void DeserializeKeybinds(const json& Table);
-	static json SerializeKeybinds(json& j);
-	static json SerializeConfig();
-	static void DeserializeConfig(const json& j);
 };

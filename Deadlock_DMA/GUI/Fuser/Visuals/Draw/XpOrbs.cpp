@@ -3,29 +3,30 @@
 #include "XpOrbs.h"
 
 #include "Deadlock/Deadlock.h"
-#include "Deadlock/Entity List/EntityList.h"
 
 #include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Fuser/Visuals/Snapshot.h"
+#include "GUI/Fuser/Visuals/WorldText.h"
 
 void Draw_XpOrbs::operator()()
 {
-	std::scoped_lock Lock(EntityList::m_XpOrbMutex);
+	const FrameSnapshot& snap = Snapshot::Current();
 
-	auto DrawList = ImGui::GetWindowDrawList();
+	const ImVec2 origin = ImGui::GetWindowPos();
+	ImDrawList*  dl     = ImGui::GetWindowDrawList();
 
-	for (auto& Orb : EntityList::m_XpOrbs)
+	for (const auto& orb : snap.xpOrbs)
 	{
-		if (Orb.IsInvalid()) continue;
+		if (orb.IsInvalid()) continue;
+		if (orb.IsDormant()) continue;
 
-		if (Orb.IsDormant()) continue;
+		const WorldText::Falloff falloff = WorldText::Compute(snap.DistanceMeters(orb));
+		if (falloff.alpha <= 0.0f) continue;
 
-		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(Orb.m_Position, ScreenPos)) continue;
+		ImVec2 p;
+		if (!snap.Project(orb.m_Position, origin, p)) continue;
 
-		DrawList->AddCircleFilled(
-			{ ScreenPos.x, ScreenPos.y },
-			4.0f,
-			ImGui::ColorConvertFloat4ToU32(ColorPicker::XpOrbColor.Value)
-		);
+		dl->AddCircleFilled(p, 4.0f,
+			WorldText::Fade(ImGui::ColorConvertFloat4ToU32(ColorPicker::XpOrbColor.Value), falloff.alpha));
 	}
 }

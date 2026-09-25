@@ -9,6 +9,8 @@
 #include "GUI/Aim Assist/Aim Assist.h"
 #include "GUI/Keybinds/Keybinds.h"
 #include "GUI/Config/Config.h"
+#include "GUI/Theme/Theme.h"
+#include "GUI/Settings/Settings.h"
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Debug GUI/Class List/Class List.h"
 #include "GUI/Debug GUI/Trooper List/Trooper List.h"
@@ -180,23 +182,26 @@ namespace
 		IconFn      icon;
 		const char* label;
 		void (*draw)();
+		// Group heading this row sits under; nullptr continues the previous group.
+		// Eleven flat rows gave no sense of which panel does what.
+		const char* group;
 	};
 
 	// Order here is the tab order in the menu. Each draw fn writes only the
 	// body — the panel functions had their ImGui::Begin/End stripped so they
 	// can be hosted inside our shared sidebar layout.
 	const Tab kTabs[] = {
-		{ Icon_General,  "General",  DrawGeneralTab },
-		{ Icon_AimAssist, "Aim Assist", AimAssist::RenderSettings },
-		{ Icon_Fuser,    "Fuser",    Fuser::RenderSettings },
-		{ Icon_Visuals,  "Visuals",  Visuals::RenderSettings },
-		{ Icon_Radar,    "Radar",    Radar::RenderSettings },
-		{ Icon_Colors,   "Colors",   ColorPicker::Render },
-		{ Icon_Keybinds, "Keybinds", Keybinds::Render },
-		{ Icon_Config,   "Config",   Config::Render },
-		{ Icon_Players,  "Players",  PlayerList::Render },
-		{ Icon_Troopers, "Troopers", TrooperList::Render },
-		{ Icon_Classes,  "Classes",  ClassList::Render },
+		{ Icon_AimAssist, "Aim Assist", AimAssist::RenderSettings, "Combat"  },
+		{ Icon_Fuser,     "Overlay",    Fuser::RenderSettings,     "Visuals" },
+		{ Icon_Visuals,   "Entities",   Visuals::RenderSettings,   nullptr   },
+		{ Icon_Radar,     "Radar",      Radar::RenderSettings,     nullptr   },
+		{ Icon_Colors,    "Colors",     ColorPicker::Render,       nullptr   },
+		{ Icon_General,   "General",    DrawGeneralTab,            "System"  },
+		{ Icon_Keybinds,  "Keybinds",   Keybinds::Render,          nullptr   },
+		{ Icon_Config,    "Config",     Config::Render,            nullptr   },
+		{ Icon_Players,   "Players",    PlayerList::Render,        "Debug"   },
+		{ Icon_Troopers,  "Troopers",   TrooperList::Render,       nullptr   },
+		{ Icon_Classes,   "Classes",    ClassList::Render,         nullptr   },
 	};
 
 	void SetClickThrough(bool clickThrough)
@@ -209,47 +214,6 @@ namespace
 			::SetWindowLongPtrW(hwnd, GWL_EXSTYLE, want);
 	}
 
-	// Derive a coherent palette from the single accent color and push it for
-	// every widget the user sees in the main menu. Returns the number of
-	// PushStyleColor calls so the caller can pop the exact count.
-	int PushAccentTheme()
-	{
-		auto mix = [](ImVec4 a, ImVec4 b, float t)
-		{
-			return ImVec4(a.x + (b.x - a.x) * t,
-			              a.y + (b.y - a.y) * t,
-			              a.z + (b.z - a.z) * t,
-			              a.w + (b.w - a.w) * t);
-		};
-		auto withA = [](ImVec4 c, float a) { return ImVec4(c.x, c.y, c.z, a); };
-
-		const ImVec4 accent = ColorPicker::MenuAccent.Value;
-		const ImVec4 white  = ImVec4(1, 1, 1, 1);
-		const ImVec4 black  = ImVec4(0, 0, 0, 1);
-		const ImVec4 hover  = mix(accent, white, 0.20f);
-		const ImVec4 active = mix(accent, white, 0.35f);
-		const ImVec4 dim    = mix(accent, black, 0.55f);
-
-		ImGui::PushStyleColor(ImGuiCol_Header,            withA(accent, 0.55f));
-		ImGui::PushStyleColor(ImGuiCol_HeaderHovered,     withA(hover,  0.70f));
-		ImGui::PushStyleColor(ImGuiCol_HeaderActive,      withA(active, 0.85f));
-		ImGui::PushStyleColor(ImGuiCol_Button,            withA(dim,    0.55f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered,     withA(hover,  0.85f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive,      withA(active, 1.00f));
-		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered,    withA(accent, 0.30f));
-		ImGui::PushStyleColor(ImGuiCol_FrameBgActive,     withA(accent, 0.45f));
-		ImGui::PushStyleColor(ImGuiCol_SliderGrab,        withA(accent, 0.90f));
-		ImGui::PushStyleColor(ImGuiCol_SliderGrabActive,  active);
-		ImGui::PushStyleColor(ImGuiCol_CheckMark,         active);
-		ImGui::PushStyleColor(ImGuiCol_TitleBgActive,     withA(dim,    0.85f));
-		ImGui::PushStyleColor(ImGuiCol_SeparatorHovered,  withA(hover,  0.70f));
-		ImGui::PushStyleColor(ImGuiCol_SeparatorActive,   active);
-		ImGui::PushStyleColor(ImGuiCol_ResizeGrip,        withA(accent, 0.25f));
-		ImGui::PushStyleColor(ImGuiCol_ResizeGripHovered, withA(hover,  0.65f));
-		ImGui::PushStyleColor(ImGuiCol_ResizeGripActive,  active);
-		ImGui::PushStyleColor(ImGuiCol_TabHovered,        withA(hover,  0.85f));
-		return 18;
-	}
 }
 
 void MainMenu::Render()
@@ -292,34 +256,62 @@ void MainMenu::Render()
 	ImGui::SetNextWindowPos(WindowPos, ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(WindowSize, ImGuiCond_FirstUseEver);
 
-	const int accentPopCount = PushAccentTheme();
+	// Style lives in ImGui::GetStyle() and is rewritten only when the accent
+	// changes, instead of 18 PushStyleColor calls on every frame.
+	Theme::EnsureApplied();
+
 	if (ImGui::Begin("DEADLOCK DMA"))
 	{
 		static int sSelected = 0;
 		constexpr int kTabCount = (int)(sizeof(kTabs) / sizeof(kTabs[0]));
 		if (sSelected < 0 || sSelected >= kTabCount) sSelected = 0;
 
-		const float sidebarWidth = 140.0f;
+		const float sidebarWidth = 158.0f;
 		ImGui::BeginChild("##Sidebar", ImVec2(sidebarWidth, 0), ImGuiChildFlags_Borders);
 		{
-			const float lineH      = ImGui::GetTextLineHeight();
-			const float iconBoxW   = lineH * 1.4f;   // gutter reserved on the left of every row
-			const float iconSize   = lineH * 0.95f;  // icon's own bounding box
-			ImDrawList* dl         = ImGui::GetWindowDrawList();
+			const float lineH    = ImGui::GetTextLineHeight();
+			const float iconBoxW = lineH * 1.5f;   // gutter reserved on the left of every row
+			const float iconSize = lineH * 0.95f;  // icon's own bounding box
+			ImDrawList* dl       = ImGui::GetWindowDrawList();
 
 			for (int i = 0; i < kTabCount; ++i)
 			{
+				if (kTabs[i].group)
+				{
+					if (i > 0) ImGui::Spacing();
+					ImGui::PushStyleColor(ImGuiCol_Text, ImGui::ColorConvertU32ToFloat4(Theme::Brass));
+					ImGui::SeparatorText(kTabs[i].group);
+					ImGui::PopStyleColor();
+				}
+
 				const ImVec2 rowStart = ImGui::GetCursorScreenPos();
+				const bool   selected = (sSelected == i);
 
-				// Leading spaces shift the label past the icon gutter so the
-				// Selectable's text doesn't overlap the icon.
-				char row[64];
-				snprintf(row, sizeof(row), "      %s##tab%d", kTabs[i].label, i);
-				if (ImGui::Selectable(row, sSelected == i))
+				// An empty Selectable owns the whole row; icon and label are both
+				// drawn into the gutter-aware positions below. The old version
+				// padded the label with six literal spaces to clear the icon,
+				// which only lined up because the font happened to be monospaced.
+				ImGui::PushID(i);
+				if (ImGui::Selectable("##tab", selected, 0, ImVec2(0.0f, lineH)))
 					sSelected = i;
+				ImGui::PopID();
 
-				const ImVec2 iconCenter(rowStart.x + iconBoxW * 0.5f, rowStart.y + lineH * 0.5f);
-				kTabs[i].icon(dl, iconCenter, iconSize, ImGui::GetColorU32(ImGuiCol_Text));
+				const ImU32 rowCol = selected
+					? ImGui::GetColorU32(ImGuiCol_Text)
+					: Theme::TextDim;
+
+				kTabs[i].icon(dl, ImVec2(rowStart.x + iconBoxW * 0.5f, rowStart.y + lineH * 0.5f),
+				              iconSize, rowCol);
+				dl->AddText(ImVec2(rowStart.x + iconBoxW, rowStart.y), rowCol, kTabs[i].label);
+
+				// Amber rule down the left edge of the active row — deco framing,
+				// and it survives the accent being changed.
+				if (selected)
+				{
+					dl->AddRectFilled(ImVec2(rowStart.x - 4.0f, rowStart.y),
+					                  ImVec2(rowStart.x - 2.0f, rowStart.y + lineH),
+					                  ImGui::ColorConvertFloat4ToU32(ColorPicker::MenuAccent.Value));
+				}
 			}
 		}
 		ImGui::EndChild();
@@ -327,6 +319,7 @@ void MainMenu::Render()
 		ImGui::SameLine();
 
 		ImGui::BeginChild("##Content", ImVec2(0, 0));
+		Settings::RenderSearch();
 		kTabs[sSelected].draw();
 		ImGui::EndChild();
 
@@ -336,5 +329,4 @@ void MainMenu::Render()
 		WindowSize = ImGui::GetWindowSize();
 	}
 	ImGui::End();
-	ImGui::PopStyleColor(accentPopCount);
 }

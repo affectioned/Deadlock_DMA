@@ -65,12 +65,20 @@ Matrix44 Deadlock::GetViewMatrix()
 
 bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
 {
-	std::scoped_lock lock(ViewMatrixMutex);
+	Matrix44 Mat;
+	{
+		std::scoped_lock lock(ViewMatrixMutex);
+		Mat = m_ViewMatrix;
+	}
+	return WorldToScreen(Mat, Pos, ScreenPos);
+}
 
-	ScreenPos.x = m_ViewMatrix.m00 * Pos.x + m_ViewMatrix.m01 * Pos.y + m_ViewMatrix.m02 * Pos.z + m_ViewMatrix.m03;
-	ScreenPos.y = m_ViewMatrix.m10 * Pos.x + m_ViewMatrix.m11 * Pos.y + m_ViewMatrix.m12 * Pos.z + m_ViewMatrix.m13;
+bool Deadlock::WorldToScreen(const Matrix44& Mat, const Vector3& Pos, Vector2& ScreenPos)
+{
+	ScreenPos.x = Mat.m00 * Pos.x + Mat.m01 * Pos.y + Mat.m02 * Pos.z + Mat.m03;
+	ScreenPos.y = Mat.m10 * Pos.x + Mat.m11 * Pos.y + Mat.m12 * Pos.z + Mat.m13;
 
-	float w = m_ViewMatrix.m30 * Pos.x + m_ViewMatrix.m31 * Pos.y + m_ViewMatrix.m32 * Pos.z + m_ViewMatrix.m33;
+	float w = Mat.m30 * Pos.x + Mat.m31 * Pos.y + Mat.m32 * Pos.z + Mat.m33;
 
 	if (w < 0.01f)
 		return false;

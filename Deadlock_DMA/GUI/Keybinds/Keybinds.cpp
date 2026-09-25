@@ -5,6 +5,7 @@
 #include "DMA/Input/Input Manager.h"
 
 #include "GUI/Aim Assist/Aim Assist.h"
+#include "GUI/Theme/Theme.h"
 
 const char* CKeybind::GetKeyName(uint32_t vkCode)
 {
@@ -146,7 +147,7 @@ void Keybinds::Render()
 	const bool inputReady = c_keys::IsInitialized();
 	if (!inputReady)
 	{
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.3f, 0.3f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_Text, Theme::Warn());
 		ImGui::Text("Input Manager not initialized — Target PC bindings won't fire.");
 		ImGui::PopStyleColor();
 		ImGui::Spacing();
@@ -181,9 +182,7 @@ void CKeybind::Render()
 
 	if (m_bWaitingForKey)
 	{
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.6f, 1.0f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.4f, 0.7f, 1.0f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.5f, 0.9f, 1.0f));
+		Theme::PushAccentButton();
 
 		if (ImGui::Button(("Press any key...##" + m_Name).c_str(), ImVec2(-1, 0)))
 		{

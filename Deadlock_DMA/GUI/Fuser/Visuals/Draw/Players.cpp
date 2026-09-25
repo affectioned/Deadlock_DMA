@@ -1,414 +1,421 @@
 #include "pch.h"
 #include "Players.h"
 #include "Deadlock/Deadlock.h"
-#include "Deadlock/Entity List/EntityList.h"
 #include "Deadlock/Const/HeroEnum.hpp"
 #include "Deadlock/Const/BoneLists.hpp"
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Fonts/Fonts.h"
+#include "GUI/Theme/Theme.h"
+#include "GUI/Fuser/Visuals/WorldText.h"
+
+namespace
+{
+	ImU32 U32(const ImColor& c) { return ImGui::ColorConvertFloat4ToU32(c.Value); }
+
+	// Health → color. Green through amber to red rather than a straight
+	// green→red lerp, which passes through a muddy olive at 50%.
+	ImU32 HealthColor(float pct)
+	{
+		pct = std::clamp(pct, 0.0f, 1.0f);
+		return pct > 0.5f
+			? Theme::Mix(Theme::Amber, Theme::SoulGreen, (pct - 0.5f) * 2.0f)
+			: Theme::Mix(Theme::Danger, Theme::Amber, pct * 2.0f);
+	}
+}
 
 void Draw_Players::operator()()
 {
-	float serverTime = 0.0f;
+	const FrameSnapshot& snap = Snapshot::Current();
+
+	const ImVec2 origin = ImGui::GetWindowPos();
+	ImDrawList*  dl     = ImGui::GetWindowDrawList();
+
+	for (const auto& view : snap.players)
 	{
-		std::lock_guard timeLock(Deadlock::m_ServerTimeMutex);
-		serverTime = Deadlock::m_ServerTime;
-		auto elapsed = std::chrono::duration<float>(std::chrono::steady_clock::now() - Deadlock::m_ServerTimeUpdatedAt).count();
-		serverTime += elapsed;
-	}
+		if (bHideLocalPlayer && view.localPlayer) continue;
+		if (bHideFriendly && view.friendly)       continue;
 
-	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
+		// FOW gate: skip enemies the team minimap can't see. Friendlies are never
+		// in the local team's FOW list, so PawnView pre-resolves them to visible.
+		if (bVisibleOnly && !view.confirmedVisible) continue;
 
-	auto WindowPos = ImGui::GetWindowPos();
-	auto DrawList = ImGui::GetWindowDrawList();
+		const WorldText::Falloff falloff = WorldText::Compute(view.distanceMeters);
+		if (falloff.alpha <= 0.0f) continue; // past the max-distance cull
 
-	for (auto& Pawn : EntityList::m_PlayerPawns)
-	{
-		if (Pawn.IsInvalid()) continue;
+		Ctx c{};
+		c.snap     = &snap;
+		c.view     = &view;
+		c.dl       = dl;
+		c.origin   = origin;
+		c.textSize = falloff.size;
+		c.alpha    = falloff.alpha;
 
-		auto AssociatedControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.m_hController);
-
-		if (!AssociatedControllerAddr) continue;
-
-		if (bHideLocalPlayer && Pawn.IsLocalPlayer()) continue;
-
-		auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), AssociatedControllerAddr);
-
-		if (ControllerIt == EntityList::m_PlayerControllers.end())
+		if (!snap.Project(view.pawn->m_Position, origin, c.feet))
 			continue;
 
-		if (ControllerIt->IsInvalid()) continue;
-
-		if (ControllerIt->IsDead())
+		if (view.controller->IsDead())
 		{
 			if (bShowRespawnTimer)
-				DrawRespawnTimer(*ControllerIt, Pawn, serverTime);
+				DrawRespawnTimer(c);
 			continue;
 		}
 
-		// FOW gate: when enabled, skip enemies the team minimap doesn't see.
-		// Friendlies always render — bypass the gate for them.
-		if (bVisibleOnly && !ControllerIt->IsFriendly() && !EntityList::IsEntityConfirmedVisible(Pawn.m_EntityAddress))
-			continue;
-
-		DrawPlayer(*ControllerIt, Pawn);
+		DrawPlayer(c);
 	}
 }
 
-void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn)
+void Draw_Players::DrawPlayer(const Ctx& c)
 {
-	if (bHideFriendly && PC.IsFriendly())
-		return;
-
-	Vector2 ScreenPos{};
-	if (!Deadlock::WorldToScreen(Pawn.m_Position, ScreenPos)) return;
-
-	auto DrawList = ImGui::GetWindowDrawList();
-	auto WindowPos = ImGui::GetWindowPos();
+	const Box box = ComputeBox(c);
 
 	if (bDrawBox)
-		DrawBox(PC, Pawn, DrawList, WindowPos);
+		DrawBox(c, box);
 
 	if (bDrawBones)
-		DrawSkeleton(PC, Pawn, DrawList, WindowPos);
+		DrawSkeleton(c);
 
 	if (bDrawHead)
-		DrawHeadCircle(PC, Pawn, DrawList, WindowPos);
+		DrawHeadCircle(c);
 
 	if (bDrawVelocityVector)
-		DrawVelocityVector(Pawn, DrawList, WindowPos);
+		DrawVelocityVector(c);
 
 	if (bBoneNumbers)
-		DrawBoneNumbers(Pawn);
+		DrawBoneNumbers(c);
 
-	int LineNumber = 0;
-
-	DrawNameTag(PC, Pawn, DrawList, WindowPos, LineNumber);
+	const float textBottomY = DrawNameTag(c);
 
 	if (bDrawHealthBar)
-		DrawHealthBar(PC, Pawn, ImVec2(ScreenPos.x + WindowPos.x, ScreenPos.y + WindowPos.y), DrawList, LineNumber);
+		DrawHealthBar(c, box, textBottomY);
 }
 
-void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, const ImVec2& PawnScreenPos, ImDrawList* DrawList, int& LineNumber)
+Draw_Players::Box Draw_Players::ComputeBox(const Ctx& c)
 {
-	constexpr float HorizontalWidth = 80.0f;
+	Box box{ 0.0f, 0.0f, 0.0f, 0.0f, false };
+
+	const C_CitadelPlayerPawn& pawn = c.Pawn();
+	if (!pawn.m_pBoneData) return box;
+
+	// Preferred path: the projected extent of the bones we already trust enough
+	// to render as the skeleton. Every one of those indices has live data, which
+	// the raw 0..m_BoneCount range does not guarantee.
+	if (bBoxFromBones && !pawn.m_pBoneData->pairs.empty())
+	{
+		float minX = FLT_MAX, minY = FLT_MAX, maxX = -FLT_MAX, maxY = -FLT_MAX;
+		int   hits = 0;
+
+		auto accumulate = [&](int boneIndex)
+		{
+			if (boneIndex < 0 || boneIndex >= MAX_BONES) return;
+			ImVec2 p;
+			if (!c.snap->Project(pawn.m_BonePositions[boneIndex], c.origin, p)) return;
+			minX = std::min(minX, p.x); maxX = std::max(maxX, p.x);
+			minY = std::min(minY, p.y); maxY = std::max(maxY, p.y);
+			++hits;
+		};
+
+		for (const auto& [start, end] : pawn.m_pBoneData->pairs)
+		{
+			accumulate(start);
+			accumulate(end);
+		}
+
+		// A couple of stray bones projecting on-screen isn't a box — fall through
+		// to the head/feet heuristic rather than drawing a sliver.
+		if (hits >= 6 && maxY > minY)
+		{
+			// Bones are the skeleton centerline; the silhouette is wider and taller
+			// than they are. Pad proportionally to on-screen height so the margin
+			// holds at every distance.
+			const float height = maxY - minY;
+			const float padX   = height * 0.07f;
+			const float padY   = height * 0.04f;
+			box = { minX - padX, minY - padY, maxX + padX, maxY + padY, true };
+			return box;
+		}
+	}
+
+	// Fallback: head bone → pawn origin, width from on-screen height.
+	const auto& headSlot = pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
+	if (headSlot.empty()) return box;
+
+	ImVec2 head;
+	if (!c.snap->Project(pawn.m_BonePositions[headSlot[0]], c.origin, head)) return box;
+
+	float topY    = head.y;
+	float bottomY = c.feet.y;
+	if (bottomY <= topY) return box; // pawn upside-down on screen — bail
+
+	// Head bone sits inside the skull, not at the crown.
+	topY -= (bottomY - topY) * 0.08f;
+
+	const float halfWidth = (bottomY - topY) * 0.25f; // typical humanoid aspect, ~1:2
+	const float centerX   = (head.x + c.feet.x) * 0.5f;
+
+	box = { centerX - halfWidth, topY, centerX + halfWidth, bottomY, true };
+	return box;
+}
+
+void Draw_Players::DrawBox(const Ctx& c, const Box& box)
+{
+	if (!box.valid) return;
+
+	const ImU32 base = c.view->visible
+		? U32(ColorPicker::BoxColorVisible)
+		: U32(ColorPicker::BoxColorInvisible);
+	const ImU32 col = WorldText::Fade(base, c.alpha);
+
+	const ImVec2 tl(box.left, box.top);
+	const ImVec2 br(box.right, box.bottom);
+
+	if (bBoxFill)
+		c.dl->AddRectFilled(tl, br, WorldText::Fade(base, c.alpha * 0.12f));
+
+	if (eBoxStyle == EBoxStyle::Full)
+	{
+		c.dl->AddRect(tl, br, col, 0.0f, 0, fBoxThickness);
+		return;
+	}
+
+	// Corner brackets: arms are a quarter of the shorter side, so the shape stays
+	// recognizable on a narrow distant box instead of closing into a full rect.
+	const float w   = br.x - tl.x;
+	const float h   = br.y - tl.y;
+	const float arm = std::max(std::min(w, h) * 0.25f, 2.0f);
+
+	const float xs[2] = { tl.x, br.x };
+	const float ys[2] = { tl.y, br.y };
+	for (int i = 0; i < 2; ++i)
+	{
+		for (int j = 0; j < 2; ++j)
+		{
+			const float dx = (i == 0) ? arm : -arm;
+			const float dy = (j == 0) ? arm : -arm;
+			const ImVec2 corner(xs[i], ys[j]);
+			c.dl->AddLine(corner, ImVec2(corner.x + dx, corner.y), col, fBoxThickness);
+			c.dl->AddLine(corner, ImVec2(corner.x, corner.y + dy), col, fBoxThickness);
+		}
+	}
+}
+
+void Draw_Players::DrawHealthBar(const Ctx& c, const Box& box, float textBottomY)
+{
+	constexpr float HorizontalWidth  = 80.0f;
 	constexpr float VerticalThickness = 8.0f;
 	constexpr float SideGap = 4.0f;
 	constexpr float Padding = 2.0f;
 
-	const float TextLineHeight = ImGui::GetTextLineHeight();
-	const float HealthPercent  = PC.m_MaxHealth > 0
-		? static_cast<float>(PC.m_CurrentHealth) / static_cast<float>(PC.m_MaxHealth)
+	const CCitadelPlayerController& PC = c.PC();
+
+	const float barHeight    = std::max(c.textSize, 6.0f);
+	const float healthPercent = PC.m_MaxHealth > 0
+		? std::clamp(static_cast<float>(PC.m_CurrentHealth) / static_cast<float>(PC.m_MaxHealth), 0.0f, 1.0f)
 		: 0.0f;
 
-	const bool bVertical = (eHealthBarPosition == EHealthBarPosition::Left ||
-	                        eHealthBarPosition == EHealthBarPosition::Right);
+	const bool wantsVertical = (eHealthBarPosition == EHealthBarPosition::Left ||
+	                            eHealthBarPosition == EHealthBarPosition::Right);
 
-	// For vertical layouts the bar height tracks the on-screen player box
-	// (head bone → feet). Falls back to Bottom if bones aren't ready yet.
-	float BoxTopY = 0.0f, BoxBottomY = 0.0f, BoxHalfWidth = 0.0f;
-	bool bHaveBoxBounds = false;
-	if (bVertical && Pawn.m_pBoneData)
-	{
-		const auto& headSlot = Pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
-		if (!headSlot.empty())
-		{
-			Vector2 Head2D, Feet2D;
-			if (Deadlock::WorldToScreen(Pawn.m_BonePositions[headSlot[0]], Head2D) &&
-			    Deadlock::WorldToScreen(Pawn.m_Position, Feet2D))
-			{
-				const ImVec2 WindowPos = ImGui::GetWindowPos();
-				float topY    = Head2D.y + WindowPos.y;
-				float bottomY = Feet2D.y + WindowPos.y;
-				if (bottomY > topY)
-				{
-					float height = bottomY - topY;
-					topY -= height * 0.08f; // match DrawBox: head bone sits inside the skull
-					BoxTopY      = topY;
-					BoxBottomY   = bottomY;
-					BoxHalfWidth = (bottomY - topY) * 0.25f;
-					bHaveBoxBounds = true;
-				}
-			}
-		}
-	}
-
-	const EHealthBarPosition Pos = (bVertical && !bHaveBoxBounds)
+	// Vertical layouts track the box; without a box there's nothing to track, so
+	// they degrade to Bottom rather than drawing at a guessed height.
+	const EHealthBarPosition pos = (wantsVertical && !box.valid)
 		? EHealthBarPosition::Bottom
 		: eHealthBarPosition;
 
-	ImVec2 BarTopLeft, BarBottomRight;
-	switch (Pos)
+	// Width scales with the box so a distant target's bar doesn't dwarf it.
+	const float horizontalWidth = box.valid
+		? std::clamp(box.right - box.left, 24.0f, HorizontalWidth)
+		: HorizontalWidth;
+
+	ImVec2 tl, br;
+	switch (pos)
 	{
 	case EHealthBarPosition::Top:
 	{
-		const float TopY = bHaveBoxBounds ? BoxTopY : PawnScreenPos.y - TextLineHeight - SideGap;
-		BarTopLeft     = ImVec2(PawnScreenPos.x - HorizontalWidth * 0.5f, TopY - TextLineHeight - SideGap);
-		BarBottomRight = ImVec2(BarTopLeft.x + HorizontalWidth, BarTopLeft.y + TextLineHeight);
+		const float topY = box.valid ? box.top : c.feet.y - barHeight - SideGap;
+		tl = ImVec2(c.feet.x - horizontalWidth * 0.5f, topY - barHeight - SideGap);
+		br = ImVec2(tl.x + horizontalWidth, tl.y + barHeight);
 		break;
 	}
 	case EHealthBarPosition::Bottom:
 	{
-		BarTopLeft     = ImVec2(PawnScreenPos.x - HorizontalWidth * 0.5f, PawnScreenPos.y + LineNumber * TextLineHeight);
-		BarBottomRight = ImVec2(BarTopLeft.x + HorizontalWidth, BarTopLeft.y + TextLineHeight);
+		tl = ImVec2(c.feet.x - horizontalWidth * 0.5f, textBottomY);
+		br = ImVec2(tl.x + horizontalWidth, tl.y + barHeight);
 		break;
 	}
 	case EHealthBarPosition::Left:
 	{
-		const float CenterX = PawnScreenPos.x;
-		BarTopLeft     = ImVec2(CenterX - BoxHalfWidth - SideGap - VerticalThickness, BoxTopY);
-		BarBottomRight = ImVec2(BarTopLeft.x + VerticalThickness, BoxBottomY);
+		tl = ImVec2(box.left - SideGap - VerticalThickness, box.top);
+		br = ImVec2(tl.x + VerticalThickness, box.bottom);
 		break;
 	}
 	case EHealthBarPosition::Right:
+	default:
 	{
-		const float CenterX = PawnScreenPos.x;
-		BarTopLeft     = ImVec2(CenterX + BoxHalfWidth + SideGap, BoxTopY);
-		BarBottomRight = ImVec2(BarTopLeft.x + VerticalThickness, BoxBottomY);
+		tl = ImVec2(box.right + SideGap, box.top);
+		br = ImVec2(tl.x + VerticalThickness, box.bottom);
 		break;
 	}
 	}
 
-	// Background frame.
-	DrawList->AddRectFilled(BarTopLeft, BarBottomRight, ColorPicker::HealthBarBackgroundColor);
+	const bool vertical = (pos == EHealthBarPosition::Left || pos == EHealthBarPosition::Right);
 
-	// Foreground fill: horizontal grows left→right; vertical grows bottom→top
-	// (depleting health drops the level like a thermometer).
-	const ImVec2 InnerTL(BarTopLeft.x + Padding,     BarTopLeft.y + Padding);
-	const ImVec2 InnerBR(BarBottomRight.x - Padding, BarBottomRight.y - Padding);
-	const float InnerW = InnerBR.x - InnerTL.x;
-	const float InnerH = InnerBR.y - InnerTL.y;
+	const ImU32 fill = bHealthGradient
+		? HealthColor(healthPercent)
+		: U32(ColorPicker::HealthBarForegroundColor);
 
-	if (Pos == EHealthBarPosition::Left || Pos == EHealthBarPosition::Right)
+	c.dl->AddRectFilled(tl, br, WorldText::Fade(U32(ColorPicker::HealthBarBackgroundColor), c.alpha));
+	// Brass hairline around the bar — reads as deco framing and separates the bar
+	// from whatever is behind it.
+	c.dl->AddRect(tl, br, WorldText::Fade(Theme::BrassDim, c.alpha * 0.8f), 0.0f, 0, 1.0f);
+
+	const ImVec2 innerTL(tl.x + Padding, tl.y + Padding);
+	const ImVec2 innerBR(br.x - Padding, br.y - Padding);
+
+	if (innerBR.x > innerTL.x && innerBR.y > innerTL.y)
 	{
-		const float FillH = InnerH * HealthPercent;
-		DrawList->AddRectFilled(ImVec2(InnerTL.x, InnerBR.y - FillH), InnerBR,
-		                        ColorPicker::HealthBarForegroundColor);
+		if (vertical)
+		{
+			// Grows bottom→top: depleting health drops the level like a thermometer.
+			const float fillH = (innerBR.y - innerTL.y) * healthPercent;
+			c.dl->AddRectFilled(ImVec2(innerTL.x, innerBR.y - fillH), innerBR,
+			                    WorldText::Fade(fill, c.alpha));
+		}
+		else
+		{
+			const float fillW = (innerBR.x - innerTL.x) * healthPercent;
+			c.dl->AddRectFilled(innerTL, ImVec2(innerTL.x + fillW, innerBR.y),
+			                    WorldText::Fade(fill, c.alpha));
+		}
 	}
+
+	// Numeric label: inside horizontal bars; floated above verticals, whose
+	// column is too narrow for legible text.
+	const std::string text = std::format("{}", PC.m_CurrentHealth);
+	const float labelSize  = std::max(barHeight - Padding * 2.0f, 8.0f);
+	const ImU32 labelCol   = WorldText::Fade(Theme::Cream, c.alpha);
+
+	if (vertical)
+		WorldText::Draw(c.dl, ImVec2((tl.x + br.x) * 0.5f, tl.y - labelSize - 1.0f),
+		                text, labelCol, labelSize, WorldText::Align::Center);
 	else
-	{
-		DrawList->AddRectFilled(InnerTL, ImVec2(InnerTL.x + InnerW * HealthPercent, InnerBR.y),
-		                        ColorPicker::HealthBarForegroundColor);
-	}
-
-	// Numeric label: centered inside horizontal bars; floated above for verticals
-	// since the column is too narrow for legible text.
-	std::string HealthText = std::format("{0:d}", PC.m_CurrentHealth);
-	const float LabelHeight = TextLineHeight - Padding;
-	ImGui::PushFont(nullptr, LabelHeight);
-	const ImVec2 TextSize = ImGui::CalcTextSize(HealthText.c_str());
-
-	ImVec2 TextPos;
-	if (Pos == EHealthBarPosition::Left || Pos == EHealthBarPosition::Right)
-		TextPos = ImVec2(BarTopLeft.x + (VerticalThickness - TextSize.x) * 0.5f,
-		                 BarTopLeft.y - TextSize.y - 1.0f);
-	else
-		TextPos = ImVec2((BarTopLeft.x + BarBottomRight.x - TextSize.x) * 0.5f,
-		                 BarTopLeft.y + Padding);
-
-	DrawList->AddText(TextPos, IM_COL32(255, 255, 255, 255), HealthText.c_str());
-	ImGui::PopFont();
-
-	if (Pos == EHealthBarPosition::Bottom)
-		LineNumber++;
+		WorldText::Draw(c.dl, ImVec2((tl.x + br.x) * 0.5f, tl.y + Padding),
+		                text, labelCol, labelSize, WorldText::Align::Center);
 }
 
-void Draw_Players::DrawBox(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
+void Draw_Players::DrawSkeleton(const Ctx& c)
 {
-	// Vertical extent: head bone (top) → pawn origin (feet). Width derived
-	// from the on-screen height — keeps the box proportional regardless of
-	// distance / FOV. Falls back gracefully when the head bone is missing.
-	if (!Pawn.m_pBoneData) return;
-	const auto& headSlot = Pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
+	const C_CitadelPlayerPawn& pawn = c.Pawn();
+	if (!pawn.m_pBoneData || pawn.m_pBoneData->pairs.empty()) return;
+
+	const ImU32 col = WorldText::Fade(c.view->visible
+		? U32(ColorPicker::SkeletonColorVisible)
+		: U32(ColorPicker::SkeletonColorInvisible), c.alpha);
+
+	for (const auto& [startBone, endBone] : pawn.m_pBoneData->pairs)
+	{
+		if (startBone >= MAX_BONES || endBone >= MAX_BONES) continue;
+
+		ImVec2 a, b;
+		if (!c.snap->Project(pawn.m_BonePositions[startBone], c.origin, a)) continue;
+		if (!c.snap->Project(pawn.m_BonePositions[endBone],   c.origin, b)) continue;
+
+		c.dl->AddLine(a, b, col, fBonesThickness);
+	}
+}
+
+void Draw_Players::DrawHeadCircle(const Ctx& c)
+{
+	const C_CitadelPlayerPawn& pawn = c.Pawn();
+	if (!pawn.m_pBoneData) return;
+
+	const auto& headSlot = pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
 	if (headSlot.empty()) return;
-	int HeadBoneIndex = headSlot[0];
 
-	Vector2 Head2D, Feet2D;
-	if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[HeadBoneIndex], Head2D)) return;
-	if (!Deadlock::WorldToScreen(Pawn.m_Position, Feet2D)) return;
+	ImVec2 head;
+	if (!c.snap->Project(pawn.m_BonePositions[headSlot[0]], c.origin, head)) return;
 
-	float topY = Head2D.y + WindowPos.y;
-	float bottomY = Feet2D.y + WindowPos.y;
-	if (bottomY <= topY) return; // pawn upside-down on screen — bail
+	// Radius from hammer-unit distance, matching the pre-snapshot behavior.
+	const float distance = c.view->distanceMeters * HammerUnitsPerMeter;
+	if (distance < 0.1f) return;
 
-	// Head bone sits inside the skull, not at the crown — push the top up so
-	// the box covers the visible head instead of cutting through it.
-	float height = bottomY - topY;
-	topY -= height * 0.08f;
-	height = bottomY - topY;
+	const float radius = 5.0f * (1000.0f / (distance + 100.0f));
 
-	float halfWidth = height * 0.25f; // typical humanoid aspect, ~1:2
-	float centerX = ((Head2D.x + Feet2D.x) * 0.5f) + WindowPos.x;
+	const ImU32 col = WorldText::Fade(c.view->visible
+		? U32(ColorPicker::SkeletonColorVisible)
+		: U32(ColorPicker::SkeletonColorInvisible), c.alpha);
 
-	// Same visibility gate as DrawSkeleton — friendlies aren't in the local
-	// team's FOW list, so IsEntityVisible would fail-closed for them.
-	const bool bVisible = PC.IsFriendly() || EntityList::IsEntityVisible(Pawn.m_EntityAddress);
-	const ImU32 BoxColor = bVisible ? ColorPicker::BoxColorVisible : ColorPicker::BoxColorInvisible;
-
-	DrawList->AddRect(
-		ImVec2(centerX - halfWidth, topY),
-		ImVec2(centerX + halfWidth, bottomY),
-		BoxColor,
-		0.0f, 0, fBoxThickness);
+	c.dl->AddCircle(head, radius, col, 32, fBonesThickness);
 }
 
-void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
+void Draw_Players::DrawVelocityVector(const Ctx& c)
 {
-	if (!Pawn.m_pBoneData || Pawn.m_pBoneData->pairs.empty()) return;
+	const C_CitadelPlayerPawn& pawn = c.Pawn();
 
-	// Friendlies aren't in the local team's FOW list so IsEntityVisible would
-	// fail-closed for them — keep them on the Visible color unconditionally.
-	const bool bVisible = PC.IsFriendly() || EntityList::IsEntityVisible(Pawn.m_EntityAddress);
-	const ImU32 BoneColor = bVisible ? ColorPicker::SkeletonColorVisible : ColorPicker::SkeletonColorInvisible;
+	ImVec2 start, end;
+	if (!c.snap->Project(pawn.m_Position, c.origin, start)) return;
+	if (!c.snap->Project(pawn.m_Position + pawn.m_Velocity, c.origin, end)) return;
 
-	for (const auto& [StartBone, EndBone] : Pawn.m_pBoneData->pairs)
+	c.dl->AddLine(start, end, WorldText::Fade(Theme::Cream, c.alpha), 3.0f);
+}
+
+void Draw_Players::DrawBoneNumbers(const Ctx& c)
+{
+	const C_CitadelPlayerPawn& pawn = c.Pawn();
+	const int count = std::clamp(pawn.m_BoneCount, 0, MAX_BONES);
+
+	for (int i = 0; i < count; i++)
 	{
-		if (StartBone >= MAX_BONES || EndBone >= MAX_BONES) continue;
+		ImVec2 p;
+		if (!c.snap->Project(pawn.m_BonePositions[i], c.origin, p)) continue;
 
-		Vector2 Start2D, End2D;
-
-		if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[StartBone], Start2D)) continue;
-		if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[EndBone], End2D)) continue;
-
-		ImVec2 Start = ImVec2(Start2D.x + WindowPos.x, Start2D.y + WindowPos.y);
-		ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
-		DrawList->AddLine(Start, End, BoneColor, fBonesThickness);
+		WorldText::Draw(c.dl, p, std::to_string(i), WorldText::Fade(Theme::Cream, c.alpha), 12.0f);
 	}
 }
 
-void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
+float Draw_Players::DrawNameTag(const Ctx& c)
 {
-	if (!Pawn.m_pBoneData) return;
-	const auto& headSlot = Pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
-	if (headSlot.empty()) return;
-	int HeadBoneIndex = headSlot[0];
+	const CCitadelPlayerController& PC   = c.PC();
+	const C_CitadelPlayerPawn&      pawn = c.Pawn();
 
-	Vector2 Head2D;
-	if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[HeadBoneIndex], Head2D)) return;
+	const ImU32 teamCol = WorldText::Fade(PC.m_TeamNum == ETeam::HIDDEN_KING
+		? U32(ColorPicker::HiddenKingTeamColor)
+		: U32(ColorPicker::ArchMotherTeamColor), c.alpha);
 
-	ImVec2 HeadPos = ImVec2(Head2D.x + WindowPos.x, Head2D.y + WindowPos.y);
+	std::string tag;
+	if (bShowHeroLevel && pawn.m_nLevel > 0)
+		tag += std::format("[{}] ", pawn.m_nLevel);
 
-	float Distance = Pawn.DistanceFromLocalPlayer(false);
-	if (Distance < 0.1f) return;
-
-	float BaseRadius = 5.f;
-
-	// Scale radius inversely with distance
-	float DistanceScale = 1000.f / (Distance + 100.f);
-	float HeadRadius = BaseRadius * DistanceScale;
-
-	const bool bVisible = PC.IsFriendly() || EntityList::IsEntityVisible(Pawn.m_EntityAddress);
-	const ImU32 HeadColor = bVisible ? ColorPicker::SkeletonColorVisible : ColorPicker::SkeletonColorInvisible;
-
-	DrawList->AddCircle(HeadPos, HeadRadius, HeadColor, 32, fBonesThickness);
-}
-
-void Draw_Players::DrawVelocityVector(const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
-{
-	Vector3 FuturePosition = Pawn.m_Position + Pawn.m_Velocity;
-	Vector2 Start2D, End2D;
-	if (!Deadlock::WorldToScreen(Pawn.m_Position, Start2D)) return;
-	if (!Deadlock::WorldToScreen(FuturePosition, End2D)) return;
-	ImVec2 Start = ImVec2(Start2D.x + WindowPos.x, Start2D.y + WindowPos.y);
-	ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
-	DrawList->AddLine(Start, End, ImColor(255, 255, 255), 5.0f);
-}
-
-void Draw_Players::DrawBoneNumbers(const C_CitadelPlayerPawn& Pawn)
-{
-	ImGui::PushFont(nullptr, 12.0f);
-
-	for (int i = 0; i < MAX_BONES; i++)
-	{
-		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[i], ScreenPos)) continue;
-
-		std::string BoneString = std::to_string(i);
-		auto TextSize = ImGui::CalcTextSize(BoneString.c_str());
-
-		ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
-		ImGui::Text(BoneString.c_str());
-	}
-
-	ImGui::PopFont();
-}
-
-void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos, int& LineNumber)
-{
-	Vector2 ScreenPos{};
-	if (!Deadlock::WorldToScreen(Pawn.m_Position, ScreenPos)) return;
-
-	std::string NameTagString{};
-
-	if (bShowHeroLevel && Pawn.m_nLevel > 0)
-		NameTagString += std::format("[{0:d}] ", Pawn.m_nLevel);
-
-	NameTagString += std::format("{0:s} ", PC.GetHeroName());
+	tag += PC.GetHeroName();
 
 	if (bShowDistance)
-		NameTagString += std::format("[{0:.0f}m] ", Pawn.DistanceFromLocalPlayer(true));
+		tag += std::format(" [{:.0f}m]", c.view->distanceMeters);
 
-	if (NameTagString.back() == ' ') NameTagString.pop_back();
+	WorldText::Stack stack(c.dl, c.feet, c.textSize);
+	stack.Push(tag, teamCol);
 
-	auto TextSize = ImGui::CalcTextSize(NameTagString.c_str());
-
-	auto NameTagColor = PC.m_TeamNum == ETeam::HIDDEN_KING ? ColorPicker::HiddenKingTeamColor : ColorPicker::ArchMotherTeamColor;
-
-	ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y + (LineNumber * TextSize.y)));
-	ImGui::TextColored(NameTagColor, NameTagString.c_str());
-
-	LineNumber++;
-
-	if (bDrawUnsecuredSouls)
-		DrawUnsecuredSouls(Pawn, ScreenPos, LineNumber);
-}
-
-void Draw_Players::DrawRespawnTimer(const CCitadelPlayerController& PC, const C_CitadelPlayerPawn& Pawn, float serverTime)
-{
-	if (bHideFriendly && PC.IsFriendly()) return;
-
-	Vector2 ScreenPos{};
-	if (!Deadlock::WorldToScreen(Pawn.m_Position, ScreenPos)) return;
-
-	auto DrawList = ImGui::GetWindowDrawList();
-	auto WindowPos = ImGui::GetWindowPos();
-
-	int lineNum = 0;
-	DrawNameTag(PC, Pawn, DrawList, WindowPos, lineNum);
-
-	float remaining = Pawn.m_flRespawnTime - serverTime;
-	std::string timerText = remaining > 0.0f
-		? std::format("DEAD ({:.1f}s)", remaining)
-		: "DEAD";
-
-	auto timerColor = PC.m_TeamNum == ETeam::HIDDEN_KING
-		? ColorPicker::HiddenKingTeamColor
-		: ColorPicker::ArchMotherTeamColor;
-
-	auto textSize = ImGui::CalcTextSize(timerText.c_str());
-	ImGui::SetCursorPos(ImVec2(ScreenPos.x - textSize.x * 0.5f, ScreenPos.y + lineNum * textSize.y));
-	ImGui::TextColored(timerColor, timerText.c_str());
-}
-
-void Draw_Players::DrawUnsecuredSouls(const C_CitadelPlayerPawn& Pawn, const Vector2& ScreenPos, int& LineNumber)
-{
-	if (Pawn.m_UnsecuredSouls < UnsecuredSoulsMinimumThreshold)
-		return;
-
-	ImColor UnsecuredSoulColor = ColorPicker::UnsecuredSoulsTextColor;
-	std::string SoulText = std::format("{} ", Pawn.m_UnsecuredSouls);
-
-	if (Pawn.m_UnsecuredSouls > UnsecuredSoulsHighlightThreshold)
+	if (bDrawUnsecuredSouls && pawn.m_UnsecuredSouls >= UnsecuredSoulsMinimumThreshold)
 	{
-		UnsecuredSoulColor = ColorPicker::UnsecuredSoulsHighlightedTextColor;
-		SoulText += "UNSECURED";
+		const bool highlight = pawn.m_UnsecuredSouls > UnsecuredSoulsHighlightThreshold;
+		const ImU32 soulCol = WorldText::Fade(highlight
+			? U32(ColorPicker::UnsecuredSoulsHighlightedTextColor)
+			: U32(ColorPicker::UnsecuredSoulsTextColor), c.alpha);
+
+		stack.Push(std::format("{} {}", pawn.m_UnsecuredSouls,
+		                       highlight ? "UNSECURED" : "Unsecured"), soulCol);
 	}
-	else
-		SoulText += "Unsecured";
 
-	auto SoulTextSize = ImGui::CalcTextSize(SoulText.c_str());
-	ImGui::SetCursorPos(ImVec2(ScreenPos.x - (SoulTextSize.x / 2.0f), ScreenPos.y + (LineNumber * SoulTextSize.y)));
-	ImGui::TextColored(UnsecuredSoulColor, SoulText.c_str());
+	return stack.Cursor().y;
+}
 
-	LineNumber++;
+void Draw_Players::DrawRespawnTimer(const Ctx& c)
+{
+	// Same tag content as a live player (level / hero / distance), with the timer
+	// appended underneath.
+	const float y = DrawNameTag(c);
+
+	const float remaining = c.Pawn().m_flRespawnTime - c.snap->serverTime;
+
+	WorldText::Draw(c.dl, ImVec2(c.feet.x, y),
+		remaining > 0.0f ? std::format("DEAD ({:.1f}s)", remaining) : std::string("DEAD"),
+		WorldText::Fade(Theme::Danger, c.alpha), c.textSize);
 }

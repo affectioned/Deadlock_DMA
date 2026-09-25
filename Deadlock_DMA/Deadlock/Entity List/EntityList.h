@@ -65,6 +65,19 @@ public: /* Interface variables */
 	static inline int32_t m_LocalPawnIndex = -1;
 	static inline std::vector<C_CitadelPlayerPawn> m_PlayerPawns{};
 
+	// steady_clock tick count of the last completed pawn position read. The whole
+	// bucket lands in one scatter, so a single stamp covers every pawn — no need
+	// for a per-entity timestamp. The overlay uses it to extrapolate positions
+	// forward to the current frame instead of drawing them one poll behind.
+	// 0 means "no read has completed yet".
+	static inline std::atomic<int64_t> m_PawnsUpdatedAtNs{ 0 };
+	static void StampPawnUpdate()
+	{
+		const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(
+			std::chrono::steady_clock::now().time_since_epoch()).count();
+		m_PawnsUpdatedAtNs.store(ns, std::memory_order_release);
+	}
+
 	static inline std::mutex m_ControllerMutex{};
 	static inline int32_t m_LocalControllerIndex = -1;
 	static inline std::vector<CCitadelPlayerController> m_PlayerControllers{};

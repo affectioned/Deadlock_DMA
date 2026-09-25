@@ -3,43 +3,40 @@
 #include "Camps.h"
 
 #include "Deadlock/Deadlock.h"
-#include "Deadlock/Entity List/EntityList.h"
 
 #include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Fuser/Visuals/Snapshot.h"
+#include "GUI/Fuser/Visuals/WorldText.h"
 
 void Draw_Camps::operator()()
 {
-	std::scoped_lock Lock(EntityList::m_MonsterCampMutex);
+	const FrameSnapshot& snap = Snapshot::Current();
 
-	auto WindowPos = ImGui::GetWindowPos();
-	auto DrawList = ImGui::GetWindowDrawList();
+	const ImVec2 origin = ImGui::GetWindowPos();
+	ImDrawList*  dl     = ImGui::GetWindowDrawList();
 
-	for (auto& Camp : EntityList::m_MonsterCamps)
+	for (const auto& camp : snap.camps)
 	{
-		if (Camp.IsInvalid()) continue;
+		if (camp.IsInvalid()) continue;
+		if (camp.IsDormant()) continue;
+		if (camp.m_CurrentHealth < 1) continue;
 
-		if (Camp.IsDormant()) continue;
+		const WorldText::Falloff falloff = WorldText::Compute(snap.DistanceMeters(camp));
+		if (falloff.alpha <= 0.0f) continue;
 
-		if (Camp.m_CurrentHealth < 1) continue;
+		ImVec2 anchor;
+		if (!snap.Project(camp.m_Position, origin, anchor)) continue;
 
-		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(Camp.m_Position, ScreenPos)) continue;
+		const ImU32 col = WorldText::Fade(
+			ImGui::ColorConvertFloat4ToU32(ColorPicker::BossColor.Value), falloff.alpha);
 
-		float yOffset = ScreenPos.y;
+		WorldText::Stack stack(dl, anchor, falloff.size);
 
-		if (Camp.m_Label)
-		{
-			auto LabelSize = ImGui::CalcTextSize(Camp.m_Label);
-			ImGui::SetCursorPos({ ScreenPos.x - (LabelSize.x / 2.0f), yOffset });
-			ImGui::TextColored(ColorPicker::BossColor.Value, Camp.m_Label);
-			yOffset += LabelSize.y;
-		}
+		if (camp.m_Label)
+			stack.Push(camp.m_Label, col);
 
-		std::string CampString = (Camp.m_MaxHealth > 0)
-			? std::format("[{}/{}]", Camp.m_CurrentHealth, Camp.m_MaxHealth)
-			: std::format("[{}]", Camp.m_CurrentHealth);
-		auto TextSize = ImGui::CalcTextSize(CampString.c_str());
-		ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), yOffset });
-		ImGui::TextColored(ColorPicker::BossColor.Value, CampString.c_str());
+		stack.Push(camp.m_MaxHealth > 0
+			? std::format("[{}/{}]", camp.m_CurrentHealth, camp.m_MaxHealth)
+			: std::format("[{}]", camp.m_CurrentHealth), col);
 	}
 }

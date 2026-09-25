@@ -116,6 +116,8 @@ void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 			m_LocalPawnIndex = -1;
 		}
 	}
+
+	StampPawnUpdate();
 }
 
 void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)
@@ -140,6 +142,10 @@ void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)
 		for (auto& Pawn : m_PlayerPawns)
 			Pawn.ExtractBones();
 	}
+
+	// Stamped after bones land so the overlay never extrapolates from a
+	// half-populated pose.
+	StampPawnUpdate();
 }
 
 ETeam EntityList::GetLocalPlayerTeam()

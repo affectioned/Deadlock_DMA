@@ -5,12 +5,15 @@
 #include "Deadlock/Entity List/EntityList.h"
 
 #include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Fuser/Visuals/Snapshot.h"
+#include "GUI/Fuser/Visuals/WorldText.h"
+#include "GUI/Theme/Theme.h"
 
 void StatusBars::RenderGenericComparisonBar(ValuePair Values, ColorPair Colors, int& LineNumber, ImDrawList* DrawList, const ImVec2& WindowPos, const ImVec2& WindowSize)
 {
 	constexpr float TotalWidth = 200.0f;
 	constexpr float Padding = 2.0f;
-	ImColor BackgroundColor = ImColor(50, 50, 50, 200);
+	const ImU32 BackgroundColor = ImGui::ColorConvertFloat4ToU32(ImVec4(0.13f, 0.11f, 0.08f, 0.80f));
 
 	ImVec2 CenterPos = ImVec2(WindowPos.x + (WindowSize.x * 0.5f), WindowPos.y + (WindowSize.y * 0.5f));
 
@@ -26,16 +29,18 @@ void StatusBars::RenderGenericComparisonBar(ValuePair Values, ColorPair Colors, 
 	BottomRight.y -= Padding;
 	DrawList->AddRectFilled(TopLeft, BottomRight, Colors.second);
 
-	uint32_t TotalValue = Values.first + Values.second;
-	float FirstValuePercentage = static_cast<float>(Values.first) / static_cast<float>(TotalValue);
+	// Both sides are 0 in a lobby and before the first controller read lands;
+	// the divide used to produce NaN and feed it straight into AddRectFilled.
+	const uint32_t TotalValue = Values.first + Values.second;
+	const float FirstValuePercentage = TotalValue > 0
+		? static_cast<float>(Values.first) / static_cast<float>(TotalValue)
+		: 0.5f;
 
 	BottomRight.x = TopLeft.x + (EffectiveWidth * FirstValuePercentage);
 	DrawList->AddRectFilled(TopLeft, BottomRight, Colors.first);
 
-	std::string ValueString = std::format("{} / {}", Values.first, Values.second);
-	ImVec2 TextSize = ImGui::CalcTextSize(ValueString.c_str());
-	ImVec2 TextPos = ImVec2(CenterPos.x - (TextSize.x * 0.5f), TopLeft.y);
-	DrawList->AddText(TextPos, ImColor(255, 255, 255, 255), ValueString.c_str());
+	WorldText::Draw(DrawList, ImVec2(CenterPos.x, TopLeft.y),
+		std::format("{} / {}", Values.first, Values.second), Theme::Cream);
 
 	LineNumber++;
 }
@@ -99,24 +104,17 @@ void StatusBars::Render()
 
 GameStatistics::GameStatistics()
 {
-	std::scoped_lock Lock(EntityList::m_ControllerMutex, EntityList::m_PawnMutex);
+	// The frame snapshot has already joined pawns to controllers and resolved
+	// friendly/enemy, so this no longer needs either mutex or the linear
+	// std::find over m_PlayerPawns it used to run once per controller.
+	const FrameSnapshot& snap = Snapshot::Current();
 
-	for (auto& Controller : EntityList::m_PlayerControllers)
+	for (const auto& view : snap.players)
 	{
-		if (Controller.IsInvalid()) continue;
+		const CCitadelPlayerController& Controller = *view.controller;
+		const C_CitadelPlayerPawn&      Pawn       = *view.pawn;
 
-		auto AssociatedPawnAddr = EntityList::GetEntityAddressFromHandle(Controller.m_hHeroPawn);
-
-		if (!AssociatedPawnAddr) continue;
-
-		auto PawnIt = std::find(EntityList::m_PlayerPawns.begin(), EntityList::m_PlayerPawns.end(), AssociatedPawnAddr);
-
-		if (PawnIt == EntityList::m_PlayerPawns.end())
-			continue;
-
-		auto& Pawn = *PawnIt;
-
-		if (Controller.IsFriendly())
+		if (view.friendly)
 		{
 			if (Controller.m_CurrentHealth > 0)
 				m_FriendlyTeamHealth += Controller.m_CurrentHealth;

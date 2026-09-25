@@ -212,6 +212,10 @@
     <ClCompile Include="GUI\Fuser\Visuals\Draw\XpOrbs.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\Draw\Powerups.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\Visuals.cpp" />
+    <ClCompile Include="GUI\Fuser\Visuals\WorldText.cpp" />
+    <ClCompile Include="GUI\Fuser\Visuals\Snapshot.cpp" />
+    <ClCompile Include="GUI\Theme\Theme.cpp" />
+    <ClCompile Include="GUI\Settings\Settings.cpp" />
     <ClCompile Include="GUI\Fuser\Fuser.cpp" />
     <ClCompile Include="GUI\Fuser\Status Bars\Status Bars.cpp" />
     <ClCompile Include="GUI\Input\KeyboardPump.cpp" />
@@ -290,6 +294,10 @@
     <ClInclude Include="GUI\Debug GUI\Trooper List\Trooper List.h" />
     <ClInclude Include="GUI\Debug\Player List\Player List.h" />
     <ClInclude Include="GUI\Fuser\Visuals\Visuals.h" />
+    <ClInclude Include="GUI\Fuser\Visuals\WorldText.h" />
+    <ClInclude Include="GUI\Fuser\Visuals\Snapshot.h" />
+    <ClInclude Include="GUI\Theme\Theme.h" />
+    <ClInclude Include="GUI\Settings\Settings.h" />
     <ClInclude Include="GUI\Fuser\Fuser.h" />
     <ClInclude Include="GUI\Main Window\Main Window.h" />
     <ClInclude Include="GUI\Radar\Radar.h" />

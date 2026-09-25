@@ -75,9 +75,24 @@ int main(int argc, char** argv)
 		Log::Init(logPath.wstring());
 	}
 
-	bool tracy = false;
+	bool tracy  = false;
+	bool uiOnly = false;
 	for (int i = 1; i < argc; ++i)
+	{
 		if (strcmp(argv[i], "--tracy") == 0) tracy = true;
+		else if (strcmp(argv[i], "--ui-only") == 0) uiOnly = true;
+		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
+		{
+			printf("Deadlock DMA\n\n"
+			       "  --ui-only   Run the overlay and menu with no DMA connection. Skips the\n"
+			       "              MemProcFS bootstrap, the Makcu link and the DMA thread, so the\n"
+			       "              UI can be reviewed without the game or a second PC. Entity\n"
+			       "              lists stay empty, so nothing is drawn in the world.\n"
+			       "  --tracy     Launch tracy-capture and write profiling_report.json.\n"
+			       "  --help      This text.\n");
+			return 0;
+		}
+	}
 
 	if (tracy)
 	{
@@ -90,8 +105,9 @@ int main(int argc, char** argv)
 
 	// Must run before anything touches vmm.dll — the DLL is delay-loaded so
 	// the process reaches this point even if the DLLs are missing, but the
-	// first VMMDLL_* call will fault otherwise.
-	if (!Bootstrap::EnsureRuntimeDlls())
+	// first VMMDLL_* call will fault otherwise. --ui-only never reaches a
+	// VMMDLL_* call, so it skips the download entirely.
+	if (!uiOnly && !Bootstrap::EnsureRuntimeDlls())
 	{
 		Log::Error("Bootstrap failed; MemProcFS DLLs unavailable. Aborting.");
 		system("pause");
@@ -102,13 +118,19 @@ int main(int argc, char** argv)
 
 	MainWindow::Initialize();
 
-	MyMakcu::Initialize();
+	if (uiOnly)
+		Log::Info("[UI] --ui-only: no DMA thread, no Makcu, entity lists stay empty");
+	else
+		MyMakcu::Initialize();
 
-	g_GameContext = new DeadlockContext();
+	std::thread DMAThread;
+	if (!uiOnly)
+	{
+		g_GameContext = new DeadlockContext();
+		DMAThread = std::thread(DMA_Thread_Main);
+	}
 
 	GuiWatchdog::Start();
-
-	std::thread DMAThread(DMA_Thread_Main);
 
 	Log::Info("END to exit");
 
@@ -125,7 +147,8 @@ int main(int argc, char** argv)
 	PhaseTimings::FinalizeJson();
 	StopTracyCapture();
 
-	DMAThread.join();
+	if (DMAThread.joinable())
+		DMAThread.join();
 
 	system("pause");
 

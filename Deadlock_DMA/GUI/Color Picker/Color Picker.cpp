@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Color Picker.h"
 #include "GUI/Fuser/Visuals/Visuals.h"
+#include "GUI/Settings/Settings.h"
 
 #include <cctype>
 #include <cstring>
@@ -26,107 +27,51 @@ namespace
 		return false;
 	}
 
-	// One compact row: swatch on the left (click to open picker), label on the right.
-	// Returns true if the row was actually drawn (filter passed).
-	bool Row(const char* label, ImColor& color, const char* filter)
+	// Registry labels are prefixed for the global search ("Color: Boss"); inside
+	// this tab the prefix is noise.
+	const char* StripPrefix(const char* label)
 	{
-		if (!MatchFilter(label, filter)) return false;
-		ImGui::PushID(label);
-		ImGui::ColorEdit4("##swatch", &color.Value.x,
-			ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreviewHalf);
-		ImGui::SameLine();
-		ImGui::TextUnformatted(label);
-		ImGui::PopID();
-		return true;
-	}
-
-	// Section header that only draws if any row in the section would pass the filter.
-	// Caller passes the list of labels in the section so we can probe ahead.
-	bool SectionVisible(const char* filter, std::initializer_list<const char*> labels)
-	{
-		if (!filter || !filter[0]) return true;
-		for (auto* lbl : labels) if (MatchFilter(lbl, filter)) return true;
-		return false;
+		const char* colon = std::strstr(label, ": ");
+		return colon ? colon + 2 : label;
 	}
 }
 
 void ColorPicker::Render()
 {
 	static char sFilter[64] = {};
-	ImGui::SetNextItemWidth(-1.0f);
+
+	const float resetWidth = 130.0f;
+	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - resetWidth - ImGui::GetStyle().ItemSpacing.x);
 	ImGui::InputTextWithHint("##colorfilter", "Filter colors...", sFilter, sizeof(sFilter));
 
+	ImGui::SameLine();
+	if (ImGui::Button("Deadlock Palette", ImVec2(resetWidth, 0.0f)))
+		Settings::ResetPrefix("ColorPicker.");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Restore every color to the Deadlock default palette");
+
+	ImGui::Spacing();
+	ImGui::Separator();
 	ImGui::Spacing();
 
-	if (SectionVisible(sFilter, { "Menu Accent" }))
+	// Driven off the settings registry rather than a hand-written list of rows.
+	// The old version enumerated its sections by hand and had silently fallen
+	// behind: both box colors, five powerup colors, the camp color, the radar
+	// local-player color and both team colors were declared but had no row here.
+	int shown = 0;
+	for (const Setting& s : Settings::All())
 	{
-		ImGui::SeparatorText("Theme");
-		Row("Menu Accent", MenuAccent, sFilter);
-		ImGui::Spacing();
+		if (s.type != SettingType::Color) continue;
+
+		const char* label = StripPrefix(s.label);
+		if (!MatchFilter(label, sFilter)) continue;
+
+		Settings::RenderWidget(s, label);
+		++shown;
 	}
 
-	if (SectionVisible(sFilter, { "Sinner's Sacrifice", "Boss", "XP Orb" }))
-	{
-		ImGui::SeparatorText("Entities");
-		Row("Sinner's Sacrifice", SinnersColor, sFilter);
-		Row("Boss",               BossColor,    sFilter);
-		Row("XP Orb",              XpOrbColor,   sFilter);
-		ImGui::Spacing();
-	}
-
-	if (SectionVisible(sFilter, { "Powerup (Default)", "Powerup Souls", "Powerup Health", "Powerup Necro" }))
-	{
-		ImGui::SeparatorText("Powerups / Breakables");
-		Row("Powerup (Default)", PowerupColor,       sFilter);
-		Row("Powerup Souls",     PowerupSoulsColor,  sFilter);
-		Row("Powerup Health",    PowerupHealthColor, sFilter);
-		Row("Powerup Necro",     PowerupNecroColor,  sFilter);
-		ImGui::Spacing();
-	}
-
-	if (SectionVisible(sFilter, { "Box (Visible)", "Box (Invisible)", "Skeleton (Visible)", "Skeleton (Invisible)", "Unsecured Souls Text", "Unsecured Souls Highlighted Text" }))
-	{
-		ImGui::SeparatorText("Players");
-		Row("Box (Visible)",                    BoxColorVisible,                     sFilter);
-		Row("Box (Invisible)",                  BoxColorInvisible,                   sFilter);
-		Row("Skeleton (Visible)",               SkeletonColorVisible,                sFilter);
-		Row("Skeleton (Invisible)",             SkeletonColorInvisible,              sFilter);
-		Row("Unsecured Souls Text",             UnsecuredSoulsTextColor,             sFilter);
-		Row("Unsecured Souls Highlighted Text", UnsecuredSoulsHighlightedTextColor,  sFilter);
-		ImGui::Spacing();
-	}
-
-	if (SectionVisible(sFilter, { "Friendly Health Status Bar", "Enemy Health Status Bar", "Friendly Souls Status Bar", "Enemy Souls Status Bar" }))
-	{
-		ImGui::SeparatorText("Team Status Bars");
-		Row("Friendly Health Status Bar", FriendlyHealthStatusBarColor, sFilter);
-		Row("Enemy Health Status Bar",    EnemyHealthStatusBarColor,    sFilter);
-		Row("Friendly Souls Status Bar",  FriendlySoulsStatusBarColor,  sFilter);
-		Row("Enemy Souls Status Bar",     EnemySoulsStatusBarColor,     sFilter);
-		ImGui::Spacing();
-	}
-
-	if (SectionVisible(sFilter, { "Health Bar Foreground", "Health Bar Background" }))
-	{
-		ImGui::SeparatorText("Visuals Health Bar");
-		Row("Health Bar Foreground", HealthBarForegroundColor, sFilter);
-		Row("Health Bar Background", HealthBarBackgroundColor, sFilter);
-		ImGui::Spacing();
-	}
-
-	if (SectionVisible(sFilter, { "Aim Assist FOV Circle", "Aim Assist FOV Circle Active" }))
-	{
-		ImGui::SeparatorText("Aim Assist");
-		Row("Aim Assist FOV Circle",        AimAssistFOVCircle,       sFilter);
-		Row("Aim Assist FOV Circle Active", AimAssistFOVCircleActive, sFilter);
-		ImGui::Spacing();
-	}
-
-	if (SectionVisible(sFilter, { "Radar Background" }))
-	{
-		ImGui::SeparatorText("Radar");
-		Row("Radar Background", RadarBackgroundColor, sFilter);
-	}
+	if (shown == 0)
+		ImGui::TextDisabled("No colors match \"%s\"", sFilter);
 }
 
 void ColorPicker::MyColorPicker(const char* label, ImColor& color)

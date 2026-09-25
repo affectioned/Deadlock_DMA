@@ -3,31 +3,31 @@
 #include "Sinners.h"
 
 #include "Deadlock/Deadlock.h"
-#include "Deadlock/Entity List/EntityList.h"
 
 #include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Fuser/Visuals/Snapshot.h"
+#include "GUI/Fuser/Visuals/WorldText.h"
 
 void Draw_Sinners::operator()()
 {
-	std::scoped_lock Lock(EntityList::m_SinnerMutex);
+	const FrameSnapshot& snap = Snapshot::Current();
 
-	auto WindowPos = ImGui::GetWindowPos();
-	auto DrawList = ImGui::GetWindowDrawList();
+	const ImVec2 origin = ImGui::GetWindowPos();
+	ImDrawList*  dl     = ImGui::GetWindowDrawList();
 
-	for (auto& Sinner : EntityList::m_Sinners)
+	for (const auto& sinner : snap.sinners)
 	{
-		if (Sinner.IsInvalid()) continue;
+		if (sinner.IsInvalid()) continue;
+		if (sinner.IsDormant()) continue;
 
-		if (Sinner.IsDormant()) continue;
+		const WorldText::Falloff falloff = WorldText::Compute(snap.DistanceMeters(sinner));
+		if (falloff.alpha <= 0.0f) continue;
 
-		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(Sinner.m_Position, ScreenPos)) continue;
+		ImVec2 anchor;
+		if (!snap.Project(sinner.m_Position, origin, anchor)) continue;
 
-		std::string SinnerString = std::format("[{}]", Sinner.m_CurrentHealth);
-
-		auto TextSize = ImGui::CalcTextSize(SinnerString.c_str());
-
-		ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
-		ImGui::TextColored(ColorPicker::SinnersColor.Value, SinnerString.c_str());
+		WorldText::Draw(dl, anchor, std::format("[{}]", sinner.m_CurrentHealth),
+			WorldText::Fade(ImGui::ColorConvertFloat4ToU32(ColorPicker::SinnersColor.Value), falloff.alpha),
+			falloff.size);
 	}
 }

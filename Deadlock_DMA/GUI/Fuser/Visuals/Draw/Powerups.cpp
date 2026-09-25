@@ -3,14 +3,15 @@
 #include "Powerups.h"
 
 #include "Deadlock/Deadlock.h"
-#include "Deadlock/Entity List/EntityList.h"
 
 #include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Fuser/Visuals/Snapshot.h"
+#include "GUI/Fuser/Visuals/WorldText.h"
 
 namespace
 {
-	// Color-code by label so the four breakable variants (souls/health/powerup/
-	// necro/crate) are visually distinct without needing per-type ImColor fields.
+	// Color-code by label so the breakable variants are visually distinct without
+	// needing per-type ImColor fields.
 	ImU32 PickColor(const char* Label)
 	{
 		if (!Label) return ImGui::ColorConvertFloat4ToU32(ColorPicker::PowerupColor.Value);
@@ -28,39 +29,34 @@ namespace
 
 void Draw_Powerups::operator()()
 {
-	std::scoped_lock Lock(EntityList::m_PowerupMutex);
+	const FrameSnapshot& snap = Snapshot::Current();
 
-	auto DrawList = ImGui::GetWindowDrawList();
+	const ImVec2 origin = ImGui::GetWindowPos();
+	ImDrawList*  dl     = ImGui::GetWindowDrawList();
 
-	for (auto& P : EntityList::m_Powerups)
+	for (const auto& P : snap.powerups)
 	{
 		if (P.IsInvalid()) continue;
-
 		if (P.IsDormant()) continue;
 
-		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(P.m_Position, ScreenPos)) continue;
+		const float distance = snap.DistanceMeters(P);
+		const WorldText::Falloff falloff = WorldText::Compute(distance);
+		if (falloff.alpha <= 0.0f) continue;
 
-		ImU32 Color = PickColor(P.m_Label);
+		ImVec2 p;
+		if (!snap.Project(P.m_Position, origin, p)) continue;
 
-		DrawList->AddCircleFilled({ ScreenPos.x, ScreenPos.y }, fCircleRadius, Color);
+		const ImU32 col = WorldText::Fade(PickColor(P.m_Label), falloff.alpha);
 
+		dl->AddCircleFilled(p, fCircleRadius, col);
+
+		std::string text;
 		if (bShowLabel && P.m_Label)
-		{
-			std::string Text = P.m_Label;
-			if (bShowDistance)
-				Text = std::format("{} [{:.0f}m]", P.m_Label, P.DistanceFromLocalPlayer(true));
-
-			auto TextSize = ImGui::CalcTextSize(Text.c_str());
-			ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y + fCircleRadius + 2.0f });
-			ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(Color), "%s", Text.c_str());
-		}
+			text = bShowDistance ? std::format("{} [{:.0f}m]", P.m_Label, distance) : P.m_Label;
 		else if (bShowDistance)
-		{
-			std::string Text = std::format("[{:.0f}m]", P.DistanceFromLocalPlayer(true));
-			auto TextSize = ImGui::CalcTextSize(Text.c_str());
-			ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y + fCircleRadius + 2.0f });
-			ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(Color), "%s", Text.c_str());
-		}
+			text = std::format("[{:.0f}m]", distance);
+
+		if (!text.empty())
+			WorldText::Draw(dl, ImVec2(p.x, p.y + fCircleRadius + 2.0f), text, col, falloff.size);
 	}
 }

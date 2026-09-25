@@ -7,6 +7,9 @@
 #include "GUI/Aim Assist/Aim Assist.h"
 #include "GUI/Main Window/Main Window.h"
 #include "GUI/Watchdog/GuiWatchdog.h"
+#include "Visuals/Snapshot.h"
+#include "Visuals/WorldText.h"
+#include "GUI/Theme/Theme.h"
 
 namespace
 {
@@ -23,11 +26,19 @@ void Fuser::Render()
 	ImGui::SetNextWindowPos(ImVec2(0, 0), s_bRequestRecenter ? ImGuiCond_Always : ImGuiCond_FirstUseEver);
 	s_bRequestRecenter = false;
 	ImGui::SetNextWindowSize(Fuser::m_ScreenSize);
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 255.0f));
+	// The fullscreen opaque-black background is required, not incidental. The
+	// overlay HWND is WS_EX_LAYERED + DwmExtendFrameIntoClientArea(-1), where DWM
+	// renders pure black as glass — so this rect is what gives the overlay a
+	// known, fully-opaque alpha surface that the ESP then draws onto. Dropping it
+	// for ImGuiWindowFlags_NoBackground leaves the surface at the clear color's
+	// alpha of 0 and the overlay stops compositing correctly.
+	//
+	// Written as 1.0f, not the 255.0f this used to carry. ImGui saturates the
+	// float alpha on conversion so both produce the same opaque black; 255.0f just
+	// looked like a byte value that had wandered into a float field.
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	ImGui::Begin("Fuser", nullptr, ImGuiWindowFlags_NoDecoration);
-	auto WindowPos = ImGui::GetWindowPos();
-	auto DrawList = ImGui::GetWindowDrawList();
 
 	GuiWatchdog::GuiStage("Fuser/AimAssistFOV");
 	AimAssist::RenderFOVCircle();
@@ -128,23 +139,33 @@ void Fuser::RenderSoulsPerMinute()
 {
 	if (!bDrawSoulsPerMinute) return;
 
-	std::scoped_lock PawnLock(EntityList::m_ControllerMutex);
+	const FrameSnapshot& snap = Snapshot::Current();
 
-	if (EntityList::m_LocalControllerIndex < 0) return;
-
-	auto& LocalController = EntityList::m_PlayerControllers[EntityList::m_LocalControllerIndex];
-
-	auto Souls = LocalController.m_TotalSouls;
-	float SoulsPerSecond = 0.0f;
-
+	// Local controller index is only meaningful against the live vector, so
+	// resolve the local controller out of the snapshot by address instead.
+	uintptr_t localCtrl = 0;
 	{
-		std::scoped_lock timeLock(Deadlock::m_ServerTimeMutex);
-		SoulsPerSecond = static_cast<float>(LocalController.m_TotalSouls) / Deadlock::m_ServerTime;
+		std::scoped_lock lock(Deadlock::m_LocalAddressMutex);
+		localCtrl = Deadlock::m_LocalPlayerControllerAddress;
 	}
+	if (!localCtrl) return;
 
-	auto SoulsPerMinute = SoulsPerSecond * 60.0f;
-	ImGui::PushFont(nullptr, 24.0f);
-	ImGui::SetCursorPos({ 2.0f, m_ScreenSize.y - ImGui::GetTextLineHeight() });
-	ImGui::Text("%.1f Souls/Min", SoulsPerMinute);
-	ImGui::PopFont();
+	const CCitadelPlayerController* pc = nullptr;
+	for (const auto& candidate : snap.controllers)
+	{
+		if (candidate.m_EntityAddress == localCtrl) { pc = &candidate; break; }
+	}
+	if (!pc) return;
+
+	// Guard the divide: serverTime is 0 until the first read lands, and in a
+	// fresh lobby, which used to produce inf on the HUD.
+	if (snap.serverTime < 1.0f) return;
+
+	const float soulsPerMinute = (static_cast<float>(pc->m_TotalSouls) / snap.serverTime) * 60.0f;
+
+	const ImVec2 origin = ImGui::GetWindowPos();
+	WorldText::Draw(ImGui::GetWindowDrawList(),
+		ImVec2(origin.x + 8.0f, origin.y + m_ScreenSize.y - 30.0f),
+		std::format("{:.1f} Souls/Min", soulsPerMinute),
+		Theme::SoulGreen, 22.0f, WorldText::Align::Left);
 }

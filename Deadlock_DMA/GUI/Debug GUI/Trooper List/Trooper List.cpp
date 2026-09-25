@@ -1,11 +1,14 @@
 #include "pch.h"
 #include "Trooper List.h"
-#include "Deadlock/Entity List/EntityList.h"
+#include "GUI/Fuser/Visuals/Snapshot.h"
+#include "GUI/Theme/Theme.h"
 
 void TrooperList::Render()
 {
-	/* m_ControllerMutex is required for friendly check */
-	std::scoped_lock Lock(EntityList::m_TrooperMutex, EntityList::m_ControllerMutex);
+	// Snapshot instead of holding m_TrooperMutex + m_ControllerMutex across the
+	// whole table; snap.IsFriendly replaces the friendly check that needed the
+	// controller lock.
+	const FrameSnapshot& snap = Snapshot::Current();
 
 	static bool bHideFriendly = true;
 	static bool bHideDormant = false;
@@ -17,10 +20,10 @@ void TrooperList::Render()
 
 	// Display total count
 	size_t visibleCount = 0;
-	for (auto& Trooper : EntityList::m_Troopers)
+	for (const auto& Trooper : snap.troopers)
 	{
 		if (Trooper.IsInvalid()) continue;
-		if (bHideFriendly && Trooper.IsFriendly()) continue;
+		if (bHideFriendly && snap.IsFriendly(Trooper)) continue;
 		if (bHideDormant && Trooper.IsDormant()) continue;
 		visibleCount++;
 	}
@@ -41,37 +44,37 @@ void TrooperList::Render()
 		ImGui::TableHeadersRow();
 
 		uint32_t TrooperNum = 0;
-		for (auto& Trooper : EntityList::m_Troopers)
+		for (const auto& Trooper : snap.troopers)
 		{
 			if (Trooper.IsInvalid()) continue;
-			if (bHideFriendly && Trooper.IsFriendly()) continue;
+			if (bHideFriendly && snap.IsFriendly(Trooper)) continue;
 			if (bHideDormant && Trooper.IsDormant()) continue;
 
 			ImGui::TableNextRow();
 
 			// Team Column
 			ImGui::TableNextColumn();
-			bool isFriendly = Trooper.IsFriendly();
+			bool isFriendly = snap.IsFriendly(Trooper);
 			if (isFriendly)
-				ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Team %d", Trooper.m_TeamNum);
+				ImGui::TextColored(Theme::Ok(), "Team %d", Trooper.m_TeamNum);
 			else
-				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Team %d", Trooper.m_TeamNum);
+				ImGui::TextColored(Theme::Bad(), "Team %d", Trooper.m_TeamNum);
 
 			// Health Column
 			ImGui::TableNextColumn();
 			float healthPercent = (float)Trooper.m_CurrentHealth / 100.0f;
 			ImVec4 healthColor;
 			if (healthPercent > 0.6f)
-				healthColor = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
+				healthColor = Theme::Ok();
 			else if (healthPercent > 0.3f)
-				healthColor = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+				healthColor = Theme::Warn();
 			else
-				healthColor = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+				healthColor = Theme::Bad();
 			ImGui::TextColored(healthColor, "%d", Trooper.m_CurrentHealth);
 
 			// Distance Column
 			ImGui::TableNextColumn();
-			float distance = Trooper.DistanceFromLocalPlayer(true);
+			float distance = snap.DistanceMeters(Trooper);
 			ImGui::Text("%.1f m", distance);
 
 			// Position Column
@@ -85,9 +88,9 @@ void TrooperList::Render()
 			// State Column
 			ImGui::TableNextColumn();
 			if (Trooper.IsDormant())
-				ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "Dormant");
+				ImGui::TextColored(Theme::Muted(), "Dormant");
 			else
-				ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Active");
+				ImGui::TextColored(Theme::Ok(), "Active");
 
 			// Address Column
 			ImGui::TableNextColumn();

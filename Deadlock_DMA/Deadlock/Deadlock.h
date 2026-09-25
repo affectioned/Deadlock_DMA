@@ -21,6 +21,10 @@ public:
 	static void ApplyViewMatrix(const Matrix44& mat);
 	static Matrix44 GetViewMatrix();
 	static bool WorldToScreen(const Vector3& Pos, Vector2& ScreenPos);
+	// Matrix-explicit overload. The overlay snapshots the view matrix once per
+	// frame and projects through this, so a frame's thousands of projections
+	// don't each take ViewMatrixMutex.
+	static bool WorldToScreen(const Matrix44& Mat, const Vector3& Pos, Vector2& ScreenPos);
 
 public:
 	static inline std::mutex m_LocalAddressMutex{};

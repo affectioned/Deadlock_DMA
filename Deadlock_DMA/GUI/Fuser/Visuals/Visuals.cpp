@@ -14,6 +14,9 @@
 #include "Draw/XpOrbs.h"
 #include "Draw/Powerups.h"
 
+#include "WorldText.h"
+#include "Snapshot.h"
+
 void Visuals::OnFrame()
 {
 	if (!bMasterToggle)
@@ -97,6 +100,19 @@ void Visuals::RenderSettings()
 			ImGui::Indent();
 			ImGui::SetNextItemWidth(150.0f);
 			ImGui::SliderFloat("Box Thickness", &Draw_Players::fBoxThickness, 0.1f, 5.0f, "%.1f");
+
+			static constexpr const char* kBoxStyles[] = { "Full", "Corners" };
+			int boxStyle = static_cast<int>(Draw_Players::eBoxStyle);
+			ImGui::SetNextItemWidth(120.0f);
+			if (ImGui::Combo("Box Style", &boxStyle, kBoxStyles, IM_ARRAYSIZE(kBoxStyles)))
+				Draw_Players::eBoxStyle = static_cast<EBoxStyle>(boxStyle);
+
+			ImGui::Checkbox("Fit To Skeleton", &Draw_Players::bBoxFromBones);
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Size the box from the projected bone extents instead of\n"
+				                  "a fixed 1:2 aspect guess off the head bone.");
+
+			ImGui::Checkbox("Box Fill", &Draw_Players::bBoxFill);
 			ImGui::Unindent();
 		}
 
@@ -114,6 +130,9 @@ void Visuals::RenderSettings()
 			ImGui::SetNextItemWidth(120.0f);
 			if (ImGui::Combo("Position", &hbPos, kHealthBarPositions, IM_ARRAYSIZE(kHealthBarPositions)))
 				Draw_Players::eHealthBarPosition = static_cast<EHealthBarPosition>(hbPos);
+			ImGui::Checkbox("Health Gradient", &Draw_Players::bHealthGradient);
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Fill color follows remaining health: green > amber > red.");
 			ImGui::Unindent();
 		}
 
@@ -166,4 +185,46 @@ void Visuals::RenderSettings()
 	ImGui::Checkbox("Bosses",  &Draw_Camps::bMasterToggle);
 	ImGui::Checkbox("Sinners", &Draw_Sinners::bMasterToggle);
 	ImGui::Checkbox("XP Orbs", &Draw_XpOrbs::bMasterToggle);
+
+	ImGui::Spacing();
+
+	if (ImGui::CollapsingHeader("Text & Distance"))
+	{
+		ImGui::Indent();
+		ImGui::Checkbox("Outline", &WorldText::bOutline);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Dark halo behind every world tag. Without it, light text\n"
+			                  "disappears over bright geometry.");
+
+		ImGui::Checkbox("Scale With Distance", &WorldText::bDistanceScale);
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::SliderFloat("Base Size",    &WorldText::fBaseTextSize, 8.0f, 32.0f, "%.0f");
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::SliderFloat("Minimum Size", &WorldText::fMinTextSize, 6.0f, 24.0f, "%.0f");
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::SliderFloat("Fade Start (m)", &WorldText::fFadeStart, 0.0f, 200.0f, "%.0f");
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::SliderFloat("Max Distance (m)", &WorldText::fMaxDistance, 0.0f, 400.0f,
+		                   WorldText::fMaxDistance <= 0.0f ? "off" : "%.0f");
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Entities past this are not drawn at all. 0 disables culling.");
+		ImGui::Unindent();
+	}
+
+	ImGui::Spacing();
+
+	if (ImGui::CollapsingHeader("Timing"))
+	{
+		ImGui::Indent();
+		ImGui::Checkbox("Extrapolate Positions", &Snapshot::bExtrapolate);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Advance entity positions by velocity for the time since the\n"
+			                  "last DMA read. Removes the half-a-poll lag on moving targets.");
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::SliderFloat("Max Extrapolation (ms)", &Snapshot::fMaxExtrapolationMs, 0.0f, 120.0f, "%.0f");
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Cap on how far ahead to project. Beyond this the read has\n"
+			                  "stalled, and extrapolating would fling tags across the screen.");
+		ImGui::Unindent();
+	}
 }

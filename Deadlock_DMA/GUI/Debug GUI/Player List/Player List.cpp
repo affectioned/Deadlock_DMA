@@ -2,11 +2,13 @@
 
 #include "Player List.h"
 
-#include "Deadlock/Entity List/EntityList.h"
+#include "GUI/Fuser/Visuals/Snapshot.h"
 
 void PlayerList::Render()
 {
-	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
+	// Snapshot instead of locking m_PawnMutex + m_ControllerMutex for the whole
+	// table build, and the pawn↔controller join is already done for us.
+	const FrameSnapshot& snap = Snapshot::Current();
 
 	if (ImGui::BeginTable("Players Table", 7))
 	{
@@ -21,27 +23,24 @@ void PlayerList::Render()
 
 		uint32_t PlayerNum = 0;
 
-		for (auto& Pawn : EntityList::m_PlayerPawns)
+		for (const auto& view : snap.players)
 		{
-			uintptr_t ControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.m_hController);
-
-			auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), ControllerAddr);
-
-			if (ControllerIt == EntityList::m_PlayerControllers.end()) continue;
-
-			if (ControllerIt->IsInvalid() || Pawn.IsInvalid()) continue;
+			const auto& Pawn = *view.pawn;
+			const auto& PC   = *view.controller;
 
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
-			ImGui::Text("%d / %d", ControllerIt->m_CurrentHealth, ControllerIt->m_MaxHealth);
+			ImGui::Text("%d / %d", PC.m_CurrentHealth, PC.m_MaxHealth);
 			ImGui::TableNextColumn();
-			ImGui::Text("%d", static_cast<int>(ControllerIt->m_HeroID));
+			ImGui::Text("%d", static_cast<int>(PC.m_HeroID));
 			ImGui::TableNextColumn();
-			ImGui::Text(ControllerIt->GetHeroName().data());
+			// TextUnformatted: hero names are data, and ImGui::Text would treat a
+			// '%' in one as a conversion specifier.
+			ImGui::TextUnformatted(PC.GetHeroName().data());
 			ImGui::TableNextColumn();
-			ImGui::Text("%.2f m", Pawn.DistanceFromLocalPlayer(true));
+			ImGui::Text("%.2f m", view.distanceMeters);
 			ImGui::TableNextColumn();
-			ImGui::Text("%d", ControllerIt->m_TotalSouls);
+			ImGui::Text("%d", PC.m_TotalSouls);
 			ImGui::TableNextColumn();
 			if (ImGui::Button(std::format("Copy Address##{}", PlayerNum).c_str()))
 				ImGui::SetClipboardText(std::format("0x{:X}", Pawn.m_EntityAddress).c_str());
