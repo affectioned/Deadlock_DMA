@@ -157,8 +157,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  32,  33 },  // leg_upper_r -> leg_lower_r
             BonePair{  33,  34 },  // leg_lower_r -> ankle_r
             BonePair{  34,  35 },  // ankle_r -> ball_r
-            BonePair{  29,  91 },  // ball_l -> ball_end_l
-            BonePair{  35,  92 },  // ball_r -> ball_end_r
+            BonePair{  29,  87 },  // ball_l -> ball_end_l
+            BonePair{  35,  88 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  28 },
@@ -167,8 +167,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "arm_lower_r",  21 },
             { "arm_upper_l",  15 },
             { "arm_upper_r",  20 },
-            { "ball_end_l",  91 },
-            { "ball_end_r",  92 },
+            { "ball_end_l",  87 },
+            { "ball_end_r",  88 },
             { "ball_l",  29 },
             { "ball_r",  35 },
             { "clavicle_l",  14 },
@@ -222,38 +222,38 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  27,  28 },  // leg_lower_r -> ankle_r
             BonePair{  28,  29 },  // ankle_r -> ball_r
             BonePair{   6,  44 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  86 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{   9,  87 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{   9,  88 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  17, 111 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  17, 112 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  16, 113 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  16, 114 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  10, 412 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  25, 428 },  // ball_l -> ball_end_l
-            BonePair{  22, 429 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  22, 430 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  29, 431 },  // ball_r -> ball_end_r
-            BonePair{  26, 432 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  26, 433 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  10,  86 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  10,  87 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{   9,  88 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{   9,  89 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  17, 112 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  17, 113 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  16, 114 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  16, 115 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  22, 138 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  22, 139 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  26, 140 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  26, 141 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  25, 432 },  // ball_l -> ball_end_l
+            BonePair{  29, 433 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  24 },
             { "ankle_r",  28 },
             { "arm_lower_l",  10 },
-            { "arm_lower_l_twist", 412 },
-            { "arm_lower_l_twist1",  86 },
+            { "arm_lower_l_twist",  86 },
+            { "arm_lower_l_twist1",  87 },
             { "arm_lower_r",  17 },
-            { "arm_lower_r_twist", 111 },
-            { "arm_lower_r_twist1", 112 },
+            { "arm_lower_r_twist", 112 },
+            { "arm_lower_r_twist1", 113 },
             { "arm_upper_l",   9 },
-            { "arm_upper_l_twist",  87 },
-            { "arm_upper_l_twist1",  88 },
+            { "arm_upper_l_twist",  88 },
+            { "arm_upper_l_twist1",  89 },
             { "arm_upper_r",  16 },
-            { "arm_upper_r_twist", 113 },
-            { "arm_upper_r_twist1", 114 },
-            { "ball_end_l", 428 },
-            { "ball_end_r", 431 },
+            { "arm_upper_r_twist", 114 },
+            { "arm_upper_r_twist1", 115 },
+            { "ball_end_l", 432 },
+            { "ball_end_r", 433 },
             { "ball_l",  25 },
             { "ball_r",  29 },
             { "clavicle_l",   8 },
@@ -264,11 +264,11 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  23 },
             { "leg_lower_r",  27 },
             { "leg_upper_l",  22 },
-            { "leg_upper_l_twist", 429 },
-            { "leg_upper_l_twist1", 430 },
+            { "leg_upper_l_twist", 138 },
+            { "leg_upper_l_twist1", 139 },
             { "leg_upper_r",  26 },
-            { "leg_upper_r_twist", 432 },
-            { "leg_upper_r_twist1", 433 },
+            { "leg_upper_r_twist", 140 },
+            { "leg_upper_r_twist1", 141 },
             { "neck_0",   6 },
             { "neck_0_twist",  44 },
             { "pelvis",   1 },
@@ -311,30 +311,30 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  28,  29 },  // leg_upper_l -> leg_lower_l
             BonePair{  29,  30 },  // leg_lower_l -> ankle_l
             BonePair{  30,  31 },  // ankle_l -> ball_l
-            BonePair{   9,  59 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{   9,  60 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{   8,  82 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{   8,  83 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  27, 117 },  // ball_r -> ball_end_r
-            BonePair{  24, 123 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  24, 124 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  31, 125 },  // ball_l -> ball_end_l
-            BonePair{  28, 140 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  28, 141 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{   9,  60 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{   9,  61 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{   8,  83 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{   8,  84 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  27, 120 },  // ball_r -> ball_end_r
+            BonePair{  24, 126 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  24, 127 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  31, 128 },  // ball_l -> ball_end_l
+            BonePair{  28, 143 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  28, 144 },  // leg_upper_l -> leg_upper_l_twist1
         },
         /* ids */ {
             { "ankle_l",  30 },
             { "ankle_r",  26 },
             { "arm_lower_l",  17 },
             { "arm_lower_r",   9 },
-            { "arm_lower_r_twist",  59 },
-            { "arm_lower_r_twist1",  60 },
+            { "arm_lower_r_twist",  60 },
+            { "arm_lower_r_twist1",  61 },
             { "arm_upper_l",  16 },
             { "arm_upper_r",   8 },
-            { "arm_upper_r_twist",  82 },
-            { "arm_upper_r_twist1",  83 },
-            { "ball_end_l", 125 },
-            { "ball_end_r", 117 },
+            { "arm_upper_r_twist",  83 },
+            { "arm_upper_r_twist1",  84 },
+            { "ball_end_l", 128 },
+            { "ball_end_r", 120 },
             { "ball_l",  31 },
             { "ball_r",  27 },
             { "clavicle_l",  15 },
@@ -345,11 +345,11 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  29 },
             { "leg_lower_r",  25 },
             { "leg_upper_l",  28 },
-            { "leg_upper_l_twist", 140 },
-            { "leg_upper_l_twist1", 141 },
+            { "leg_upper_l_twist", 143 },
+            { "leg_upper_l_twist1", 144 },
             { "leg_upper_r",  24 },
-            { "leg_upper_r_twist", 123 },
-            { "leg_upper_r_twist1", 124 },
+            { "leg_upper_r_twist", 126 },
+            { "leg_upper_r_twist1", 127 },
             { "neck_0",   5 },
             { "pelvis",   0 },
             { "spine_0",   1 },
@@ -369,86 +369,86 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_staging/chrono/chrono.vmdl
     { "models/heroes_staging/chrono/chrono.vmdl", {
         /* pairs */ {
-            BonePair{   2,   3 },  // pelvis -> spine_0
-            BonePair{   3,   4 },  // spine_0 -> spine_1
-            BonePair{   4,   5 },  // spine_1 -> spine_2
-            BonePair{   5,   6 },  // spine_2 -> spine_3
-            BonePair{   6,   7 },  // spine_3 -> neck_0
-            BonePair{   7,   8 },  // neck_0 -> head
-            BonePair{   6,   9 },  // spine_3 -> clavicle_l
-            BonePair{   9,  10 },  // clavicle_l -> arm_upper_l
-            BonePair{  10,  11 },  // arm_upper_l -> arm_lower_l
-            BonePair{  11,  12 },  // arm_lower_l -> hand_l
-            BonePair{   6,  13 },  // spine_3 -> clavicle_r
-            BonePair{  13,  14 },  // clavicle_r -> arm_upper_r
-            BonePair{  14,  15 },  // arm_upper_r -> arm_lower_r
-            BonePair{  15,  16 },  // arm_lower_r -> hand_r
-            BonePair{   2,  25 },  // pelvis -> leg_upper_l
-            BonePair{  25,  26 },  // leg_upper_l -> leg_lower_l
-            BonePair{  26,  27 },  // leg_lower_l -> ankle_l
-            BonePair{  27,  28 },  // ankle_l -> ball_l
-            BonePair{   2,  29 },  // pelvis -> leg_upper_r
-            BonePair{  29,  30 },  // leg_upper_r -> leg_lower_r
-            BonePair{  30,  31 },  // leg_lower_r -> ankle_r
-            BonePair{  31,  32 },  // ankle_r -> ball_r
-            BonePair{   7,  33 },  // neck_0 -> neck_0_twist
-            BonePair{  11,  55 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  11,  56 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  10,  57 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  10,  58 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  15,  90 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  15,  91 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  14,  92 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  14,  93 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  25,  94 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  25,  95 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  29,  96 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  29,  97 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{   3,   4 },  // pelvis -> spine_0
+            BonePair{   4,   5 },  // spine_0 -> spine_1
+            BonePair{   5,   6 },  // spine_1 -> spine_2
+            BonePair{   6,   7 },  // spine_2 -> spine_3
+            BonePair{   7,   8 },  // spine_3 -> neck_0
+            BonePair{   8,   9 },  // neck_0 -> head
+            BonePair{   7,  10 },  // spine_3 -> clavicle_l
+            BonePair{  10,  11 },  // clavicle_l -> arm_upper_l
+            BonePair{  11,  12 },  // arm_upper_l -> arm_lower_l
+            BonePair{  12,  13 },  // arm_lower_l -> hand_l
+            BonePair{  11,  14 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{   7,  15 },  // spine_3 -> clavicle_r
+            BonePair{  15,  16 },  // clavicle_r -> arm_upper_r
+            BonePair{  16,  17 },  // arm_upper_r -> arm_lower_r
+            BonePair{  17,  18 },  // arm_lower_r -> hand_r
+            BonePair{   3,  27 },  // pelvis -> leg_upper_l
+            BonePair{  27,  28 },  // leg_upper_l -> leg_lower_l
+            BonePair{  28,  29 },  // leg_lower_l -> ankle_l
+            BonePair{  29,  30 },  // ankle_l -> ball_l
+            BonePair{   3,  31 },  // pelvis -> leg_upper_r
+            BonePair{  31,  32 },  // leg_upper_r -> leg_lower_r
+            BonePair{  32,  33 },  // leg_lower_r -> ankle_r
+            BonePair{  33,  34 },  // ankle_r -> ball_r
+            BonePair{   8,  35 },  // neck_0 -> neck_0_twist
+            BonePair{  12,  57 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  12,  58 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  11,  59 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  17,  91 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  17,  92 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  16,  93 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  16,  94 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  27,  95 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  27,  96 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  31,  97 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  31,  98 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
-            { "ankle_l",  27 },
-            { "ankle_r",  31 },
-            { "arm_lower_l",  11 },
-            { "arm_lower_l_twist",  55 },
-            { "arm_lower_l_twist1",  56 },
-            { "arm_lower_r",  15 },
-            { "arm_lower_r_twist",  90 },
-            { "arm_lower_r_twist1",  91 },
-            { "arm_upper_l",  10 },
-            { "arm_upper_l_twist",  57 },
-            { "arm_upper_l_twist1",  58 },
-            { "arm_upper_r",  14 },
-            { "arm_upper_r_twist",  92 },
-            { "arm_upper_r_twist1",  93 },
-            { "ball_l",  28 },
-            { "ball_r",  32 },
-            { "clavicle_l",   9 },
-            { "clavicle_r",  13 },
-            { "hand_l",  12 },
-            { "hand_r",  16 },
-            { "head",   8 },
-            { "leg_lower_l",  26 },
-            { "leg_lower_r",  30 },
-            { "leg_upper_l",  25 },
-            { "leg_upper_l_twist",  94 },
-            { "leg_upper_l_twist1",  95 },
-            { "leg_upper_r",  29 },
-            { "leg_upper_r_twist",  96 },
-            { "leg_upper_r_twist1",  97 },
-            { "neck_0",   7 },
-            { "neck_0_twist",  33 },
-            { "pelvis",   2 },
-            { "spine_0",   3 },
-            { "spine_1",   4 },
-            { "spine_2",   5 },
-            { "spine_3",   6 },
+            { "ankle_l",  29 },
+            { "ankle_r",  33 },
+            { "arm_lower_l",  12 },
+            { "arm_lower_l_twist",  57 },
+            { "arm_lower_l_twist1",  58 },
+            { "arm_lower_r",  17 },
+            { "arm_lower_r_twist",  91 },
+            { "arm_lower_r_twist1",  92 },
+            { "arm_upper_l",  11 },
+            { "arm_upper_l_twist",  59 },
+            { "arm_upper_l_twist1",  14 },
+            { "arm_upper_r",  16 },
+            { "arm_upper_r_twist",  93 },
+            { "arm_upper_r_twist1",  94 },
+            { "ball_l",  30 },
+            { "ball_r",  34 },
+            { "clavicle_l",  10 },
+            { "clavicle_r",  15 },
+            { "hand_l",  13 },
+            { "hand_r",  18 },
+            { "head",   9 },
+            { "leg_lower_l",  28 },
+            { "leg_lower_r",  32 },
+            { "leg_upper_l",  27 },
+            { "leg_upper_l_twist",  95 },
+            { "leg_upper_l_twist1",  96 },
+            { "leg_upper_r",  31 },
+            { "leg_upper_r_twist",  97 },
+            { "leg_upper_r_twist1",  98 },
+            { "neck_0",   8 },
+            { "neck_0_twist",  35 },
+            { "pelvis",   3 },
+            { "spine_0",   4 },
+            { "spine_1",   5 },
+            { "spine_2",   6 },
+            { "spine_3",   7 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 8 },
-            /* [1] Neck  */ { 7 },
-            /* [2] Torso */ { 2 },
-            /* [3] Arms  */ { 9 },
-            /* [4] Legs  */ { 26 },
+            /* [0] Head  */ { 9 },
+            /* [1] Neck  */ { 8 },
+            /* [2] Torso */ { 3 },
+            /* [3] Arms  */ { 10 },
+            /* [4] Legs  */ { 28 },
         },
     }},
 
@@ -477,8 +477,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  43,  44 },  // leg_upper_r -> leg_lower_r
             BonePair{  44,  45 },  // leg_lower_r -> ankle_r
             BonePair{  45,  46 },  // ankle_r -> ball_r
-            BonePair{  42, 151 },  // ball_l -> ball_end_l
-            BonePair{  46, 158 },  // ball_r -> ball_end_r
+            BonePair{  42, 152 },  // ball_l -> ball_end_l
+            BonePair{  46, 159 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  41 },
@@ -487,8 +487,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "arm_lower_r",  14 },
             { "arm_upper_l",   9 },
             { "arm_upper_r",  13 },
-            { "ball_end_l", 151 },
-            { "ball_end_r", 158 },
+            { "ball_end_l", 152 },
+            { "ball_end_r", 159 },
             { "ball_l",  42 },
             { "ball_r",  46 },
             { "clavicle_l",   8 },
@@ -545,30 +545,31 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  62,  63 },  // ankle_r -> ball_r
             BonePair{  60,  64 },  // leg_upper_r -> leg_upper_r_twist
             BonePair{  60,  65 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  10,  97 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  10,  98 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{   9,  99 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{   9, 100 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  38, 124 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  38, 125 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  37, 126 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  37, 127 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{   6,  74 },  // neck_0 -> neck_0_twist
+            BonePair{  10,  98 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  10,  99 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{   9, 100 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{   9, 101 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  38, 125 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  38, 126 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  37, 127 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  37, 128 },  // arm_upper_l -> arm_upper_l_twist1
         },
         /* ids */ {
             { "ankle_l",  56 },
             { "ankle_r",  62 },
             { "arm_lower_l",  38 },
-            { "arm_lower_l_twist", 124 },
-            { "arm_lower_l_twist1", 125 },
+            { "arm_lower_l_twist", 125 },
+            { "arm_lower_l_twist1", 126 },
             { "arm_lower_r",  10 },
-            { "arm_lower_r_twist",  97 },
-            { "arm_lower_r_twist1",  98 },
+            { "arm_lower_r_twist",  98 },
+            { "arm_lower_r_twist1",  99 },
             { "arm_upper_l",  37 },
-            { "arm_upper_l_twist", 126 },
-            { "arm_upper_l_twist1", 127 },
+            { "arm_upper_l_twist", 127 },
+            { "arm_upper_l_twist1", 128 },
             { "arm_upper_r",   9 },
-            { "arm_upper_r_twist",  99 },
-            { "arm_upper_r_twist1", 100 },
+            { "arm_upper_r_twist", 100 },
+            { "arm_upper_r_twist1", 101 },
             { "ball_l",  57 },
             { "ball_r",  63 },
             { "clavicle_l",  36 },
@@ -585,6 +586,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_upper_r_twist",  64 },
             { "leg_upper_r_twist1",  65 },
             { "neck_0",   6 },
+            { "neck_0_twist",  74 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
@@ -711,16 +713,35 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  40,  41 },  // leg_upper_r -> leg_lower_r
             BonePair{  41,  42 },  // leg_lower_r -> ankle_r
             BonePair{  42,  43 },  // ankle_r -> ball_r
-            BonePair{  36, 124 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  40, 129 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  10,  72 },  // neck_0 -> neck_0_twist
+            BonePair{  14,  93 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  14,  94 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  13,  95 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  13,  96 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  22, 117 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  22, 118 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  21, 120 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  21, 121 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  36, 133 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  36, 134 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  40, 139 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  40, 140 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  38 },
             { "ankle_r",  42 },
             { "arm_lower_l",  14 },
+            { "arm_lower_l_twist",  93 },
+            { "arm_lower_l_twist1",  94 },
             { "arm_lower_r",  22 },
+            { "arm_lower_r_twist", 117 },
+            { "arm_lower_r_twist1", 118 },
             { "arm_upper_l",  13 },
+            { "arm_upper_l_twist",  95 },
+            { "arm_upper_l_twist1",  96 },
             { "arm_upper_r",  21 },
+            { "arm_upper_r_twist", 120 },
+            { "arm_upper_r_twist1", 121 },
             { "ball_l",  39 },
             { "ball_r",  43 },
             { "clavicle_l",  12 },
@@ -731,10 +752,13 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  37 },
             { "leg_lower_r",  41 },
             { "leg_upper_l",  36 },
-            { "leg_upper_l_twist", 124 },
+            { "leg_upper_l_twist", 133 },
+            { "leg_upper_l_twist1", 134 },
             { "leg_upper_r",  40 },
-            { "leg_upper_r_twist", 129 },
+            { "leg_upper_r_twist", 139 },
+            { "leg_upper_r_twist1", 140 },
             { "neck_0",  10 },
+            { "neck_0_twist",  72 },
             { "pelvis",   5 },
             { "spine_0",   6 },
             { "spine_1",   7 },
@@ -777,124 +801,154 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_staging/gigawatt_prisoner/gigawatt_prisoner.vmdl
     { "models/heroes_staging/gigawatt_prisoner/gigawatt_prisoner.vmdl", {
         /* pairs */ {
-            BonePair{   7,   8 },  // pelvis -> spine_0
-            BonePair{   8,   9 },  // spine_0 -> spine_1
-            BonePair{   9,  10 },  // spine_1 -> spine_2
-            BonePair{  10,  11 },  // spine_2 -> spine_3
-            BonePair{  11,  12 },  // spine_3 -> neck_0
-            BonePair{  12,  13 },  // neck_0 -> head
-            BonePair{  11,  17 },  // spine_3 -> clavicle_l
-            BonePair{  17,  18 },  // clavicle_l -> arm_upper_l
-            BonePair{  18,  19 },  // arm_upper_l -> arm_lower_l
-            BonePair{  19,  20 },  // arm_lower_l -> hand_l
-            BonePair{  11,  21 },  // spine_3 -> clavicle_r
-            BonePair{  21,  22 },  // clavicle_r -> arm_upper_r
-            BonePair{  22,  23 },  // arm_upper_r -> arm_lower_r
-            BonePair{  23,  24 },  // arm_lower_r -> hand_r
-            BonePair{   7,  62 },  // pelvis -> leg_upper_l
-            BonePair{  62,  63 },  // leg_upper_l -> leg_lower_l
-            BonePair{  63,  64 },  // leg_lower_l -> ankle_l
-            BonePair{  64,  65 },  // ankle_l -> ball_l
-            BonePair{   7,  66 },  // pelvis -> leg_upper_r
-            BonePair{  66,  67 },  // leg_upper_r -> leg_lower_r
-            BonePair{  67,  68 },  // leg_lower_r -> ankle_r
-            BonePair{  68,  69 },  // ankle_r -> ball_r
-            BonePair{  62, 209 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  66, 212 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{   8,   9 },  // pelvis -> spine_0
+            BonePair{   9,  10 },  // spine_0 -> spine_1
+            BonePair{  10,  11 },  // spine_1 -> spine_2
+            BonePair{  11,  12 },  // spine_2 -> spine_3
+            BonePair{  12,  13 },  // spine_3 -> neck_0
+            BonePair{  13,  14 },  // neck_0 -> head
+            BonePair{  12,  18 },  // spine_3 -> clavicle_l
+            BonePair{  18,  19 },  // clavicle_l -> arm_upper_l
+            BonePair{  19,  20 },  // arm_upper_l -> arm_lower_l
+            BonePair{  20,  21 },  // arm_lower_l -> hand_l
+            BonePair{  12,  22 },  // spine_3 -> clavicle_r
+            BonePair{  22,  23 },  // clavicle_r -> arm_upper_r
+            BonePair{  23,  24 },  // arm_upper_r -> arm_lower_r
+            BonePair{  24,  25 },  // arm_lower_r -> hand_r
+            BonePair{   8,  63 },  // pelvis -> leg_upper_l
+            BonePair{  63,  64 },  // leg_upper_l -> leg_lower_l
+            BonePair{  64,  65 },  // leg_lower_l -> ankle_l
+            BonePair{  65,  66 },  // ankle_l -> ball_l
+            BonePair{   8,  67 },  // pelvis -> leg_upper_r
+            BonePair{  67,  68 },  // leg_upper_r -> leg_lower_r
+            BonePair{  68,  69 },  // leg_lower_r -> ankle_r
+            BonePair{  69,  70 },  // ankle_r -> ball_r
+            BonePair{  13,  72 },  // neck_0 -> neck_0_twist
+            BonePair{  20,  94 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  20,  95 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  19, 109 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  19, 110 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  24, 152 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  24, 153 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  23, 156 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  23, 157 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  63, 215 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  63, 216 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  67, 219 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  67, 220 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  66, 243 },  // ball_l -> ball_end_l
+            BonePair{  70, 244 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  64 },
-            { "ankle_r",  68 },
-            { "arm_lower_l",  19 },
-            { "arm_lower_r",  23 },
-            { "arm_upper_l",  18 },
-            { "arm_upper_r",  22 },
-            { "ball_l",  65 },
-            { "ball_r",  69 },
-            { "clavicle_l",  17 },
-            { "clavicle_r",  21 },
-            { "hand_l",  20 },
-            { "hand_r",  24 },
-            { "head",  13 },
-            { "leg_lower_l",  63 },
-            { "leg_lower_r",  67 },
-            { "leg_upper_l",  62 },
-            { "leg_upper_l_twist", 209 },
-            { "leg_upper_r",  66 },
-            { "leg_upper_r_twist", 212 },
-            { "neck_0",  12 },
-            { "pelvis",   7 },
-            { "spine_0",   8 },
-            { "spine_1",   9 },
-            { "spine_2",  10 },
-            { "spine_3",  11 },
+            { "ankle_l",  65 },
+            { "ankle_r",  69 },
+            { "arm_lower_l",  20 },
+            { "arm_lower_l_twist",  94 },
+            { "arm_lower_l_twist1",  95 },
+            { "arm_lower_r",  24 },
+            { "arm_lower_r_twist", 152 },
+            { "arm_lower_r_twist1", 153 },
+            { "arm_upper_l",  19 },
+            { "arm_upper_l_twist", 109 },
+            { "arm_upper_l_twist1", 110 },
+            { "arm_upper_r",  23 },
+            { "arm_upper_r_twist", 156 },
+            { "arm_upper_r_twist1", 157 },
+            { "ball_end_l", 243 },
+            { "ball_end_r", 244 },
+            { "ball_l",  66 },
+            { "ball_r",  70 },
+            { "clavicle_l",  18 },
+            { "clavicle_r",  22 },
+            { "hand_l",  21 },
+            { "hand_r",  25 },
+            { "head",  14 },
+            { "leg_lower_l",  64 },
+            { "leg_lower_r",  68 },
+            { "leg_upper_l",  63 },
+            { "leg_upper_l_twist", 215 },
+            { "leg_upper_l_twist1", 216 },
+            { "leg_upper_r",  67 },
+            { "leg_upper_r_twist", 219 },
+            { "leg_upper_r_twist1", 220 },
+            { "neck_0",  13 },
+            { "neck_0_twist",  72 },
+            { "pelvis",   8 },
+            { "spine_0",   9 },
+            { "spine_1",  10 },
+            { "spine_2",  11 },
+            { "spine_3",  12 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 13 },
-            /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 17 },
-            /* [4] Legs  */ { 63 },
+            /* [0] Head  */ { 14 },
+            /* [1] Neck  */ { 13 },
+            /* [2] Torso */ { 8 },
+            /* [3] Arms  */ { 18 },
+            /* [4] Legs  */ { 64 },
         },
     }},
 
     // models/heroes_staging/haze/haze.vmdl
     { "models/heroes_staging/haze/haze.vmdl", {
         /* pairs */ {
-            BonePair{   7,   8 },  // pelvis -> spine_0
-            BonePair{   8,   9 },  // spine_0 -> spine_1
-            BonePair{   9,  10 },  // spine_1 -> spine_2
-            BonePair{  10,  11 },  // spine_2 -> spine_3
-            BonePair{  11,  12 },  // spine_3 -> neck_0
-            BonePair{  12,  13 },  // neck_0 -> head
-            BonePair{  11,  15 },  // spine_3 -> clavicle_l
-            BonePair{  15,  16 },  // clavicle_l -> arm_upper_l
-            BonePair{  16,  17 },  // arm_upper_l -> arm_lower_l
-            BonePair{  17,  18 },  // arm_lower_l -> hand_l
-            BonePair{  11,  21 },  // spine_3 -> clavicle_r
-            BonePair{  21,  22 },  // clavicle_r -> arm_upper_r
-            BonePair{  22,  23 },  // arm_upper_r -> arm_lower_r
-            BonePair{  23,  24 },  // arm_lower_r -> hand_r
-            BonePair{   7,  27 },  // pelvis -> leg_upper_l
-            BonePair{  27,  28 },  // leg_upper_l -> leg_lower_l
-            BonePair{  28,  29 },  // leg_lower_l -> ankle_l
-            BonePair{  29,  30 },  // ankle_l -> ball_l
-            BonePair{   7,  32 },  // pelvis -> leg_upper_r
-            BonePair{  32,  33 },  // leg_upper_r -> leg_lower_r
-            BonePair{  33,  34 },  // leg_lower_r -> ankle_r
-            BonePair{  34,  35 },  // ankle_r -> ball_r
+            BonePair{   8,   9 },  // pelvis -> spine_0
+            BonePair{   9,  10 },  // spine_0 -> spine_1
+            BonePair{  10,  11 },  // spine_1 -> spine_2
+            BonePair{  11,  12 },  // spine_2 -> spine_3
+            BonePair{  12,  13 },  // spine_3 -> neck_0
+            BonePair{  13,  14 },  // neck_0 -> head
+            BonePair{  12,  16 },  // spine_3 -> clavicle_l
+            BonePair{  16,  17 },  // clavicle_l -> arm_upper_l
+            BonePair{  17,  18 },  // arm_upper_l -> arm_lower_l
+            BonePair{  18,  19 },  // arm_lower_l -> hand_l
+            BonePair{  12,  22 },  // spine_3 -> clavicle_r
+            BonePair{  22,  23 },  // clavicle_r -> arm_upper_r
+            BonePair{  23,  24 },  // arm_upper_r -> arm_lower_r
+            BonePair{  24,  25 },  // arm_lower_r -> hand_r
+            BonePair{   8,  28 },  // pelvis -> leg_upper_l
+            BonePair{  28,  29 },  // leg_upper_l -> leg_lower_l
+            BonePair{  29,  30 },  // leg_lower_l -> ankle_l
+            BonePair{  30,  31 },  // ankle_l -> ball_l
+            BonePair{   8,  33 },  // pelvis -> leg_upper_r
+            BonePair{  33,  34 },  // leg_upper_r -> leg_lower_r
+            BonePair{  34,  35 },  // leg_lower_r -> ankle_r
+            BonePair{  35,  36 },  // ankle_r -> ball_r
+            BonePair{  31, 115 },  // ball_l -> ball_end_l
+            BonePair{  36, 116 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  29 },
-            { "ankle_r",  34 },
-            { "arm_lower_l",  17 },
-            { "arm_lower_r",  23 },
-            { "arm_upper_l",  16 },
-            { "arm_upper_r",  22 },
-            { "ball_l",  30 },
-            { "ball_r",  35 },
-            { "clavicle_l",  15 },
-            { "clavicle_r",  21 },
-            { "hand_l",  18 },
-            { "hand_r",  24 },
-            { "head",  13 },
-            { "leg_lower_l",  28 },
-            { "leg_lower_r",  33 },
-            { "leg_upper_l",  27 },
-            { "leg_upper_r",  32 },
-            { "neck_0",  12 },
-            { "pelvis",   7 },
-            { "spine_0",   8 },
-            { "spine_1",   9 },
-            { "spine_2",  10 },
-            { "spine_3",  11 },
+            { "ankle_l",  30 },
+            { "ankle_r",  35 },
+            { "arm_lower_l",  18 },
+            { "arm_lower_r",  24 },
+            { "arm_upper_l",  17 },
+            { "arm_upper_r",  23 },
+            { "ball_end_l", 115 },
+            { "ball_end_r", 116 },
+            { "ball_l",  31 },
+            { "ball_r",  36 },
+            { "clavicle_l",  16 },
+            { "clavicle_r",  22 },
+            { "hand_l",  19 },
+            { "hand_r",  25 },
+            { "head",  14 },
+            { "leg_lower_l",  29 },
+            { "leg_lower_r",  34 },
+            { "leg_upper_l",  28 },
+            { "leg_upper_r",  33 },
+            { "neck_0",  13 },
+            { "pelvis",   8 },
+            { "spine_0",   9 },
+            { "spine_1",  10 },
+            { "spine_2",  11 },
+            { "spine_3",  12 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 13 },
-            /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 15 },
-            /* [4] Legs  */ { 28 },
+            /* [0] Head  */ { 14 },
+            /* [1] Neck  */ { 13 },
+            /* [2] Torso */ { 8 },
+            /* [3] Arms  */ { 16 },
+            /* [4] Legs  */ { 29 },
         },
     }},
 
@@ -936,7 +990,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "clavicle_l",   8 },
             { "clavicle_r",  12 },
             { "hand_l",  11 },
-            { "hand_l_ik_target",  56 },
+            { "hand_l_ik_target",  58 },
             { "hand_r",  15 },
             { "hand_r_ik_target",  27 },
             { "head",   7 },
@@ -994,11 +1048,13 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  18, 108 },  // arm_upper_r -> arm_upper_r_twist
             BonePair{  18, 109 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{  29, 110 },  // neck_0 -> neck_0_twist
-            BonePair{  29, 130 },  // neck_0 -> neck_notwist
-            BonePair{  48, 141 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  48, 142 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  52, 143 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  52, 144 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  29, 131 },  // neck_0 -> neck_notwist
+            BonePair{  48, 142 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  48, 143 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  52, 144 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  52, 145 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  51, 157 },  // ball_r -> ball_end_r
+            BonePair{  55, 158 },  // ball_l -> ball_end_l
         },
         /* ids */ {
             { "ankle_l",  54 },
@@ -1015,6 +1071,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "arm_upper_r",  18 },
             { "arm_upper_r_twist", 108 },
             { "arm_upper_r_twist1", 109 },
+            { "ball_end_l", 158 },
+            { "ball_end_r", 157 },
             { "ball_l",  55 },
             { "ball_r",  51 },
             { "clavicle_l",  12 },
@@ -1025,14 +1083,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  53 },
             { "leg_lower_r",  49 },
             { "leg_upper_l",  52 },
-            { "leg_upper_l_twist", 143 },
-            { "leg_upper_l_twist1", 144 },
+            { "leg_upper_l_twist", 144 },
+            { "leg_upper_l_twist1", 145 },
             { "leg_upper_r",  48 },
-            { "leg_upper_r_twist", 141 },
-            { "leg_upper_r_twist1", 142 },
+            { "leg_upper_r_twist", 142 },
+            { "leg_upper_r_twist1", 143 },
             { "neck_0",  29 },
             { "neck_0_twist", 110 },
-            { "neck_notwist", 130 },
+            { "neck_notwist", 131 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
@@ -1073,16 +1131,39 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  32,  33 },  // leg_upper_r -> leg_lower_r
             BonePair{  33,  34 },  // leg_lower_r -> ankle_r
             BonePair{  34,  35 },  // ankle_r -> ball_r
-            BonePair{  28,  87 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  32,  89 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  11,  40 },  // neck_0 -> neck_0_twist
+            BonePair{  15,  56 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  15,  57 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  14,  58 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  14,  59 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  19,  85 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  19,  86 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  18,  87 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  18,  88 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  28, 109 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  28, 111 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  32, 112 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  32, 114 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  31, 128 },  // ball_l -> ball_end_l
+            BonePair{  35, 129 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  30 },
             { "ankle_r",  34 },
             { "arm_lower_l",  15 },
+            { "arm_lower_l_twist",  56 },
+            { "arm_lower_l_twist1",  57 },
             { "arm_lower_r",  19 },
+            { "arm_lower_r_twist",  85 },
+            { "arm_lower_r_twist1",  86 },
             { "arm_upper_l",  14 },
+            { "arm_upper_l_twist",  58 },
+            { "arm_upper_l_twist1",  59 },
             { "arm_upper_r",  18 },
+            { "arm_upper_r_twist",  87 },
+            { "arm_upper_r_twist1",  88 },
+            { "ball_end_l", 128 },
+            { "ball_end_r", 129 },
             { "ball_l",  31 },
             { "ball_r",  35 },
             { "clavicle_l",  13 },
@@ -1093,10 +1174,13 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  29 },
             { "leg_lower_r",  33 },
             { "leg_upper_l",  28 },
-            { "leg_upper_l_twist",  87 },
+            { "leg_upper_l_twist", 109 },
+            { "leg_upper_l_twist1", 111 },
             { "leg_upper_r",  32 },
-            { "leg_upper_r_twist",  89 },
+            { "leg_upper_r_twist", 112 },
+            { "leg_upper_r_twist1", 114 },
             { "neck_0",  11 },
+            { "neck_0_twist",  40 },
             { "pelvis",   6 },
             { "spine_0",   7 },
             { "spine_1",   8 },
@@ -1137,14 +1221,39 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  41,  42 },  // leg_upper_r -> leg_lower_r
             BonePair{  42,  43 },  // leg_lower_r -> ankle_r
             BonePair{  43,  44 },  // ankle_r -> ball_r
+            BonePair{  12,  45 },  // neck_0 -> neck_0_twist
+            BonePair{  19,  70 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  19,  71 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  18,  72 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  18,  73 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  23,  97 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  23,  98 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  22,  99 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  22, 100 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  37, 101 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  37, 102 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  41, 103 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  41, 104 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  40, 105 },  // ball_l -> ball_end_l
+            BonePair{  44, 106 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  39 },
             { "ankle_r",  43 },
             { "arm_lower_l",  19 },
+            { "arm_lower_l_twist",  70 },
+            { "arm_lower_l_twist1",  71 },
             { "arm_lower_r",  23 },
+            { "arm_lower_r_twist",  97 },
+            { "arm_lower_r_twist1",  98 },
             { "arm_upper_l",  18 },
+            { "arm_upper_l_twist",  72 },
+            { "arm_upper_l_twist1",  73 },
             { "arm_upper_r",  22 },
+            { "arm_upper_r_twist",  99 },
+            { "arm_upper_r_twist1", 100 },
+            { "ball_end_l", 105 },
+            { "ball_end_r", 106 },
             { "ball_l",  40 },
             { "ball_r",  44 },
             { "clavicle_l",  17 },
@@ -1155,8 +1264,13 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  38 },
             { "leg_lower_r",  42 },
             { "leg_upper_l",  37 },
+            { "leg_upper_l_twist", 101 },
+            { "leg_upper_l_twist1", 102 },
             { "leg_upper_r",  41 },
+            { "leg_upper_r_twist", 103 },
+            { "leg_upper_r_twist1", 104 },
             { "neck_0",  12 },
+            { "neck_0_twist",  45 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
@@ -1371,86 +1485,86 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_staging/nano/nano_v2/nano.vmdl
     { "models/heroes_staging/nano/nano_v2/nano.vmdl", {
         /* pairs */ {
-            BonePair{   7,   8 },  // pelvis -> spine_0
-            BonePair{   8,   9 },  // spine_0 -> spine_1
-            BonePair{   9,  10 },  // spine_1 -> spine_2
-            BonePair{  10,  11 },  // spine_2 -> spine_3
-            BonePair{  11,  12 },  // spine_3 -> neck_0
-            BonePair{  12,  13 },  // neck_0 -> head
-            BonePair{  11,  14 },  // spine_3 -> clavicle_l
-            BonePair{  14,  15 },  // clavicle_l -> arm_upper_l
-            BonePair{  15,  16 },  // arm_upper_l -> arm_lower_l
-            BonePair{  16,  17 },  // arm_lower_l -> hand_l
-            BonePair{  11,  27 },  // spine_3 -> clavicle_r
-            BonePair{  27,  28 },  // clavicle_r -> arm_upper_r
-            BonePair{  28,  29 },  // arm_upper_r -> arm_lower_r
-            BonePair{  29,  30 },  // arm_lower_r -> hand_r
-            BonePair{   7,  33 },  // pelvis -> leg_upper_l
-            BonePair{  33,  34 },  // leg_upper_l -> leg_lower_l
-            BonePair{  34,  35 },  // leg_lower_l -> ankle_l
-            BonePair{  35,  36 },  // ankle_l -> ball_l
-            BonePair{   7,  37 },  // pelvis -> leg_upper_r
-            BonePair{  37,  38 },  // leg_upper_r -> leg_lower_r
-            BonePair{  38,  39 },  // leg_lower_r -> ankle_r
-            BonePair{  39,  40 },  // ankle_r -> ball_r
-            BonePair{  12,  48 },  // neck_0 -> neck_0_twist
-            BonePair{  16,  72 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  16,  73 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  15,  74 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  15,  75 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  29, 130 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  29, 131 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  28, 132 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  28, 133 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  33, 134 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  33, 135 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  37, 136 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  37, 137 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{   8,   9 },  // pelvis -> spine_0
+            BonePair{   9,  10 },  // spine_0 -> spine_1
+            BonePair{  10,  11 },  // spine_1 -> spine_2
+            BonePair{  11,  12 },  // spine_2 -> spine_3
+            BonePair{  12,  13 },  // spine_3 -> neck_0
+            BonePair{  13,  14 },  // neck_0 -> head
+            BonePair{  12,  15 },  // spine_3 -> clavicle_l
+            BonePair{  15,  16 },  // clavicle_l -> arm_upper_l
+            BonePair{  16,  17 },  // arm_upper_l -> arm_lower_l
+            BonePair{  17,  18 },  // arm_lower_l -> hand_l
+            BonePair{  12,  28 },  // spine_3 -> clavicle_r
+            BonePair{  28,  29 },  // clavicle_r -> arm_upper_r
+            BonePair{  29,  30 },  // arm_upper_r -> arm_lower_r
+            BonePair{  30,  31 },  // arm_lower_r -> hand_r
+            BonePair{   8,  34 },  // pelvis -> leg_upper_l
+            BonePair{  34,  35 },  // leg_upper_l -> leg_lower_l
+            BonePair{  35,  36 },  // leg_lower_l -> ankle_l
+            BonePair{  36,  37 },  // ankle_l -> ball_l
+            BonePair{   8,  38 },  // pelvis -> leg_upper_r
+            BonePair{  38,  39 },  // leg_upper_r -> leg_lower_r
+            BonePair{  39,  40 },  // leg_lower_r -> ankle_r
+            BonePair{  40,  41 },  // ankle_r -> ball_r
+            BonePair{  13,  49 },  // neck_0 -> neck_0_twist
+            BonePair{  17,  73 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  17,  74 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  16,  75 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  16,  76 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  30, 131 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  30, 132 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  29, 133 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  29, 134 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  34, 135 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  34, 136 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  38, 137 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  38, 138 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
-            { "ankle_l",  35 },
-            { "ankle_r",  39 },
-            { "arm_lower_l",  16 },
-            { "arm_lower_l_twist",  72 },
-            { "arm_lower_l_twist1",  73 },
-            { "arm_lower_r",  29 },
-            { "arm_lower_r_twist", 130 },
-            { "arm_lower_r_twist1", 131 },
-            { "arm_upper_l",  15 },
-            { "arm_upper_l_twist",  75 },
-            { "arm_upper_l_twist1",  74 },
-            { "arm_upper_r",  28 },
-            { "arm_upper_r_twist", 133 },
-            { "arm_upper_r_twist1", 132 },
-            { "ball_l",  36 },
-            { "ball_r",  40 },
-            { "clavicle_l",  14 },
-            { "clavicle_r",  27 },
-            { "hand_l",  17 },
-            { "hand_r",  30 },
-            { "head",  13 },
-            { "leg_lower_l",  34 },
-            { "leg_lower_r",  38 },
-            { "leg_upper_l",  33 },
-            { "leg_upper_l_twist", 134 },
-            { "leg_upper_l_twist1", 135 },
-            { "leg_upper_r",  37 },
-            { "leg_upper_r_twist", 136 },
-            { "leg_upper_r_twist1", 137 },
-            { "neck_0",  12 },
-            { "neck_0_twist",  48 },
-            { "pelvis",   7 },
-            { "spine_0",   8 },
-            { "spine_1",   9 },
-            { "spine_2",  10 },
-            { "spine_3",  11 },
+            { "ankle_l",  36 },
+            { "ankle_r",  40 },
+            { "arm_lower_l",  17 },
+            { "arm_lower_l_twist",  73 },
+            { "arm_lower_l_twist1",  74 },
+            { "arm_lower_r",  30 },
+            { "arm_lower_r_twist", 131 },
+            { "arm_lower_r_twist1", 132 },
+            { "arm_upper_l",  16 },
+            { "arm_upper_l_twist",  76 },
+            { "arm_upper_l_twist1",  75 },
+            { "arm_upper_r",  29 },
+            { "arm_upper_r_twist", 134 },
+            { "arm_upper_r_twist1", 133 },
+            { "ball_l",  37 },
+            { "ball_r",  41 },
+            { "clavicle_l",  15 },
+            { "clavicle_r",  28 },
+            { "hand_l",  18 },
+            { "hand_r",  31 },
+            { "head",  14 },
+            { "leg_lower_l",  35 },
+            { "leg_lower_r",  39 },
+            { "leg_upper_l",  34 },
+            { "leg_upper_l_twist", 135 },
+            { "leg_upper_l_twist1", 136 },
+            { "leg_upper_r",  38 },
+            { "leg_upper_r_twist", 137 },
+            { "leg_upper_r_twist1", 138 },
+            { "neck_0",  13 },
+            { "neck_0_twist",  49 },
+            { "pelvis",   8 },
+            { "spine_0",   9 },
+            { "spine_1",  10 },
+            { "spine_2",  11 },
+            { "spine_3",  12 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 13 },
-            /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 34 },
+            /* [0] Head  */ { 14 },
+            /* [1] Neck  */ { 13 },
+            /* [2] Torso */ { 8 },
+            /* [3] Arms  */ { 15 },
+            /* [4] Legs  */ { 35 },
         },
     }},
 
@@ -1774,12 +1888,12 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  23, 154 },  // arm_lower_r -> arm_lower_r_twist1
             BonePair{  22, 155 },  // arm_upper_r -> arm_upper_r_twist
             BonePair{  22, 156 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  28, 187 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  28, 188 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  34, 189 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  34, 190 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  31, 359 },  // ball_l -> ball_end_l
-            BonePair{  37, 361 },  // ball_r -> ball_end_r
+            BonePair{  28, 190 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  28, 191 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  34, 192 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  34, 193 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  31, 369 },  // ball_l -> ball_end_l
+            BonePair{  37, 371 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  30 },
@@ -1796,8 +1910,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "arm_upper_r",  22 },
             { "arm_upper_r_twist", 155 },
             { "arm_upper_r_twist1", 156 },
-            { "ball_end_l", 359 },
-            { "ball_end_r", 361 },
+            { "ball_end_l", 369 },
+            { "ball_end_r", 371 },
             { "ball_l",  31 },
             { "ball_r",  37 },
             { "clavicle_l",  14 },
@@ -1808,11 +1922,11 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  29 },
             { "leg_lower_r",  35 },
             { "leg_upper_l",  28 },
-            { "leg_upper_l_twist", 187 },
-            { "leg_upper_l_twist1", 188 },
+            { "leg_upper_l_twist", 190 },
+            { "leg_upper_l_twist1", 191 },
             { "leg_upper_r",  34 },
-            { "leg_upper_r_twist", 189 },
-            { "leg_upper_r_twist1", 190 },
+            { "leg_upper_r_twist", 192 },
+            { "leg_upper_r_twist1", 193 },
             { "neck_0",  12 },
             { "neck_0_twist",  46 },
             { "neck_notwist",  47 },
@@ -1898,58 +2012,58 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_staging/vindicta/crow/crow_open_wing.vmdl
     { "models/heroes_staging/vindicta/crow/crow_open_wing.vmdl", {
         /* pairs */ {
-            BonePair{   0,   1 },  // pelvis -> spine_0
-            BonePair{   1,   2 },  // spine_0 -> spine_1
-            BonePair{   2,   4 },  // spine_1 -> spine_2
-            BonePair{   4,   5 },  // spine_2 -> neck_0
-            BonePair{   5,   6 },  // neck_0 -> head
-            BonePair{   4,  10 },  // spine_2 -> arm_upper_r
-            BonePair{  10,  12 },  // arm_upper_r -> arm_lower_r
-            BonePair{  12,  13 },  // arm_lower_r -> hand_r
-            BonePair{   4,  19 },  // spine_2 -> arm_upper_l
-            BonePair{  19,  20 },  // arm_upper_l -> arm_lower_l
-            BonePair{  20,  22 },  // arm_lower_l -> hand_l
-            BonePair{   0,  33 },  // pelvis -> leg_upper_r
-            BonePair{  33,  34 },  // leg_upper_r -> leg_lower_r
-            BonePair{  34,  35 },  // leg_lower_r -> ankle_r
-            BonePair{  35,  37 },  // ankle_r -> ball_r
-            BonePair{   0,  44 },  // pelvis -> leg_upper_l
-            BonePair{  44,  45 },  // leg_upper_l -> leg_lower_l
-            BonePair{  45,  46 },  // leg_lower_l -> ankle_l
-            BonePair{  46,  47 },  // ankle_l -> ball_l
-            BonePair{  37,  89 },  // ball_r -> ball_end_r
-            BonePair{  47,  93 },  // ball_l -> ball_end_l
+            BonePair{   1,   2 },  // pelvis -> spine_0
+            BonePair{   2,   3 },  // spine_0 -> spine_1
+            BonePair{   3,   5 },  // spine_1 -> spine_2
+            BonePair{   5,   6 },  // spine_2 -> neck_0
+            BonePair{   6,   7 },  // neck_0 -> head
+            BonePair{   5,   9 },  // spine_2 -> arm_upper_r
+            BonePair{   9,  11 },  // arm_upper_r -> arm_lower_r
+            BonePair{  11,  12 },  // arm_lower_r -> hand_r
+            BonePair{   5,  18 },  // spine_2 -> arm_upper_l
+            BonePair{  18,  19 },  // arm_upper_l -> arm_lower_l
+            BonePair{  19,  21 },  // arm_lower_l -> hand_l
+            BonePair{   1,  32 },  // pelvis -> leg_upper_r
+            BonePair{  32,  33 },  // leg_upper_r -> leg_lower_r
+            BonePair{  33,  34 },  // leg_lower_r -> ankle_r
+            BonePair{  34,  36 },  // ankle_r -> ball_r
+            BonePair{   1,  43 },  // pelvis -> leg_upper_l
+            BonePair{  43,  44 },  // leg_upper_l -> leg_lower_l
+            BonePair{  44,  45 },  // leg_lower_l -> ankle_l
+            BonePair{  45,  46 },  // ankle_l -> ball_l
+            BonePair{  36,  90 },  // ball_r -> ball_end_r
+            BonePair{  46,  94 },  // ball_l -> ball_end_l
         },
         /* ids */ {
-            { "ankle_l",  46 },
-            { "ankle_r",  35 },
-            { "arm_lower_l",  20 },
-            { "arm_lower_r",  12 },
-            { "arm_upper_l",  19 },
-            { "arm_upper_r",  10 },
-            { "ball_end_l",  93 },
-            { "ball_end_r",  89 },
-            { "ball_l",  47 },
-            { "ball_r",  37 },
-            { "hand_l",  22 },
-            { "hand_r",  13 },
-            { "head",   6 },
-            { "leg_lower_l",  45 },
-            { "leg_lower_r",  34 },
-            { "leg_upper_l",  44 },
-            { "leg_upper_r",  33 },
-            { "neck_0",   5 },
-            { "pelvis",   0 },
-            { "spine_0",   1 },
-            { "spine_1",   2 },
-            { "spine_2",   4 },
+            { "ankle_l",  45 },
+            { "ankle_r",  34 },
+            { "arm_lower_l",  19 },
+            { "arm_lower_r",  11 },
+            { "arm_upper_l",  18 },
+            { "arm_upper_r",   9 },
+            { "ball_end_l",  94 },
+            { "ball_end_r",  90 },
+            { "ball_l",  46 },
+            { "ball_r",  36 },
+            { "hand_l",  21 },
+            { "hand_r",  12 },
+            { "head",   7 },
+            { "leg_lower_l",  44 },
+            { "leg_lower_r",  33 },
+            { "leg_upper_l",  43 },
+            { "leg_upper_r",  32 },
+            { "neck_0",   6 },
+            { "pelvis",   1 },
+            { "spine_0",   2 },
+            { "spine_1",   3 },
+            { "spine_2",   5 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 6 },
-            /* [1] Neck  */ { 5 },
-            /* [2] Torso */ { 0 },
-            /* [3] Arms  */ { 12 },
-            /* [4] Legs  */ { 34 },
+            /* [0] Head  */ { 7 },
+            /* [1] Neck  */ { 6 },
+            /* [2] Torso */ { 1 },
+            /* [3] Arms  */ { 11 },
+            /* [4] Legs  */ { 33 },
         },
     }},
 
@@ -2090,62 +2204,62 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  16,  17 },  // clavicle_r -> arm_upper_r
             BonePair{  17,  18 },  // arm_upper_r -> arm_lower_r
             BonePair{  18,  19 },  // arm_lower_r -> hand_r
-            BonePair{   5,  29 },  // pelvis -> leg_upper_l
-            BonePair{  29,  30 },  // leg_upper_l -> leg_lower_l
-            BonePair{  30,  31 },  // leg_lower_l -> ankle_l
-            BonePair{  31,  32 },  // ankle_l -> ball_l
-            BonePair{   5,  33 },  // pelvis -> leg_upper_r
-            BonePair{  33,  34 },  // leg_upper_r -> leg_lower_r
-            BonePair{  34,  35 },  // leg_lower_r -> ankle_r
-            BonePair{  35,  36 },  // ankle_r -> ball_r
-            BonePair{  10,  37 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  38 },  // neck_0 -> neck_notwist
-            BonePair{  14,  58 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14,  59 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  13,  60 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  13,  61 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  18,  88 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18,  89 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  17,  90 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  17,  91 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  29, 110 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  29, 111 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  33, 112 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  33, 113 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  17,  29 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{   5,  30 },  // pelvis -> leg_upper_l
+            BonePair{  30,  31 },  // leg_upper_l -> leg_lower_l
+            BonePair{  31,  32 },  // leg_lower_l -> ankle_l
+            BonePair{  32,  33 },  // ankle_l -> ball_l
+            BonePair{   5,  34 },  // pelvis -> leg_upper_r
+            BonePair{  34,  35 },  // leg_upper_r -> leg_lower_r
+            BonePair{  35,  36 },  // leg_lower_r -> ankle_r
+            BonePair{  36,  37 },  // ankle_r -> ball_r
+            BonePair{  10,  39 },  // neck_0 -> neck_0_twist
+            BonePair{  10,  40 },  // neck_0 -> neck_notwist
+            BonePair{  14,  60 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  14,  61 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  13,  62 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  13,  63 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  18,  90 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  18,  91 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  17,  92 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  30, 122 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  30, 123 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  34, 124 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  34, 125 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
-            { "ankle_l",  31 },
-            { "ankle_r",  35 },
+            { "ankle_l",  32 },
+            { "ankle_r",  36 },
             { "arm_lower_l",  14 },
-            { "arm_lower_l_twist",  59 },
-            { "arm_lower_l_twist1",  58 },
+            { "arm_lower_l_twist",  61 },
+            { "arm_lower_l_twist1",  60 },
             { "arm_lower_r",  18 },
-            { "arm_lower_r_twist",  89 },
-            { "arm_lower_r_twist1",  88 },
+            { "arm_lower_r_twist",  91 },
+            { "arm_lower_r_twist1",  90 },
             { "arm_upper_l",  13 },
-            { "arm_upper_l_twist",  60 },
-            { "arm_upper_l_twist1",  61 },
+            { "arm_upper_l_twist",  62 },
+            { "arm_upper_l_twist1",  63 },
             { "arm_upper_r",  17 },
-            { "arm_upper_r_twist",  90 },
-            { "arm_upper_r_twist1",  91 },
-            { "ball_l",  32 },
-            { "ball_r",  36 },
+            { "arm_upper_r_twist",  29 },
+            { "arm_upper_r_twist1",  92 },
+            { "ball_l",  33 },
+            { "ball_r",  37 },
             { "clavicle_l",  12 },
             { "clavicle_r",  16 },
             { "hand_l",  15 },
             { "hand_r",  19 },
             { "head",  11 },
-            { "leg_lower_l",  30 },
-            { "leg_lower_r",  34 },
-            { "leg_upper_l",  29 },
-            { "leg_upper_l_twist", 110 },
-            { "leg_upper_l_twist1", 111 },
-            { "leg_upper_r",  33 },
-            { "leg_upper_r_twist", 112 },
-            { "leg_upper_r_twist1", 113 },
+            { "leg_lower_l",  31 },
+            { "leg_lower_r",  35 },
+            { "leg_upper_l",  30 },
+            { "leg_upper_l_twist", 122 },
+            { "leg_upper_l_twist1", 123 },
+            { "leg_upper_r",  34 },
+            { "leg_upper_r_twist", 124 },
+            { "leg_upper_r_twist1", 125 },
             { "neck_0",  10 },
-            { "neck_0_twist",  37 },
-            { "neck_notwist",  38 },
+            { "neck_0_twist",  39 },
+            { "neck_notwist",  40 },
             { "pelvis",   5 },
             { "spine_0",   6 },
             { "spine_1",   7 },
@@ -2157,7 +2271,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             /* [1] Neck  */ { 10 },
             /* [2] Torso */ { 5 },
             /* [3] Arms  */ { 12 },
-            /* [4] Legs  */ { 30 },
+            /* [4] Legs  */ { 31 },
         },
     }},
 
@@ -2186,11 +2300,11 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  41,  42 },  // leg_upper_r -> leg_lower_r
             BonePair{  42,  43 },  // leg_lower_r -> ankle_r
             BonePair{  43,  44 },  // ankle_r -> ball_r
-            BonePair{  17,  57 },  // neck_0 -> neck_0_twist
-            BonePair{  37, 159 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  37, 160 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  41, 161 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  41, 162 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  17,  58 },  // neck_0 -> neck_0_twist
+            BonePair{  37, 164 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  37, 165 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  41, 166 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  41, 167 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  39 },
@@ -2209,13 +2323,13 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  38 },
             { "leg_lower_r",  42 },
             { "leg_upper_l",  37 },
-            { "leg_upper_l_twist", 159 },
-            { "leg_upper_l_twist1", 160 },
+            { "leg_upper_l_twist", 164 },
+            { "leg_upper_l_twist1", 165 },
             { "leg_upper_r",  41 },
-            { "leg_upper_r_twist", 161 },
-            { "leg_upper_r_twist1", 162 },
+            { "leg_upper_r_twist", 166 },
+            { "leg_upper_r_twist1", 167 },
             { "neck_0",  17 },
-            { "neck_0_twist",  57 },
+            { "neck_0_twist",  58 },
             { "pelvis",  12 },
             { "spine_0",  13 },
             { "spine_1",  14 },
@@ -2508,18 +2622,26 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  19,  73 },  // arm_upper_l -> arm_upper_l_twist1
             BonePair{  23,  93 },  // arm_upper_r -> arm_upper_r_twist
             BonePair{  23, 103 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{   9, 505 },  // ball_l -> ball_end_l
+            BonePair{  13, 506 },  // ball_r -> ball_end_r
+            BonePair{  24, 507 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  24, 508 },  // arm_lower_r -> arm_lower_r_twist1
         },
         /* ids */ {
             { "ankle_l",   8 },
             { "ankle_r",  12 },
             { "arm_lower_l",  20 },
             { "arm_lower_r",  24 },
+            { "arm_lower_r_twist", 507 },
+            { "arm_lower_r_twist1", 508 },
             { "arm_upper_l",  19 },
             { "arm_upper_l_twist",  63 },
             { "arm_upper_l_twist1",  73 },
             { "arm_upper_r",  23 },
             { "arm_upper_r_twist",  93 },
             { "arm_upper_r_twist1", 103 },
+            { "ball_end_l", 505 },
+            { "ball_end_r", 506 },
             { "ball_l",   9 },
             { "ball_r",  13 },
             { "clavicle_l",  18 },
@@ -2560,70 +2682,74 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{   4,   5 },  // spine_2 -> spine_3
             BonePair{   5,   6 },  // spine_3 -> neck_0
             BonePair{   6,   7 },  // neck_0 -> head
-            BonePair{   5,   8 },  // spine_3 -> clavicle_l
-            BonePair{   8,   9 },  // clavicle_l -> arm_upper_l
-            BonePair{   9,  10 },  // arm_upper_l -> arm_lower_l
-            BonePair{  10,  11 },  // arm_lower_l -> hand_l
-            BonePair{   5,  16 },  // spine_3 -> clavicle_r
-            BonePair{  16,  17 },  // clavicle_r -> arm_upper_r
-            BonePair{  17,  18 },  // arm_upper_r -> arm_lower_r
-            BonePair{  18,  19 },  // arm_lower_r -> hand_r
-            BonePair{   1,  21 },  // pelvis -> leg_upper_l
-            BonePair{  21,  22 },  // leg_upper_l -> leg_lower_l
-            BonePair{  22,  23 },  // leg_lower_l -> ankle_l
-            BonePair{  23,  24 },  // ankle_l -> ball_l
-            BonePair{   1,  25 },  // pelvis -> leg_upper_r
-            BonePair{  25,  26 },  // leg_upper_r -> leg_lower_r
-            BonePair{  26,  27 },  // leg_lower_r -> ankle_r
-            BonePair{  27,  28 },  // ankle_r -> ball_r
-            BonePair{   6, 174 },  // neck_0 -> neck_0_twist
-            BonePair{   6, 180 },  // neck_0 -> neck_0_notwist
-            BonePair{  10, 238 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10, 239 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{   9, 240 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{   9, 241 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  18, 266 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  18, 267 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  17, 268 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  17, 269 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  21, 288 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  21, 289 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  25, 291 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  25, 292 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{   5,   9 },  // spine_3 -> clavicle_l
+            BonePair{   9,  10 },  // clavicle_l -> arm_upper_l
+            BonePair{  10,  11 },  // arm_upper_l -> arm_lower_l
+            BonePair{  11,  12 },  // arm_lower_l -> hand_l
+            BonePair{   5,  17 },  // spine_3 -> clavicle_r
+            BonePair{  17,  18 },  // clavicle_r -> arm_upper_r
+            BonePair{  18,  19 },  // arm_upper_r -> arm_lower_r
+            BonePair{  19,  20 },  // arm_lower_r -> hand_r
+            BonePair{   1,  26 },  // pelvis -> leg_upper_l
+            BonePair{  26,  27 },  // leg_upper_l -> leg_lower_l
+            BonePair{  27,  28 },  // leg_lower_l -> ankle_l
+            BonePair{  28,  29 },  // ankle_l -> ball_l
+            BonePair{   1,  30 },  // pelvis -> leg_upper_r
+            BonePair{  30,  31 },  // leg_upper_r -> leg_lower_r
+            BonePair{  31,  32 },  // leg_lower_r -> ankle_r
+            BonePair{  32,  33 },  // ankle_r -> ball_r
+            BonePair{   6, 179 },  // neck_0 -> neck_0_twist
+            BonePair{   6, 185 },  // neck_0 -> neck_0_notwist
+            BonePair{  11, 243 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  11, 244 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  10, 245 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  10, 246 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  19, 267 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  19, 268 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  18, 269 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  18, 270 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  26, 292 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  26, 293 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  30, 295 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  30, 296 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  29, 494 },  // ball_l -> ball_end_l
+            BonePair{  33, 495 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  23 },
-            { "ankle_r",  27 },
-            { "arm_lower_l",  10 },
-            { "arm_lower_l_twist", 238 },
-            { "arm_lower_l_twist1", 239 },
-            { "arm_lower_r",  18 },
-            { "arm_lower_r_twist", 266 },
-            { "arm_lower_r_twist1", 267 },
-            { "arm_upper_l",   9 },
-            { "arm_upper_l_twist", 240 },
-            { "arm_upper_l_twist1", 241 },
-            { "arm_upper_r",  17 },
-            { "arm_upper_r_twist", 268 },
-            { "arm_upper_r_twist1", 269 },
-            { "ball_l",  24 },
-            { "ball_r",  28 },
-            { "clavicle_l",   8 },
-            { "clavicle_r",  16 },
-            { "hand_l",  11 },
-            { "hand_r",  19 },
+            { "ankle_l",  28 },
+            { "ankle_r",  32 },
+            { "arm_lower_l",  11 },
+            { "arm_lower_l_twist", 243 },
+            { "arm_lower_l_twist1", 244 },
+            { "arm_lower_r",  19 },
+            { "arm_lower_r_twist", 267 },
+            { "arm_lower_r_twist1", 268 },
+            { "arm_upper_l",  10 },
+            { "arm_upper_l_twist", 245 },
+            { "arm_upper_l_twist1", 246 },
+            { "arm_upper_r",  18 },
+            { "arm_upper_r_twist", 269 },
+            { "arm_upper_r_twist1", 270 },
+            { "ball_end_l", 494 },
+            { "ball_end_r", 495 },
+            { "ball_l",  29 },
+            { "ball_r",  33 },
+            { "clavicle_l",   9 },
+            { "clavicle_r",  17 },
+            { "hand_l",  12 },
+            { "hand_r",  20 },
             { "head",   7 },
-            { "leg_lower_l",  22 },
-            { "leg_lower_r",  26 },
-            { "leg_upper_l",  21 },
-            { "leg_upper_l_twist", 288 },
-            { "leg_upper_l_twist1", 289 },
-            { "leg_upper_r",  25 },
-            { "leg_upper_r_twist", 291 },
-            { "leg_upper_r_twist1", 292 },
+            { "leg_lower_l",  27 },
+            { "leg_lower_r",  31 },
+            { "leg_upper_l",  26 },
+            { "leg_upper_l_twist", 292 },
+            { "leg_upper_l_twist1", 293 },
+            { "leg_upper_r",  30 },
+            { "leg_upper_r_twist", 295 },
+            { "leg_upper_r_twist1", 296 },
             { "neck_0",   6 },
-            { "neck_0_notwist", 180 },
-            { "neck_0_twist", 174 },
+            { "neck_0_notwist", 185 },
+            { "neck_0_twist", 179 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
@@ -2634,8 +2760,160 @@ inline const std::unordered_map<std::string, ModelBoneData>
             /* [0] Head  */ { 7 },
             /* [1] Neck  */ { 6 },
             /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 22 },
+            /* [3] Arms  */ { 9 },
+            /* [4] Legs  */ { 27 },
+        },
+    }},
+
+    // models/heroes_wip/artist/artist.vmdl
+    { "models/heroes_wip/artist/artist.vmdl", {
+        /* pairs */ {
+            BonePair{  11,  12 },  // pelvis -> spine_0
+            BonePair{  12,  13 },  // spine_0 -> spine_1
+            BonePair{  13,  14 },  // spine_1 -> spine_2
+            BonePair{  14,  15 },  // spine_2 -> spine_3
+            BonePair{  15,  16 },  // spine_3 -> neck_0
+            BonePair{  16,  17 },  // neck_0 -> head
+            BonePair{  15,  18 },  // spine_3 -> clavicle_r
+            BonePair{  18,  19 },  // clavicle_r -> arm_upper_r
+            BonePair{  19,  20 },  // arm_upper_r -> arm_lower_r
+            BonePair{  20,  21 },  // arm_lower_r -> hand_r
+            BonePair{  19,  22 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  15,  26 },  // spine_3 -> clavicle_l
+            BonePair{  26,  27 },  // clavicle_l -> arm_upper_l
+            BonePair{  27,  28 },  // arm_upper_l -> arm_lower_l
+            BonePair{  28,  29 },  // arm_lower_l -> hand_l
+            BonePair{  11,  31 },  // pelvis -> leg_upper_r
+            BonePair{  31,  32 },  // leg_upper_r -> leg_lower_r
+            BonePair{  32,  33 },  // leg_lower_r -> ankle_r
+            BonePair{  33,  34 },  // ankle_r -> ball_r
+            BonePair{  11,  35 },  // pelvis -> leg_upper_l
+            BonePair{  35,  36 },  // leg_upper_l -> leg_lower_l
+            BonePair{  36,  37 },  // leg_lower_l -> ankle_l
+            BonePair{  37,  38 },  // ankle_l -> ball_l
+            BonePair{  20,  77 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  20,  78 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  19,  99 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{ 101, 102 },  // arm_upper_sleeve_top_r -> arm_upper_sleeve_outer_r
+            BonePair{ 102, 103 },  // arm_upper_sleeve_outer_r -> arm_upper_sleeve_bottom_r
+            BonePair{ 103, 104 },  // arm_upper_sleeve_bottom_r -> arm_upper_sleeve_inner_r
+            BonePair{  27, 131 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{ 133, 134 },  // arm_upper_sleeve_top_l -> arm_upper_sleeve_outer_l
+            BonePair{ 134, 135 },  // arm_upper_sleeve_outer_l -> arm_upper_sleeve_bottom_l
+            BonePair{ 135, 136 },  // arm_upper_sleeve_bottom_l -> arm_upper_sleeve_inner_l
+            BonePair{  27, 137 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  28, 138 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  28, 139 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  31, 180 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  31, 181 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  35, 187 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  35, 188 },  // leg_upper_l -> leg_upper_l_twist1
+        },
+        /* ids */ {
+            { "ankle_l",  37 },
+            { "ankle_r",  33 },
+            { "arm_lower_l",  28 },
+            { "arm_lower_l_twist", 138 },
+            { "arm_lower_l_twist1", 139 },
+            { "arm_lower_r",  20 },
+            { "arm_lower_r_twist",  77 },
+            { "arm_lower_r_twist1",  78 },
+            { "arm_upper_l",  27 },
+            { "arm_upper_l_twist", 137 },
+            { "arm_upper_l_twist1", 131 },
+            { "arm_upper_r",  19 },
+            { "arm_upper_r_twist",  22 },
+            { "arm_upper_r_twist1",  99 },
+            { "arm_upper_sleeve_bottom_l", 135 },
+            { "arm_upper_sleeve_bottom_r", 103 },
+            { "arm_upper_sleeve_inner_l", 136 },
+            { "arm_upper_sleeve_inner_r", 104 },
+            { "arm_upper_sleeve_outer_l", 134 },
+            { "arm_upper_sleeve_outer_r", 102 },
+            { "arm_upper_sleeve_top_l", 133 },
+            { "arm_upper_sleeve_top_r", 101 },
+            { "ball_l",  38 },
+            { "ball_r",  34 },
+            { "clavicle_l",  26 },
+            { "clavicle_r",  18 },
+            { "hand_l",  29 },
+            { "hand_r",  21 },
+            { "head",  17 },
+            { "leg_lower_l",  36 },
+            { "leg_lower_r",  32 },
+            { "leg_upper_l",  35 },
+            { "leg_upper_l_twist", 187 },
+            { "leg_upper_l_twist1", 188 },
+            { "leg_upper_r",  31 },
+            { "leg_upper_r_twist", 180 },
+            { "leg_upper_r_twist1", 181 },
+            { "neck_0",  16 },
+            { "pelvis",  11 },
+            { "spine_0",  12 },
+            { "spine_1",  13 },
+            { "spine_2",  14 },
+            { "spine_3",  15 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ { 17 },
+            /* [1] Neck  */ { 16 },
+            /* [2] Torso */ { 11 },
+            /* [3] Arms  */ { 18 },
+            /* [4] Legs  */ { 32 },
+        },
+    }},
+
+    // models/heroes_wip/baba/baba.vmdl
+    { "models/heroes_wip/baba/baba.vmdl", {
+        /* pairs */ {
+            BonePair{   7,   8 },  // pelvis -> leg_upper_l
+            BonePair{   8,   9 },  // leg_upper_l -> leg_lower_l
+            BonePair{   9,  10 },  // leg_lower_l -> ankle_l
+            BonePair{  10,  11 },  // ankle_l -> ball_l
+            BonePair{   9,  12 },  // leg_lower_l -> leg_lower_b_hlp_l
+            BonePair{   8,  13 },  // leg_upper_l -> leg_upper_b_hlp_l
+            BonePair{   7,  14 },  // pelvis -> leg_upper_r
+            BonePair{  14,  15 },  // leg_upper_r -> leg_lower_r
+            BonePair{  15,  16 },  // leg_lower_r -> ankle_r
+            BonePair{  16,  17 },  // ankle_r -> ball_r
+            BonePair{  15,  18 },  // leg_lower_r -> leg_lower_b_hlp_r
+            BonePair{  14,  19 },  // leg_upper_r -> leg_upper_b_hlp_r
+            BonePair{   9,  68 },  // leg_lower_l -> leg_lower_a_hlp_l
+            BonePair{   8,  69 },  // leg_upper_l -> leg_upper_a_hlp_l
+            BonePair{  15,  85 },  // leg_lower_r -> leg_lower_a_hlp_r
+            BonePair{  14,  86 },  // leg_upper_r -> leg_upper_a_hlp_r
+            BonePair{  11, 238 },  // ball_l -> ball_end_l
+            BonePair{  17, 244 },  // ball_r -> ball_end_r
+        },
+        /* ids */ {
+            { "ankle_l",  10 },
+            { "ankle_r",  16 },
+            { "ball_end_l", 238 },
+            { "ball_end_r", 244 },
+            { "ball_l",  11 },
+            { "ball_r",  17 },
+            { "hand_l", 260 },
+            { "hand_r", 251 },
+            { "leg_lower_a_hlp_l",  68 },
+            { "leg_lower_a_hlp_r",  85 },
+            { "leg_lower_b_hlp_l",  12 },
+            { "leg_lower_b_hlp_r",  18 },
+            { "leg_lower_l",   9 },
+            { "leg_lower_r",  15 },
+            { "leg_upper_a_hlp_l",  69 },
+            { "leg_upper_a_hlp_r",  86 },
+            { "leg_upper_b_hlp_l",  13 },
+            { "leg_upper_b_hlp_r",  19 },
+            { "leg_upper_l",   8 },
+            { "leg_upper_r",  14 },
+            { "pelvis",   7 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ {},
+            /* [1] Neck  */ {},
+            /* [2] Torso */ { 7 },
+            /* [3] Arms  */ {},
+            /* [4] Legs  */ { 9 },
         },
     }},
 
@@ -2664,39 +2942,39 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  36,  37 },  // leg_upper_r -> leg_lower_r
             BonePair{  37,  38 },  // leg_lower_r -> ankle_r
             BonePair{  38,  39 },  // ankle_r -> ball_r
-            BonePair{  21,  60 },  // neck_0 -> neck_0_twist
-            BonePair{  25,  81 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  25,  82 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  24,  84 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  24,  85 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  29, 107 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  29, 108 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  28, 110 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  28, 111 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  32, 116 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  32, 117 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  36, 119 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  36, 120 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  35, 157 },  // ball_l -> ball_end_l
-            BonePair{  39, 160 },  // ball_r -> ball_end_r
+            BonePair{  21,  61 },  // neck_0 -> neck_0_twist
+            BonePair{  25,  82 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  25,  83 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  24,  85 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  24,  86 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  29, 109 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  29, 110 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  28, 112 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  28, 113 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  32, 120 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  32, 121 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  36, 123 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  36, 124 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  35, 158 },  // ball_l -> ball_end_l
+            BonePair{  39, 161 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  34 },
             { "ankle_r",  38 },
             { "arm_lower_l",  25 },
-            { "arm_lower_l_twist",  81 },
-            { "arm_lower_l_twist1",  82 },
+            { "arm_lower_l_twist",  82 },
+            { "arm_lower_l_twist1",  83 },
             { "arm_lower_r",  29 },
-            { "arm_lower_r_twist", 107 },
-            { "arm_lower_r_twist1", 108 },
+            { "arm_lower_r_twist", 109 },
+            { "arm_lower_r_twist1", 110 },
             { "arm_upper_l",  24 },
-            { "arm_upper_l_twist",  84 },
-            { "arm_upper_l_twist1",  85 },
+            { "arm_upper_l_twist",  85 },
+            { "arm_upper_l_twist1",  86 },
             { "arm_upper_r",  28 },
-            { "arm_upper_r_twist", 110 },
-            { "arm_upper_r_twist1", 111 },
-            { "ball_end_l", 157 },
-            { "ball_end_r", 160 },
+            { "arm_upper_r_twist", 112 },
+            { "arm_upper_r_twist1", 113 },
+            { "ball_end_l", 158 },
+            { "ball_end_r", 161 },
             { "ball_l",  35 },
             { "ball_r",  39 },
             { "clavicle_l",  23 },
@@ -2707,13 +2985,13 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  33 },
             { "leg_lower_r",  37 },
             { "leg_upper_l",  32 },
-            { "leg_upper_l_twist", 116 },
-            { "leg_upper_l_twist1", 117 },
+            { "leg_upper_l_twist", 120 },
+            { "leg_upper_l_twist1", 121 },
             { "leg_upper_r",  36 },
-            { "leg_upper_r_twist", 119 },
-            { "leg_upper_r_twist1", 120 },
+            { "leg_upper_r_twist", 123 },
+            { "leg_upper_r_twist1", 124 },
             { "neck_0",  21 },
-            { "neck_0_twist",  60 },
+            { "neck_0_twist",  61 },
             { "pelvis",  16 },
             { "spine_0",  17 },
             { "spine_1",  18 },
@@ -2764,97 +3042,277 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
     }},
 
+    // models/heroes_wip/chessmaster/chessmaster.vmdl
+    { "models/heroes_wip/chessmaster/chessmaster.vmdl", {
+        /* pairs */ {
+            BonePair{   9,  10 },  // pelvis -> spine_0
+            BonePair{  10,  11 },  // spine_0 -> spine_1
+            BonePair{  11,  12 },  // spine_1 -> spine_2
+            BonePair{  12,  13 },  // spine_2 -> spine_3
+            BonePair{  13,  14 },  // spine_3 -> neck_0
+            BonePair{  14,  15 },  // neck_0 -> head
+            BonePair{  13,  16 },  // spine_3 -> clavicle_l
+            BonePair{  16,  17 },  // clavicle_l -> arm_upper_l
+            BonePair{  17,  18 },  // arm_upper_l -> arm_lower_l
+            BonePair{  18,  19 },  // arm_lower_l -> hand_l
+            BonePair{  13,  20 },  // spine_3 -> clavicle_r
+            BonePair{  20,  21 },  // clavicle_r -> arm_upper_r
+            BonePair{  21,  22 },  // arm_upper_r -> arm_lower_r
+            BonePair{  22,  23 },  // arm_lower_r -> hand_r
+            BonePair{   9,  24 },  // pelvis -> leg_upper_l
+            BonePair{  24,  25 },  // leg_upper_l -> leg_lower_l
+            BonePair{  25,  26 },  // leg_lower_l -> ankle_l
+            BonePair{  26,  27 },  // ankle_l -> ball_l
+            BonePair{   9,  28 },  // pelvis -> leg_upper_r
+            BonePair{  28,  29 },  // leg_upper_r -> leg_lower_r
+            BonePair{  29,  30 },  // leg_lower_r -> ankle_r
+            BonePair{  30,  31 },  // ankle_r -> ball_r
+            BonePair{  14,  64 },  // neck_0 -> neck_0_twist
+            BonePair{  14,  65 },  // neck_0 -> neck_0_fwd_twist
+            BonePair{  17,  86 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  18,  87 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  16, 121 },  // clavicle_l -> clavicle_l_twist
+            BonePair{  21, 122 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  22, 123 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  20, 158 },  // clavicle_r -> clavicle_r_twist
+            BonePair{  24, 189 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  28, 190 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  27, 233 },  // ball_l -> ball_end_l
+            BonePair{  31, 237 },  // ball_r -> ball_end_r
+        },
+        /* ids */ {
+            { "ankle_l",  26 },
+            { "ankle_r",  30 },
+            { "arm_lower_l",  18 },
+            { "arm_lower_l_twist",  87 },
+            { "arm_lower_r",  22 },
+            { "arm_lower_r_twist", 123 },
+            { "arm_upper_l",  17 },
+            { "arm_upper_l_twist",  86 },
+            { "arm_upper_r",  21 },
+            { "arm_upper_r_twist", 122 },
+            { "ball_end_l", 233 },
+            { "ball_end_r", 237 },
+            { "ball_l",  27 },
+            { "ball_r",  31 },
+            { "clavicle_l",  16 },
+            { "clavicle_l_twist", 121 },
+            { "clavicle_r",  20 },
+            { "clavicle_r_twist", 158 },
+            { "hand_l",  19 },
+            { "hand_r",  23 },
+            { "head",  15 },
+            { "leg_lower_l",  25 },
+            { "leg_lower_r",  29 },
+            { "leg_upper_l",  24 },
+            { "leg_upper_l_twist", 189 },
+            { "leg_upper_r",  28 },
+            { "leg_upper_r_twist", 190 },
+            { "neck_0",  14 },
+            { "neck_0_fwd_twist",  65 },
+            { "neck_0_twist",  64 },
+            { "pelvis",   9 },
+            { "spine_0",  10 },
+            { "spine_1",  11 },
+            { "spine_2",  12 },
+            { "spine_3",  13 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ { 15 },
+            /* [1] Neck  */ { 14 },
+            /* [2] Torso */ { 9 },
+            /* [3] Arms  */ { 16 },
+            /* [4] Legs  */ { 25 },
+        },
+    }},
+
+    // models/heroes_wip/deadpack/deadpack.vmdl
+    { "models/heroes_wip/deadpack/deadpack.vmdl", {
+        /* pairs */ {
+            BonePair{   6,   7 },  // pelvis -> spine_0
+            BonePair{   7,   8 },  // spine_0 -> spine_1
+            BonePair{   8,   9 },  // spine_1 -> spine_2
+            BonePair{   9,  10 },  // spine_2 -> spine_3
+            BonePair{  10,  11 },  // spine_3 -> neck_0
+            BonePair{  11,  12 },  // neck_0 -> head
+            BonePair{  10,  13 },  // spine_3 -> clavicle_r
+            BonePair{  13,  14 },  // clavicle_r -> arm_upper_r
+            BonePair{  14,  15 },  // arm_upper_r -> arm_lower_r
+            BonePair{  15,  16 },  // arm_lower_r -> hand_r
+            BonePair{  14,  18 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  10,  19 },  // spine_3 -> clavicle_l
+            BonePair{  19,  20 },  // clavicle_l -> arm_upper_l
+            BonePair{  20,  21 },  // arm_upper_l -> arm_lower_l
+            BonePair{  21,  22 },  // arm_lower_l -> hand_l
+            BonePair{   6,  44 },  // pelvis -> leg_upper_r
+            BonePair{  44,  45 },  // leg_upper_r -> leg_lower_r
+            BonePair{  45,  46 },  // leg_lower_r -> ankle_r
+            BonePair{  46,  47 },  // ankle_r -> ball_r
+            BonePair{  44,  48 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{   6,  49 },  // pelvis -> leg_upper_l
+            BonePair{  49,  50 },  // leg_upper_l -> leg_lower_l
+            BonePair{  50,  51 },  // leg_lower_l -> ankle_l
+            BonePair{  51,  52 },  // ankle_l -> ball_l
+            BonePair{  11,  83 },  // neck_0 -> neck_0_twist
+            BonePair{  11,  84 },  // neck_0 -> neck_0_notwist
+            BonePair{  15, 105 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  15, 106 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  14, 107 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  13, 109 },  // clavicle_r -> clavicle_r_twist
+            BonePair{  21, 129 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  21, 130 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  20, 131 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  20, 132 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  19, 134 },  // clavicle_l -> clavicle_l_twist
+            BonePair{  44, 174 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  49, 176 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  49, 177 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  47, 228 },  // ball_r -> ball_end_r
+            BonePair{  52, 231 },  // ball_l -> ball_end_l
+        },
+        /* ids */ {
+            { "ankle_l",  51 },
+            { "ankle_r",  46 },
+            { "arm_lower_l",  21 },
+            { "arm_lower_l_twist", 129 },
+            { "arm_lower_l_twist1", 130 },
+            { "arm_lower_r",  15 },
+            { "arm_lower_r_twist", 105 },
+            { "arm_lower_r_twist1", 106 },
+            { "arm_upper_l",  20 },
+            { "arm_upper_l_twist", 131 },
+            { "arm_upper_l_twist1", 132 },
+            { "arm_upper_r",  14 },
+            { "arm_upper_r_twist",  18 },
+            { "arm_upper_r_twist1", 107 },
+            { "ball_end_l", 231 },
+            { "ball_end_r", 228 },
+            { "ball_l",  52 },
+            { "ball_r",  47 },
+            { "clavicle_l",  19 },
+            { "clavicle_l_twist", 134 },
+            { "clavicle_r",  13 },
+            { "clavicle_r_twist", 109 },
+            { "hand_l",  22 },
+            { "hand_r",  16 },
+            { "head",  12 },
+            { "leg_lower_l",  50 },
+            { "leg_lower_r",  45 },
+            { "leg_upper_l",  49 },
+            { "leg_upper_l_twist", 176 },
+            { "leg_upper_l_twist1", 177 },
+            { "leg_upper_r",  44 },
+            { "leg_upper_r_twist",  48 },
+            { "leg_upper_r_twist1", 174 },
+            { "neck_0",  11 },
+            { "neck_0_notwist",  84 },
+            { "neck_0_twist",  83 },
+            { "pelvis",   6 },
+            { "spine_0",   7 },
+            { "spine_1",   8 },
+            { "spine_2",   9 },
+            { "spine_3",  10 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ { 12 },
+            /* [1] Neck  */ { 11 },
+            /* [2] Torso */ { 6 },
+            /* [3] Arms  */ { 13 },
+            /* [4] Legs  */ { 45 },
+        },
+    }},
+
     // models/heroes_wip/doorman_v2/doorman.vmdl
     { "models/heroes_wip/doorman_v2/doorman.vmdl", {
         /* pairs */ {
-            BonePair{  14,  15 },  // pelvis -> spine_0
-            BonePair{  15,  16 },  // spine_0 -> spine_1
-            BonePair{  16,  17 },  // spine_1 -> spine_2
-            BonePair{  17,  18 },  // spine_2 -> spine_3
-            BonePair{  18,  19 },  // spine_3 -> neck_0
-            BonePair{  19,  20 },  // neck_0 -> head
-            BonePair{  18,  21 },  // spine_3 -> clavicle_l
-            BonePair{  21,  22 },  // clavicle_l -> arm_upper_l
-            BonePair{  22,  23 },  // arm_upper_l -> arm_lower_l
-            BonePair{  23,  24 },  // arm_lower_l -> hand_l
-            BonePair{  18,  25 },  // spine_3 -> clavicle_r
-            BonePair{  25,  26 },  // clavicle_r -> arm_upper_r
-            BonePair{  26,  27 },  // arm_upper_r -> arm_lower_r
-            BonePair{  27,  28 },  // arm_lower_r -> hand_r
-            BonePair{  14,  32 },  // pelvis -> leg_upper_l
-            BonePair{  32,  33 },  // leg_upper_l -> leg_lower_l
-            BonePair{  33,  34 },  // leg_lower_l -> ankle_l
-            BonePair{  34,  35 },  // ankle_l -> ball_l
-            BonePair{  14,  36 },  // pelvis -> leg_upper_r
-            BonePair{  36,  37 },  // leg_upper_r -> leg_lower_r
-            BonePair{  37,  38 },  // leg_lower_r -> ankle_r
-            BonePair{  38,  39 },  // ankle_r -> ball_r
-            BonePair{  19,  54 },  // neck_0 -> neck_0_twist
-            BonePair{  23,  74 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  23,  75 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  22,  76 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  22,  77 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  21,  79 },  // clavicle_l -> clavicle_l_notwist
-            BonePair{  27, 100 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  27, 101 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  26, 102 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  26, 103 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  25, 105 },  // clavicle_r -> clavicle_r_notwist
-            BonePair{  32, 115 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  32, 116 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  36, 118 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  36, 119 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  35, 158 },  // ball_l -> ball_end_l
-            BonePair{  39, 161 },  // ball_r -> ball_end_r
+            BonePair{  15,  16 },  // pelvis -> spine_0
+            BonePair{  16,  17 },  // spine_0 -> spine_1
+            BonePair{  17,  18 },  // spine_1 -> spine_2
+            BonePair{  18,  19 },  // spine_2 -> spine_3
+            BonePair{  19,  20 },  // spine_3 -> neck_0
+            BonePair{  20,  21 },  // neck_0 -> head
+            BonePair{  19,  22 },  // spine_3 -> clavicle_l
+            BonePair{  22,  23 },  // clavicle_l -> arm_upper_l
+            BonePair{  23,  24 },  // arm_upper_l -> arm_lower_l
+            BonePair{  24,  25 },  // arm_lower_l -> hand_l
+            BonePair{  19,  26 },  // spine_3 -> clavicle_r
+            BonePair{  26,  27 },  // clavicle_r -> arm_upper_r
+            BonePair{  27,  28 },  // arm_upper_r -> arm_lower_r
+            BonePair{  28,  29 },  // arm_lower_r -> hand_r
+            BonePair{  15,  33 },  // pelvis -> leg_upper_l
+            BonePair{  33,  34 },  // leg_upper_l -> leg_lower_l
+            BonePair{  34,  35 },  // leg_lower_l -> ankle_l
+            BonePair{  35,  36 },  // ankle_l -> ball_l
+            BonePair{  15,  37 },  // pelvis -> leg_upper_r
+            BonePair{  37,  38 },  // leg_upper_r -> leg_lower_r
+            BonePair{  38,  39 },  // leg_lower_r -> ankle_r
+            BonePair{  39,  40 },  // ankle_r -> ball_r
+            BonePair{  20,  55 },  // neck_0 -> neck_0_twist
+            BonePair{  24,  75 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  24,  76 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  23,  77 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  23,  78 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  22,  80 },  // clavicle_l -> clavicle_l_notwist
+            BonePair{  28, 101 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  28, 102 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  27, 103 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  27, 104 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  26, 106 },  // clavicle_r -> clavicle_r_notwist
+            BonePair{  33, 119 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  33, 120 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  37, 122 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  37, 123 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  36, 158 },  // ball_l -> ball_end_l
+            BonePair{  40, 161 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  34 },
-            { "ankle_r",  38 },
-            { "arm_lower_l",  23 },
-            { "arm_lower_l_twist",  74 },
-            { "arm_lower_l_twist1",  75 },
-            { "arm_lower_r",  27 },
-            { "arm_lower_r_twist", 100 },
-            { "arm_lower_r_twist1", 101 },
-            { "arm_upper_l",  22 },
-            { "arm_upper_l_twist",  76 },
-            { "arm_upper_l_twist1",  77 },
-            { "arm_upper_r",  26 },
-            { "arm_upper_r_twist", 102 },
-            { "arm_upper_r_twist1", 103 },
+            { "ankle_l",  35 },
+            { "ankle_r",  39 },
+            { "arm_lower_l",  24 },
+            { "arm_lower_l_twist",  75 },
+            { "arm_lower_l_twist1",  76 },
+            { "arm_lower_r",  28 },
+            { "arm_lower_r_twist", 101 },
+            { "arm_lower_r_twist1", 102 },
+            { "arm_upper_l",  23 },
+            { "arm_upper_l_twist",  77 },
+            { "arm_upper_l_twist1",  78 },
+            { "arm_upper_r",  27 },
+            { "arm_upper_r_twist", 103 },
+            { "arm_upper_r_twist1", 104 },
             { "ball_end_l", 158 },
             { "ball_end_r", 161 },
-            { "ball_l",  35 },
-            { "ball_r",  39 },
-            { "clavicle_l",  21 },
-            { "clavicle_l_notwist",  79 },
-            { "clavicle_r",  25 },
-            { "clavicle_r_notwist", 105 },
-            { "hand_l",  24 },
-            { "hand_r",  28 },
-            { "head",  20 },
-            { "leg_lower_l",  33 },
-            { "leg_lower_r",  37 },
-            { "leg_upper_l",  32 },
-            { "leg_upper_l_twist", 115 },
-            { "leg_upper_l_twist1", 116 },
-            { "leg_upper_r",  36 },
-            { "leg_upper_r_twist", 118 },
-            { "leg_upper_r_twist1", 119 },
-            { "neck_0",  19 },
-            { "neck_0_twist",  54 },
-            { "pelvis",  14 },
-            { "spine_0",  15 },
-            { "spine_1",  16 },
-            { "spine_2",  17 },
-            { "spine_3",  18 },
+            { "ball_l",  36 },
+            { "ball_r",  40 },
+            { "clavicle_l",  22 },
+            { "clavicle_l_notwist",  80 },
+            { "clavicle_r",  26 },
+            { "clavicle_r_notwist", 106 },
+            { "hand_l",  25 },
+            { "hand_r",  29 },
+            { "head",  21 },
+            { "leg_lower_l",  34 },
+            { "leg_lower_r",  38 },
+            { "leg_upper_l",  33 },
+            { "leg_upper_l_twist", 119 },
+            { "leg_upper_l_twist1", 120 },
+            { "leg_upper_r",  37 },
+            { "leg_upper_r_twist", 122 },
+            { "leg_upper_r_twist1", 123 },
+            { "neck_0",  20 },
+            { "neck_0_twist",  55 },
+            { "pelvis",  15 },
+            { "spine_0",  16 },
+            { "spine_1",  17 },
+            { "spine_2",  18 },
+            { "spine_3",  19 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 20 },
-            /* [1] Neck  */ { 19 },
-            /* [2] Torso */ { 14 },
-            /* [3] Arms  */ { 21 },
-            /* [4] Legs  */ { 33 },
+            /* [0] Head  */ { 21 },
+            /* [1] Neck  */ { 20 },
+            /* [2] Torso */ { 15 },
+            /* [3] Arms  */ { 22 },
+            /* [4] Legs  */ { 34 },
         },
     }},
 
@@ -2883,64 +3341,60 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  27,  28 },  // leg_upper_r -> leg_lower_r
             BonePair{  28,  29 },  // leg_lower_r -> ankle_r
             BonePair{  29,  30 },  // ankle_r -> ball_r
-            BonePair{  11,  50 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  11,  51 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  10,  53 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  10,  54 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{   9,  55 },  // clavicle_l -> clavicle_l_notwist
-            BonePair{  15,  76 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  15,  77 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  14,  79 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  14,  80 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  13,  81 },  // clavicle_r -> clavicle_r_notwist
-            BonePair{  17,  83 },  // neck_0 -> neck_0_twist
-            BonePair{  23,  85 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  23,  86 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  27,  88 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  27,  89 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  15, 112 },  // arm_lower_r -> arm_lower_r_twist2
-            BonePair{  15, 113 },  // arm_lower_r -> arm_lower_r_twist3
-            BonePair{  26, 121 },  // ball_l -> ball_end_l
-            BonePair{  30, 124 },  // ball_r -> ball_end_r
+            BonePair{  11,  51 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  11,  52 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  10,  54 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  10,  55 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{   9,  56 },  // clavicle_l -> clavicle_l_notwist
+            BonePair{  15,  78 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  15,  79 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  14,  81 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  14,  82 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  13,  83 },  // clavicle_r -> clavicle_r_notwist
+            BonePair{  17,  85 },  // neck_0 -> neck_0_twist
+            BonePair{  23,  89 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  23,  90 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  27,  92 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  27,  93 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  26, 120 },  // ball_l -> ball_end_l
+            BonePair{  30, 123 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  25 },
             { "ankle_r",  29 },
             { "arm_lower_l",  11 },
-            { "arm_lower_l_twist",  50 },
-            { "arm_lower_l_twist1",  51 },
+            { "arm_lower_l_twist",  51 },
+            { "arm_lower_l_twist1",  52 },
             { "arm_lower_r",  15 },
-            { "arm_lower_r_twist",  76 },
-            { "arm_lower_r_twist1",  77 },
-            { "arm_lower_r_twist2", 112 },
-            { "arm_lower_r_twist3", 113 },
+            { "arm_lower_r_twist",  78 },
+            { "arm_lower_r_twist1",  79 },
             { "arm_upper_l",  10 },
-            { "arm_upper_l_twist",  53 },
-            { "arm_upper_l_twist1",  54 },
+            { "arm_upper_l_twist",  54 },
+            { "arm_upper_l_twist1",  55 },
             { "arm_upper_r",  14 },
-            { "arm_upper_r_twist",  79 },
-            { "arm_upper_r_twist1",  80 },
-            { "ball_end_l", 121 },
-            { "ball_end_r", 124 },
+            { "arm_upper_r_twist",  81 },
+            { "arm_upper_r_twist1",  82 },
+            { "ball_end_l", 120 },
+            { "ball_end_r", 123 },
             { "ball_l",  26 },
             { "ball_r",  30 },
             { "clavicle_l",   9 },
-            { "clavicle_l_notwist",  55 },
+            { "clavicle_l_notwist",  56 },
             { "clavicle_r",  13 },
-            { "clavicle_r_notwist",  81 },
+            { "clavicle_r_notwist",  83 },
             { "hand_l",  12 },
             { "hand_r",  16 },
             { "head",  18 },
             { "leg_lower_l",  24 },
             { "leg_lower_r",  28 },
             { "leg_upper_l",  23 },
-            { "leg_upper_l_twist",  85 },
-            { "leg_upper_l_twist1",  86 },
+            { "leg_upper_l_twist",  89 },
+            { "leg_upper_l_twist1",  90 },
             { "leg_upper_r",  27 },
-            { "leg_upper_r_twist",  88 },
-            { "leg_upper_r_twist1",  89 },
+            { "leg_upper_r_twist",  92 },
+            { "leg_upper_r_twist1",  93 },
             { "neck_0",  17 },
-            { "neck_0_twist",  83 },
+            { "neck_0_twist",  85 },
             { "pelvis",   4 },
             { "spine_0",   5 },
             { "spine_1",   6 },
@@ -2959,79 +3413,79 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_wip/dynamo/dynamo.vmdl
     { "models/heroes_wip/dynamo/dynamo.vmdl", {
         /* pairs */ {
-            BonePair{  17,  18 },  // pelvis -> spine_0
-            BonePair{  22,  23 },  // neck_0 -> head
-            BonePair{  27,  28 },  // clavicle_l -> arm_upper_l
-            BonePair{  28,  29 },  // arm_upper_l -> arm_lower_l
-            BonePair{  29,  30 },  // arm_lower_l -> hand_l
-            BonePair{  32,  33 },  // clavicle_r -> arm_upper_r
-            BonePair{  33,  34 },  // arm_upper_r -> arm_lower_r
-            BonePair{  34,  35 },  // arm_lower_r -> hand_r
-            BonePair{  17,  42 },  // pelvis -> leg_upper_l
-            BonePair{  42,  43 },  // leg_upper_l -> leg_lower_l
-            BonePair{  43,  44 },  // leg_lower_l -> ankle_l
-            BonePair{  44,  45 },  // ankle_l -> ball_l
-            BonePair{  17,  46 },  // pelvis -> leg_upper_r
-            BonePair{  46,  47 },  // leg_upper_r -> leg_lower_r
-            BonePair{  47,  48 },  // leg_lower_r -> ankle_r
-            BonePair{  48,  49 },  // ankle_r -> ball_r
-            BonePair{  28,  73 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  28,  74 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  33, 119 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  33, 120 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  42, 161 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  42, 162 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  46, 164 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  46, 165 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  29, 344 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  29, 345 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  34, 354 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  34, 355 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  45, 370 },  // ball_l -> ball_end_l
-            BonePair{  49, 373 },  // ball_r -> ball_end_r
+            BonePair{  18,  19 },  // pelvis -> spine_0
+            BonePair{  23,  24 },  // neck_0 -> head
+            BonePair{  28,  29 },  // clavicle_l -> arm_upper_l
+            BonePair{  29,  30 },  // arm_upper_l -> arm_lower_l
+            BonePair{  30,  31 },  // arm_lower_l -> hand_l
+            BonePair{  33,  34 },  // clavicle_r -> arm_upper_r
+            BonePair{  34,  35 },  // arm_upper_r -> arm_lower_r
+            BonePair{  35,  36 },  // arm_lower_r -> hand_r
+            BonePair{  18,  43 },  // pelvis -> leg_upper_l
+            BonePair{  43,  44 },  // leg_upper_l -> leg_lower_l
+            BonePair{  44,  45 },  // leg_lower_l -> ankle_l
+            BonePair{  45,  46 },  // ankle_l -> ball_l
+            BonePair{  18,  47 },  // pelvis -> leg_upper_r
+            BonePair{  47,  48 },  // leg_upper_r -> leg_lower_r
+            BonePair{  48,  49 },  // leg_lower_r -> ankle_r
+            BonePair{  49,  50 },  // ankle_r -> ball_r
+            BonePair{  30,  74 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  30,  75 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  29,  76 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  29,  77 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  35, 122 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  35, 123 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  34, 124 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  34, 125 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  43, 166 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  43, 167 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  47, 169 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  47, 170 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  46, 370 },  // ball_l -> ball_end_l
+            BonePair{  50, 373 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  44 },
-            { "ankle_r",  48 },
-            { "arm_lower_l",  29 },
-            { "arm_lower_l_twist", 344 },
-            { "arm_lower_l_twist1", 345 },
-            { "arm_lower_r",  34 },
-            { "arm_lower_r_twist", 354 },
-            { "arm_lower_r_twist1", 355 },
-            { "arm_upper_l",  28 },
-            { "arm_upper_l_twist",  73 },
-            { "arm_upper_l_twist1",  74 },
-            { "arm_upper_r",  33 },
-            { "arm_upper_r_twist", 119 },
-            { "arm_upper_r_twist1", 120 },
+            { "ankle_l",  45 },
+            { "ankle_r",  49 },
+            { "arm_lower_l",  30 },
+            { "arm_lower_l_twist",  74 },
+            { "arm_lower_l_twist1",  75 },
+            { "arm_lower_r",  35 },
+            { "arm_lower_r_twist", 122 },
+            { "arm_lower_r_twist1", 123 },
+            { "arm_upper_l",  29 },
+            { "arm_upper_l_twist",  76 },
+            { "arm_upper_l_twist1",  77 },
+            { "arm_upper_r",  34 },
+            { "arm_upper_r_twist", 124 },
+            { "arm_upper_r_twist1", 125 },
             { "ball_end_l", 370 },
             { "ball_end_r", 373 },
-            { "ball_l",  45 },
-            { "ball_r",  49 },
-            { "clavicle_l",  27 },
-            { "clavicle_r",  32 },
-            { "hand_l",  30 },
-            { "hand_r",  35 },
-            { "head",  23 },
-            { "leg_lower_l",  43 },
-            { "leg_lower_r",  47 },
-            { "leg_upper_l",  42 },
-            { "leg_upper_l_twist", 161 },
-            { "leg_upper_l_twist1", 162 },
-            { "leg_upper_r",  46 },
-            { "leg_upper_r_twist", 164 },
-            { "leg_upper_r_twist1", 165 },
-            { "neck_0",  22 },
-            { "pelvis",  17 },
-            { "spine_0",  18 },
+            { "ball_l",  46 },
+            { "ball_r",  50 },
+            { "clavicle_l",  28 },
+            { "clavicle_r",  33 },
+            { "hand_l",  31 },
+            { "hand_r",  36 },
+            { "head",  24 },
+            { "leg_lower_l",  44 },
+            { "leg_lower_r",  48 },
+            { "leg_upper_l",  43 },
+            { "leg_upper_l_twist", 166 },
+            { "leg_upper_l_twist1", 167 },
+            { "leg_upper_r",  47 },
+            { "leg_upper_r_twist", 169 },
+            { "leg_upper_r_twist1", 170 },
+            { "neck_0",  23 },
+            { "pelvis",  18 },
+            { "spine_0",  19 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 23 },
-            /* [1] Neck  */ { 22 },
-            /* [2] Torso */ { 17 },
-            /* [3] Arms  */ { 27 },
-            /* [4] Legs  */ { 43 },
+            /* [0] Head  */ { 24 },
+            /* [1] Neck  */ { 23 },
+            /* [2] Torso */ { 18 },
+            /* [3] Arms  */ { 28 },
+            /* [4] Legs  */ { 44 },
         },
     }},
 
@@ -3128,94 +3582,94 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_wip/familiar/familiar_wip.vmdl
     { "models/heroes_wip/familiar/familiar_wip.vmdl", {
         /* pairs */ {
-            BonePair{   4,   5 },  // pelvis -> spine_0
-            BonePair{   5,   6 },  // spine_0 -> spine_1
-            BonePair{   6,   7 },  // spine_1 -> spine_2
-            BonePair{   7,   8 },  // spine_2 -> spine_3
-            BonePair{   8,   9 },  // spine_3 -> neck_0
-            BonePair{   9,  10 },  // neck_0 -> head
-            BonePair{   8,  15 },  // spine_3 -> clavicle_l
-            BonePair{  15,  16 },  // clavicle_l -> arm_upper_l
-            BonePair{  16,  17 },  // arm_upper_l -> arm_lower_l
-            BonePair{  17,  18 },  // arm_lower_l -> hand_l
-            BonePair{   8,  28 },  // spine_3 -> clavicle_r
-            BonePair{  28,  29 },  // clavicle_r -> arm_upper_r
-            BonePair{  29,  30 },  // arm_upper_r -> arm_lower_r
-            BonePair{  30,  31 },  // arm_lower_r -> hand_r
-            BonePair{   4,  33 },  // pelvis -> leg_upper_l
-            BonePair{  33,  34 },  // leg_upper_l -> leg_lower_l
-            BonePair{  34,  35 },  // leg_lower_l -> ankle_l
-            BonePair{  35,  36 },  // ankle_l -> ball_l
-            BonePair{   4,  37 },  // pelvis -> leg_upper_r
-            BonePair{  37,  38 },  // leg_upper_r -> leg_lower_r
-            BonePair{  38,  39 },  // leg_lower_r -> ankle_r
-            BonePair{  39,  40 },  // ankle_r -> ball_r
-            BonePair{   9,  58 },  // neck_0 -> neck_0_twist
-            BonePair{  17, 101 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  17, 102 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  16, 103 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  16, 104 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  15, 106 },  // clavicle_l -> clavicle_notwist_l
-            BonePair{  30, 123 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  30, 124 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  29, 125 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  29, 126 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  28, 128 },  // clavicle_r -> clavicle_notwist_r
-            BonePair{  33, 130 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  33, 131 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  37, 133 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  37, 134 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  36, 275 },  // ball_l -> ball_end_l
-            BonePair{  40, 278 },  // ball_r -> ball_end_r
+            BonePair{   5,   6 },  // pelvis -> spine_0
+            BonePair{   6,   7 },  // spine_0 -> spine_1
+            BonePair{   7,   8 },  // spine_1 -> spine_2
+            BonePair{   8,   9 },  // spine_2 -> spine_3
+            BonePair{   9,  10 },  // spine_3 -> neck_0
+            BonePair{  10,  11 },  // neck_0 -> head
+            BonePair{   9,  16 },  // spine_3 -> clavicle_l
+            BonePair{  16,  17 },  // clavicle_l -> arm_upper_l
+            BonePair{  17,  18 },  // arm_upper_l -> arm_lower_l
+            BonePair{  18,  19 },  // arm_lower_l -> hand_l
+            BonePair{   9,  29 },  // spine_3 -> clavicle_r
+            BonePair{  29,  30 },  // clavicle_r -> arm_upper_r
+            BonePair{  30,  31 },  // arm_upper_r -> arm_lower_r
+            BonePair{  31,  32 },  // arm_lower_r -> hand_r
+            BonePair{   5,  34 },  // pelvis -> leg_upper_l
+            BonePair{  34,  35 },  // leg_upper_l -> leg_lower_l
+            BonePair{  35,  36 },  // leg_lower_l -> ankle_l
+            BonePair{  36,  37 },  // ankle_l -> ball_l
+            BonePair{   5,  38 },  // pelvis -> leg_upper_r
+            BonePair{  38,  39 },  // leg_upper_r -> leg_lower_r
+            BonePair{  39,  40 },  // leg_lower_r -> ankle_r
+            BonePair{  40,  41 },  // ankle_r -> ball_r
+            BonePair{  10,  59 },  // neck_0 -> neck_0_twist
+            BonePair{  18, 102 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  18, 103 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  17, 104 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  17, 105 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  16, 107 },  // clavicle_l -> clavicle_notwist_l
+            BonePair{  31, 124 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  31, 125 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  30, 126 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  30, 127 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  29, 129 },  // clavicle_r -> clavicle_notwist_r
+            BonePair{  34, 134 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  34, 135 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  38, 137 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  38, 138 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  37, 274 },  // ball_l -> ball_end_l
+            BonePair{  41, 277 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  35 },
-            { "ankle_r",  39 },
-            { "arm_lower_l",  17 },
-            { "arm_lower_l_twist", 101 },
-            { "arm_lower_l_twist1", 102 },
-            { "arm_lower_r",  30 },
-            { "arm_lower_r_twist", 123 },
-            { "arm_lower_r_twist1", 124 },
-            { "arm_upper_l",  16 },
-            { "arm_upper_l_twist", 103 },
-            { "arm_upper_l_twist1", 104 },
-            { "arm_upper_r",  29 },
-            { "arm_upper_r_twist", 125 },
-            { "arm_upper_r_twist1", 126 },
-            { "ball_end_l", 275 },
-            { "ball_end_r", 278 },
-            { "ball_l",  36 },
-            { "ball_r",  40 },
-            { "clavicle_l",  15 },
-            { "clavicle_notwist_l", 106 },
-            { "clavicle_notwist_r", 128 },
-            { "clavicle_r",  28 },
-            { "hand_l",  18 },
-            { "hand_r",  31 },
-            { "head",  10 },
-            { "leg_lower_l",  34 },
-            { "leg_lower_r",  38 },
-            { "leg_upper_l",  33 },
-            { "leg_upper_l_twist", 130 },
-            { "leg_upper_l_twist1", 131 },
-            { "leg_upper_r",  37 },
-            { "leg_upper_r_twist", 133 },
-            { "leg_upper_r_twist1", 134 },
-            { "neck_0",   9 },
-            { "neck_0_twist",  58 },
-            { "pelvis",   4 },
-            { "spine_0",   5 },
-            { "spine_1",   6 },
-            { "spine_2",   7 },
-            { "spine_3",   8 },
+            { "ankle_l",  36 },
+            { "ankle_r",  40 },
+            { "arm_lower_l",  18 },
+            { "arm_lower_l_twist", 102 },
+            { "arm_lower_l_twist1", 103 },
+            { "arm_lower_r",  31 },
+            { "arm_lower_r_twist", 124 },
+            { "arm_lower_r_twist1", 125 },
+            { "arm_upper_l",  17 },
+            { "arm_upper_l_twist", 104 },
+            { "arm_upper_l_twist1", 105 },
+            { "arm_upper_r",  30 },
+            { "arm_upper_r_twist", 126 },
+            { "arm_upper_r_twist1", 127 },
+            { "ball_end_l", 274 },
+            { "ball_end_r", 277 },
+            { "ball_l",  37 },
+            { "ball_r",  41 },
+            { "clavicle_l",  16 },
+            { "clavicle_notwist_l", 107 },
+            { "clavicle_notwist_r", 129 },
+            { "clavicle_r",  29 },
+            { "hand_l",  19 },
+            { "hand_r",  32 },
+            { "head",  11 },
+            { "leg_lower_l",  35 },
+            { "leg_lower_r",  39 },
+            { "leg_upper_l",  34 },
+            { "leg_upper_l_twist", 134 },
+            { "leg_upper_l_twist1", 135 },
+            { "leg_upper_r",  38 },
+            { "leg_upper_r_twist", 137 },
+            { "leg_upper_r_twist1", 138 },
+            { "neck_0",  10 },
+            { "neck_0_twist",  59 },
+            { "pelvis",   5 },
+            { "spine_0",   6 },
+            { "spine_1",   7 },
+            { "spine_2",   8 },
+            { "spine_3",   9 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 10 },
-            /* [1] Neck  */ { 9 },
-            /* [2] Torso */ { 4 },
-            /* [3] Arms  */ { 15 },
-            /* [4] Legs  */ { 34 },
+            /* [0] Head  */ { 11 },
+            /* [1] Neck  */ { 10 },
+            /* [2] Torso */ { 5 },
+            /* [3] Arms  */ { 16 },
+            /* [4] Legs  */ { 35 },
         },
     }},
 
@@ -3244,47 +3698,47 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  33,  34 },  // leg_upper_r -> leg_lower_r
             BonePair{  34,  35 },  // leg_lower_r -> ankle_r
             BonePair{  35,  36 },  // ankle_r -> ball_r
-            BonePair{  16,  40 },  // neck_0 -> neck_0_twist
-            BonePair{  16,  41 },  // neck_0 -> neck_notwist
-            BonePair{  22,  61 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  22,  62 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  21,  63 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  21,  64 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  20,  66 },  // clavicle_l -> clavicle_notwist_l
-            BonePair{  26,  87 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  26,  88 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  25,  89 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  25,  90 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  24,  92 },  // clavicle_r -> clavicle_notwist_r
-            BonePair{  29,  97 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  29,  98 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  33, 103 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  33, 104 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  32, 356 },  // ball_l -> ball_end_l
-            BonePair{  36, 361 },  // ball_r -> ball_end_r
+            BonePair{  16,  41 },  // neck_0 -> neck_0_twist
+            BonePair{  16,  42 },  // neck_0 -> neck_notwist
+            BonePair{  22,  62 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  22,  63 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  21,  64 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  21,  65 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  20,  67 },  // clavicle_l -> clavicle_notwist_l
+            BonePair{  26,  88 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  26,  89 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  25,  90 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  25,  91 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  24,  93 },  // clavicle_r -> clavicle_notwist_r
+            BonePair{  29, 101 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  29, 102 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  33, 107 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  33, 108 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  32, 357 },  // ball_l -> ball_end_l
+            BonePair{  36, 362 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  31 },
             { "ankle_r",  35 },
             { "arm_lower_l",  22 },
-            { "arm_lower_l_twist",  61 },
-            { "arm_lower_l_twist1",  62 },
+            { "arm_lower_l_twist",  62 },
+            { "arm_lower_l_twist1",  63 },
             { "arm_lower_r",  26 },
-            { "arm_lower_r_twist",  87 },
-            { "arm_lower_r_twist1",  88 },
+            { "arm_lower_r_twist",  88 },
+            { "arm_lower_r_twist1",  89 },
             { "arm_upper_l",  21 },
-            { "arm_upper_l_twist",  63 },
-            { "arm_upper_l_twist1",  64 },
+            { "arm_upper_l_twist",  64 },
+            { "arm_upper_l_twist1",  65 },
             { "arm_upper_r",  25 },
-            { "arm_upper_r_twist",  89 },
-            { "arm_upper_r_twist1",  90 },
-            { "ball_end_l", 356 },
-            { "ball_end_r", 361 },
+            { "arm_upper_r_twist",  90 },
+            { "arm_upper_r_twist1",  91 },
+            { "ball_end_l", 357 },
+            { "ball_end_r", 362 },
             { "ball_l",  32 },
             { "ball_r",  36 },
             { "clavicle_l",  20 },
-            { "clavicle_notwist_l",  66 },
-            { "clavicle_notwist_r",  92 },
+            { "clavicle_notwist_l",  67 },
+            { "clavicle_notwist_r",  93 },
             { "clavicle_r",  24 },
             { "hand_l",  23 },
             { "hand_r",  27 },
@@ -3292,14 +3746,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  30 },
             { "leg_lower_r",  34 },
             { "leg_upper_l",  29 },
-            { "leg_upper_l_twist",  97 },
-            { "leg_upper_l_twist1",  98 },
+            { "leg_upper_l_twist", 101 },
+            { "leg_upper_l_twist1", 102 },
             { "leg_upper_r",  33 },
-            { "leg_upper_r_twist", 103 },
-            { "leg_upper_r_twist1", 104 },
+            { "leg_upper_r_twist", 107 },
+            { "leg_upper_r_twist1", 108 },
             { "neck_0",  16 },
-            { "neck_0_twist",  40 },
-            { "neck_notwist",  41 },
+            { "neck_0_twist",  41 },
+            { "neck_notwist",  42 },
             { "pelvis",  11 },
             { "spine_0",  12 },
             { "spine_1",  13 },
@@ -3342,37 +3796,37 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  30,  31 },  // leg_upper_r -> leg_lower_r
             BonePair{  31,  32 },  // leg_lower_r -> ankle_r
             BonePair{  32,  33 },  // ankle_r -> ball_r
-            BonePair{  11,  59 },  // neck_0 -> neck_0_twist
-            BonePair{  15,  79 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  15,  80 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14,  82 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  14,  83 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  20, 103 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  19, 110 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  26, 114 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  26, 115 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  30, 117 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  30, 118 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  29, 152 },  // ball_l -> ball_end_l
-            BonePair{  33, 155 },  // ball_r -> ball_end_r
+            BonePair{  11,  60 },  // neck_0 -> neck_0_twist
+            BonePair{  15,  81 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  15,  82 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  14,  84 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  14,  85 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  20, 105 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  19, 112 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  26, 119 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  26, 120 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  30, 122 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  30, 123 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  29, 153 },  // ball_l -> ball_end_l
+            BonePair{  33, 156 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  28 },
             { "ankle_r",  32 },
             { "arm_lower_l",  15 },
-            { "arm_lower_l_twist",  79 },
-            { "arm_lower_l_twist1",  80 },
+            { "arm_lower_l_twist",  81 },
+            { "arm_lower_l_twist1",  82 },
             { "arm_lower_r",  20 },
             { "arm_lower_r_twist",  23 },
-            { "arm_lower_r_twist1", 103 },
+            { "arm_lower_r_twist1", 105 },
             { "arm_upper_l",  14 },
-            { "arm_upper_l_twist",  82 },
-            { "arm_upper_l_twist1",  83 },
+            { "arm_upper_l_twist",  84 },
+            { "arm_upper_l_twist1",  85 },
             { "arm_upper_r",  19 },
-            { "arm_upper_r_twist", 110 },
+            { "arm_upper_r_twist", 112 },
             { "arm_upper_r_twist1",  24 },
-            { "ball_end_l", 152 },
-            { "ball_end_r", 155 },
+            { "ball_end_l", 153 },
+            { "ball_end_r", 156 },
             { "ball_l",  29 },
             { "ball_r",  33 },
             { "clavicle_l",  13 },
@@ -3383,13 +3837,13 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  27 },
             { "leg_lower_r",  31 },
             { "leg_upper_l",  26 },
-            { "leg_upper_l_twist", 114 },
-            { "leg_upper_l_twist1", 115 },
+            { "leg_upper_l_twist", 119 },
+            { "leg_upper_l_twist1", 120 },
             { "leg_upper_r",  30 },
-            { "leg_upper_r_twist", 117 },
-            { "leg_upper_r_twist1", 118 },
+            { "leg_upper_r_twist", 122 },
+            { "leg_upper_r_twist1", 123 },
             { "neck_0",  11 },
-            { "neck_0_twist",  59 },
+            { "neck_0_twist",  60 },
             { "pelvis",   6 },
             { "spine_0",   7 },
             { "spine_1",   8 },
@@ -3408,178 +3862,272 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_wip/geist/geist.vmdl
     { "models/heroes_wip/geist/geist.vmdl", {
         /* pairs */ {
-            BonePair{   5,   6 },  // pelvis -> spine_0
-            BonePair{   6,   7 },  // spine_0 -> spine_1
-            BonePair{   7,   8 },  // spine_1 -> spine_2
-            BonePair{   8,   9 },  // spine_2 -> spine_3
-            BonePair{   9,  10 },  // spine_3 -> neck_0
-            BonePair{  10,  11 },  // neck_0 -> head
-            BonePair{   9,  12 },  // spine_3 -> clavicle_l
-            BonePair{  12,  13 },  // clavicle_l -> arm_upper_l
-            BonePair{  13,  14 },  // arm_upper_l -> arm_lower_l
-            BonePair{  14,  15 },  // arm_lower_l -> hand_l
-            BonePair{   9,  20 },  // spine_3 -> clavicle_r
-            BonePair{  20,  21 },  // clavicle_r -> arm_upper_r
-            BonePair{  21,  22 },  // arm_upper_r -> arm_lower_r
-            BonePair{  22,  23 },  // arm_lower_r -> hand_r
-            BonePair{   5,  36 },  // pelvis -> leg_upper_l
-            BonePair{  36,  37 },  // leg_upper_l -> leg_lower_l
-            BonePair{  37,  38 },  // leg_lower_l -> ankle_l
-            BonePair{  38,  39 },  // ankle_l -> ball_l
-            BonePair{   5,  40 },  // pelvis -> leg_upper_r
-            BonePair{  40,  41 },  // leg_upper_r -> leg_lower_r
-            BonePair{  41,  42 },  // leg_lower_r -> ankle_r
-            BonePair{  42,  43 },  // ankle_r -> ball_r
-            BonePair{  10,  50 },  // neck_0 -> neck_0_twist
-            BonePair{  14,  70 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  14,  71 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  13,  72 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  13,  73 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  22,  94 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  22,  95 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  21,  98 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  21,  99 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  36, 109 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  36, 110 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  40, 111 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  40, 112 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  39, 574 },  // ball_l -> ball_end_l
-            BonePair{  43, 598 },  // ball_r -> ball_end_r
+            BonePair{   6,   7 },  // pelvis -> spine_0
+            BonePair{   7,   8 },  // spine_0 -> spine_1
+            BonePair{   8,   9 },  // spine_1 -> spine_2
+            BonePair{   9,  10 },  // spine_2 -> spine_3
+            BonePair{  10,  11 },  // spine_3 -> neck_0
+            BonePair{  11,  12 },  // neck_0 -> head
+            BonePair{  10,  13 },  // spine_3 -> clavicle_l
+            BonePair{  13,  14 },  // clavicle_l -> arm_upper_l
+            BonePair{  14,  15 },  // arm_upper_l -> arm_lower_l
+            BonePair{  15,  16 },  // arm_lower_l -> hand_l
+            BonePair{  10,  21 },  // spine_3 -> clavicle_r
+            BonePair{  21,  22 },  // clavicle_r -> arm_upper_r
+            BonePair{  22,  23 },  // arm_upper_r -> arm_lower_r
+            BonePair{  23,  24 },  // arm_lower_r -> hand_r
+            BonePair{  22,  25 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{   6,  38 },  // pelvis -> leg_upper_l
+            BonePair{  38,  39 },  // leg_upper_l -> leg_lower_l
+            BonePair{  39,  40 },  // leg_lower_l -> ankle_l
+            BonePair{  40,  41 },  // ankle_l -> ball_l
+            BonePair{   6,  42 },  // pelvis -> leg_upper_r
+            BonePair{  42,  43 },  // leg_upper_r -> leg_lower_r
+            BonePair{  43,  44 },  // leg_lower_r -> ankle_r
+            BonePair{  44,  45 },  // ankle_r -> ball_r
+            BonePair{  11,  53 },  // neck_0 -> neck_0_twist
+            BonePair{  15,  73 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  15,  74 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  14,  75 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  14,  76 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  23,  97 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  23,  98 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  22, 101 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  38, 114 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  38, 115 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  42, 116 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  42, 117 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  41, 575 },  // ball_l -> ball_end_l
+            BonePair{  45, 599 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  38 },
-            { "ankle_r",  42 },
-            { "arm_lower_l",  14 },
-            { "arm_lower_l_twist",  70 },
-            { "arm_lower_l_twist1",  71 },
-            { "arm_lower_r",  22 },
-            { "arm_lower_r_twist",  94 },
-            { "arm_lower_r_twist1",  95 },
-            { "arm_upper_l",  13 },
-            { "arm_upper_l_twist",  72 },
-            { "arm_upper_l_twist1",  73 },
-            { "arm_upper_r",  21 },
-            { "arm_upper_r_twist",  98 },
-            { "arm_upper_r_twist1",  99 },
-            { "ball_end_l", 574 },
-            { "ball_end_r", 598 },
-            { "ball_l",  39 },
-            { "ball_r",  43 },
-            { "clavicle_l",  12 },
-            { "clavicle_r",  20 },
-            { "hand_l",  15 },
-            { "hand_r",  23 },
-            { "head",  11 },
-            { "leg_lower_l",  37 },
-            { "leg_lower_r",  41 },
-            { "leg_upper_l",  36 },
-            { "leg_upper_l_twist", 109 },
-            { "leg_upper_l_twist1", 110 },
-            { "leg_upper_r",  40 },
-            { "leg_upper_r_twist", 111 },
-            { "leg_upper_r_twist1", 112 },
-            { "neck_0",  10 },
-            { "neck_0_twist",  50 },
-            { "pelvis",   5 },
-            { "spine_0",   6 },
-            { "spine_1",   7 },
-            { "spine_2",   8 },
-            { "spine_3",   9 },
+            { "ankle_l",  40 },
+            { "ankle_r",  44 },
+            { "arm_lower_l",  15 },
+            { "arm_lower_l_twist",  73 },
+            { "arm_lower_l_twist1",  74 },
+            { "arm_lower_r",  23 },
+            { "arm_lower_r_twist",  97 },
+            { "arm_lower_r_twist1",  98 },
+            { "arm_upper_l",  14 },
+            { "arm_upper_l_twist",  75 },
+            { "arm_upper_l_twist1",  76 },
+            { "arm_upper_r",  22 },
+            { "arm_upper_r_twist", 101 },
+            { "arm_upper_r_twist1",  25 },
+            { "ball_end_l", 575 },
+            { "ball_end_r", 599 },
+            { "ball_l",  41 },
+            { "ball_r",  45 },
+            { "clavicle_l",  13 },
+            { "clavicle_r",  21 },
+            { "hand_l",  16 },
+            { "hand_r",  24 },
+            { "head",  12 },
+            { "leg_lower_l",  39 },
+            { "leg_lower_r",  43 },
+            { "leg_upper_l",  38 },
+            { "leg_upper_l_twist", 114 },
+            { "leg_upper_l_twist1", 115 },
+            { "leg_upper_r",  42 },
+            { "leg_upper_r_twist", 116 },
+            { "leg_upper_r_twist1", 117 },
+            { "neck_0",  11 },
+            { "neck_0_twist",  53 },
+            { "pelvis",   6 },
+            { "spine_0",   7 },
+            { "spine_1",   8 },
+            { "spine_2",   9 },
+            { "spine_3",  10 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 11 },
-            /* [1] Neck  */ { 10 },
-            /* [2] Torso */ { 5 },
-            /* [3] Arms  */ { 12 },
-            /* [4] Legs  */ { 37 },
+            /* [0] Head  */ { 12 },
+            /* [1] Neck  */ { 11 },
+            /* [2] Torso */ { 6 },
+            /* [3] Arms  */ { 13 },
+            /* [4] Legs  */ { 39 },
+        },
+    }},
+
+    // models/heroes_wip/gen_man/gen_man.vmdl
+    { "models/heroes_wip/gen_man/gen_man.vmdl", {
+        /* pairs */ {
+            BonePair{   1,   2 },  // pelvis -> spine_0
+            BonePair{   2,   3 },  // spine_0 -> spine_1
+            BonePair{   3,   4 },  // spine_1 -> spine_2
+            BonePair{   4,   5 },  // spine_2 -> spine_3
+            BonePair{   5,   6 },  // spine_3 -> neck_0
+            BonePair{   6,   7 },  // neck_0 -> head
+            BonePair{   5,   8 },  // spine_3 -> clavicle_l
+            BonePair{   8,   9 },  // clavicle_l -> arm_upper_l
+            BonePair{   9,  10 },  // arm_upper_l -> arm_lower_l
+            BonePair{  10,  11 },  // arm_lower_l -> hand_l
+            BonePair{   5,  12 },  // spine_3 -> clavicle_r
+            BonePair{  12,  13 },  // clavicle_r -> arm_upper_r
+            BonePair{  13,  14 },  // arm_upper_r -> arm_lower_r
+            BonePair{  14,  15 },  // arm_lower_r -> hand_r
+            BonePair{   1,  18 },  // pelvis -> leg_upper_l
+            BonePair{  18,  19 },  // leg_upper_l -> leg_lower_l
+            BonePair{  19,  20 },  // leg_lower_l -> ankle_l
+            BonePair{  20,  21 },  // ankle_l -> ball_l
+            BonePair{   1,  22 },  // pelvis -> leg_upper_r
+            BonePair{  22,  23 },  // leg_upper_r -> leg_lower_r
+            BonePair{  23,  24 },  // leg_lower_r -> ankle_r
+            BonePair{  24,  25 },  // ankle_r -> ball_r
+            BonePair{   6,  28 },  // neck_0 -> neck_0_twist
+            BonePair{   9,  35 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{   9,  36 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  10,  56 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  10,  57 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  13,  59 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  13,  60 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  14,  82 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  14,  83 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  18,  89 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  18,  90 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  22,  91 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  22,  92 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  21, 128 },  // ball_l -> ball_end_l
+            BonePair{  25, 129 },  // ball_r -> ball_end_r
+        },
+        /* ids */ {
+            { "ankle_l",  20 },
+            { "ankle_r",  24 },
+            { "arm_lower_l",  10 },
+            { "arm_lower_l_twist",  56 },
+            { "arm_lower_l_twist1",  57 },
+            { "arm_lower_r",  14 },
+            { "arm_lower_r_twist",  82 },
+            { "arm_lower_r_twist1",  83 },
+            { "arm_upper_l",   9 },
+            { "arm_upper_l_twist",  36 },
+            { "arm_upper_l_twist1",  35 },
+            { "arm_upper_r",  13 },
+            { "arm_upper_r_twist",  60 },
+            { "arm_upper_r_twist1",  59 },
+            { "ball_end_l", 128 },
+            { "ball_end_r", 129 },
+            { "ball_l",  21 },
+            { "ball_r",  25 },
+            { "clavicle_l",   8 },
+            { "clavicle_r",  12 },
+            { "hand_l",  11 },
+            { "hand_r",  15 },
+            { "head",   7 },
+            { "leg_lower_l",  19 },
+            { "leg_lower_r",  23 },
+            { "leg_upper_l",  18 },
+            { "leg_upper_l_twist",  89 },
+            { "leg_upper_l_twist1",  90 },
+            { "leg_upper_r",  22 },
+            { "leg_upper_r_twist",  91 },
+            { "leg_upper_r_twist1",  92 },
+            { "neck_0",   6 },
+            { "neck_0_twist",  28 },
+            { "pelvis",   1 },
+            { "spine_0",   2 },
+            { "spine_1",   3 },
+            { "spine_2",   4 },
+            { "spine_3",   5 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ { 7 },
+            /* [1] Neck  */ { 6 },
+            /* [2] Torso */ { 1 },
+            /* [3] Arms  */ { 8 },
+            /* [4] Legs  */ { 19 },
         },
     }},
 
     // models/heroes_wip/inferno/inferno.vmdl
     { "models/heroes_wip/inferno/inferno.vmdl", {
         /* pairs */ {
-            BonePair{   5,   6 },  // pelvis -> spine_0
-            BonePair{   6,   7 },  // spine_0 -> spine_1
-            BonePair{   7,   8 },  // spine_1 -> spine_2
-            BonePair{   8,   9 },  // spine_2 -> spine_3
-            BonePair{   9,  10 },  // spine_3 -> clavicle_l
-            BonePair{  10,  11 },  // clavicle_l -> arm_upper_l
-            BonePair{  11,  12 },  // arm_upper_l -> arm_lower_l
-            BonePair{  12,  13 },  // arm_lower_l -> hand_l
-            BonePair{   9,  15 },  // spine_3 -> clavicle_r
-            BonePair{  15,  16 },  // clavicle_r -> arm_upper_r
-            BonePair{  16,  17 },  // arm_upper_r -> arm_lower_r
-            BonePair{  17,  18 },  // arm_lower_r -> hand_r
-            BonePair{   9,  27 },  // spine_3 -> neck_0
-            BonePair{  27,  28 },  // neck_0 -> head
-            BonePair{   5,  46 },  // pelvis -> leg_upper_r
-            BonePair{  46,  47 },  // leg_upper_r -> leg_lower_r
-            BonePair{  47,  48 },  // leg_lower_r -> ankle_r
-            BonePair{  48,  49 },  // ankle_r -> ball_r
-            BonePair{   5,  50 },  // pelvis -> leg_upper_l
-            BonePair{  50,  51 },  // leg_upper_l -> leg_lower_l
-            BonePair{  51,  52 },  // leg_lower_l -> ankle_l
-            BonePair{  52,  53 },  // ankle_l -> ball_l
-            BonePair{  12,  55 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  12,  56 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  11,  76 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  11,  77 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  17, 104 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  17, 105 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  16, 106 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  16, 107 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  27, 108 },  // neck_0 -> neck_0_twist
-            BonePair{  27, 129 },  // neck_0 -> neck_notwist
-            BonePair{  46, 140 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  46, 141 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  50, 142 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  50, 143 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{   6,   7 },  // pelvis -> spine_0
+            BonePair{   7,   8 },  // spine_0 -> spine_1
+            BonePair{   8,   9 },  // spine_1 -> spine_2
+            BonePair{   9,  10 },  // spine_2 -> spine_3
+            BonePair{  10,  11 },  // spine_3 -> clavicle_l
+            BonePair{  11,  12 },  // clavicle_l -> arm_upper_l
+            BonePair{  12,  13 },  // arm_upper_l -> arm_lower_l
+            BonePair{  13,  14 },  // arm_lower_l -> hand_l
+            BonePair{  10,  16 },  // spine_3 -> clavicle_r
+            BonePair{  16,  17 },  // clavicle_r -> arm_upper_r
+            BonePair{  17,  18 },  // arm_upper_r -> arm_lower_r
+            BonePair{  18,  19 },  // arm_lower_r -> hand_r
+            BonePair{  10,  28 },  // spine_3 -> neck_0
+            BonePair{  28,  29 },  // neck_0 -> head
+            BonePair{   6,  47 },  // pelvis -> leg_upper_r
+            BonePair{  47,  48 },  // leg_upper_r -> leg_lower_r
+            BonePair{  48,  49 },  // leg_lower_r -> ankle_r
+            BonePair{  49,  50 },  // ankle_r -> ball_r
+            BonePair{   6,  51 },  // pelvis -> leg_upper_l
+            BonePair{  51,  52 },  // leg_upper_l -> leg_lower_l
+            BonePair{  52,  53 },  // leg_lower_l -> ankle_l
+            BonePair{  53,  54 },  // ankle_l -> ball_l
+            BonePair{  13,  56 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  13,  57 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  12,  77 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  12,  78 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  18, 105 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  18, 106 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  17, 107 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  17, 108 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  28, 109 },  // neck_0 -> neck_0_twist
+            BonePair{  28, 130 },  // neck_0 -> neck_notwist
+            BonePair{  47, 141 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  47, 142 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  51, 143 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  51, 144 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  50, 156 },  // ball_r -> ball_end_r
+            BonePair{  54, 157 },  // ball_l -> ball_end_l
         },
         /* ids */ {
-            { "ankle_l",  52 },
-            { "ankle_r",  48 },
-            { "arm_lower_l",  12 },
-            { "arm_lower_l_twist",  55 },
-            { "arm_lower_l_twist1",  56 },
-            { "arm_lower_r",  17 },
-            { "arm_lower_r_twist", 104 },
-            { "arm_lower_r_twist1", 105 },
-            { "arm_upper_l",  11 },
-            { "arm_upper_l_twist",  76 },
-            { "arm_upper_l_twist1",  77 },
-            { "arm_upper_r",  16 },
-            { "arm_upper_r_twist", 106 },
-            { "arm_upper_r_twist1", 107 },
-            { "ball_l",  53 },
-            { "ball_r",  49 },
-            { "clavicle_l",  10 },
-            { "clavicle_r",  15 },
-            { "hand_l",  13 },
-            { "hand_r",  18 },
-            { "head",  28 },
-            { "leg_lower_l",  51 },
-            { "leg_lower_r",  47 },
-            { "leg_upper_l",  50 },
-            { "leg_upper_l_twist", 142 },
-            { "leg_upper_l_twist1", 143 },
-            { "leg_upper_r",  46 },
-            { "leg_upper_r_twist", 140 },
-            { "leg_upper_r_twist1", 141 },
-            { "neck_0",  27 },
-            { "neck_0_twist", 108 },
-            { "neck_notwist", 129 },
-            { "pelvis",   5 },
-            { "spine_0",   6 },
-            { "spine_1",   7 },
-            { "spine_2",   8 },
-            { "spine_3",   9 },
+            { "ankle_l",  53 },
+            { "ankle_r",  49 },
+            { "arm_lower_l",  13 },
+            { "arm_lower_l_twist",  56 },
+            { "arm_lower_l_twist1",  57 },
+            { "arm_lower_r",  18 },
+            { "arm_lower_r_twist", 105 },
+            { "arm_lower_r_twist1", 106 },
+            { "arm_upper_l",  12 },
+            { "arm_upper_l_twist",  77 },
+            { "arm_upper_l_twist1",  78 },
+            { "arm_upper_r",  17 },
+            { "arm_upper_r_twist", 107 },
+            { "arm_upper_r_twist1", 108 },
+            { "ball_end_l", 157 },
+            { "ball_end_r", 156 },
+            { "ball_l",  54 },
+            { "ball_r",  50 },
+            { "clavicle_l",  11 },
+            { "clavicle_r",  16 },
+            { "hand_l",  14 },
+            { "hand_r",  19 },
+            { "head",  29 },
+            { "leg_lower_l",  52 },
+            { "leg_lower_r",  48 },
+            { "leg_upper_l",  51 },
+            { "leg_upper_l_twist", 143 },
+            { "leg_upper_l_twist1", 144 },
+            { "leg_upper_r",  47 },
+            { "leg_upper_r_twist", 141 },
+            { "leg_upper_r_twist1", 142 },
+            { "neck_0",  28 },
+            { "neck_0_twist", 109 },
+            { "neck_notwist", 130 },
+            { "pelvis",   6 },
+            { "spine_0",   7 },
+            { "spine_1",   8 },
+            { "spine_2",   9 },
+            { "spine_3",  10 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 28 },
-            /* [1] Neck  */ { 27 },
-            /* [2] Torso */ { 5 },
-            /* [3] Arms  */ { 10 },
-            /* [4] Legs  */ { 47 },
+            /* [0] Head  */ { 29 },
+            /* [1] Neck  */ { 28 },
+            /* [2] Torso */ { 6 },
+            /* [3] Arms  */ { 11 },
+            /* [4] Legs  */ { 48 },
         },
     }},
 
@@ -3608,8 +4156,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  41,  42 },  // leg_upper_r -> leg_lower_r
             BonePair{  42,  43 },  // leg_lower_r -> ankle_r
             BonePair{  43,  44 },  // ankle_r -> ball_r
-            BonePair{  40, 117 },  // ball_l -> ball_end_l
-            BonePair{  44, 118 },  // ball_r -> ball_end_r
+            BonePair{  40, 118 },  // ball_l -> ball_end_l
+            BonePair{  44, 119 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  39 },
@@ -3618,8 +4166,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "arm_lower_r",  20 },
             { "arm_upper_l",  15 },
             { "arm_upper_r",  19 },
-            { "ball_end_l", 117 },
-            { "ball_end_r", 118 },
+            { "ball_end_l", 118 },
+            { "ball_end_r", 119 },
             { "ball_l",  40 },
             { "ball_r",  44 },
             { "clavicle_l",  14 },
@@ -3650,186 +4198,186 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_wip/lash/lash.vmdl
     { "models/heroes_wip/lash/lash.vmdl", {
         /* pairs */ {
-            BonePair{   6,   7 },  // pelvis -> spine_0
-            BonePair{   7,   8 },  // spine_0 -> spine_1
-            BonePair{   8,   9 },  // spine_1 -> spine_2
-            BonePair{   9,  10 },  // spine_2 -> spine_3
-            BonePair{  10,  11 },  // spine_3 -> neck_0
-            BonePair{  11,  12 },  // neck_0 -> head
-            BonePair{  10,  13 },  // spine_3 -> clavicle_l
-            BonePair{  13,  14 },  // clavicle_l -> arm_upper_l
-            BonePair{  14,  15 },  // arm_upper_l -> arm_lower_l
-            BonePair{  15,  16 },  // arm_lower_l -> hand_l
-            BonePair{  10,  17 },  // spine_3 -> clavicle_r
-            BonePair{  17,  18 },  // clavicle_r -> arm_upper_r
-            BonePair{  18,  19 },  // arm_upper_r -> arm_lower_r
-            BonePair{  19,  20 },  // arm_lower_r -> hand_r
-            BonePair{   6,  27 },  // pelvis -> leg_upper_l
-            BonePair{  27,  28 },  // leg_upper_l -> leg_lower_l
-            BonePair{  28,  29 },  // leg_lower_l -> ankle_l
-            BonePair{  29,  30 },  // ankle_l -> ball_l
-            BonePair{   6,  31 },  // pelvis -> leg_upper_r
-            BonePair{  31,  32 },  // leg_upper_r -> leg_lower_r
-            BonePair{  32,  33 },  // leg_lower_r -> ankle_r
-            BonePair{  33,  34 },  // ankle_r -> ball_r
-            BonePair{  11,  47 },  // neck_0 -> neck_0_twist
-            BonePair{  15,  67 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  15,  75 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14,  76 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  14,  77 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  19, 100 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  19, 101 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18, 102 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  18, 103 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  27, 117 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  27, 118 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  31, 119 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  31, 120 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  11, 138 },  // neck_0 -> neck_notwist
-            BonePair{  30, 168 },  // ball_l -> ball_end_l
-            BonePair{  34, 169 },  // ball_r -> ball_end_r
+            BonePair{   7,   8 },  // pelvis -> spine_0
+            BonePair{   8,   9 },  // spine_0 -> spine_1
+            BonePair{   9,  10 },  // spine_1 -> spine_2
+            BonePair{  10,  11 },  // spine_2 -> spine_3
+            BonePair{  11,  12 },  // spine_3 -> neck_0
+            BonePair{  12,  13 },  // neck_0 -> head
+            BonePair{  11,  14 },  // spine_3 -> clavicle_l
+            BonePair{  14,  15 },  // clavicle_l -> arm_upper_l
+            BonePair{  15,  16 },  // arm_upper_l -> arm_lower_l
+            BonePair{  16,  17 },  // arm_lower_l -> hand_l
+            BonePair{  11,  18 },  // spine_3 -> clavicle_r
+            BonePair{  18,  19 },  // clavicle_r -> arm_upper_r
+            BonePair{  19,  20 },  // arm_upper_r -> arm_lower_r
+            BonePair{  20,  21 },  // arm_lower_r -> hand_r
+            BonePair{   7,  28 },  // pelvis -> leg_upper_l
+            BonePair{  28,  29 },  // leg_upper_l -> leg_lower_l
+            BonePair{  29,  30 },  // leg_lower_l -> ankle_l
+            BonePair{  30,  31 },  // ankle_l -> ball_l
+            BonePair{   7,  32 },  // pelvis -> leg_upper_r
+            BonePair{  32,  33 },  // leg_upper_r -> leg_lower_r
+            BonePair{  33,  34 },  // leg_lower_r -> ankle_r
+            BonePair{  34,  35 },  // ankle_r -> ball_r
+            BonePair{  12,  48 },  // neck_0 -> neck_0_twist
+            BonePair{  12,  49 },  // neck_0 -> neck_notwist
+            BonePair{  16,  69 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  16,  77 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  15,  78 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  15,  79 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  20, 103 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  20, 104 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  19, 105 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  19, 106 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  28, 124 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  28, 125 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  32, 126 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  32, 127 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  31, 169 },  // ball_l -> ball_end_l
+            BonePair{  35, 170 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  29 },
-            { "ankle_r",  33 },
-            { "arm_lower_l",  15 },
-            { "arm_lower_l_twist",  67 },
-            { "arm_lower_l_twist1",  75 },
-            { "arm_lower_r",  19 },
-            { "arm_lower_r_twist", 100 },
-            { "arm_lower_r_twist1", 101 },
-            { "arm_upper_l",  14 },
-            { "arm_upper_l_twist",  76 },
-            { "arm_upper_l_twist1",  77 },
-            { "arm_upper_r",  18 },
-            { "arm_upper_r_twist", 102 },
-            { "arm_upper_r_twist1", 103 },
-            { "ball_end_l", 168 },
-            { "ball_end_r", 169 },
-            { "ball_l",  30 },
-            { "ball_r",  34 },
-            { "clavicle_l",  13 },
-            { "clavicle_r",  17 },
-            { "hand_l",  16 },
-            { "hand_r",  20 },
-            { "head",  12 },
-            { "leg_lower_l",  28 },
-            { "leg_lower_r",  32 },
-            { "leg_upper_l",  27 },
-            { "leg_upper_l_twist", 117 },
-            { "leg_upper_l_twist1", 118 },
-            { "leg_upper_r",  31 },
-            { "leg_upper_r_twist", 119 },
-            { "leg_upper_r_twist1", 120 },
-            { "neck_0",  11 },
-            { "neck_0_twist",  47 },
-            { "neck_notwist", 138 },
-            { "pelvis",   6 },
-            { "spine_0",   7 },
-            { "spine_1",   8 },
-            { "spine_2",   9 },
-            { "spine_3",  10 },
+            { "ankle_l",  30 },
+            { "ankle_r",  34 },
+            { "arm_lower_l",  16 },
+            { "arm_lower_l_twist",  69 },
+            { "arm_lower_l_twist1",  77 },
+            { "arm_lower_r",  20 },
+            { "arm_lower_r_twist", 103 },
+            { "arm_lower_r_twist1", 104 },
+            { "arm_upper_l",  15 },
+            { "arm_upper_l_twist",  78 },
+            { "arm_upper_l_twist1",  79 },
+            { "arm_upper_r",  19 },
+            { "arm_upper_r_twist", 105 },
+            { "arm_upper_r_twist1", 106 },
+            { "ball_end_l", 169 },
+            { "ball_end_r", 170 },
+            { "ball_l",  31 },
+            { "ball_r",  35 },
+            { "clavicle_l",  14 },
+            { "clavicle_r",  18 },
+            { "hand_l",  17 },
+            { "hand_r",  21 },
+            { "head",  13 },
+            { "leg_lower_l",  29 },
+            { "leg_lower_r",  33 },
+            { "leg_upper_l",  28 },
+            { "leg_upper_l_twist", 124 },
+            { "leg_upper_l_twist1", 125 },
+            { "leg_upper_r",  32 },
+            { "leg_upper_r_twist", 126 },
+            { "leg_upper_r_twist1", 127 },
+            { "neck_0",  12 },
+            { "neck_0_twist",  48 },
+            { "neck_notwist",  49 },
+            { "pelvis",   7 },
+            { "spine_0",   8 },
+            { "spine_1",   9 },
+            { "spine_2",  10 },
+            { "spine_3",  11 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 12 },
-            /* [1] Neck  */ { 11 },
-            /* [2] Torso */ { 6 },
-            /* [3] Arms  */ { 13 },
-            /* [4] Legs  */ { 28 },
+            /* [0] Head  */ { 13 },
+            /* [1] Neck  */ { 12 },
+            /* [2] Torso */ { 7 },
+            /* [3] Arms  */ { 14 },
+            /* [4] Legs  */ { 29 },
         },
     }},
 
     // models/heroes_wip/mcginnis/mcginnis.vmdl
     { "models/heroes_wip/mcginnis/mcginnis.vmdl", {
         /* pairs */ {
-            BonePair{  28,  29 },  // pelvis -> leg_upper_l
-            BonePair{  29,  30 },  // leg_upper_l -> leg_lower_l
-            BonePair{  30,  31 },  // leg_lower_l -> ankle_l
-            BonePair{  31,  32 },  // ankle_l -> ball_l
-            BonePair{  28,  33 },  // pelvis -> spine_0
-            BonePair{  33,  34 },  // spine_0 -> spine_1
-            BonePair{  34,  35 },  // spine_1 -> spine_2
-            BonePair{  35,  36 },  // spine_2 -> spine_3
-            BonePair{  36,  37 },  // spine_3 -> neck_0
-            BonePair{  37,  38 },  // neck_0 -> head
-            BonePair{  36,  39 },  // spine_3 -> clavicle_l
-            BonePair{  39,  40 },  // clavicle_l -> arm_upper_l
-            BonePair{  40,  41 },  // arm_upper_l -> arm_lower_l
-            BonePair{  41,  42 },  // arm_lower_l -> hand_l
-            BonePair{  36,  43 },  // spine_3 -> clavicle_r
-            BonePair{  43,  44 },  // clavicle_r -> arm_upper_r
-            BonePair{  44,  45 },  // arm_upper_r -> arm_lower_r
-            BonePair{  45,  46 },  // arm_lower_r -> hand_r
-            BonePair{  28,  64 },  // pelvis -> leg_upper_r
-            BonePair{  64,  65 },  // leg_upper_r -> leg_lower_r
-            BonePair{  65,  66 },  // leg_lower_r -> ankle_r
-            BonePair{  66,  67 },  // ankle_r -> ball_r
-            BonePair{  29,  78 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  29,  79 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  33,  80 },  // spine_0 -> spine_0_notwist
-            BonePair{  37, 217 },  // neck_0 -> neck_0_twist
-            BonePair{  37, 223 },  // neck_0 -> neck_0_notwist
-            BonePair{  41, 258 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  41, 259 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  40, 260 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  40, 263 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  39, 264 },  // clavicle_l -> clavicle_l_notwist
-            BonePair{  45, 295 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  45, 296 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  44, 297 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  44, 298 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  43, 301 },  // clavicle_r -> clavicle_r_notwist
-            BonePair{  64, 347 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  64, 348 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  29,  30 },  // pelvis -> leg_upper_l
+            BonePair{  30,  31 },  // leg_upper_l -> leg_lower_l
+            BonePair{  31,  32 },  // leg_lower_l -> ankle_l
+            BonePair{  32,  33 },  // ankle_l -> ball_l
+            BonePair{  29,  34 },  // pelvis -> spine_0
+            BonePair{  34,  35 },  // spine_0 -> spine_1
+            BonePair{  35,  36 },  // spine_1 -> spine_2
+            BonePair{  36,  37 },  // spine_2 -> spine_3
+            BonePair{  37,  38 },  // spine_3 -> neck_0
+            BonePair{  38,  39 },  // neck_0 -> head
+            BonePair{  37,  40 },  // spine_3 -> clavicle_l
+            BonePair{  40,  41 },  // clavicle_l -> arm_upper_l
+            BonePair{  41,  42 },  // arm_upper_l -> arm_lower_l
+            BonePair{  42,  43 },  // arm_lower_l -> hand_l
+            BonePair{  37,  44 },  // spine_3 -> clavicle_r
+            BonePair{  44,  45 },  // clavicle_r -> arm_upper_r
+            BonePair{  45,  46 },  // arm_upper_r -> arm_lower_r
+            BonePair{  46,  47 },  // arm_lower_r -> hand_r
+            BonePair{  45,  54 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  29,  66 },  // pelvis -> leg_upper_r
+            BonePair{  66,  67 },  // leg_upper_r -> leg_lower_r
+            BonePair{  67,  68 },  // leg_lower_r -> ankle_r
+            BonePair{  68,  69 },  // ankle_r -> ball_r
+            BonePair{  30,  81 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  30,  82 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  34,  84 },  // spine_0 -> spine_0_notwist
+            BonePair{  38, 221 },  // neck_0 -> neck_0_twist
+            BonePair{  38, 227 },  // neck_0 -> neck_0_notwist
+            BonePair{  42, 263 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  42, 264 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  41, 265 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  41, 268 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  40, 269 },  // clavicle_l -> clavicle_l_notwist
+            BonePair{  46, 300 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  46, 301 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  45, 302 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  44, 305 },  // clavicle_r -> clavicle_r_notwist
+            BonePair{  66, 353 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  66, 354 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
-            { "ankle_l",  31 },
-            { "ankle_r",  66 },
-            { "arm_lower_l",  41 },
-            { "arm_lower_l_twist", 258 },
-            { "arm_lower_l_twist1", 259 },
-            { "arm_lower_r",  45 },
-            { "arm_lower_r_twist", 295 },
-            { "arm_lower_r_twist1", 296 },
-            { "arm_upper_l",  40 },
-            { "arm_upper_l_twist", 263 },
-            { "arm_upper_l_twist1", 260 },
-            { "arm_upper_r",  44 },
-            { "arm_upper_r_twist", 297 },
-            { "arm_upper_r_twist1", 298 },
-            { "ball_l",  32 },
-            { "ball_r",  67 },
-            { "clavicle_l",  39 },
-            { "clavicle_l_notwist", 264 },
-            { "clavicle_r",  43 },
-            { "clavicle_r_notwist", 301 },
-            { "hand_l",  42 },
-            { "hand_r",  46 },
-            { "head",  38 },
-            { "leg_lower_l",  30 },
-            { "leg_lower_r",  65 },
-            { "leg_upper_l",  29 },
-            { "leg_upper_l_twist",  78 },
-            { "leg_upper_l_twist1",  79 },
-            { "leg_upper_r",  64 },
-            { "leg_upper_r_twist", 347 },
-            { "leg_upper_r_twist1", 348 },
-            { "neck_0",  37 },
-            { "neck_0_notwist", 223 },
-            { "neck_0_twist", 217 },
-            { "pelvis",  28 },
-            { "spine_0",  33 },
-            { "spine_0_notwist",  80 },
-            { "spine_1",  34 },
-            { "spine_2",  35 },
-            { "spine_3",  36 },
+            { "ankle_l",  32 },
+            { "ankle_r",  68 },
+            { "arm_lower_l",  42 },
+            { "arm_lower_l_twist", 263 },
+            { "arm_lower_l_twist1", 264 },
+            { "arm_lower_r",  46 },
+            { "arm_lower_r_twist", 300 },
+            { "arm_lower_r_twist1", 301 },
+            { "arm_upper_l",  41 },
+            { "arm_upper_l_twist", 268 },
+            { "arm_upper_l_twist1", 265 },
+            { "arm_upper_r",  45 },
+            { "arm_upper_r_twist",  54 },
+            { "arm_upper_r_twist1", 302 },
+            { "ball_l",  33 },
+            { "ball_r",  69 },
+            { "clavicle_l",  40 },
+            { "clavicle_l_notwist", 269 },
+            { "clavicle_r",  44 },
+            { "clavicle_r_notwist", 305 },
+            { "hand_l",  43 },
+            { "hand_r",  47 },
+            { "head",  39 },
+            { "leg_lower_l",  31 },
+            { "leg_lower_r",  67 },
+            { "leg_upper_l",  30 },
+            { "leg_upper_l_twist",  81 },
+            { "leg_upper_l_twist1",  82 },
+            { "leg_upper_r",  66 },
+            { "leg_upper_r_twist", 353 },
+            { "leg_upper_r_twist1", 354 },
+            { "neck_0",  38 },
+            { "neck_0_notwist", 227 },
+            { "neck_0_twist", 221 },
+            { "pelvis",  29 },
+            { "spine_0",  34 },
+            { "spine_0_notwist",  84 },
+            { "spine_1",  35 },
+            { "spine_2",  36 },
+            { "spine_3",  37 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 38 },
-            /* [1] Neck  */ { 37 },
-            /* [2] Torso */ { 28 },
-            /* [3] Arms  */ { 39 },
-            /* [4] Legs  */ { 30 },
+            /* [0] Head  */ { 39 },
+            /* [1] Neck  */ { 38 },
+            /* [2] Torso */ { 29 },
+            /* [3] Arms  */ { 40 },
+            /* [4] Legs  */ { 31 },
         },
     }},
 
@@ -3846,82 +4394,82 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  14,  15 },  // clavicle_l -> arm_upper_l
             BonePair{  15,  16 },  // arm_upper_l -> arm_lower_l
             BonePair{  16,  17 },  // arm_lower_l -> hand_l
-            BonePair{  11,  18 },  // spine_3 -> clavicle_r
-            BonePair{  18,  19 },  // clavicle_r -> arm_upper_r
-            BonePair{  19,  20 },  // arm_upper_r -> arm_lower_r
-            BonePair{  20,  21 },  // arm_lower_r -> hand_r
-            BonePair{   7,  22 },  // pelvis -> leg_upper_l
-            BonePair{  22,  23 },  // leg_upper_l -> leg_lower_l
-            BonePair{  23,  24 },  // leg_lower_l -> ankle_l
-            BonePair{  24,  25 },  // ankle_l -> ball_l
-            BonePair{   7,  26 },  // pelvis -> leg_upper_r
-            BonePair{  26,  27 },  // leg_upper_r -> leg_lower_r
-            BonePair{  27,  28 },  // leg_lower_r -> ankle_r
-            BonePair{  28,  29 },  // ankle_r -> ball_r
-            BonePair{  12,  73 },  // neck_0 -> neck_0_twist
-            BonePair{  12,  74 },  // neck_0 -> neck_notwist
-            BonePair{  16,  98 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  16,  99 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  15, 102 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  15, 103 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  14, 105 },  // clavicle_l -> clavicle_notwist_l
-            BonePair{  20, 130 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  20, 131 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  19, 132 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  19, 133 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  18, 135 },  // clavicle_r -> clavicle_notwist_r
-            BonePair{  22, 137 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  22, 138 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  22, 140 },  // leg_upper_l -> leg_upper_l_aim
-            BonePair{  26, 141 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  26, 142 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  26, 144 },  // leg_upper_r -> leg_upper_r_aim
-            BonePair{  25, 185 },  // ball_l -> ball_end_l
-            BonePair{  22, 188 },  // leg_upper_l -> leg_upper_l_aim_upv
-            BonePair{  29, 189 },  // ball_r -> ball_end_r
-            BonePair{  26, 192 },  // leg_upper_r -> leg_upper_r_aim_upv
+            BonePair{  14,  18 },  // clavicle_l -> clavicle_notwist_l
+            BonePair{  11,  22 },  // spine_3 -> clavicle_r
+            BonePair{  22,  23 },  // clavicle_r -> arm_upper_r
+            BonePair{  23,  24 },  // arm_upper_r -> arm_lower_r
+            BonePair{  24,  25 },  // arm_lower_r -> hand_r
+            BonePair{   7,  26 },  // pelvis -> leg_upper_l
+            BonePair{  26,  27 },  // leg_upper_l -> leg_lower_l
+            BonePair{  27,  28 },  // leg_lower_l -> ankle_l
+            BonePair{  28,  29 },  // ankle_l -> ball_l
+            BonePair{   7,  30 },  // pelvis -> leg_upper_r
+            BonePair{  30,  31 },  // leg_upper_r -> leg_lower_r
+            BonePair{  31,  32 },  // leg_lower_r -> ankle_r
+            BonePair{  32,  33 },  // ankle_r -> ball_r
+            BonePair{  12,  78 },  // neck_0 -> neck_0_twist
+            BonePair{  12,  79 },  // neck_0 -> neck_notwist
+            BonePair{  16, 103 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  16, 104 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  15, 107 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  15, 108 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  24, 131 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  24, 132 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  23, 133 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  23, 134 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  22, 136 },  // clavicle_r -> clavicle_notwist_r
+            BonePair{  26, 141 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  26, 142 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  26, 144 },  // leg_upper_l -> leg_upper_l_aim
+            BonePair{  26, 145 },  // leg_upper_l -> leg_upper_l_aim_upv
+            BonePair{  30, 146 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  30, 147 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  30, 149 },  // leg_upper_r -> leg_upper_r_aim
+            BonePair{  30, 150 },  // leg_upper_r -> leg_upper_r_aim_upv
+            BonePair{  29, 188 },  // ball_l -> ball_end_l
+            BonePair{  33, 191 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  24 },
-            { "ankle_r",  28 },
+            { "ankle_l",  28 },
+            { "ankle_r",  32 },
             { "arm_lower_l",  16 },
-            { "arm_lower_l_twist",  98 },
-            { "arm_lower_l_twist1",  99 },
-            { "arm_lower_r",  20 },
-            { "arm_lower_r_twist", 130 },
-            { "arm_lower_r_twist1", 131 },
+            { "arm_lower_l_twist", 103 },
+            { "arm_lower_l_twist1", 104 },
+            { "arm_lower_r",  24 },
+            { "arm_lower_r_twist", 131 },
+            { "arm_lower_r_twist1", 132 },
             { "arm_upper_l",  15 },
-            { "arm_upper_l_twist", 102 },
-            { "arm_upper_l_twist1", 103 },
-            { "arm_upper_r",  19 },
-            { "arm_upper_r_twist", 132 },
-            { "arm_upper_r_twist1", 133 },
-            { "ball_end_l", 185 },
-            { "ball_end_r", 189 },
-            { "ball_l",  25 },
-            { "ball_r",  29 },
+            { "arm_upper_l_twist", 107 },
+            { "arm_upper_l_twist1", 108 },
+            { "arm_upper_r",  23 },
+            { "arm_upper_r_twist", 133 },
+            { "arm_upper_r_twist1", 134 },
+            { "ball_end_l", 188 },
+            { "ball_end_r", 191 },
+            { "ball_l",  29 },
+            { "ball_r",  33 },
             { "clavicle_l",  14 },
-            { "clavicle_notwist_l", 105 },
-            { "clavicle_notwist_r", 135 },
-            { "clavicle_r",  18 },
+            { "clavicle_notwist_l",  18 },
+            { "clavicle_notwist_r", 136 },
+            { "clavicle_r",  22 },
             { "hand_l",  17 },
-            { "hand_r",  21 },
+            { "hand_r",  25 },
             { "head",  13 },
-            { "leg_lower_l",  23 },
-            { "leg_lower_r",  27 },
-            { "leg_upper_l",  22 },
-            { "leg_upper_l_aim", 140 },
-            { "leg_upper_l_aim_upv", 188 },
-            { "leg_upper_l_twist", 137 },
-            { "leg_upper_l_twist1", 138 },
-            { "leg_upper_r",  26 },
-            { "leg_upper_r_aim", 144 },
-            { "leg_upper_r_aim_upv", 192 },
-            { "leg_upper_r_twist", 141 },
-            { "leg_upper_r_twist1", 142 },
+            { "leg_lower_l",  27 },
+            { "leg_lower_r",  31 },
+            { "leg_upper_l",  26 },
+            { "leg_upper_l_aim", 144 },
+            { "leg_upper_l_aim_upv", 145 },
+            { "leg_upper_l_twist", 141 },
+            { "leg_upper_l_twist1", 142 },
+            { "leg_upper_r",  30 },
+            { "leg_upper_r_aim", 149 },
+            { "leg_upper_r_aim_upv", 150 },
+            { "leg_upper_r_twist", 146 },
+            { "leg_upper_r_twist1", 147 },
             { "neck_0",  12 },
-            { "neck_0_twist",  73 },
-            { "neck_notwist",  74 },
+            { "neck_0_twist",  78 },
+            { "neck_notwist",  79 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
@@ -3933,7 +4481,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             /* [1] Neck  */ { 12 },
             /* [2] Torso */ { 7 },
             /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 23 },
+            /* [4] Legs  */ { 27 },
         },
     }},
 
@@ -4085,95 +4633,193 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
     }},
 
+    // models/heroes_wip/nurse/nurse.vmdl
+    { "models/heroes_wip/nurse/nurse.vmdl", {
+        /* pairs */ {
+            BonePair{   7,   8 },  // pelvis -> leg_upper_r
+            BonePair{   8,   9 },  // leg_upper_r -> leg_lower_r
+            BonePair{   9,  10 },  // leg_lower_r -> ankle_r
+            BonePair{  10,  11 },  // ankle_r -> ball_r
+            BonePair{   7,  12 },  // pelvis -> leg_upper_l
+            BonePair{  12,  13 },  // leg_upper_l -> leg_lower_l
+            BonePair{  13,  14 },  // leg_lower_l -> ankle_l
+            BonePair{  14,  15 },  // ankle_l -> ball_l
+            BonePair{   7,  16 },  // pelvis -> spine_0
+            BonePair{  16,  17 },  // spine_0 -> spine_1
+            BonePair{  17,  18 },  // spine_1 -> spine_2
+            BonePair{  18,  19 },  // spine_2 -> spine_3
+            BonePair{  19,  20 },  // spine_3 -> clavicle_r
+            BonePair{  20,  21 },  // clavicle_r -> clavicle_r_twist
+            BonePair{  20,  24 },  // clavicle_r -> arm_upper_r
+            BonePair{  24,  25 },  // arm_upper_r -> arm_lower_r
+            BonePair{  25,  26 },  // arm_lower_r -> hand_r
+            BonePair{  19,  28 },  // spine_3 -> clavicle_l
+            BonePair{  28,  29 },  // clavicle_l -> arm_upper_l
+            BonePair{  29,  30 },  // arm_upper_l -> arm_lower_l
+            BonePair{  30,  31 },  // arm_lower_l -> hand_l
+            BonePair{  19,  33 },  // spine_3 -> neck_0
+            BonePair{  33,  34 },  // neck_0 -> head
+            BonePair{   8,  48 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{   8,  55 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  12,  69 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  12,  76 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  24, 109 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  24, 110 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  25, 111 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  25, 112 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  28, 133 },  // clavicle_l -> clavicle_l_twist
+            BonePair{  29, 150 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  29, 151 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  30, 152 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  30, 153 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  33, 194 },  // neck_0 -> neck_0_twist
+            BonePair{  11, 231 },  // ball_r -> ball_end_r
+            BonePair{  15, 232 },  // ball_l -> ball_end_l
+            BonePair{  33, 257 },  // neck_0 -> neck_hlp_0
+            BonePair{ 257, 258 },  // neck_hlp_0 -> neck_hlp_end
+        },
+        /* ids */ {
+            { "ankle_l",  14 },
+            { "ankle_r",  10 },
+            { "arm_lower_l",  30 },
+            { "arm_lower_l_twist", 152 },
+            { "arm_lower_l_twist1", 153 },
+            { "arm_lower_r",  25 },
+            { "arm_lower_r_twist", 111 },
+            { "arm_lower_r_twist1", 112 },
+            { "arm_upper_l",  29 },
+            { "arm_upper_l_twist", 151 },
+            { "arm_upper_l_twist1", 150 },
+            { "arm_upper_r",  24 },
+            { "arm_upper_r_twist", 110 },
+            { "arm_upper_r_twist1", 109 },
+            { "ball_end_l", 232 },
+            { "ball_end_r", 231 },
+            { "ball_l",  15 },
+            { "ball_r",  11 },
+            { "clavicle_l",  28 },
+            { "clavicle_l_twist", 133 },
+            { "clavicle_r",  20 },
+            { "clavicle_r_twist",  21 },
+            { "hand_l",  31 },
+            { "hand_r",  26 },
+            { "head",  34 },
+            { "leg_lower_l",  13 },
+            { "leg_lower_r",   9 },
+            { "leg_upper_l",  12 },
+            { "leg_upper_l_twist",  69 },
+            { "leg_upper_l_twist1",  76 },
+            { "leg_upper_r",   8 },
+            { "leg_upper_r_twist",  48 },
+            { "leg_upper_r_twist1",  55 },
+            { "neck_0",  33 },
+            { "neck_0_twist", 194 },
+            { "neck_hlp_0", 257 },
+            { "neck_hlp_end", 258 },
+            { "pelvis",   7 },
+            { "spine_0",  16 },
+            { "spine_1",  17 },
+            { "spine_2",  18 },
+            { "spine_3",  19 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ { 34 },
+            /* [1] Neck  */ { 33 },
+            /* [2] Torso */ { 7 },
+            /* [3] Arms  */ { 20 },
+            /* [4] Legs  */ { 9 },
+        },
+    }},
+
     // models/heroes_wip/pocket/pocket.vmdl
     { "models/heroes_wip/pocket/pocket.vmdl", {
         /* pairs */ {
-            BonePair{   7,   8 },  // pelvis -> spine_0
-            BonePair{   8,   9 },  // spine_0 -> spine_1
-            BonePair{   9,  10 },  // spine_1 -> spine_2
-            BonePair{  10,  11 },  // spine_2 -> spine_3
-            BonePair{  11,  12 },  // spine_3 -> neck_0
-            BonePair{  12,  13 },  // neck_0 -> head
-            BonePair{  11,  14 },  // spine_3 -> clavicle_l
-            BonePair{  14,  15 },  // clavicle_l -> arm_upper_l
-            BonePair{  15,  16 },  // arm_upper_l -> arm_lower_l
-            BonePair{  16,  17 },  // arm_lower_l -> hand_l
-            BonePair{  11,  21 },  // spine_3 -> clavicle_r
-            BonePair{  21,  22 },  // clavicle_r -> arm_upper_r
-            BonePair{  22,  23 },  // arm_upper_r -> arm_lower_r
-            BonePair{  23,  24 },  // arm_lower_r -> hand_r
-            BonePair{   7,  28 },  // pelvis -> leg_upper_l
-            BonePair{  28,  29 },  // leg_upper_l -> leg_lower_l
-            BonePair{  29,  30 },  // leg_lower_l -> ankle_l
-            BonePair{  30,  31 },  // ankle_l -> ball_l
-            BonePair{   7,  34 },  // pelvis -> leg_upper_r
-            BonePair{  34,  35 },  // leg_upper_r -> leg_lower_r
-            BonePair{  35,  36 },  // leg_lower_r -> ankle_r
-            BonePair{  36,  37 },  // ankle_r -> ball_r
-            BonePair{  12,  46 },  // neck_0 -> neck_0_twist
-            BonePair{  12,  47 },  // neck_0 -> neck_notwist
-            BonePair{  16, 115 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  16, 116 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  15, 117 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  15, 118 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  23, 152 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  23, 153 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  22, 154 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  22, 155 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  28, 189 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  28, 190 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  34, 191 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  34, 192 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  31, 401 },  // ball_l -> ball_end_l
-            BonePair{  37, 403 },  // ball_r -> ball_end_r
+            BonePair{   8,   9 },  // pelvis -> spine_0
+            BonePair{   9,  10 },  // spine_0 -> spine_1
+            BonePair{  10,  11 },  // spine_1 -> spine_2
+            BonePair{  11,  12 },  // spine_2 -> spine_3
+            BonePair{  12,  13 },  // spine_3 -> neck_0
+            BonePair{  13,  14 },  // neck_0 -> head
+            BonePair{  12,  15 },  // spine_3 -> clavicle_l
+            BonePair{  15,  16 },  // clavicle_l -> arm_upper_l
+            BonePair{  16,  17 },  // arm_upper_l -> arm_lower_l
+            BonePair{  17,  18 },  // arm_lower_l -> hand_l
+            BonePair{  12,  22 },  // spine_3 -> clavicle_r
+            BonePair{  22,  23 },  // clavicle_r -> arm_upper_r
+            BonePair{  23,  24 },  // arm_upper_r -> arm_lower_r
+            BonePair{  24,  25 },  // arm_lower_r -> hand_r
+            BonePair{   8,  29 },  // pelvis -> leg_upper_l
+            BonePair{  29,  30 },  // leg_upper_l -> leg_lower_l
+            BonePair{  30,  31 },  // leg_lower_l -> ankle_l
+            BonePair{  31,  32 },  // ankle_l -> ball_l
+            BonePair{   8,  35 },  // pelvis -> leg_upper_r
+            BonePair{  35,  36 },  // leg_upper_r -> leg_lower_r
+            BonePair{  36,  37 },  // leg_lower_r -> ankle_r
+            BonePair{  37,  38 },  // ankle_r -> ball_r
+            BonePair{  13,  47 },  // neck_0 -> neck_0_twist
+            BonePair{  13,  48 },  // neck_0 -> neck_notwist
+            BonePair{  17, 116 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  17, 117 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  16, 118 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  16, 119 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  24, 154 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  24, 155 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  23, 156 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  23, 157 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  29, 194 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  29, 195 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  35, 196 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  35, 197 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  32, 367 },  // ball_l -> ball_end_l
+            BonePair{  38, 369 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  30 },
-            { "ankle_r",  36 },
-            { "arm_lower_l",  16 },
-            { "arm_lower_l_twist", 115 },
-            { "arm_lower_l_twist1", 116 },
-            { "arm_lower_r",  23 },
-            { "arm_lower_r_twist", 152 },
-            { "arm_lower_r_twist1", 153 },
-            { "arm_upper_l",  15 },
-            { "arm_upper_l_twist", 117 },
-            { "arm_upper_l_twist1", 118 },
-            { "arm_upper_r",  22 },
-            { "arm_upper_r_twist", 154 },
-            { "arm_upper_r_twist1", 155 },
-            { "ball_end_l", 401 },
-            { "ball_end_r", 403 },
-            { "ball_l",  31 },
-            { "ball_r",  37 },
-            { "clavicle_l",  14 },
-            { "clavicle_r",  21 },
-            { "hand_l",  17 },
-            { "hand_r",  24 },
-            { "head",  13 },
-            { "leg_lower_l",  29 },
-            { "leg_lower_r",  35 },
-            { "leg_upper_l",  28 },
-            { "leg_upper_l_twist", 189 },
-            { "leg_upper_l_twist1", 190 },
-            { "leg_upper_r",  34 },
-            { "leg_upper_r_twist", 191 },
-            { "leg_upper_r_twist1", 192 },
-            { "neck_0",  12 },
-            { "neck_0_twist",  46 },
-            { "neck_notwist",  47 },
-            { "pelvis",   7 },
-            { "spine_0",   8 },
-            { "spine_1",   9 },
-            { "spine_2",  10 },
-            { "spine_3",  11 },
+            { "ankle_l",  31 },
+            { "ankle_r",  37 },
+            { "arm_lower_l",  17 },
+            { "arm_lower_l_twist", 116 },
+            { "arm_lower_l_twist1", 117 },
+            { "arm_lower_r",  24 },
+            { "arm_lower_r_twist", 154 },
+            { "arm_lower_r_twist1", 155 },
+            { "arm_upper_l",  16 },
+            { "arm_upper_l_twist", 118 },
+            { "arm_upper_l_twist1", 119 },
+            { "arm_upper_r",  23 },
+            { "arm_upper_r_twist", 156 },
+            { "arm_upper_r_twist1", 157 },
+            { "ball_end_l", 367 },
+            { "ball_end_r", 369 },
+            { "ball_l",  32 },
+            { "ball_r",  38 },
+            { "clavicle_l",  15 },
+            { "clavicle_r",  22 },
+            { "hand_l",  18 },
+            { "hand_r",  25 },
+            { "head",  14 },
+            { "leg_lower_l",  30 },
+            { "leg_lower_r",  36 },
+            { "leg_upper_l",  29 },
+            { "leg_upper_l_twist", 194 },
+            { "leg_upper_l_twist1", 195 },
+            { "leg_upper_r",  35 },
+            { "leg_upper_r_twist", 196 },
+            { "leg_upper_r_twist1", 197 },
+            { "neck_0",  13 },
+            { "neck_0_twist",  47 },
+            { "neck_notwist",  48 },
+            { "pelvis",   8 },
+            { "spine_0",   9 },
+            { "spine_1",  10 },
+            { "spine_2",  11 },
+            { "spine_3",  12 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 13 },
-            /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 29 },
+            /* [0] Head  */ { 14 },
+            /* [1] Neck  */ { 13 },
+            /* [2] Torso */ { 8 },
+            /* [3] Arms  */ { 15 },
+            /* [4] Legs  */ { 30 },
         },
     }},
 
@@ -4202,39 +4848,39 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  42,  43 },  // leg_upper_r -> leg_lower_r
             BonePair{  43,  44 },  // leg_lower_r -> ankle_r
             BonePair{  44,  45 },  // ankle_r -> ball_r
-            BonePair{   9,  69 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{   9,  71 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  17,  92 },  // neck_0 -> neck_0_twist
-            BonePair{  22, 114 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  22, 115 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  21, 116 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  21, 117 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  29, 139 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  29, 140 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  28, 141 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  28, 142 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  42, 161 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  42, 162 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  12, 185 },  // ball_l -> ball_end_l
-            BonePair{  45, 221 },  // ball_r -> ball_end_r
+            BonePair{   9,  70 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{   9,  72 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  17,  94 },  // neck_0 -> neck_0_twist
+            BonePair{  22, 117 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  22, 118 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  21, 119 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  21, 120 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  29, 142 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  29, 143 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  28, 144 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  28, 145 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  42, 170 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  42, 171 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  12, 193 },  // ball_l -> ball_end_l
+            BonePair{  45, 224 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  11 },
             { "ankle_r",  44 },
             { "arm_lower_l",  22 },
-            { "arm_lower_l_twist", 114 },
-            { "arm_lower_l_twist1", 115 },
+            { "arm_lower_l_twist", 117 },
+            { "arm_lower_l_twist1", 118 },
             { "arm_lower_r",  29 },
-            { "arm_lower_r_twist", 139 },
-            { "arm_lower_r_twist1", 140 },
+            { "arm_lower_r_twist", 142 },
+            { "arm_lower_r_twist1", 143 },
             { "arm_upper_l",  21 },
-            { "arm_upper_l_twist", 116 },
-            { "arm_upper_l_twist1", 117 },
+            { "arm_upper_l_twist", 119 },
+            { "arm_upper_l_twist1", 120 },
             { "arm_upper_r",  28 },
-            { "arm_upper_r_twist", 141 },
-            { "arm_upper_r_twist1", 142 },
-            { "ball_end_l", 185 },
-            { "ball_end_r", 221 },
+            { "arm_upper_r_twist", 144 },
+            { "arm_upper_r_twist1", 145 },
+            { "ball_end_l", 193 },
+            { "ball_end_r", 224 },
             { "ball_l",  12 },
             { "ball_r",  45 },
             { "clavicle_l",  20 },
@@ -4245,13 +4891,13 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  10 },
             { "leg_lower_r",  43 },
             { "leg_upper_l",   9 },
-            { "leg_upper_l_twist",  69 },
-            { "leg_upper_l_twist1",  71 },
+            { "leg_upper_l_twist",  70 },
+            { "leg_upper_l_twist1",  72 },
             { "leg_upper_r",  42 },
-            { "leg_upper_r_twist", 161 },
-            { "leg_upper_r_twist1", 162 },
+            { "leg_upper_r_twist", 170 },
+            { "leg_upper_r_twist1", 171 },
             { "neck_0",  17 },
-            { "neck_0_twist",  92 },
+            { "neck_0_twist",  94 },
             { "pelvis",   8 },
             { "spine_0",  13 },
             { "spine_1",  14 },
@@ -4276,78 +4922,78 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{   4,   5 },  // spine_2 -> spine_3
             BonePair{   5,   6 },  // spine_3 -> neck_0
             BonePair{   6,   7 },  // neck_0 -> head
-            BonePair{   5,   8 },  // spine_3 -> clavicle_l
-            BonePair{   8,   9 },  // clavicle_l -> arm_upper_l
-            BonePair{   9,  10 },  // arm_upper_l -> arm_lower_l
-            BonePair{  10,  11 },  // arm_lower_l -> hand_l
-            BonePair{   5,  14 },  // spine_3 -> clavicle_r
-            BonePair{  14,  15 },  // clavicle_r -> arm_upper_r
-            BonePair{  15,  16 },  // arm_upper_r -> arm_lower_r
-            BonePair{  16,  17 },  // arm_lower_r -> hand_r
-            BonePair{   1,  19 },  // pelvis -> leg_upper_l
-            BonePair{  19,  20 },  // leg_upper_l -> leg_lower_l
-            BonePair{  20,  21 },  // leg_lower_l -> ankle_l
-            BonePair{  21,  22 },  // ankle_l -> ball_l
-            BonePair{   1,  23 },  // pelvis -> leg_upper_r
-            BonePair{  23,  24 },  // leg_upper_r -> leg_lower_r
-            BonePair{  24,  25 },  // leg_lower_r -> ankle_r
-            BonePair{  25,  26 },  // ankle_r -> ball_r
-            BonePair{   6,  44 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  64 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10,  65 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{   9,  66 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{   9,  67 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{   8,  69 },  // clavicle_l -> clavicle_l_notwist
-            BonePair{  16,  96 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  16,  97 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  15,  98 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  15,  99 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  14, 101 },  // clavicle_r -> clavicle_r_notwist
-            BonePair{  19, 103 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  19, 104 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  23, 106 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  23, 107 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{   5,  10 },  // spine_3 -> clavicle_l
+            BonePair{  10,  11 },  // clavicle_l -> arm_upper_l
+            BonePair{  11,  12 },  // arm_upper_l -> arm_lower_l
+            BonePair{  12,  13 },  // arm_lower_l -> hand_l
+            BonePair{   5,  16 },  // spine_3 -> clavicle_r
+            BonePair{  16,  17 },  // clavicle_r -> arm_upper_r
+            BonePair{  17,  18 },  // arm_upper_r -> arm_lower_r
+            BonePair{  18,  19 },  // arm_lower_r -> hand_r
+            BonePair{   1,  21 },  // pelvis -> leg_upper_l
+            BonePair{  21,  22 },  // leg_upper_l -> leg_lower_l
+            BonePair{  22,  23 },  // leg_lower_l -> ankle_l
+            BonePair{  23,  24 },  // ankle_l -> ball_l
+            BonePair{   1,  25 },  // pelvis -> leg_upper_r
+            BonePair{  25,  26 },  // leg_upper_r -> leg_lower_r
+            BonePair{  26,  27 },  // leg_lower_r -> ankle_r
+            BonePair{  27,  28 },  // ankle_r -> ball_r
+            BonePair{   6,  46 },  // neck_0 -> neck_0_twist
+            BonePair{  12,  66 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  12,  67 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  11,  68 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  11,  69 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  10,  71 },  // clavicle_l -> clavicle_l_notwist
+            BonePair{  18,  97 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  18,  98 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  17,  99 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  17, 100 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  16, 102 },  // clavicle_r -> clavicle_r_notwist
+            BonePair{  21, 104 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  21, 105 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  25, 107 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  25, 108 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{   7, 122 },  // head -> hand_r_head_space_target
-            BonePair{  22, 145 },  // ball_l -> ball_end_l
-            BonePair{  26, 148 },  // ball_r -> ball_end_r
+            BonePair{  24, 146 },  // ball_l -> ball_end_l
+            BonePair{  28, 149 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  21 },
-            { "ankle_r",  25 },
-            { "arm_lower_l",  10 },
-            { "arm_lower_l_twist",  64 },
-            { "arm_lower_l_twist1",  65 },
-            { "arm_lower_r",  16 },
-            { "arm_lower_r_twist",  96 },
-            { "arm_lower_r_twist1",  97 },
-            { "arm_upper_l",   9 },
-            { "arm_upper_l_twist",  66 },
-            { "arm_upper_l_twist1",  67 },
-            { "arm_upper_r",  15 },
-            { "arm_upper_r_twist",  98 },
-            { "arm_upper_r_twist1",  99 },
-            { "ball_end_l", 145 },
-            { "ball_end_r", 148 },
-            { "ball_l",  22 },
-            { "ball_r",  26 },
-            { "clavicle_l",   8 },
-            { "clavicle_l_notwist",  69 },
-            { "clavicle_r",  14 },
-            { "clavicle_r_notwist", 101 },
-            { "hand_l",  11 },
-            { "hand_r",  17 },
+            { "ankle_l",  23 },
+            { "ankle_r",  27 },
+            { "arm_lower_l",  12 },
+            { "arm_lower_l_twist",  66 },
+            { "arm_lower_l_twist1",  67 },
+            { "arm_lower_r",  18 },
+            { "arm_lower_r_twist",  97 },
+            { "arm_lower_r_twist1",  98 },
+            { "arm_upper_l",  11 },
+            { "arm_upper_l_twist",  68 },
+            { "arm_upper_l_twist1",  69 },
+            { "arm_upper_r",  17 },
+            { "arm_upper_r_twist",  99 },
+            { "arm_upper_r_twist1", 100 },
+            { "ball_end_l", 146 },
+            { "ball_end_r", 149 },
+            { "ball_l",  24 },
+            { "ball_r",  28 },
+            { "clavicle_l",  10 },
+            { "clavicle_l_notwist",  71 },
+            { "clavicle_r",  16 },
+            { "clavicle_r_notwist", 102 },
+            { "hand_l",  13 },
+            { "hand_r",  19 },
             { "hand_r_head_space_target", 122 },
             { "head",   7 },
-            { "leg_lower_l",  20 },
-            { "leg_lower_r",  24 },
-            { "leg_upper_l",  19 },
-            { "leg_upper_l_twist", 103 },
-            { "leg_upper_l_twist1", 104 },
-            { "leg_upper_r",  23 },
-            { "leg_upper_r_twist", 106 },
-            { "leg_upper_r_twist1", 107 },
+            { "leg_lower_l",  22 },
+            { "leg_lower_r",  26 },
+            { "leg_upper_l",  21 },
+            { "leg_upper_l_twist", 104 },
+            { "leg_upper_l_twist1", 105 },
+            { "leg_upper_r",  25 },
+            { "leg_upper_r_twist", 107 },
+            { "leg_upper_r_twist1", 108 },
             { "neck_0",   6 },
-            { "neck_0_twist",  44 },
+            { "neck_0_twist",  46 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
@@ -4358,8 +5004,102 @@ inline const std::unordered_map<std::string, ModelBoneData>
             /* [0] Head  */ { 7 },
             /* [1] Neck  */ { 6 },
             /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 20 },
+            /* [3] Arms  */ { 10 },
+            /* [4] Legs  */ { 22 },
+        },
+    }},
+
+    // models/heroes_wip/ratking/ratking.vmdl
+    { "models/heroes_wip/ratking/ratking.vmdl", {
+        /* pairs */ {
+            BonePair{   1,   2 },  // pelvis -> spine_0
+            BonePair{   2,   3 },  // spine_0 -> spine_1
+            BonePair{   3,   4 },  // spine_1 -> spine_2
+            BonePair{   4,   5 },  // spine_2 -> spine_3
+            BonePair{   5,   6 },  // spine_3 -> neck_0
+            BonePair{   6,   7 },  // neck_0 -> head
+            BonePair{   5,   9 },  // spine_3 -> clavicle_l
+            BonePair{   9,  10 },  // clavicle_l -> arm_upper_l
+            BonePair{  10,  11 },  // arm_upper_l -> arm_lower_l
+            BonePair{  11,  12 },  // arm_lower_l -> hand_l
+            BonePair{   9,  13 },  // clavicle_l -> clavicle_l_twist
+            BonePair{   5,  15 },  // spine_3 -> clavicle_r
+            BonePair{  15,  16 },  // clavicle_r -> arm_upper_r
+            BonePair{  16,  17 },  // arm_upper_r -> arm_lower_r
+            BonePair{  17,  18 },  // arm_lower_r -> hand_r
+            BonePair{  15,  19 },  // clavicle_r -> clavicle_r_twist
+            BonePair{   1,  25 },  // pelvis -> leg_upper_l
+            BonePair{  25,  26 },  // leg_upper_l -> leg_lower_l
+            BonePair{  26,  27 },  // leg_lower_l -> ankle_l
+            BonePair{  27,  28 },  // ankle_l -> ball_l
+            BonePair{   1,  29 },  // pelvis -> leg_upper_r
+            BonePair{  29,  30 },  // leg_upper_r -> leg_lower_r
+            BonePair{  30,  31 },  // leg_lower_r -> ankle_r
+            BonePair{  31,  32 },  // ankle_r -> ball_r
+            BonePair{   6,  38 },  // neck_0 -> neck_0_twist
+            BonePair{  10,  46 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  10,  47 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  11,  67 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  11,  68 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  16,  83 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  16,  84 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  17, 103 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  17, 104 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  25, 264 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  25, 265 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  29, 272 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  29, 273 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  28, 357 },  // ball_l -> ball_end_l
+            BonePair{  32, 364 },  // ball_r -> ball_end_r
+        },
+        /* ids */ {
+            { "ankle_l",  27 },
+            { "ankle_r",  31 },
+            { "arm_lower_l",  11 },
+            { "arm_lower_l_twist",  67 },
+            { "arm_lower_l_twist1",  68 },
+            { "arm_lower_r",  17 },
+            { "arm_lower_r_twist", 103 },
+            { "arm_lower_r_twist1", 104 },
+            { "arm_upper_l",  10 },
+            { "arm_upper_l_twist",  47 },
+            { "arm_upper_l_twist1",  46 },
+            { "arm_upper_r",  16 },
+            { "arm_upper_r_twist",  84 },
+            { "arm_upper_r_twist1",  83 },
+            { "ball_end_l", 357 },
+            { "ball_end_r", 364 },
+            { "ball_l",  28 },
+            { "ball_r",  32 },
+            { "clavicle_l",   9 },
+            { "clavicle_l_twist",  13 },
+            { "clavicle_r",  15 },
+            { "clavicle_r_twist",  19 },
+            { "hand_l",  12 },
+            { "hand_r",  18 },
+            { "head",   7 },
+            { "leg_lower_l",  26 },
+            { "leg_lower_r",  30 },
+            { "leg_upper_l",  25 },
+            { "leg_upper_l_twist", 264 },
+            { "leg_upper_l_twist1", 265 },
+            { "leg_upper_r",  29 },
+            { "leg_upper_r_twist", 272 },
+            { "leg_upper_r_twist1", 273 },
+            { "neck_0",   6 },
+            { "neck_0_twist",  38 },
+            { "pelvis",   1 },
+            { "spine_0",   2 },
+            { "spine_1",   3 },
+            { "spine_2",   4 },
+            { "spine_3",   5 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ { 7 },
+            /* [1] Neck  */ { 6 },
+            /* [2] Torso */ { 1 },
+            /* [3] Arms  */ { 9 },
+            /* [4] Legs  */ { 26 },
         },
     }},
 
@@ -4380,70 +5120,70 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  17,  18 },  // clavicle_r -> arm_upper_r
             BonePair{  18,  19 },  // arm_upper_r -> arm_lower_r
             BonePair{  19,  20 },  // arm_lower_r -> hand_r
-            BonePair{   5,  22 },  // pelvis -> leg_upper_l
-            BonePair{  22,  23 },  // leg_upper_l -> leg_lower_l
-            BonePair{  23,  24 },  // leg_lower_l -> ankle_l
-            BonePair{  24,  25 },  // ankle_l -> ball_l
-            BonePair{   5,  26 },  // pelvis -> leg_upper_r
-            BonePair{  26,  27 },  // leg_upper_r -> leg_lower_r
-            BonePair{  27,  28 },  // leg_lower_r -> ankle_r
-            BonePair{  28,  29 },  // ankle_r -> ball_r
-            BonePair{  10,  79 },  // neck_0 -> neck_0_twist
-            BonePair{  15,  99 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  15, 100 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14, 101 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  14, 102 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  13, 103 },  // clavicle_l -> clavicle_notwist_l1
-            BonePair{  19, 124 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  19, 125 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18, 133 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  18, 134 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  17, 135 },  // clavicle_r -> clavicle_notwist_r1
-            BonePair{  22, 140 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  22, 141 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  26, 142 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  26, 143 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  10, 351 },  // neck_0 -> neck_notwist
-            BonePair{  25, 377 },  // ball_l -> ball_end_l
-            BonePair{  29, 380 },  // ball_r -> ball_end_r
+            BonePair{  18,  22 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{   5,  23 },  // pelvis -> leg_upper_l
+            BonePair{  23,  24 },  // leg_upper_l -> leg_lower_l
+            BonePair{  24,  25 },  // leg_lower_l -> ankle_l
+            BonePair{  25,  26 },  // ankle_l -> ball_l
+            BonePair{   5,  27 },  // pelvis -> leg_upper_r
+            BonePair{  27,  28 },  // leg_upper_r -> leg_lower_r
+            BonePair{  28,  29 },  // leg_lower_r -> ankle_r
+            BonePair{  29,  30 },  // ankle_r -> ball_r
+            BonePair{  10,  81 },  // neck_0 -> neck_notwist
+            BonePair{  10,  82 },  // neck_0 -> neck_0_twist
+            BonePair{  15, 102 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  15, 103 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  14, 104 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  14, 105 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  13, 106 },  // clavicle_l -> clavicle_notwist_l1
+            BonePair{  19, 128 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  19, 129 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  18, 137 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  17, 138 },  // clavicle_r -> clavicle_notwist_r1
+            BonePair{  23, 146 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  23, 147 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  27, 149 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  27, 150 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  26, 380 },  // ball_l -> ball_end_l
+            BonePair{  30, 382 },  // ball_r -> ball_end_r
         },
         /* ids */ {
-            { "ankle_l",  24 },
-            { "ankle_r",  28 },
+            { "ankle_l",  25 },
+            { "ankle_r",  29 },
             { "arm_lower_l",  15 },
-            { "arm_lower_l_twist",  99 },
-            { "arm_lower_l_twist1", 100 },
+            { "arm_lower_l_twist", 102 },
+            { "arm_lower_l_twist1", 103 },
             { "arm_lower_r",  19 },
-            { "arm_lower_r_twist", 124 },
-            { "arm_lower_r_twist1", 125 },
+            { "arm_lower_r_twist", 128 },
+            { "arm_lower_r_twist1", 129 },
             { "arm_upper_l",  14 },
-            { "arm_upper_l_twist", 101 },
-            { "arm_upper_l_twist1", 102 },
+            { "arm_upper_l_twist", 104 },
+            { "arm_upper_l_twist1", 105 },
             { "arm_upper_r",  18 },
-            { "arm_upper_r_twist", 133 },
-            { "arm_upper_r_twist1", 134 },
-            { "ball_end_l", 377 },
-            { "ball_end_r", 380 },
-            { "ball_l",  25 },
-            { "ball_r",  29 },
+            { "arm_upper_r_twist",  22 },
+            { "arm_upper_r_twist1", 137 },
+            { "ball_end_l", 380 },
+            { "ball_end_r", 382 },
+            { "ball_l",  26 },
+            { "ball_r",  30 },
             { "clavicle_l",  13 },
-            { "clavicle_notwist_l1", 103 },
-            { "clavicle_notwist_r1", 135 },
+            { "clavicle_notwist_l1", 106 },
+            { "clavicle_notwist_r1", 138 },
             { "clavicle_r",  17 },
             { "hand_l",  16 },
             { "hand_r",  20 },
             { "head",  11 },
-            { "leg_lower_l",  23 },
-            { "leg_lower_r",  27 },
-            { "leg_upper_l",  22 },
-            { "leg_upper_l_twist", 140 },
-            { "leg_upper_l_twist1", 141 },
-            { "leg_upper_r",  26 },
-            { "leg_upper_r_twist", 142 },
-            { "leg_upper_r_twist1", 143 },
+            { "leg_lower_l",  24 },
+            { "leg_lower_r",  28 },
+            { "leg_upper_l",  23 },
+            { "leg_upper_l_twist", 146 },
+            { "leg_upper_l_twist1", 147 },
+            { "leg_upper_r",  27 },
+            { "leg_upper_r_twist", 149 },
+            { "leg_upper_r_twist1", 150 },
             { "neck_0",  10 },
-            { "neck_0_twist",  79 },
-            { "neck_notwist", 351 },
+            { "neck_0_twist",  82 },
+            { "neck_notwist",  81 },
             { "pelvis",   5 },
             { "spine_0",   6 },
             { "spine_1",   7 },
@@ -4455,7 +5195,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             /* [1] Neck  */ { 10 },
             /* [2] Torso */ { 5 },
             /* [3] Arms  */ { 13 },
-            /* [4] Legs  */ { 23 },
+            /* [4] Legs  */ { 24 },
         },
     }},
 
@@ -4480,60 +5220,60 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  22,  23 },  // clavicle_r -> arm_upper_r
             BonePair{  23,  24 },  // arm_upper_r -> arm_lower_r
             BonePair{  24,  25 },  // arm_lower_r -> hand_r
-            BonePair{   6,  28 },  // pelvis -> leg_upper_r
-            BonePair{  28,  29 },  // leg_upper_r -> leg_lower_r
-            BonePair{  29,  30 },  // leg_lower_r -> ankle_r
-            BonePair{  30,  31 },  // ankle_r -> ball_r
-            BonePair{   7,  37 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{   7,  38 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  15,  48 },  // neck_0 -> neck_0_twist
-            BonePair{  19,  69 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  19,  70 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  18,  71 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  18,  72 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  24,  94 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  24,  95 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  23,  96 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  23,  97 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  28, 123 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  28, 124 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  10, 180 },  // ball_l -> ball_end_l
-            BonePair{  31, 220 },  // ball_r -> ball_end_r
+            BonePair{   6,  32 },  // pelvis -> leg_upper_r
+            BonePair{  32,  33 },  // leg_upper_r -> leg_lower_r
+            BonePair{  33,  34 },  // leg_lower_r -> ankle_r
+            BonePair{  34,  35 },  // ankle_r -> ball_r
+            BonePair{   7,  42 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{   7,  43 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  15,  53 },  // neck_0 -> neck_0_twist
+            BonePair{  19,  74 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  19,  75 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  18,  76 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  18,  77 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  24,  99 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  24, 100 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  23, 101 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  23, 102 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  32, 127 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  32, 128 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  10, 184 },  // ball_l -> ball_end_l
+            BonePair{  35, 221 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",   9 },
-            { "ankle_r",  30 },
+            { "ankle_r",  34 },
             { "arm_lower_l",  19 },
-            { "arm_lower_l_twist",  69 },
-            { "arm_lower_l_twist1",  70 },
+            { "arm_lower_l_twist",  74 },
+            { "arm_lower_l_twist1",  75 },
             { "arm_lower_r",  24 },
-            { "arm_lower_r_twist",  94 },
-            { "arm_lower_r_twist1",  95 },
+            { "arm_lower_r_twist",  99 },
+            { "arm_lower_r_twist1", 100 },
             { "arm_upper_l",  18 },
-            { "arm_upper_l_twist",  71 },
-            { "arm_upper_l_twist1",  72 },
+            { "arm_upper_l_twist",  76 },
+            { "arm_upper_l_twist1",  77 },
             { "arm_upper_r",  23 },
-            { "arm_upper_r_twist",  96 },
-            { "arm_upper_r_twist1",  97 },
-            { "ball_end_l", 180 },
-            { "ball_end_r", 220 },
+            { "arm_upper_r_twist", 101 },
+            { "arm_upper_r_twist1", 102 },
+            { "ball_end_l", 184 },
+            { "ball_end_r", 221 },
             { "ball_l",  10 },
-            { "ball_r",  31 },
+            { "ball_r",  35 },
             { "clavicle_l",  17 },
             { "clavicle_r",  22 },
             { "hand_l",  20 },
             { "hand_r",  25 },
             { "head",  16 },
             { "leg_lower_l",   8 },
-            { "leg_lower_r",  29 },
+            { "leg_lower_r",  33 },
             { "leg_upper_l",   7 },
-            { "leg_upper_l_twist",  37 },
-            { "leg_upper_l_twist1",  38 },
-            { "leg_upper_r",  28 },
-            { "leg_upper_r_twist", 123 },
-            { "leg_upper_r_twist1", 124 },
+            { "leg_upper_l_twist",  42 },
+            { "leg_upper_l_twist1",  43 },
+            { "leg_upper_r",  32 },
+            { "leg_upper_r_twist", 127 },
+            { "leg_upper_r_twist1", 128 },
             { "neck_0",  15 },
-            { "neck_0_twist",  48 },
+            { "neck_0_twist",  53 },
             { "pelvis",   6 },
             { "spine_0",  11 },
             { "spine_1",  12 },
@@ -4572,60 +5312,60 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  27,  28 },  // arm_lower_l -> hand_l
             BonePair{  19,  30 },  // spine_3 -> neck_0
             BonePair{  30,  31 },  // neck_0 -> head
-            BonePair{   6,  35 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{   6,  36 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  11,  37 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  11,  38 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  20,  65 },  // clavicle_r -> clavicle_r_twist
-            BonePair{  21,  66 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  21,  67 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  22,  68 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  22,  69 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  25,  85 },  // clavicle_l -> clavicle_l_twist
-            BonePair{  26,  86 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  26,  87 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  27,  88 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  27,  89 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  30, 105 },  // neck_0 -> neck_0_twist
-            BonePair{  10, 127 },  // ball_l -> ball_end_l
-            BonePair{  15, 129 },  // ball_r -> ball_end_r
+            BonePair{   6,  36 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{   6,  37 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  11,  38 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  11,  39 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  20,  66 },  // clavicle_r -> clavicle_r_twist
+            BonePair{  21,  67 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  21,  68 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  22,  69 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  22,  70 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  25,  86 },  // clavicle_l -> clavicle_l_twist
+            BonePair{  26,  87 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  26,  88 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  27,  89 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  27,  90 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  30, 106 },  // neck_0 -> neck_0_twist
+            BonePair{  10, 128 },  // ball_l -> ball_end_l
+            BonePair{  15, 130 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",   8 },
             { "ankle_r",  13 },
             { "arm_lower_l",  27 },
-            { "arm_lower_l_twist",  88 },
-            { "arm_lower_l_twist1",  89 },
+            { "arm_lower_l_twist",  89 },
+            { "arm_lower_l_twist1",  90 },
             { "arm_lower_r",  22 },
-            { "arm_lower_r_twist",  68 },
-            { "arm_lower_r_twist1",  69 },
+            { "arm_lower_r_twist",  69 },
+            { "arm_lower_r_twist1",  70 },
             { "arm_upper_l",  26 },
-            { "arm_upper_l_twist",  87 },
-            { "arm_upper_l_twist1",  86 },
+            { "arm_upper_l_twist",  88 },
+            { "arm_upper_l_twist1",  87 },
             { "arm_upper_r",  21 },
-            { "arm_upper_r_twist",  67 },
-            { "arm_upper_r_twist1",  66 },
-            { "ball_end_l", 127 },
-            { "ball_end_r", 129 },
+            { "arm_upper_r_twist",  68 },
+            { "arm_upper_r_twist1",  67 },
+            { "ball_end_l", 128 },
+            { "ball_end_r", 130 },
             { "ball_l",  10 },
             { "ball_r",  15 },
             { "clavicle_l",  25 },
-            { "clavicle_l_twist",  85 },
+            { "clavicle_l_twist",  86 },
             { "clavicle_r",  20 },
-            { "clavicle_r_twist",  65 },
+            { "clavicle_r_twist",  66 },
             { "hand_l",  28 },
             { "hand_r",  23 },
             { "head",  31 },
             { "leg_lower_l",   7 },
             { "leg_lower_r",  12 },
             { "leg_upper_l",   6 },
-            { "leg_upper_l_twist",  35 },
-            { "leg_upper_l_twist1",  36 },
+            { "leg_upper_l_twist",  36 },
+            { "leg_upper_l_twist1",  37 },
             { "leg_upper_r",  11 },
-            { "leg_upper_r_twist",  37 },
-            { "leg_upper_r_twist1",  38 },
+            { "leg_upper_r_twist",  38 },
+            { "leg_upper_r_twist1",  39 },
             { "neck_0",  30 },
-            { "neck_0_twist", 105 },
+            { "neck_0_twist", 106 },
             { "pelvis",   5 },
             { "spine_0",  16 },
             { "spine_1",  17 },
@@ -4644,94 +5384,188 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_wip/werewolf/werewolf.vmdl
     { "models/heroes_wip/werewolf/werewolf.vmdl", {
         /* pairs */ {
-            BonePair{   3,   4 },  // pelvis -> spine_0
-            BonePair{   4,   5 },  // spine_0 -> spine_1
-            BonePair{   5,   6 },  // spine_1 -> spine_2
-            BonePair{   6,   7 },  // spine_2 -> spine_3
-            BonePair{   7,   8 },  // spine_3 -> neck_0
-            BonePair{   8,   9 },  // neck_0 -> head
-            BonePair{   7,  10 },  // spine_3 -> clavicle_r
-            BonePair{  10,  11 },  // clavicle_r -> arm_upper_r
-            BonePair{  11,  12 },  // arm_upper_r -> arm_lower_r
-            BonePair{  12,  13 },  // arm_lower_r -> hand_r
-            BonePair{   7,  15 },  // spine_3 -> clavicle_l
-            BonePair{  15,  16 },  // clavicle_l -> arm_upper_l
-            BonePair{  16,  17 },  // arm_upper_l -> arm_lower_l
-            BonePair{  17,  18 },  // arm_lower_l -> hand_l
-            BonePair{   3,  20 },  // pelvis -> leg_upper_r
-            BonePair{  20,  21 },  // leg_upper_r -> leg_lower_r
-            BonePair{  21,  22 },  // leg_lower_r -> ankle_r
-            BonePair{  22,  23 },  // ankle_r -> ball_r
-            BonePair{   3,  24 },  // pelvis -> leg_upper_l
-            BonePair{  24,  25 },  // leg_upper_l -> leg_lower_l
-            BonePair{  25,  26 },  // leg_lower_l -> ankle_l
-            BonePair{  26,  27 },  // ankle_l -> ball_l
-            BonePair{   8,  48 },  // neck_0 -> neck_0_twist
-            BonePair{  12,  75 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  12,  76 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  11,  80 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  11,  81 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  10,  82 },  // clavicle_r -> clavicle_notwist_r
-            BonePair{  17, 107 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  17, 108 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  16, 109 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  16, 110 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  15, 111 },  // clavicle_l -> clavicle_notwist_l
-            BonePair{  20, 143 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  20, 150 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  24, 151 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  24, 152 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  23, 196 },  // ball_r -> ball_end_r
-            BonePair{  27, 198 },  // ball_l -> ball_end_l
+            BonePair{   4,   5 },  // pelvis -> spine_0
+            BonePair{   5,   6 },  // spine_0 -> spine_1
+            BonePair{   6,   7 },  // spine_1 -> spine_2
+            BonePair{   7,   8 },  // spine_2 -> spine_3
+            BonePair{   8,   9 },  // spine_3 -> neck_0
+            BonePair{   9,  10 },  // neck_0 -> head
+            BonePair{   8,  11 },  // spine_3 -> clavicle_r
+            BonePair{  11,  12 },  // clavicle_r -> arm_upper_r
+            BonePair{  12,  13 },  // arm_upper_r -> arm_lower_r
+            BonePair{  13,  14 },  // arm_lower_r -> hand_r
+            BonePair{   8,  16 },  // spine_3 -> clavicle_l
+            BonePair{  16,  17 },  // clavicle_l -> arm_upper_l
+            BonePair{  17,  18 },  // arm_upper_l -> arm_lower_l
+            BonePair{  18,  19 },  // arm_lower_l -> hand_l
+            BonePair{   4,  21 },  // pelvis -> leg_upper_r
+            BonePair{  21,  22 },  // leg_upper_r -> leg_lower_r
+            BonePair{  22,  23 },  // leg_lower_r -> ankle_r
+            BonePair{  23,  24 },  // ankle_r -> ball_r
+            BonePair{   4,  25 },  // pelvis -> leg_upper_l
+            BonePair{  25,  26 },  // leg_upper_l -> leg_lower_l
+            BonePair{  26,  27 },  // leg_lower_l -> ankle_l
+            BonePair{  27,  28 },  // ankle_l -> ball_l
+            BonePair{   9,  49 },  // neck_0 -> neck_0_twist
+            BonePair{  13,  76 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  13,  77 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  12,  81 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  12,  82 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  11,  83 },  // clavicle_r -> clavicle_notwist_r
+            BonePair{  18, 108 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  18, 109 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  17, 110 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  17, 111 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  16, 112 },  // clavicle_l -> clavicle_notwist_l
+            BonePair{  21, 144 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  21, 151 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  25, 152 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  25, 153 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  24, 196 },  // ball_r -> ball_end_r
+            BonePair{  28, 204 },  // ball_l -> ball_end_l
         },
         /* ids */ {
-            { "ankle_l",  26 },
-            { "ankle_r",  22 },
-            { "arm_lower_l",  17 },
-            { "arm_lower_l_twist", 107 },
-            { "arm_lower_l_twist1", 108 },
-            { "arm_lower_r",  12 },
-            { "arm_lower_r_twist",  75 },
-            { "arm_lower_r_twist1",  76 },
-            { "arm_upper_l",  16 },
-            { "arm_upper_l_twist", 109 },
-            { "arm_upper_l_twist1", 110 },
-            { "arm_upper_r",  11 },
-            { "arm_upper_r_twist",  80 },
-            { "arm_upper_r_twist1",  81 },
-            { "ball_end_l", 198 },
+            { "ankle_l",  27 },
+            { "ankle_r",  23 },
+            { "arm_lower_l",  18 },
+            { "arm_lower_l_twist", 108 },
+            { "arm_lower_l_twist1", 109 },
+            { "arm_lower_r",  13 },
+            { "arm_lower_r_twist",  76 },
+            { "arm_lower_r_twist1",  77 },
+            { "arm_upper_l",  17 },
+            { "arm_upper_l_twist", 110 },
+            { "arm_upper_l_twist1", 111 },
+            { "arm_upper_r",  12 },
+            { "arm_upper_r_twist",  81 },
+            { "arm_upper_r_twist1",  82 },
+            { "ball_end_l", 204 },
             { "ball_end_r", 196 },
-            { "ball_l",  27 },
-            { "ball_r",  23 },
-            { "clavicle_l",  15 },
-            { "clavicle_notwist_l", 111 },
-            { "clavicle_notwist_r",  82 },
-            { "clavicle_r",  10 },
-            { "hand_l",  18 },
-            { "hand_r",  13 },
-            { "head",   9 },
-            { "leg_lower_l",  25 },
-            { "leg_lower_r",  21 },
-            { "leg_upper_l",  24 },
-            { "leg_upper_l_twist", 151 },
-            { "leg_upper_l_twist1", 152 },
-            { "leg_upper_r",  20 },
-            { "leg_upper_r_twist", 143 },
-            { "leg_upper_r_twist1", 150 },
-            { "neck_0",   8 },
-            { "neck_0_twist",  48 },
-            { "pelvis",   3 },
-            { "spine_0",   4 },
-            { "spine_1",   5 },
-            { "spine_2",   6 },
-            { "spine_3",   7 },
+            { "ball_l",  28 },
+            { "ball_r",  24 },
+            { "clavicle_l",  16 },
+            { "clavicle_notwist_l", 112 },
+            { "clavicle_notwist_r",  83 },
+            { "clavicle_r",  11 },
+            { "hand_l",  19 },
+            { "hand_r",  14 },
+            { "head",  10 },
+            { "leg_lower_l",  26 },
+            { "leg_lower_r",  22 },
+            { "leg_upper_l",  25 },
+            { "leg_upper_l_twist", 152 },
+            { "leg_upper_l_twist1", 153 },
+            { "leg_upper_r",  21 },
+            { "leg_upper_r_twist", 144 },
+            { "leg_upper_r_twist1", 151 },
+            { "neck_0",   9 },
+            { "neck_0_twist",  49 },
+            { "pelvis",   4 },
+            { "spine_0",   5 },
+            { "spine_1",   6 },
+            { "spine_2",   7 },
+            { "spine_3",   8 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 9 },
-            /* [1] Neck  */ { 8 },
-            /* [2] Torso */ { 3 },
-            /* [3] Arms  */ { 10 },
-            /* [4] Legs  */ { 21 },
+            /* [0] Head  */ { 10 },
+            /* [1] Neck  */ { 9 },
+            /* [2] Torso */ { 4 },
+            /* [3] Arms  */ { 11 },
+            /* [4] Legs  */ { 22 },
+        },
+    }},
+
+    // models/heroes_wip/werewolf/werewolf_pieces.vmdl
+    { "models/heroes_wip/werewolf/werewolf_pieces.vmdl", {
+        /* pairs */ {
+            BonePair{  54,  55 },  // pelvis -> leg_upper_r
+            BonePair{  55,  56 },  // leg_upper_r -> leg_lower_r
+            BonePair{  54,  57 },  // pelvis -> leg_upper_l
+            BonePair{  57,  58 },  // leg_upper_l -> leg_lower_l
+            BonePair{  58,  59 },  // leg_lower_l -> ankle_l
+            BonePair{  54,  63 },  // pelvis -> spine_0
+            BonePair{  63,  64 },  // spine_0 -> spine_1
+            BonePair{  64,  65 },  // spine_1 -> spine_2
+            BonePair{  65,  66 },  // spine_2 -> spine_3
+            BonePair{  66,  67 },  // spine_3 -> neck_0
+            BonePair{  67,  68 },  // neck_0 -> head
+            BonePair{  67,  90 },  // neck_0 -> neck_0_twist
+            BonePair{  66,  99 },  // spine_3 -> clavicle_r
+            BonePair{  99, 100 },  // clavicle_r -> arm_upper_r
+            BonePair{ 100, 101 },  // arm_upper_r -> arm_lower_r
+            BonePair{ 101, 102 },  // arm_lower_r -> hand_r
+            BonePair{ 101, 130 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{ 101, 131 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{ 100, 135 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{ 100, 136 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  99, 137 },  // clavicle_r -> clavicle_notwist_r
+            BonePair{  66, 143 },  // spine_3 -> clavicle_l
+            BonePair{ 143, 144 },  // clavicle_l -> arm_upper_l
+            BonePair{ 144, 145 },  // arm_upper_l -> arm_lower_l
+            BonePair{ 145, 146 },  // arm_lower_l -> hand_l
+            BonePair{ 145, 174 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{ 145, 175 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{ 144, 176 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{ 144, 177 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{ 143, 178 },  // clavicle_l -> clavicle_notwist_l
+            BonePair{  56, 216 },  // leg_lower_r -> ankle_r
+            BonePair{ 216, 218 },  // ankle_r -> ball_r
+            BonePair{ 218, 219 },  // ball_r -> ball_end_r
+            BonePair{  55, 220 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  55, 227 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  59, 229 },  // ankle_l -> ball_l
+            BonePair{ 229, 230 },  // ball_l -> ball_end_l
+            BonePair{  57, 231 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  57, 232 },  // leg_upper_l -> leg_upper_l_twist1
+        },
+        /* ids */ {
+            { "ankle_l",  59 },
+            { "ankle_r", 216 },
+            { "arm_lower_l", 145 },
+            { "arm_lower_l_twist", 174 },
+            { "arm_lower_l_twist1", 175 },
+            { "arm_lower_r", 101 },
+            { "arm_lower_r_twist", 130 },
+            { "arm_lower_r_twist1", 131 },
+            { "arm_upper_l", 144 },
+            { "arm_upper_l_twist", 176 },
+            { "arm_upper_l_twist1", 177 },
+            { "arm_upper_r", 100 },
+            { "arm_upper_r_twist", 135 },
+            { "arm_upper_r_twist1", 136 },
+            { "ball_end_l", 230 },
+            { "ball_end_r", 219 },
+            { "ball_l", 229 },
+            { "ball_r", 218 },
+            { "clavicle_l", 143 },
+            { "clavicle_notwist_l", 178 },
+            { "clavicle_notwist_r", 137 },
+            { "clavicle_r",  99 },
+            { "hand_l", 146 },
+            { "hand_r", 102 },
+            { "head",  68 },
+            { "leg_lower_l",  58 },
+            { "leg_lower_r",  56 },
+            { "leg_upper_l",  57 },
+            { "leg_upper_l_twist", 231 },
+            { "leg_upper_l_twist1", 232 },
+            { "leg_upper_r",  55 },
+            { "leg_upper_r_twist", 220 },
+            { "leg_upper_r_twist1", 227 },
+            { "neck_0",  67 },
+            { "neck_0_twist",  90 },
+            { "pelvis",  54 },
+            { "spine_0",  63 },
+            { "spine_1",  64 },
+            { "spine_2",  65 },
+            { "spine_3",  66 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ { 68 },
+            /* [1] Neck  */ { 67 },
+            /* [2] Torso */ { 54 },
+            /* [3] Arms  */ { 99 },
+            /* [4] Legs  */ { 56 },
         },
     }},
 
@@ -4760,39 +5594,39 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  22,  23 },  // leg_upper_r -> leg_lower_r
             BonePair{  23,  24 },  // leg_lower_r -> ankle_r
             BonePair{  24,  25 },  // ankle_r -> ball_r
-            BonePair{   6,  42 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  55 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10,  56 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{   9,  57 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{   9,  58 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  14,  79 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  14,  80 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  13,  81 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  13,  82 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  18, 110 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  18, 111 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  22, 112 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  22, 113 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  21, 415 },  // ball_l -> ball_end_l
-            BonePair{  25, 416 },  // ball_r -> ball_end_r
+            BonePair{   6,  43 },  // neck_0 -> neck_0_twist
+            BonePair{  10,  66 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  10,  67 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{   9,  68 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{   9,  69 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  14,  98 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  14,  99 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  13, 100 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  13, 101 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  18, 129 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  18, 130 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  22, 131 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  22, 132 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  21, 412 },  // ball_l -> ball_end_l
+            BonePair{  25, 413 },  // ball_r -> ball_end_r
         },
         /* ids */ {
             { "ankle_l",  20 },
             { "ankle_r",  24 },
             { "arm_lower_l",  10 },
-            { "arm_lower_l_twist",  55 },
-            { "arm_lower_l_twist1",  56 },
+            { "arm_lower_l_twist",  66 },
+            { "arm_lower_l_twist1",  67 },
             { "arm_lower_r",  14 },
-            { "arm_lower_r_twist",  79 },
-            { "arm_lower_r_twist1",  80 },
+            { "arm_lower_r_twist",  98 },
+            { "arm_lower_r_twist1",  99 },
             { "arm_upper_l",   9 },
-            { "arm_upper_l_twist",  57 },
-            { "arm_upper_l_twist1",  58 },
+            { "arm_upper_l_twist",  68 },
+            { "arm_upper_l_twist1",  69 },
             { "arm_upper_r",  13 },
-            { "arm_upper_r_twist",  81 },
-            { "arm_upper_r_twist1",  82 },
-            { "ball_end_l", 415 },
-            { "ball_end_r", 416 },
+            { "arm_upper_r_twist", 100 },
+            { "arm_upper_r_twist1", 101 },
+            { "ball_end_l", 412 },
+            { "ball_end_r", 413 },
             { "ball_l",  21 },
             { "ball_r",  25 },
             { "clavicle_l",   8 },
@@ -4803,13 +5637,13 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  19 },
             { "leg_lower_r",  23 },
             { "leg_upper_l",  18 },
-            { "leg_upper_l_twist", 110 },
-            { "leg_upper_l_twist1", 111 },
+            { "leg_upper_l_twist", 129 },
+            { "leg_upper_l_twist1", 130 },
             { "leg_upper_r",  22 },
-            { "leg_upper_r_twist", 112 },
-            { "leg_upper_r_twist1", 113 },
+            { "leg_upper_r_twist", 131 },
+            { "leg_upper_r_twist1", 132 },
             { "neck_0",   6 },
-            { "neck_0_twist",  42 },
+            { "neck_0_twist",  43 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
@@ -4822,6 +5656,96 @@ inline const std::unordered_map<std::string, ModelBoneData>
             /* [2] Torso */ { 1 },
             /* [3] Arms  */ { 8 },
             /* [4] Legs  */ { 19 },
+        },
+    }},
+
+    // models/heroes_wip/wraith/wraith_fx.vmdl
+    { "models/heroes_wip/wraith/wraith_fx.vmdl", {
+        /* pairs */ {
+            BonePair{   1,   2 },  // pelvis -> spine_0
+            BonePair{   2,   3 },  // spine_0 -> spine_1
+            BonePair{   3,   4 },  // spine_1 -> spine_2
+            BonePair{   4,   5 },  // spine_2 -> spine_3
+            BonePair{   5,   6 },  // spine_3 -> neck_0
+            BonePair{   6,   7 },  // neck_0 -> head
+            BonePair{   5,   8 },  // spine_3 -> clavicle_l
+            BonePair{   8,   9 },  // clavicle_l -> arm_upper_l
+            BonePair{   9,  10 },  // arm_upper_l -> arm_lower_l
+            BonePair{  10,  11 },  // arm_lower_l -> hand_l
+            BonePair{   5,  12 },  // spine_3 -> clavicle_r
+            BonePair{  12,  13 },  // clavicle_r -> arm_upper_r
+            BonePair{  13,  14 },  // arm_upper_r -> arm_lower_r
+            BonePair{  14,  15 },  // arm_lower_r -> hand_r
+            BonePair{   1,  16 },  // pelvis -> leg_upper_l
+            BonePair{  16,  17 },  // leg_upper_l -> leg_lower_l
+            BonePair{  17,  18 },  // leg_lower_l -> ankle_l
+            BonePair{  18,  19 },  // ankle_l -> ball_l
+            BonePair{   1,  20 },  // pelvis -> leg_upper_r
+            BonePair{  20,  21 },  // leg_upper_r -> leg_lower_r
+            BonePair{  21,  22 },  // leg_lower_r -> ankle_r
+            BonePair{  22,  23 },  // ankle_r -> ball_r
+            BonePair{   6,  40 },  // neck_0 -> neck_0_twist
+            BonePair{  10,  68 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  10,  69 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{   9,  70 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{   9,  71 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  14, 106 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  14, 107 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{  13, 108 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  13, 109 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  16, 137 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{  16, 138 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{  20, 139 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{  20, 140 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  19, 150 },  // ball_l -> ball_end_l
+            BonePair{  23, 151 },  // ball_r -> ball_end_r
+        },
+        /* ids */ {
+            { "ankle_l",  18 },
+            { "ankle_r",  22 },
+            { "arm_lower_l",  10 },
+            { "arm_lower_l_twist",  68 },
+            { "arm_lower_l_twist1",  69 },
+            { "arm_lower_r",  14 },
+            { "arm_lower_r_twist", 106 },
+            { "arm_lower_r_twist1", 107 },
+            { "arm_upper_l",   9 },
+            { "arm_upper_l_twist",  70 },
+            { "arm_upper_l_twist1",  71 },
+            { "arm_upper_r",  13 },
+            { "arm_upper_r_twist", 108 },
+            { "arm_upper_r_twist1", 109 },
+            { "ball_end_l", 150 },
+            { "ball_end_r", 151 },
+            { "ball_l",  19 },
+            { "ball_r",  23 },
+            { "clavicle_l",   8 },
+            { "clavicle_r",  12 },
+            { "hand_l",  11 },
+            { "hand_r",  15 },
+            { "head",   7 },
+            { "leg_lower_l",  17 },
+            { "leg_lower_r",  21 },
+            { "leg_upper_l",  16 },
+            { "leg_upper_l_twist", 137 },
+            { "leg_upper_l_twist1", 138 },
+            { "leg_upper_r",  20 },
+            { "leg_upper_r_twist", 139 },
+            { "leg_upper_r_twist1", 140 },
+            { "neck_0",   6 },
+            { "neck_0_twist",  40 },
+            { "pelvis",   1 },
+            { "spine_0",   2 },
+            { "spine_1",   3 },
+            { "spine_2",   4 },
+            { "spine_3",   5 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ { 7 },
+            /* [1] Neck  */ { 6 },
+            /* [2] Torso */ { 1 },
+            /* [3] Arms  */ { 8 },
+            /* [4] Legs  */ { 17 },
         },
     }},
 
