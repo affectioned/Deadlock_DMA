@@ -56,8 +56,8 @@ public: /* Interface methods */
 	static void QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc);
 
 	// Reads base bullet speed for primary fire from the local pawn's
-	// citadel_ability_primary_weapon -> m_pSubclassVData -> CCitadelWeaponInfo
-	// at +0x158 -> m_flBulletSpeed at +0xB4. Latches into g_LocalBulletSpeed.
+	// citadel_ability_primary_weapon -> m_pSubclassVData -> m_mapWeaponInfos
+	// -> CCitadelWeaponInfo::m_flBulletSpeed. Latches into g_LocalBulletSpeed.
 	static void RefreshPrimaryWeaponBulletSpeed(DMA_Connection* Conn, Process* Proc);
 
 public: /* Interface variables */

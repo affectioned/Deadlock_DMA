@@ -10,7 +10,7 @@ namespace
 	// CInWorldItemPanel::m_hTrackedEntity offset (source2sdk client dump,
 	// CInWorldItemPanel.hpp). The handle resolves to the pickup the panel is
 	// floating above, which is what we actually want to name in the overlay.
-	constexpr uintptr_t kInWorldItemPanel_hTrackedEntity = 0xBF0;
+	constexpr uintptr_t kInWorldItemPanel_hTrackedEntity = 0xE10;
 
 	// Maps a tracked-entity class name (e.g. "citadel_item_pickup_idol") to a
 	// short display label. Substring match keeps this stable across renames

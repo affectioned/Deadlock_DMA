@@ -3,6 +3,27 @@
 #include "Deadlock/Deadlock.h"
 #include "EntityList.h"
 
+namespace
+{
+	// CitadelAbilityVData::m_mapWeaponInfos is a 0x28-byte CUtlOrderedMap
+	// (CUtlRBTree under the hood). The schema dump gives its size but not its
+	// internals, and the two plausible layouts differ in both where the node
+	// array pointer sits and how wide the tree-link indices are. Rather than
+	// commit to one, probe every 8-byte slot of the header as a candidate node
+	// array and every plausible link width, then keep the first bullet speed
+	// that lands in a sane range. The primary-weapon ability carries a single
+	// entry, so node 0 is the one we want either way.
+	constexpr std::ptrdiff_t kMapHeaderSize = 0x28;
+
+	// UtlRBTreeLinks_t is 4 indices wide: 8 bytes for uint16 indices, 16 for
+	// uint32. The map's own Node_t then starts with the CGlobalSymbol key (8b)
+	// before the inline CCitadelWeaponInfo value.
+	constexpr std::ptrdiff_t kNodeValueOffsets[] = { 0x08 + 0x08, 0x10 + 0x08 };
+
+	constexpr float kMinBulletSpeedHu = 1000.0f;
+	constexpr float kMaxBulletSpeedHu = 200000.0f;
+}
+
 // Resolves the local pawn's primary-weapon base bullet speed from the ability
 // VData chain. This is the static-template value: hero stat scaling and item
 // %BulletSpeed bonuses (server-side) aren't included. Resets the cached value
@@ -45,12 +66,38 @@ void EntityList::RefreshPrimaryWeaponBulletSpeed(DMA_Connection* Conn, Process* 
 
 	if (!VDataPtr) { ClearOnFailure(); return; } // engine hasn't populated subclass data yet
 
-	float SpeedHu = 0.0f;
+	std::array<uint64_t, kMapHeaderSize / sizeof(uint64_t)> MapHeader{};
 	m_sr->Clear();
-	m_sr->Add(VDataPtr + Offsets::CitadelAbilityVData::m_flBulletSpeed, &SpeedHu);
+	m_sr->AddRaw(VDataPtr + Offsets::CitadelAbilityVData::m_mapWeaponInfos,
+		static_cast<DWORD>(MapHeader.size() * sizeof(uint64_t)), MapHeader.data());
 	m_sr->Execute();
 
-	if (SpeedHu < 1000.0f || SpeedHu > 200000.0f) { ClearOnFailure(); return; }
+	// One scatter for every (candidate node array, link width) pair.
+	struct Candidate { uintptr_t addr; float speed; };
+	std::vector<Candidate> Candidates;
+	Candidates.reserve(MapHeader.size() * std::size(kNodeValueOffsets));
+	for (uint64_t Slot : MapHeader)
+	{
+		// Heap pointers only — skip the indices, counts and the less-func.
+		if (Slot < 0x10000 || Slot > 0x7FFFFFFFFFFFull) continue;
+		for (std::ptrdiff_t ValueOff : kNodeValueOffsets)
+			Candidates.push_back({ static_cast<uintptr_t>(Slot) + ValueOff
+				+ Offsets::CCitadelWeaponInfo::m_flBulletSpeed, 0.0f });
+	}
+	if (Candidates.empty()) { ClearOnFailure(); return; }
+
+	m_sr->Clear();
+	for (auto& c : Candidates)
+		m_sr->Add(c.addr, &c.speed);
+	m_sr->Execute();
+
+	float SpeedHu = 0.0f;
+	for (const auto& c : Candidates)
+	{
+		if (c.speed >= kMinBulletSpeedHu && c.speed <= kMaxBulletSpeedHu) { SpeedHu = c.speed; break; }
+	}
+
+	if (SpeedHu == 0.0f) { ClearOnFailure(); return; }
 
 	if (g_LocalBulletSpeed.load(std::memory_order_relaxed) != SpeedHu)
 	{

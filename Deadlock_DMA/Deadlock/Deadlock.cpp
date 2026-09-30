@@ -19,7 +19,7 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 	EntityList::FullUpdate(Conn, &Process);
 
 	uintptr_t clientBase = Process.GetModuleBase(GameModules::ClientDll);
-	m_PredictionAddress = Process.ReadMem<uintptr_t>(Conn, clientBase + Offsets::Prediction);
+	m_PredictionAddress = clientBase ? clientBase + Offsets::Prediction : 0;
 	Log::Info("Prediction: 0x{:X}", m_PredictionAddress);
 
 	UpdateLocalPlayerAddresses(Conn);
@@ -156,14 +156,14 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 
 void Deadlock::UpdateServerTime(DMA_Connection* Conn)
 {
-	// Initialize() reads m_PredictionAddress once at startup; if that read
-	// failed (transient scatter miss while the game was still spinning up),
-	// retry here so ServerTime doesn't stay dead for the whole session.
+	// Initialize() derives m_PredictionAddress once at startup; if the module
+	// base wasn't resolved yet (game still spinning up), retry here so
+	// ServerTime doesn't stay dead for the whole session.
 	if (!m_PredictionAddress)
 	{
 		uintptr_t clientBase = Proc().GetModuleBase(GameModules::ClientDll);
-		m_PredictionAddress = Proc().ReadMem<uintptr_t>(Conn, clientBase + Offsets::Prediction);
-		if (!m_PredictionAddress) return;
+		if (!clientBase) return;
+		m_PredictionAddress = clientBase + Offsets::Prediction;
 		Log::Info("Prediction: 0x{:X}", m_PredictionAddress);
 	}
 
