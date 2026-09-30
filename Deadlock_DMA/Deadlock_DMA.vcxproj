@@ -155,6 +155,7 @@
     </ClCompile>
     <ClCompile Include="Deadlock\Classes\C_BaseEntity.cpp" />
     <ClCompile Include="Deadlock\Classes\C_CitadelPlayerPawn.cpp" />
+    <ClCompile Include="Deadlock\Const\HeroSkeletonMap.cpp" />
     <ClInclude Include="Deadlock\Classes\C_NPC_Trooper.h" />
     <ClInclude Include="GUI\Watchdog\GuiWatchdog.h" />
     <ClInclude Include="Deadlock\Const\BoneListTypes.hpp" />
