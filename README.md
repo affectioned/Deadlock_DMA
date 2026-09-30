@@ -20,11 +20,11 @@ This project is intended **strictly for educational and research purposes** — 
 
 - [MemProcFS FPGA](https://github.com/ufrisk/MemProcFS) — DMA hardware driver
 - [Makcu](https://github.com/K4HVH/makcu-cpp) — USB HID mouse controller for aim assist
-- Visual Studio 2022 with C++23 support
+- Visual Studio 2022 or newer, with C++23 support
 
 ## Build
 
-1. Open `Deadlock_DMA.sln` in **Visual Studio 2022**
+1. Open `Deadlock_DMA.sln` in **Visual Studio**
 2. Select **Release | x64**
 3. Build (**Ctrl+Shift+B**)
 
@@ -41,6 +41,46 @@ On first launch the built-in bootstrapper downloads the latest MemProcFS Windows
 | `FTD3XXWU.dll` | MemProcFS |
 
 Makcu C++ is linked statically, so no `makcu-cpp.dll` is needed at runtime.
+
+## Keeping up with game updates
+
+A Deadlock patch can move schema field offsets, the client.dll globals, and the
+hero skeletons. Two things need refreshing, and neither failure mode is loud —
+nothing crashes, the overlay just reads the wrong memory.
+
+**1. Offsets.** `Deadlock/Offsets.cpp` resolves the four client.dll globals by
+signature scan at runtime, each with a hardcoded fallback RVA, so a stale
+fallback only bites if the pattern breaks too. Field offsets in
+`Deadlock/Offsets.h` are plain constants and always need checking.
+
+Both track a [dezlock-dump](https://github.com/dougwithseismic/dezlock-dump)
+schema dump of the current build:
+
+| Dump file | What to check against it |
+|-----------|--------------------------|
+| `client.txt`, `server.txt` | Field offsets — the `FLATTENED` section gives full layouts including inherited fields |
+| `sdk/_patterns.hpp` | Signatures for the global pointers |
+| `sdk/_globals.hpp` | Fallback RVAs for those globals |
+| `_globals.txt` | Globals found by `.data` RTTI scan, for pointers with no pattern |
+
+Watch for fields that stop being a fixed offset rather than simply moving —
+e.g. an inline struct becoming a `CUtlOrderedMap`, whose internals the dump
+does not describe.
+
+**2. Hero bone tables.** `Deadlock/Const/BoneLists.hpp` is generated from the
+game's VPKs by [BoneExtractor](BoneExtractor/README.md) — run it after a patch.
+Bone indices shift often, frequently as a whole-skeleton renumber from one bone
+inserted near the root, which silently aims every hitbox lookup one joint off.
+
+It skips the work when `pak01_dir.vpk`'s hash is unchanged since the last run —
+delete `vpk.cache` to force regeneration.
+
+BoneExtractor locates the VPK through Steam's registry keys and takes no path
+argument, so it expects to run on the machine with the game installed. The game
+may be open at the time; it only reads the pack files. To keep that box
+untouched, copy `game\citadel\pak01_dir.vpk` plus its `pak01_0xx.vpk` chunks to
+the other machine, either mirroring the Steam directory layout or editing
+`VPK_RELATIVE` / `FALLBACK_VPK` at the bottom of the script.
 
 ## Credits
 
