@@ -254,6 +254,18 @@ void EntityList::FullFOWRefresh(DMA_Connection* Conn, Process* Proc)
 		if (!addr) continue;
 		m_FOWVisibleByAddr[addr] = visible;
 	}
+	// One line per team address: how many replicated entries resolved to live
+	// entities. A real team resolves nearly all of them; a handful out of
+	// hundreds means the probe latched onto something that merely looks like
+	// the FOW vector at this offset, and every visibility answer is noise.
+	static uintptr_t s_LoggedTeam = 0;
+	if (s_LoggedTeam != teamAddr)
+	{
+		s_LoggedTeam = teamAddr;
+		Log::Info("[FOW] mapped {}/{} entries for team 0x{:X}",
+			m_FOWVisibleByAddr.size(), count, teamAddr);
+	}
+
 	m_bFOWReady.store(true, std::memory_order_release);
 }
 
