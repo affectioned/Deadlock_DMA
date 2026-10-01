@@ -199,6 +199,7 @@
     <ClCompile Include="DMA\Memory\Process.cpp" />
     <ClCompile Include="DMA\Memory\SigScan.cpp" />
     <ClCompile Include="GUI\Aim Assist\Aim Assist.cpp" />
+    <ClCompile Include="GUI\Aim Assist\Humanizer.cpp" />
     <ClCompile Include="GUI\Watchdog\GuiWatchdog.cpp" />
     <ClCompile Include="GUI\Color Picker\Color Picker.cpp" />
     <ClCompile Include="GUI\Config\Config.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="DMA\Memory\ScatterRead.h" />
     <ClInclude Include="DMA\Memory\SigScan.h" />
     <ClInclude Include="GUI\Aim Assist\Aim Assist.h" />
+    <ClInclude Include="GUI\Aim Assist\Humanizer.h" />
     <ClInclude Include="GUI\Config\Config.h" />
     <ClInclude Include="GUI\Fonts\Data\IBMPlexMono.h" />
     <ClInclude Include="GUI\Fonts\Fonts.h" />

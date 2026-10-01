@@ -94,9 +94,6 @@ namespace
 			// ---- Aim assist --------------------------------------------------
 			B ("AimAssist.bSettings",           "Aim Assist: Show Settings",   &AimAssist::bSettings),
 			B ("AimAssist.bMasterToggle",       "Aim Assist: Enable",          &AimAssist::bMasterToggle),
-			F ("AimAssist.fAlphaX",             "Aim Assist: Smoothing X",     &AimAssist::fAlphaX, 0.01f, 1.0f, "%.3f"),
-			F ("AimAssist.fAlphaY",             "Aim Assist: Smoothing Y",     &AimAssist::fAlphaY, 0.01f, 1.0f, "%.3f"),
-			F ("AimAssist.fGaussianNoise",      "Aim Assist: Noise",           &AimAssist::fGaussianNoise, 0.0f, 5.0f, "%.2f"),
 			F ("AimAssist.fMaxPixelDistance",   "Aim Assist: FOV (pixels)",    &AimAssist::fMaxPixelDistance, 1.0f, 800.0f, "%.0f"),
 			E ("AimAssist.eHitboxSlot",         "Aim Assist: Hitbox",          &AimAssist::eHitboxSlot, kHitboxSlots, IM_ARRAYSIZE(kHitboxSlots)),
 			B ("AimAssist.bDrawMaxFOV",         "Aim Assist: Draw FOV Circle", &AimAssist::bDrawMaxFOV),
@@ -104,6 +101,14 @@ namespace
 			B ("AimAssist.bVisibleOnly",        "Aim Assist: Visible Only",    &AimAssist::bVisibleOnly),
 			B ("AimAssist.bUsePrediction",      "Aim Assist: Lead Prediction", &AimAssist::bUsePrediction),
 			F ("AimAssist.fManualBulletSpeedMs","Aim Assist: Bullet Speed m/s",&AimAssist::fManualBulletSpeedMs, 0.0f, 2000.0f, "%.0f"),
+			F ("AimAssist.fReactionMeanMs",     "Aim Assist: Reaction Mean (ms)",  &AimAssist::fReactionMeanMs, 60.0f, 400.0f, "%.0f"),
+			F ("AimAssist.fReactionStdDevMs",   "Aim Assist: Reaction StdDev (ms)",&AimAssist::fReactionStdDevMs, 0.0f, 120.0f, "%.0f"),
+			F ("AimAssist.fSnapMeanMs",         "Aim Assist: Snap Mean (ms)",      &AimAssist::fSnapMeanMs, 30.0f, 200.0f, "%.0f"),
+			F ("AimAssist.fSnapStdDevMs",       "Aim Assist: Snap StdDev (ms)",    &AimAssist::fSnapStdDevMs, 0.0f, 60.0f, "%.0f"),
+			F ("AimAssist.fSettleAlpha",        "Aim Assist: Settle Alpha",        &AimAssist::fSettleAlpha, 0.02f, 0.80f, "%.2f"),
+			F ("AimAssist.fOvershootChance",    "Aim Assist: Overshoot Chance",    &AimAssist::fOvershootChance, 0.0f, 1.0f, "%.2f"),
+			F ("AimAssist.fVelocityCapPxSec",   "Aim Assist: Velocity Cap (px/s)", &AimAssist::fVelocityCapPxSec, 200.0f, 6000.0f, "%.0f"),
+			F ("AimAssist.fMissChance",         "Aim Assist: Miss Chance",         &AimAssist::fMissChance, 0.0f, 0.35f, "%.3f"),
 
 			// ---- Overlay host ------------------------------------------------
 			B ("Fuser.bMasterToggle",       "Overlay: Enable",          &Fuser::bMasterToggle),

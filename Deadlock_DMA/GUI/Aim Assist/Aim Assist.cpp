@@ -10,6 +10,23 @@
 #include "Makcu/MyMakcu.h"
 #include "Deadlock/Entity List/EntityList.h"
 
+namespace
+{
+	Humanizer::Params CurrentParams()
+	{
+		return Humanizer::Params{
+			AimAssist::fReactionMeanMs,
+			AimAssist::fReactionStdDevMs,
+			AimAssist::fSnapMeanMs,
+			AimAssist::fSnapStdDevMs,
+			AimAssist::fSettleAlpha,
+			AimAssist::fOvershootChance,
+			AimAssist::fVelocityCapPxSec,
+			AimAssist::fMissChance,
+		};
+	}
+}
+
 void AimAssist::RenderSettings()
 {
 	// Reconnect is handled by OnFrame's throttled retry, not tied to opening
@@ -23,12 +40,6 @@ void AimAssist::RenderSettings()
 
 	ImGui::Checkbox("Enable Aim Assist", &bMasterToggle);
 	ImGui::Separator();
-
-	ImGui::SliderFloat("Alpha X", &fAlphaX, 0.01f, 1.0f, "%.2f");
-
-	ImGui::SliderFloat("Alpha Y", &fAlphaY, 0.01f, 1.0f, "%.2f");
-
-	ImGui::SliderFloat("Gaussian Noise", &fGaussianNoise, 0.0f, 2.0f, "%.2f");
 
 	ImGui::SliderFloat("FOV", &fMaxPixelDistance, 10.0f, 500.0f, "%.1f");
 
@@ -45,6 +56,36 @@ void AimAssist::RenderSettings()
 	ImGui::Checkbox("Aim At Orbs", &bAimAtOrbs);
 
 	ImGui::Checkbox("Visible Only", &bVisibleOnly);
+
+	ImGui::SeparatorText("Humanization");
+
+	ImGui::SliderFloat("Reaction Mean (ms)", &fReactionMeanMs, 60.0f, 400.0f, "%.0f");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Delay before the first motion of a new engagement. Clamped to [90, 350] ms.");
+
+	ImGui::SliderFloat("Reaction StdDev (ms)", &fReactionStdDevMs, 0.0f, 120.0f, "%.0f");
+
+	ImGui::SliderFloat("Snap Mean (ms)", &fSnapMeanMs, 30.0f, 200.0f, "%.0f");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Duration of the flick phase, which covers 70-85%% of the angular distance.");
+
+	ImGui::SliderFloat("Snap StdDev (ms)", &fSnapStdDevMs, 0.0f, 60.0f, "%.0f");
+
+	ImGui::SliderFloat("Settle Alpha", &fSettleAlpha, 0.02f, 0.80f, "%.2f");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Closing gain per 5 ms tick after the flick. Lower = slower, softer convergence.");
+
+	ImGui::SliderFloat("Overshoot Chance", &fOvershootChance, 0.0f, 1.0f, "%.2f");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Probability the flick targets 102-108%% of the delta and corrects back.");
+
+	ImGui::SliderFloat("Velocity Cap (px/s)", &fVelocityCapPxSec, 200.0f, 6000.0f, "%.0f");
+
+	ImGui::SliderFloat("Miss Chance", &fMissChance, 0.0f, 0.35f, "%.3f");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Base per-engagement probability of a deliberate near-miss. Scales with range, capped at 0.35.");
+
+	ImGui::SeparatorText("Prediction");
 
 	ImGui::Checkbox("Lead Prediction", &bUsePrediction);
 	if (bUsePrediction)
@@ -66,12 +107,12 @@ void AimAssist::RenderSettings()
 }
 
 
-Vector2 AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen)
+AimAssist::AimTarget AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen)
 {
-	Vector2 BestTargetDelta{};
+	AimTarget Best{};
 	float BestDistance = FLT_MAX;
 
-	auto Consider = [&](const Vector3& WorldPos)
+	auto Consider = [&](const Vector3& WorldPos, uintptr_t Key, float RangeMeters, const Vector3* pOrigin)
 	{
 		Vector2 ScreenPos{};
 		if (!Deadlock::WorldToScreen(WorldPos, ScreenPos)) return;
@@ -80,12 +121,21 @@ Vector2 AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen
 		float Distance = sqrtf(Delta.x * Delta.x + Delta.y * Delta.y);
 
 		if (Distance > fMaxPixelDistance) return;
+		if (Distance >= BestDistance) return;
 
-		if (Distance < BestDistance)
+		// Miss offsets are expressed as a fraction of the target's apparent
+		// size, so a fixed pixel bias doesn't become a range-invariant tell.
+		float RadiusPx = 8.0f;
+		Vector2 OriginScreen{};
+		if (pOrigin && Deadlock::WorldToScreen(*pOrigin, OriginScreen))
 		{
-			BestDistance = Distance;
-			BestTargetDelta = Delta;
+			const float hx = OriginScreen.x - ScreenPos.x;
+			const float hy = OriginScreen.y - ScreenPos.y;
+			RadiusPx = std::max(sqrtf(hx * hx + hy * hy) * 0.10f, 3.0f);
 		}
+
+		BestDistance = Distance;
+		Best = AimTarget{ true, static_cast<uint64_t>(Key), Delta, RangeMeters, RadiusPx };
 	};
 
 	{
@@ -143,7 +193,8 @@ Vector2 AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen
 			if (FinalAimpointIndex < 0) continue;
 
 			const Vector3& Bone = Pawn.m_BonePositions[FinalAimpointIndex];
-			Consider(bPredictEnabled ? LeadPredict(Bone, Pawn.m_Velocity) : Bone);
+			const Vector3 Aimpoint = bPredictEnabled ? LeadPredict(Bone, Pawn.m_Velocity) : Bone;
+			Consider(Aimpoint, Pawn.m_EntityAddress, Pawn.DistanceFromLocalPlayer(true), &Pawn.m_Position);
 		}
 	}
 
@@ -156,12 +207,12 @@ Vector2 AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen
 		for (auto& Orb : EntityList::m_XpOrbs)
 		{
 			if (Orb.IsInvalid() || Orb.IsDormant()) continue;
-			Consider(Orb.m_Position);
+			Consider(Orb.m_Position, Orb.m_EntityAddress, Orb.DistanceFromLocalPlayer(true), nullptr);
 		}
 	}
 
 	GuiWatchdog::DmaStage("Aim Assist/done");
-	return BestTargetDelta;
+	return Best;
 }
 
 void AimAssist::OnFrame(DMA_Connection* Conn)
@@ -182,34 +233,50 @@ void AimAssist::OnFrame(DMA_Connection* Conn)
 		return;
 	}
 
+	if (!bMasterToggle)
+	{
+		m_Humanizer.Reset();
+		return;
+	}
+
 	static auto LastTime = std::chrono::steady_clock::time_point();
 
-	auto CurrentTime = std::chrono::high_resolution_clock::now();
-	auto DeltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(CurrentTime - LastTime).count();
+	const auto CurrentTime = std::chrono::steady_clock::now();
+	const auto Gap = CurrentTime - LastTime;
 
-	if (DeltaTime < 5) return;
+	if (Gap < std::chrono::milliseconds(5)) return;
 
 	LastTime = CurrentTime;
+
+	// OnFrame only runs while the aim key is held, so a long gap means the key
+	// was released — the next press has to pay a fresh reaction delay.
+	if (Gap > std::chrono::milliseconds(250))
+		m_Humanizer.Reset();
+
+	const float DeltaSeconds = std::min(std::chrono::duration<float>(Gap).count(), 0.050f);
 
 	auto WindowSize = Fuser::m_ScreenSize;
 	Vector2 CenterScreen{ WindowSize.x / 2.0f, WindowSize.y / 2.0f };
 
-	Vector2 Delta = GetAimDelta(Conn, CenterScreen);
+	const AimTarget Target = GetAimDelta(Conn, CenterScreen);
 
-	// Lerp from no movement toward full delta
-	// fAlphaX/Y in (0.0, 1.0]: lower = smoother
-	Vector2 MoveAmount{
-		std::lerp(0.0f, Delta.x, fAlphaX),
-		std::lerp(0.0f, Delta.y, fAlphaY)
-	};
+	if (!Target.bValid)
+	{
+		m_Humanizer.Reset();
+		return;
+	}
 
-	// https://en.cppreference.com/w/cpp/numeric/random/normal_distribution.html
-	std::normal_distribution<float> noise(0.0f, fGaussianNoise);
+	const Humanizer::Params Params = CurrentParams();
 
-	MoveAmount.x += noise(gen);
-	MoveAmount.y += noise(gen);
+	if (!m_Humanizer.Armed() || m_Humanizer.Key() != Target.Key)
+		m_Humanizer.Begin(Target.Key, Target.RadiusPx, Target.RangeMeters, Params);
 
-	(void)MyMakcu::m_Device.mouseMove(static_cast<int32_t>(MoveAmount.x), static_cast<int32_t>(MoveAmount.y));
+	const Vector2 Move = m_Humanizer.Step(Target.Delta, DeltaSeconds, Params);
+
+	if (Move.x == 0.0f && Move.y == 0.0f)
+		return;
+
+	(void)MyMakcu::m_Device.mouseMove(static_cast<int32_t>(Move.x), static_cast<int32_t>(Move.y));
 }
 
 void AimAssist::RenderFOVCircle()
