@@ -4,8 +4,6 @@ An open-source DMA client for Valve's **Deadlock**, written in **C++23**.
 
 > **This is an actively maintained fork.** The [original repository](https://github.com/CyN1ckal/Deadlock_DMA) by CyN1ckal has been archived. All ongoing development and bug fixes happen here.
 
-<img width="1920" height="1079" alt="Showcase" src="https://raw.githubusercontent.com/CyN1ckal/Deadlock_DMA/refs/heads/master/Deadlock%201.1.png" />
-
 ## Educational Purpose
 
 This project is intended **strictly for educational and research purposes** — to study Direct Memory Access (DMA) techniques, Source 2 engine internals, and game client architecture. It demonstrates:
