@@ -76,16 +76,22 @@ void EntityList::DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc)
 	}
 	s_CallsSinceFullScan = 0;
 
-	// Scan the entire list 0. Teams aren't guaranteed to live at low indices —
-	// in busy matches the early slots fill with troopers/pawns/etc. and team
-	// entities can land anywhere in the list.
+	// Scan every populated chunk, not just list 0. Teams aren't guaranteed to
+	// live at low indices, and on the 2026-10-01 build list 0 holds 6 of ~74
+	// entities with the team among the rest — a list-0-only scan found nothing
+	// and left FOW dead for the whole session.
 	std::vector<Probe> probes;
 	probes.reserve(MAX_ENTITIES);
-	for (size_t i = 0; i < MAX_ENTITIES; i++)
+	for (size_t l = 0; l < MAX_ENTITY_LISTS; l++)
 	{
-		auto& id = m_CompleteEntityList[0][i];
-		if (!id.pEnt) continue;
-		probes.push_back(Probe{ id.pEnt, 0, 0, 0 });
+		if (m_EntityList_Addresses[l] == 0) continue;
+
+		for (size_t i = 0; i < MAX_ENTITIES; i++)
+		{
+			auto& id = m_CompleteEntityList[l][i];
+			if (!id.pEnt) continue;
+			probes.push_back(Probe{ id.pEnt, 0, 0, 0 });
+		}
 	}
 	if (probes.empty()) return;
 
