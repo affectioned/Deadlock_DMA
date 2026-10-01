@@ -110,6 +110,30 @@ void EntityList::DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc)
 		}
 	}
 
+	// No candidate means IsEntityConfirmedVisible fails closed for the rest of
+	// the session and aim assist silently never fires, so report it with enough
+	// detail to tell "no entities reached the probe" from "the vector is there
+	// but empty". Throttled: this scan runs at the 1Hz FullUpdate cadence.
+	if (!bestAddr)
+	{
+		static int s_NoTeamWarn = 0;
+		if ((s_NoTeamWarn++ % 30) == 0)
+		{
+			int32_t  seenCount = 0;
+			uint64_t seenPtr   = 0;
+			int32_t  seenMax   = 0;
+			for (auto& p : probes)
+			{
+				if (p.count <= seenCount) continue;
+				seenCount = p.count;
+				seenPtr   = p.ptr;
+				seenMax   = p.max;
+			}
+			Log::Warn("[FOW] no team entity — {} probed, best count={} ptr=0x{:X} max={}",
+				probes.size(), seenCount, seenPtr, seenMax);
+		}
+	}
+
 	ETeam bestTeam = ETeam::UNKNOWN;
 	if (bestAddr && bestAddr != m_FOWTeamAddress)
 	{
