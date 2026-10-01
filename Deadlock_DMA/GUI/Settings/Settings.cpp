@@ -98,7 +98,7 @@ namespace
 			E ("AimAssist.eHitboxSlot",         "Aim Assist: Hitbox",          &AimAssist::eHitboxSlot, kHitboxSlots, IM_ARRAYSIZE(kHitboxSlots)),
 			B ("AimAssist.bDrawMaxFOV",         "Aim Assist: Draw FOV Circle", &AimAssist::bDrawMaxFOV),
 			B ("AimAssist.bAimAtOrbs",          "Aim Assist: Target Orbs",     &AimAssist::bAimAtOrbs),
-			B ("AimAssist.bVisibleOnly",        "Aim Assist: Visible Only",    &AimAssist::bVisibleOnly),
+			B ("AimAssist.bAllowAimThroughOcclusion","Aim Assist: Allow Aim Through Occlusion",&AimAssist::bAllowAimThroughOcclusion),
 			B ("AimAssist.bUsePrediction",      "Aim Assist: Lead Prediction", &AimAssist::bUsePrediction),
 			F ("AimAssist.fManualBulletSpeedMs","Aim Assist: Bullet Speed m/s",&AimAssist::fManualBulletSpeedMs, 0.0f, 2000.0f, "%.0f"),
 			F ("AimAssist.fReactionMeanMs",     "Aim Assist: Reaction Mean (ms)",  &AimAssist::fReactionMeanMs, 60.0f, 400.0f, "%.0f"),
@@ -109,6 +109,7 @@ namespace
 			F ("AimAssist.fOvershootChance",    "Aim Assist: Overshoot Chance",    &AimAssist::fOvershootChance, 0.0f, 1.0f, "%.2f"),
 			F ("AimAssist.fVelocityCapPxSec",   "Aim Assist: Velocity Cap (px/s)", &AimAssist::fVelocityCapPxSec, 200.0f, 6000.0f, "%.0f"),
 			F ("AimAssist.fMissChance",         "Aim Assist: Miss Chance",         &AimAssist::fMissChance, 0.0f, 0.35f, "%.3f"),
+			I ("AimAssist.iMinVisibleTicks",    "Aim Assist: Min Visible Ticks",   &AimAssist::iMinVisibleTicks, 1.0f, 10.0f),
 
 			// ---- Overlay host ------------------------------------------------
 			B ("Fuser.bMasterToggle",       "Overlay: Enable",          &Fuser::bMasterToggle),

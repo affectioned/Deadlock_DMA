@@ -6,6 +6,7 @@
 #include "Humanizer.h"
 
 #include <cstdint>
+#include <unordered_map>
 
 
 class AimAssist
@@ -22,7 +23,7 @@ public:
 	static inline HitboxSlot eHitboxSlot{ HitboxSlot::Head };
 	static inline bool bDrawMaxFOV{ true };
 	static inline bool bAimAtOrbs{ false };
-	static inline bool bVisibleOnly{ false };
+	static inline bool bAllowAimThroughOcclusion{ false };
 	static inline bool bIsActive = false;
 
 	// Humanization. Reaction / snap timings are drawn per engagement from
@@ -35,6 +36,7 @@ public:
 	static inline float fOvershootChance{ 0.35f };
 	static inline float fVelocityCapPxSec{ 1800.0f };
 	static inline float fMissChance{ 0.08f };
+	static inline int   iMinVisibleTicks{ 2 };
 
 	// Lead prediction. Auto-detect path reads the base bullet speed from the
 	// local pawn's primary-weapon-ability VData (CCitadelWeaponInfo). That's
@@ -55,7 +57,28 @@ private:
 		float    RadiusPx{ 8.0f };
 	};
 
+	class TargetTracker
+	{
+	public:
+		uint32_t Observe(uint64_t Key, bool bVisible);
+
+	private:
+		struct TargetState
+		{
+			uint32_t Streak{ 0 };
+			uint64_t Seq{ 0 };
+		};
+
+		// LRU bound = 32 — Observe runs under the pawn lock, so a larger map
+		// produces visible stalls under full-match ten-pawn churn.
+		static constexpr size_t kMaxTracked = 32;
+
+		std::unordered_map<uint64_t, TargetState> m_States;
+		uint64_t m_Seq{ 0 };
+	};
+
 	static AimTarget GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen);
 
+	static inline TargetTracker m_Tracker{};
 	static inline Humanizer m_Humanizer{};
 };

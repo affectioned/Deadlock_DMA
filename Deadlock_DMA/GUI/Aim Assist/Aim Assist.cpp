@@ -27,6 +27,29 @@ namespace
 	}
 }
 
+uint32_t AimAssist::TargetTracker::Observe(uint64_t Key, bool bVisible)
+{
+	const uint64_t Now = ++m_Seq;
+
+	auto it = m_States.find(Key);
+	if (it == m_States.end())
+	{
+		if (m_States.size() >= kMaxTracked)
+		{
+			auto Oldest = m_States.begin();
+			for (auto c = m_States.begin(); c != m_States.end(); ++c)
+				if (c->second.Seq < Oldest->second.Seq)
+					Oldest = c;
+			m_States.erase(Oldest);
+		}
+		it = m_States.emplace(Key, TargetState{}).first;
+	}
+
+	it->second.Seq = Now;
+	it->second.Streak = bVisible ? it->second.Streak + 1 : 0;
+	return it->second.Streak;
+}
+
 void AimAssist::RenderSettings()
 {
 	// Reconnect is handled by OnFrame's throttled retry, not tied to opening
@@ -55,7 +78,16 @@ void AimAssist::RenderSettings()
 
 	ImGui::Checkbox("Aim At Orbs", &bAimAtOrbs);
 
-	ImGui::Checkbox("Visible Only", &bVisibleOnly);
+	ImGui::Checkbox("Allow Aim Through Occlusion", &bAllowAimThroughOcclusion);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Was \"Visible Only\", inverted. Off (default) skips every target the\n"
+		                  "FOW oracle has not confirmed visible. On removes the gate entirely,\n"
+		                  "including the minimum-visible-ticks dwell.");
+
+	ImGui::SetNextItemWidth(120.0f);
+	ImGui::SliderInt("Min Visible Ticks", &iMinVisibleTicks, 1, 10);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Consecutive confirmed-visible polls before a target becomes eligible.");
 
 	ImGui::SeparatorText("Humanization");
 
@@ -185,7 +217,12 @@ AimAssist::AimTarget AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2&
 			if (ControllerIt->IsDead())
 				continue;
 
-			if (bVisibleOnly && !EntityList::IsEntityConfirmedVisible(Pawn.m_EntityAddress))
+			const bool bVisible = EntityList::IsEntityConfirmedVisible(Pawn.m_EntityAddress);
+			const uint32_t Streak = m_Tracker.Observe(Pawn.m_EntityAddress, bVisible);
+
+			// Streak is 0 whenever the pawn is occluded, so this one test covers
+			// both the visibility gate and the minimum-dwell requirement.
+			if (!bAllowAimThroughOcclusion && Streak < static_cast<uint32_t>(std::max(iMinVisibleTicks, 1)))
 				continue;
 
 			HitboxSlot slot = eHitboxSlot;
