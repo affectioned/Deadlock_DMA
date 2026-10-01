@@ -104,15 +104,44 @@ void EntityList::DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc)
 	}
 	m_sr->Execute();
 
+	// The count/ptr/max shape alone is not enough to identify a team: an
+	// unrelated entity whose +0x6C8 happens to hold a plausible-looking vector
+	// was latched on the 2026-10-01 build and reported 117 entries, none of
+	// which resolved to a live entity. Score each survivor by how many of its
+	// entries actually resolve and take the best — a real team resolves nearly
+	// all of them, a coincidence resolves none.
 	uintptr_t bestAddr = 0;
 	int32_t   bestCount = 0;
+	int       bestResolved = 0;
+
 	for (auto& p : probes)
 	{
 		if (!ProbePassesSanity(p.count, p.ptr, p.max)) continue;
-		if (p.count > bestCount)
+
+		std::vector<uint8_t> raw(static_cast<size_t>(p.count) * kSTeamFOWEntitySize);
+		m_sr->Clear();
+		m_sr->AddRaw(static_cast<uintptr_t>(p.ptr), static_cast<DWORD>(raw.size()), raw.data());
+		m_sr->Execute();
+
+		int resolved = 0;
+		for (int32_t i = 0; i < p.count; i++)
 		{
-			bestCount = p.count;
-			bestAddr = p.addr;
+			int32_t entIndex = 0;
+			std::memcpy(&entIndex, raw.data() + static_cast<size_t>(i) * kSTeamFOWEntitySize
+				+ Offsets::STeamFOWEntity::m_nEntIndex, 4);
+			if (entIndex <= 0) continue;
+
+			const size_t listIdx  = static_cast<size_t>(entIndex) / MAX_ENTITIES;
+			const size_t entryIdx = static_cast<size_t>(entIndex) % MAX_ENTITIES;
+			if (listIdx >= MAX_ENTITY_LISTS) continue;
+			if (m_CompleteEntityList[listIdx][entryIdx].pEnt) resolved++;
+		}
+
+		if (resolved > bestResolved)
+		{
+			bestResolved = resolved;
+			bestCount    = p.count;
+			bestAddr     = p.addr;
 		}
 	}
 
@@ -135,7 +164,7 @@ void EntityList::DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc)
 				seenPtr   = p.ptr;
 				seenMax   = p.max;
 			}
-			Log::Warn("[FOW] no team entity — {} probed, best count={} ptr=0x{:X} max={}",
+			Log::Warn("[FOW] no team entity — {} probed, best count={} ptr=0x{:X} max={} (none resolved)",
 				probes.size(), seenCount, seenPtr, seenMax);
 		}
 	}
@@ -266,7 +295,11 @@ void EntityList::FullFOWRefresh(DMA_Connection* Conn, Process* Proc)
 			m_FOWVisibleByAddr.size(), count, teamAddr);
 	}
 
-	m_bFOWReady.store(true, std::memory_order_release);
+	// Ready means "this map can answer a visibility question", so an empty map
+	// must not claim it. Declaring ready over nothing makes
+	// IsEntityConfirmedVisible fail closed permanently, which reads as working
+	// aim assist that silently never fires.
+	m_bFOWReady.store(!m_FOWVisibleByAddr.empty(), std::memory_order_release);
 }
 
 bool EntityList::IsEntityVisible(uintptr_t entityAddress)
