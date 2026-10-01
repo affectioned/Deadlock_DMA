@@ -5,12 +5,12 @@
 
 const bool C_BaseEntity::IsFriendly() const
 {
-	if (EntityList::m_LocalControllerIndex < 0)
+	const ETeam LocalTeam = EntityList::GetLocalTeam();
+
+	if (LocalTeam == ETeam::UNKNOWN)
 		return false;
 
-	auto& LocalController = EntityList::m_PlayerControllers[EntityList::m_LocalControllerIndex];
-
-	return m_TeamNum == LocalController.m_TeamNum;
+	return m_TeamNum == LocalTeam;
 }
 
 const bool C_BaseEntity::IsLocalPlayer() const

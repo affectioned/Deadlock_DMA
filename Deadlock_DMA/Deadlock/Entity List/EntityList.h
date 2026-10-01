@@ -127,6 +127,12 @@ public: /* Interface variables */
 	// team-switch windows.
 	static inline std::atomic<bool> m_bFOWReady{ false };
 
+	// Team number of the entity m_FOWTeamAddress points at. The server only
+	// replicates the local team's FOW view, so that entity *is* the local
+	// player's team — which makes this a local-team source that does not go
+	// through the LocalController client.dll global.
+	static inline std::atomic<ETeam> m_FOWLocalTeam{ ETeam::UNKNOWN };
+
 	static void DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc);
 	static void FullFOWRefresh(DMA_Connection* Conn, Process* Proc);
 	// Fail-open on unknown: used for visibility coloring where "no data"
@@ -171,6 +177,9 @@ public: /* Debug features */
 
 public:
 	static ETeam GetLocalPlayerTeam();
+	// Prefers the local controller, falls back to the FOW team entity. Caller
+	// must hold m_ControllerMutex.
+	static ETeam GetLocalTeam();
 	static Vector3 GetLocalPawnPosition();
 	static 	CCitadelPlayerController* GetAssociatedPC(const C_CitadelPlayerPawn& Pawn);
 };

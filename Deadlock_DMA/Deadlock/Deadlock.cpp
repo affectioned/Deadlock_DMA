@@ -112,6 +112,23 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 	// real pawn ptr, so nothing in the pawn scan ever matched and every
 	// DistanceFromLocalPlayer consumer (head circle, distance nametag) broke.
 	uintptr_t newCtrl = Proc().ReadMem<uintptr_t>(Conn, clientBase + Offsets::LocalController);
+
+	// A stale LocalController RVA reads a non-pointer (0xC was the observed
+	// value once the pattern stopped matching). Everything downstream that
+	// answers "who am I" then answers wrong rather than not at all, so reject
+	// the value here and say so once.
+	if (newCtrl && newCtrl < 0x10000)
+	{
+		static bool bWarnedBadCtrl = false;
+		if (!bWarnedBadCtrl)
+		{
+			Log::Warn("[Local] LocalController read 0x{:X} — stale pattern/RVA. "
+			          "Team falls back to the FOW team entity; local-pawn features stay off.", newCtrl);
+			bWarnedBadCtrl = true;
+		}
+		newCtrl = 0;
+	}
+
 	CHandle   hHeroPawn{ 0 };
 	if (newCtrl)
 		hHeroPawn = Proc().ReadMem<CHandle>(Conn,

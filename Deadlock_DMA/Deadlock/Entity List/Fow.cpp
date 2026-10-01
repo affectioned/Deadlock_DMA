@@ -110,11 +110,22 @@ void EntityList::DiscoverFOWTeam(DMA_Connection* Conn, Process* Proc)
 		}
 	}
 
+	ETeam bestTeam = ETeam::UNKNOWN;
+	if (bestAddr && bestAddr != m_FOWTeamAddress)
+	{
+		m_sr->Clear();
+		m_sr->Add(bestAddr + Offsets::C_BaseEntity::m_iTeamNum, &bestTeam);
+		m_sr->Execute();
+		if (bestTeam != ETeam::HIDDEN_KING && bestTeam != ETeam::ARCH_MOTHER)
+			bestTeam = ETeam::UNKNOWN;
+	}
+
 	std::scoped_lock lk(m_FOWMutex);
 	if (bestAddr != m_FOWTeamAddress)
 	{
+		m_FOWLocalTeam.store(bestTeam, std::memory_order_relaxed);
 		if (bestAddr)
-			Log::Info("[FOW] team=0x{:X} n={}", bestAddr, bestCount);
+			Log::Info("[FOW] team=0x{:X} n={} teamnum={}", bestAddr, bestCount, static_cast<int>(bestTeam));
 		else
 			Log::Info("[FOW] team lost (was 0x{:X})", m_FOWTeamAddress);
 		m_FOWTeamAddress = bestAddr;

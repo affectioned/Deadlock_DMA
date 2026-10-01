@@ -88,13 +88,8 @@ const FrameSnapshot& Snapshot::Acquire()
 		snap.pawns       = EntityList::m_PlayerPawns;
 		snap.controllers = EntityList::m_PlayerControllers;
 
-		snap.haveLocalTeam = false;
-		if (EntityList::m_LocalControllerIndex >= 0 &&
-		    EntityList::m_LocalControllerIndex < static_cast<int32_t>(snap.controllers.size()))
-		{
-			snap.localTeam     = snap.controllers[EntityList::m_LocalControllerIndex].m_TeamNum;
-			snap.haveLocalTeam = true;
-		}
+		snap.localTeam     = EntityList::GetLocalTeam();
+		snap.haveLocalTeam = snap.localTeam != ETeam::UNKNOWN;
 
 		// Latched under the lock: the DMA thread rewrites m_LocalPawnIndex on every
 		// FullPawnRefresh, and the extrapolation pass below needs the same index

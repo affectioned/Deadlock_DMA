@@ -160,6 +160,18 @@ ETeam EntityList::GetLocalPlayerTeam()
 	return m_PlayerPawns[m_LocalPawnIndex].m_TeamNum;
 }
 
+ETeam EntityList::GetLocalTeam()
+{
+	if (m_LocalControllerIndex >= 0 && m_LocalControllerIndex < (int)m_PlayerControllers.size())
+	{
+		const ETeam FromController = m_PlayerControllers[m_LocalControllerIndex].m_TeamNum;
+		if (FromController == ETeam::HIDDEN_KING || FromController == ETeam::ARCH_MOTHER)
+			return FromController;
+	}
+
+	return m_FOWLocalTeam.load(std::memory_order_relaxed);
+}
+
 Vector3 EntityList::GetLocalPawnPosition()
 {
 	auto Return = Vector3();
