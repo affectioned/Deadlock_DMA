@@ -105,36 +105,33 @@ bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 
 	uintptr_t clientBase = Proc().GetModuleBase(GameModules::ClientDll);
 
-	// Controller sits in a stable client.dll global; read it and follow
-	// m_hHeroPawn through the entity list to get the pawn pointer. Tried the
-	// CPrediction+LocalPlayerPawn chain from dezlock-dump too — in this build
-	// it lands on a field inside CPrediction itself (~+0x130) rather than a
-	// real pawn ptr, so nothing in the pawn scan ever matched and every
-	// DistanceFromLocalPlayer consumer (head circle, distance nametag) broke.
-	uintptr_t newCtrl = Proc().ReadMem<uintptr_t>(Conn, clientBase + Offsets::LocalController);
+	// Pawn first, controller derived from it. The previous order started at a
+	// hand-made LocalController pattern that had no upstream source and broke
+	// on the 2026-10-01 build, reading 0xC; dwLocalPlayerPawn rides the
+	// CPrediction scan instead, which the dump does publish a pattern for.
+	uintptr_t newPawn = Proc().ReadMem<uintptr_t>(Conn, clientBase + Offsets::LocalPlayerPawn);
 
-	// A stale LocalController RVA reads a non-pointer (0xC was the observed
-	// value once the pattern stopped matching). Everything downstream that
-	// answers "who am I" then answers wrong rather than not at all, so reject
-	// the value here and say so once.
-	if (newCtrl && newCtrl < 0x10000)
+	// Anything that is not a plausible heap pointer means the global moved.
+	// Left unchecked it propagates as a confident wrong answer to every
+	// "who am I" consumer, so drop it here and say so once.
+	if (newPawn && newPawn < 0x10000)
 	{
-		static bool bWarnedBadCtrl = false;
-		if (!bWarnedBadCtrl)
+		static bool bWarnedBadPawn = false;
+		if (!bWarnedBadPawn)
 		{
-			Log::Warn("[Local] LocalController read 0x{:X} — stale pattern/RVA. "
-			          "Team falls back to the FOW team entity; local-pawn features stay off.", newCtrl);
-			bWarnedBadCtrl = true;
+			Log::Warn("[Local] LocalPlayerPawn read 0x{:X} — stale pattern/offset. "
+			          "Team falls back to the FOW team entity; local-pawn features stay off.", newPawn);
+			bWarnedBadPawn = true;
 		}
-		newCtrl = 0;
+		newPawn = 0;
 	}
 
-	CHandle   hHeroPawn{ 0 };
-	if (newCtrl)
-		hHeroPawn = Proc().ReadMem<CHandle>(Conn,
-			newCtrl + Offsets::CCitadelPlayerController::m_hHeroPawn);
+	CHandle hController{ 0 };
+	if (newPawn)
+		hController = Proc().ReadMem<CHandle>(Conn,
+			newPawn + Offsets::C_BasePlayerPawn::m_hController);
 
-	uintptr_t newPawn = EntityList::GetEntityAddressFromHandle(hHeroPawn);
+	uintptr_t newCtrl = EntityList::GetEntityAddressFromHandle(hController);
 
 	// A 0 read here is almost always a transient scatter failure (alt-tab).
 	// Preserve the last-known-good ptrs so visuals don't disappear until the

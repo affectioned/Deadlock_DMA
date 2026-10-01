@@ -48,25 +48,24 @@ bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 	// Patterns and fallback RVAs below track the dezlock-dump schema dump
 	// (sdk/_patterns.hpp + sdk/_globals.hpp) for the current build.
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
-		"GameEntitySystem", Offsets::GameEntitySystem, 0x3CFC7C0,
+		"GameEntitySystem", Offsets::GameEntitySystem, 0x3CFEDA0,
 		"48 8B 1D ? ? ? ? 48 89 1D ? ? ? ? 4C 63 B3", 3, 7);
 
-	// No dump pattern for the local-controller global; fallback RVA comes from
-	// the dump's .data RTTI scan (_globals.txt: CCitadelPlayerController @
-	// client.dll+0x31836E0, pointer).
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
-		"LocalController", Offsets::LocalController, 0x31836E0,
-		"48 3B 35 ? ? ? ? 75 ? 48 C7 05", 3, 7);
-
-	ResolveOffset(Conn, pid, clientBase, clientEnd,
-		"ViewMatrix", Offsets::ViewMatrix, 0x3BC84C0,
+		"ViewMatrix", Offsets::ViewMatrix, 0x3BCAD80,
 		"48 8D 0D ? ? ? ? 48 C1 E0 06", 3, 7);
 
 	// LEA, so this resolves to the CPrediction instance itself — callers use it
 	// directly instead of dereferencing a pointer global as they did before.
 	ResolveOffset(Conn, pid, clientBase, clientEnd,
-		"CPrediction", Offsets::Prediction, 0x3237B80,
+		"CPrediction", Offsets::Prediction, 0x323AE00,
 		"48 8D 05 ? ? ? ? C3 CC CC CC CC CC CC CC CC 40 53 56 41 54", 3, 7);
+
+	// dwLocalPlayerPawn has no pattern of its own in the dump — it is published
+	// as a member of the CPrediction instance, so it rides that scan instead of
+	// carrying an RVA that goes stale on its own schedule.
+	Offsets::LocalPlayerPawn = Offsets::Prediction + Offsets::CPrediction::LocalPlayerPawn;
+	Log::Info("[Off] LocalPlayerPawn=0x{:X}", Offsets::LocalPlayerPawn);
 
 	DbgLog("All offsets resolved.");
 	return true;

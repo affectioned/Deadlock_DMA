@@ -7,14 +7,19 @@ namespace Offsets
 
 	inline constexpr std::ptrdiff_t FirstEntityList = 0x10;
 	inline std::ptrdiff_t GameEntitySystem = 0;
-	inline std::ptrdiff_t LocalController = 0;
 	inline std::ptrdiff_t ViewMatrix = 0;
 	inline std::ptrdiff_t Prediction = 0; // client.dll::CPrediction (the instance itself, not a pointer to it)
+	// Derived from Prediction, never scanned on its own — see ResolveOffsets.
+	inline std::ptrdiff_t LocalPlayerPawn = 0;
 
 	namespace CPrediction
 	{
-		// Field name unconfirmed — not exposed in schema dump, falls in unnamed padding at +0x68 of CPrediction.
+		// Neither field is in the schema dump; both are members of the
+		// CPrediction instance that dwPrediction resolves to.
 		inline constexpr std::ptrdiff_t ServerTime = 0x68;
+		// dezlock-dump emits dwLocalPlayerPawn as "derived from dwPrediction"
+		// with this member offset; the member holds the pawn pointer directly.
+		inline constexpr std::ptrdiff_t LocalPlayerPawn = 0xD8;
 	}
 
 	namespace CGameSceneNode
