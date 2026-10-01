@@ -65,15 +65,18 @@ private:
 	class TargetTracker
 	{
 	public:
-		uint32_t Observe(uint64_t Key, bool bVisible);
-
-	private:
 		struct TargetState
 		{
 			uint32_t Streak{ 0 };
 			uint64_t Seq{ 0 };
+			int16_t  LastBone{ -1 };
 		};
 
+		// unordered_map keeps references valid across insert and across erase of
+		// other keys, so the caller may hold this until its next Observe call.
+		TargetState& Observe(uint64_t Key, bool bVisible);
+
+	private:
 		// LRU bound = 32 — Observe runs under the pawn lock, so a larger map
 		// produces visible stalls under full-match ten-pawn churn.
 		static constexpr size_t kMaxTracked = 32;

@@ -12,6 +12,8 @@
 
 namespace
 {
+	constexpr float kBoneStickinessPx = 6.0f;
+
 	float ConfidenceBias()
 	{
 		return std::clamp(AimAssist::fSessionConfidenceBias, 0.5f, 1.5f);
@@ -37,7 +39,7 @@ float AimAssist::EffectiveFOV()
 	return fMaxPixelDistance * ConfidenceBias();
 }
 
-uint32_t AimAssist::TargetTracker::Observe(uint64_t Key, bool bVisible)
+AimAssist::TargetTracker::TargetState& AimAssist::TargetTracker::Observe(uint64_t Key, bool bVisible)
 {
 	const uint64_t Now = ++m_Seq;
 
@@ -57,7 +59,9 @@ uint32_t AimAssist::TargetTracker::Observe(uint64_t Key, bool bVisible)
 
 	it->second.Seq = Now;
 	it->second.Streak = bVisible ? it->second.Streak + 1 : 0;
-	return it->second.Streak;
+	if (!bVisible)
+		it->second.LastBone = -1;
+	return it->second;
 }
 
 void AimAssist::RenderSettings()
@@ -239,20 +243,52 @@ AimAssist::AimTarget AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2&
 				continue;
 
 			const bool bVisible = EntityList::IsEntityConfirmedVisible(Pawn.m_EntityAddress);
-			const uint32_t Streak = m_Tracker.Observe(Pawn.m_EntityAddress, bVisible);
+			TargetTracker::TargetState& State = m_Tracker.Observe(Pawn.m_EntityAddress, bVisible);
 
 			// Streak is 0 whenever the pawn is occluded, so this one test covers
 			// both the visibility gate and the minimum-dwell requirement.
-			if (!bAllowAimThroughOcclusion && Streak < static_cast<uint32_t>(std::max(iMinVisibleTicks, 1)))
+			if (!bAllowAimThroughOcclusion && State.Streak < static_cast<uint32_t>(std::max(iMinVisibleTicks, 1)))
 				continue;
 
-			HitboxSlot slot = eHitboxSlot;
-			int FinalAimpointIndex = GetHeroBoneSlot(Pawn.GetModelPath(), slot);
-			if (FinalAimpointIndex < 0) continue;
+			if (!Pawn.m_pBoneData) continue;
 
-			const Vector3& Bone = Pawn.m_BonePositions[FinalAimpointIndex];
-			const Vector3 Aimpoint = bPredictEnabled ? LeadPredict(Bone, Pawn.m_Velocity) : Bone;
-			Consider(Aimpoint, Pawn.m_EntityAddress, Pawn.DistanceFromLocalPlayer(true), &Pawn.m_Position);
+			const auto& SlotBones = Pawn.m_pBoneData->slotBones[static_cast<int>(eHitboxSlot)];
+
+			int16_t ChosenBone = -1;
+			float   ChosenScore = FLT_MAX;
+			Vector3 ChosenWorld{};
+
+			for (int16_t BoneIndex : SlotBones)
+			{
+				if (BoneIndex < 0 || BoneIndex >= MAX_BONES) continue;
+
+				const Vector3& Bone = Pawn.m_BonePositions[BoneIndex];
+				const Vector3 World = bPredictEnabled ? LeadPredict(Bone, Pawn.m_Velocity) : Bone;
+
+				Vector2 Screen{};
+				if (!Deadlock::WorldToScreen(World, Screen)) continue;
+
+				const Vector2 D = Screen - CenterScreen;
+				float Score = sqrtf(D.x * D.x + D.y * D.y);
+
+				// Without this the aimpoint flips between two near-equidistant
+				// bones frame to frame, which dithers the emitted delta at tick
+				// rate — a far louder signature than the aim itself.
+				if (BoneIndex == State.LastBone)
+					Score -= kBoneStickinessPx;
+
+				if (Score < ChosenScore)
+				{
+					ChosenScore = Score;
+					ChosenBone  = BoneIndex;
+					ChosenWorld = World;
+				}
+			}
+
+			if (ChosenBone < 0) continue;
+			State.LastBone = ChosenBone;
+
+			Consider(ChosenWorld, Pawn.m_EntityAddress, Pawn.DistanceFromLocalPlayer(true), &Pawn.m_Position);
 		}
 	}
 

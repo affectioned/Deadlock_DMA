@@ -12,8 +12,5 @@
 
 const ModelBoneData* GetHeroBoneData(std::string_view modelPath) noexcept;
 
-// Returns the first bone index for the given slot, or -1 if unavailable.
-int GetHeroBoneSlot(std::string_view modelPath, HitboxSlot slot) noexcept;
-
 // Returns the bone pairs for skeleton drawing, or nullptr if unavailable.
 const std::vector<BonePair>* GetHeroBonePairs(std::string_view modelPath) noexcept;
