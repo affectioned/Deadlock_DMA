@@ -64,9 +64,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 17 },
             /* [1] Neck  */ { 16 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 18 },
-            /* [4] Legs  */ { 35 },
+            /* [2] Torso */ { 8, 7, 10, 15 },
+            /* [3] Arms  */ { 27, 18, 28, 19, 29, 20, 30, 21 },
+            /* [4] Legs  */ { 34, 38, 35, 39, 36, 40 },
         },
     }},
 
@@ -126,9 +126,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 17 },
             /* [1] Neck  */ { 16 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 18 },
-            /* [4] Legs  */ { 36 },
+            /* [2] Torso */ { 8, 7, 10, 15 },
+            /* [3] Arms  */ { 25, 18, 26, 19, 27, 20, 28, 21 },
+            /* [4] Legs  */ { 35, 39, 36, 40, 37, 41 },
         },
     }},
 
@@ -190,9 +190,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 13 },
             /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 27 },
+            /* [2] Torso */ { 8, 10, 7, 11 },
+            /* [3] Arms  */ { 15, 20, 16, 21, 17, 22 },
+            /* [4] Legs  */ { 26, 32, 27, 33, 28, 34 },
         },
     }},
 
@@ -279,10 +279,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 23 },
+            /* [1] Neck  */ { 6, 44 },
+            /* [2] Torso */ { 4, 2, 8, 15, 1 },
+            /* [3] Arms  */ { 9, 16, 10, 17, 11, 18 },
+            /* [4] Legs  */ { 22, 26, 23, 27, 24, 28 },
         },
     }},
 
@@ -360,9 +360,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 6 },
             /* [1] Neck  */ { 5 },
-            /* [2] Torso */ { 0 },
-            /* [3] Arms  */ { 7 },
-            /* [4] Legs  */ { 25 },
+            /* [2] Torso */ { 3, 4, 0 },
+            /* [3] Arms  */ { 19, 16, 17, 15, 8, 9, 10 },
+            /* [4] Legs  */ { 28, 24, 29, 25, 30, 26 },
         },
     }},
 
@@ -446,9 +446,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 9 },
             /* [1] Neck  */ { 8 },
-            /* [2] Torso */ { 3 },
-            /* [3] Arms  */ { 10 },
-            /* [4] Legs  */ { 28 },
+            /* [2] Torso */ { 3, 6, 4, 7 },
+            /* [3] Arms  */ { 11, 16, 12, 17, 13, 18 },
+            /* [4] Legs  */ { 27, 31, 28, 32, 29, 33 },
         },
     }},
 
@@ -510,9 +510,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 7 },
             /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 40 },
+            /* [2] Torso */ { 4, 1 },
+            /* [3] Arms  */ { 8, 12, 9, 13, 14, 10, 11, 15 },
+            /* [4] Legs  */ { 39, 43, 44, 40, 41, 45 },
         },
     }},
 
@@ -595,10 +595,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 55 },
+            /* [1] Neck  */ { 6, 74 },
+            /* [2] Torso */ { 4, 1, 5 },
+            /* [3] Arms  */ { 37, 9, 38, 10, 39, 11 },
+            /* [4] Legs  */ { 54, 60, 55, 61, 56, 62 },
         },
     }},
 
@@ -681,10 +681,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 12 },
-            /* [1] Neck  */ { 11 },
-            /* [2] Torso */ { 6 },
-            /* [3] Arms  */ { 13 },
-            /* [4] Legs  */ { 25 },
+            /* [1] Neck  */ { 11, 36 },
+            /* [2] Torso */ { 9, 7, 6 },
+            /* [3] Arms  */ { 14, 18, 15, 19, 16, 20, 13, 17 },
+            /* [4] Legs  */ { 24, 28, 25, 29, 26, 30 },
         },
     }},
 
@@ -767,10 +767,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 11 },
-            /* [1] Neck  */ { 10 },
-            /* [2] Torso */ { 5 },
-            /* [3] Arms  */ { 12 },
-            /* [4] Legs  */ { 37 },
+            /* [1] Neck  */ { 10, 72 },
+            /* [2] Torso */ { 8, 6, 5 },
+            /* [3] Arms  */ { 13, 21, 14, 22, 15, 23 },
+            /* [4] Legs  */ { 36, 40, 37, 41, 38, 42 },
         },
     }},
 
@@ -881,10 +881,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 14 },
-            /* [1] Neck  */ { 13 },
-            /* [2] Torso */ { 8 },
-            /* [3] Arms  */ { 18 },
-            /* [4] Legs  */ { 64 },
+            /* [1] Neck  */ { 13, 72 },
+            /* [2] Torso */ { 12, 11, 8 },
+            /* [3] Arms  */ { 19, 20, 24, 21, 25 },
+            /* [4] Legs  */ { 63, 67, 64, 68, 65, 69 },
         },
     }},
 
@@ -946,9 +946,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 14 },
             /* [1] Neck  */ { 13 },
-            /* [2] Torso */ { 8 },
-            /* [3] Arms  */ { 16 },
-            /* [4] Legs  */ { 29 },
+            /* [2] Torso */ { 10, 12, 8, 11 },
+            /* [3] Arms  */ { 18, 24, 16 },
+            /* [4] Legs  */ { 29, 34, 30, 35 },
         },
     }},
 
@@ -1008,9 +1008,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 7 },
             /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 20 },
+            /* [2] Torso */ { 1, 4 },
+            /* [3] Arms  */ { 9, 13, 10, 14, 11, 15 },
+            /* [4] Legs  */ { 23, 19, 20, 24, 21, 25 },
         },
     }},
 
@@ -1100,9 +1100,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 30 },
             /* [1] Neck  */ { 29 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 12 },
-            /* [4] Legs  */ { 49 },
+            /* [2] Torso */ { 11, 10, 7 },
+            /* [3] Arms  */ { 13, 18, 12, 14, 19, 20, 15 },
+            /* [4] Legs  */ { 52, 48, 53, 49, 54, 50 },
         },
     }},
 
@@ -1189,10 +1189,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 12 },
-            /* [1] Neck  */ { 11 },
-            /* [2] Torso */ { 6 },
-            /* [3] Arms  */ { 13 },
-            /* [4] Legs  */ { 29 },
+            /* [1] Neck  */ { 11, 40 },
+            /* [2] Torso */ { 7, 9, 6 },
+            /* [3] Arms  */ { 14, 15, 18, 19, 16, 20 },
+            /* [4] Legs  */ { 28, 32, 29, 33, 30, 34 },
         },
     }},
 
@@ -1279,10 +1279,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
-            /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 17 },
-            /* [4] Legs  */ { 38 },
+            /* [1] Neck  */ { 12, 45 },
+            /* [2] Torso */ { 11, 10, 7 },
+            /* [3] Arms  */ { 18, 22, 20, 24, 19, 23 },
+            /* [4] Legs  */ { 37, 41, 38, 42, 39, 43 },
         },
     }},
 
@@ -1369,10 +1369,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 19 },
+            /* [1] Neck  */ { 6, 28 },
+            /* [2] Torso */ { 4, 2, 1 },
+            /* [3] Arms  */ { 13, 9, 14, 10, 15, 11, 8, 12 },
+            /* [4] Legs  */ { 18, 22, 19, 23, 20, 24 },
         },
     }},
 
@@ -1459,10 +1459,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 29 },
+            /* [1] Neck  */ { 6, 42 },
+            /* [2] Torso */ { 4, 2, 1 },
+            /* [3] Arms  */ { 23, 9, 24, 10, 25, 11, 8, 22 },
+            /* [4] Legs  */ { 28, 32, 29, 33, 30, 34 },
         },
     }},
 
@@ -1561,10 +1561,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 14 },
-            /* [1] Neck  */ { 13 },
-            /* [2] Torso */ { 8 },
-            /* [3] Arms  */ { 15 },
-            /* [4] Legs  */ { 35 },
+            /* [1] Neck  */ { 13, 49 },
+            /* [2] Torso */ { 11, 8, 10, 13 },
+            /* [3] Arms  */ { 16, 29, 17, 30, 18, 31 },
+            /* [4] Legs  */ { 34, 38, 35, 39, 36, 40 },
         },
     }},
 
@@ -1647,10 +1647,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 19 },
+            /* [1] Neck  */ { 6, 34 },
+            /* [2] Torso */ { 4, 1 },
+            /* [3] Arms  */ { 9, 13, 10, 14, 11, 15 },
+            /* [4] Legs  */ { 18, 22, 19, 23, 20, 24 },
         },
     }},
 
@@ -1727,9 +1727,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 13 },
             /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 17 },
-            /* [4] Legs  */ { 40 },
+            /* [2] Torso */ { 9, 7 },
+            /* [3] Arms  */ { 18, 23, 19, 24, 20, 25 },
+            /* [4] Legs  */ { 39, 43, 40, 44, 41, 45 },
         },
     }},
 
@@ -1787,9 +1787,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 13 },
             /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 46 },
+            /* [2] Torso */ { 21, 10, 8, 7 },
+            /* [3] Arms  */ { 15, 23, 16, 24, 25, 17, 14, 22 },
+            /* [4] Legs  */ { 45, 50, 46, 51, 47, 52 },
         },
     }},
 
@@ -1847,9 +1847,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 8 },
             /* [1] Neck  */ { 7 },
-            /* [2] Torso */ { 2 },
-            /* [3] Arms  */ { 9 },
-            /* [4] Legs  */ { 19 },
+            /* [2] Torso */ { 5, 2 },
+            /* [3] Arms  */ { 9, 14, 10, 15, 16, 11, 12, 17 },
+            /* [4] Legs  */ { 22, 18, 19, 23, 24, 20 },
         },
     }},
 
@@ -1938,10 +1938,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
-            /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 29 },
+            /* [1] Neck  */ { 12, 46, 47 },
+            /* [2] Torso */ { 10, 7, 11 },
+            /* [3] Arms  */ { 15, 22, 16, 23, 17, 24 },
+            /* [4] Legs  */ { 34, 28, 35, 29, 30, 36 },
         },
     }},
 
@@ -2003,9 +2003,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 13 },
             /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 38 },
+            /* [2] Torso */ { 10, 7, 8, 11 },
+            /* [3] Arms  */ { 17, 21, 16, 20, 18, 14, 19, 15 },
+            /* [4] Legs  */ { 37, 41, 42, 38, 39, 43 },
         },
     }},
 
@@ -2061,9 +2061,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 7 },
             /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 11 },
-            /* [4] Legs  */ { 33 },
+            /* [2] Torso */ { 1, 2, 3, 5 },
+            /* [3] Arms  */ { 11, 19 },
+            /* [4] Legs  */ { 33, 34, 44, 45 },
         },
     }},
 
@@ -2121,9 +2121,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 13 },
             /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 28 },
+            /* [2] Torso */ { 10, 8, 11, 7 },
+            /* [3] Arms  */ { 15, 19, 14, 16, 18, 20, 17, 21 },
+            /* [4] Legs  */ { 27, 31, 28, 32, 29, 33 },
         },
     }},
 
@@ -2181,9 +2181,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 7 },
             /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 22 },
+            /* [2] Torso */ { 2, 4, 1 },
+            /* [3] Arms  */ { 13, 9, 10, 14, 11, 15 },
+            /* [4] Legs  */ { 21, 25, 22, 26, 23, 27 },
         },
     }},
 
@@ -2268,10 +2268,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 11 },
-            /* [1] Neck  */ { 10 },
-            /* [2] Torso */ { 5 },
-            /* [3] Arms  */ { 12 },
-            /* [4] Legs  */ { 31 },
+            /* [1] Neck  */ { 10, 39, 40 },
+            /* [2] Torso */ { 6, 8, 5, 12, 16 },
+            /* [3] Arms  */ { 13, 17, 14, 18, 15, 19 },
+            /* [4] Legs  */ { 30, 34, 31, 35, 32, 36 },
         },
     }},
 
@@ -2338,10 +2338,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 18 },
-            /* [1] Neck  */ { 17 },
-            /* [2] Torso */ { 12 },
-            /* [3] Arms  */ { 19 },
-            /* [4] Legs  */ { 38 },
+            /* [1] Neck  */ { 17, 58 },
+            /* [2] Torso */ { 16, 12, 13 },
+            /* [3] Arms  */ { 20, 29, 19, 21, 30, 28, 22, 31 },
+            /* [4] Legs  */ { 37, 41, 38, 42, 39, 43 },
         },
     }},
 
@@ -2428,10 +2428,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 19 },
+            /* [1] Neck  */ { 6, 42 },
+            /* [2] Torso */ { 5, 1, 2 },
+            /* [3] Arms  */ { 9, 13, 8, 10, 14, 12, 11, 15 },
+            /* [4] Legs  */ { 18, 22, 19, 23, 20, 24 },
         },
     }},
 
@@ -2493,9 +2493,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 13 },
             /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 47 },
-            /* [4] Legs  */ { 58 },
+            /* [2] Torso */ { 10, 7, 8 },
+            /* [3] Arms  */ { 48, 52, 49, 53, 47, 51, 50, 54 },
+            /* [4] Legs  */ { 61, 57, 62, 58, 59, 63 },
         },
     }},
 
@@ -2582,10 +2582,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 8 },
-            /* [1] Neck  */ { 7 },
-            /* [2] Torso */ { 2 },
-            /* [3] Arms  */ { 9 },
-            /* [4] Legs  */ { 27 },
+            /* [1] Neck  */ { 7, 34 },
+            /* [2] Torso */ { 2, 5, 3, 6 },
+            /* [3] Arms  */ { 10, 15, 11, 16, 12, 17 },
+            /* [4] Legs  */ { 26, 30, 27, 31, 28, 32 },
         },
     }},
 
@@ -2667,9 +2667,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 34 },
             /* [1] Neck  */ { 33 },
-            /* [2] Torso */ { 5 },
-            /* [3] Arms  */ { 18 },
-            /* [4] Legs  */ { 7 },
+            /* [2] Torso */ { 5, 16, 17 },
+            /* [3] Arms  */ { 19, 23, 20, 24, 21, 25 },
+            /* [4] Legs  */ { 7, 11, 6, 10, 8, 12 },
         },
     }},
 
@@ -2758,10 +2758,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 9 },
-            /* [4] Legs  */ { 27 },
+            /* [1] Neck  */ { 6, 179, 185 },
+            /* [2] Torso */ { 4, 2, 9, 17, 1 },
+            /* [3] Arms  */ { 10, 18, 11, 19, 12, 20 },
+            /* [4] Legs  */ { 26, 30, 27, 31, 28, 32 },
         },
     }},
 
@@ -2857,9 +2857,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 17 },
             /* [1] Neck  */ { 16 },
-            /* [2] Torso */ { 11 },
-            /* [3] Arms  */ { 18 },
-            /* [4] Legs  */ { 32 },
+            /* [2] Torso */ { 14, 11, 15 },
+            /* [3] Arms  */ { 27, 19, 28, 20, 29, 21 },
+            /* [4] Legs  */ { 35, 31, 36, 32, 37, 33 },
         },
     }},
 
@@ -2909,11 +2909,11 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "pelvis",   7 },
         },
         /* slotBones */ {
-            /* [0] Head  */ {},
+            /* [0] Head  */ { 44, 51 },
             /* [1] Neck  */ {},
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ {},
-            /* [4] Legs  */ { 9 },
+            /* [2] Torso */ { 31, 33, 43, 7, 45, 50 },
+            /* [3] Arms  */ { 40, 36, 41, 42, 37, 38 },
+            /* [4] Legs  */ { 8, 11, 10, 14, 17, 16, 13, 19, 27, 23, 9, 15, 28, 24, 12, 18, 29, 25, 30, 26 },
         },
     }},
 
@@ -3001,9 +3001,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 22 },
             /* [1] Neck  */ { 21 },
-            /* [2] Torso */ { 16 },
-            /* [3] Arms  */ { 23 },
-            /* [4] Legs  */ { 33 },
+            /* [2] Torso */ { 19, 16, 20 },
+            /* [3] Arms  */ { 24, 28, 25, 29, 26, 30 },
+            /* [4] Legs  */ { 32, 36, 33, 37, 34, 38 },
         },
     }},
 
@@ -3035,8 +3035,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ {},
-            /* [1] Neck  */ { 2 },
-            /* [2] Torso */ { 29 },
+            /* [1] Neck  */ { 2, 3, 4, 5, 6 },
+            /* [2] Torso */ { 29, 30, 31, 32, 33, 34 },
             /* [3] Arms  */ {},
             /* [4] Legs  */ {},
         },
@@ -3119,10 +3119,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 15 },
-            /* [1] Neck  */ { 14 },
-            /* [2] Torso */ { 9 },
-            /* [3] Arms  */ { 16 },
-            /* [4] Legs  */ { 25 },
+            /* [1] Neck  */ { 14, 64, 65 },
+            /* [2] Torso */ { 10, 11, 9, 12, 13, 16, 20, 14 },
+            /* [3] Arms  */ { 17, 21, 19, 23, 18, 22 },
+            /* [4] Legs  */ { 24, 28, 25, 29, 26, 30, 27, 31 },
         },
     }},
 
@@ -3215,10 +3215,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 12 },
-            /* [1] Neck  */ { 11 },
-            /* [2] Torso */ { 6 },
-            /* [3] Arms  */ { 13 },
-            /* [4] Legs  */ { 45 },
+            /* [1] Neck  */ { 11, 83, 84 },
+            /* [2] Torso */ { 7, 9, 6, 19, 13 },
+            /* [3] Arms  */ { 20, 14, 21, 15, 22, 16 },
+            /* [4] Legs  */ { 49, 44, 50, 45, 51, 46 },
         },
     }},
 
@@ -3309,10 +3309,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 21 },
-            /* [1] Neck  */ { 20 },
-            /* [2] Torso */ { 15 },
-            /* [3] Arms  */ { 22 },
-            /* [4] Legs  */ { 34 },
+            /* [1] Neck  */ { 20, 55 },
+            /* [2] Torso */ { 18, 16, 15 },
+            /* [3] Arms  */ { 23, 27, 24, 28, 25, 29, 22, 26 },
+            /* [4] Legs  */ { 33, 37, 34, 38, 35, 39 },
         },
     }},
 
@@ -3403,10 +3403,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 18 },
-            /* [1] Neck  */ { 17 },
-            /* [2] Torso */ { 4 },
-            /* [3] Arms  */ { 9 },
-            /* [4] Legs  */ { 24 },
+            /* [1] Neck  */ { 17, 85 },
+            /* [2] Torso */ { 5, 7, 4, 9, 13 },
+            /* [3] Arms  */ { 10, 14, 11, 15, 12, 16 },
+            /* [4] Legs  */ { 23, 27, 24, 28, 25, 29 },
         },
     }},
 
@@ -3483,9 +3483,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 24 },
             /* [1] Neck  */ { 23 },
-            /* [2] Torso */ { 18 },
-            /* [3] Arms  */ { 28 },
-            /* [4] Legs  */ { 44 },
+            /* [2] Torso */ { 20, 18 },
+            /* [3] Arms  */ { 29, 34, 30, 35, 31, 36 },
+            /* [4] Legs  */ { 43, 47, 44, 48, 45, 49 },
         },
     }},
 
@@ -3571,11 +3571,11 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "spine_3",  10 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 12 },
-            /* [1] Neck  */ { 11 },
-            /* [2] Torso */ { 6 },
-            /* [3] Arms  */ { 13 },
-            /* [4] Legs  */ { 23 },
+            /* [0] Head  */ { 6 },
+            /* [1] Neck  */ { 11, 65 },
+            /* [2] Torso */ { 6, 7, 8, 9, 10 },
+            /* [3] Arms  */ { 13, 15, 17, 19, 93, 94, 126, 127 },
+            /* [4] Legs  */ { 23, 24, 27, 28 },
         },
     }},
 
@@ -3665,11 +3665,11 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "spine_3",   9 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 11 },
-            /* [1] Neck  */ { 10 },
-            /* [2] Torso */ { 5 },
-            /* [3] Arms  */ { 16 },
-            /* [4] Legs  */ { 35 },
+            /* [0] Head  */ { 11, 15, 14 },
+            /* [1] Neck  */ { 10, 59 },
+            /* [2] Torso */ { 5, 8, 6 },
+            /* [3] Arms  */ { 17, 30, 16, 29, 18, 31, 19, 32 },
+            /* [4] Legs  */ { 34, 35, 39, 38, 36, 40 },
         },
     }},
 
@@ -3762,10 +3762,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 17 },
-            /* [1] Neck  */ { 16 },
-            /* [2] Torso */ { 11 },
-            /* [3] Arms  */ { 20 },
-            /* [4] Legs  */ { 30 },
+            /* [1] Neck  */ { 16, 41, 42 },
+            /* [2] Torso */ { 14, 12, 11 },
+            /* [3] Arms  */ { 25, 21, 26, 22, 27, 23 },
+            /* [4] Legs  */ { 29, 33, 30, 34, 31, 35 },
         },
     }},
 
@@ -3852,10 +3852,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 12 },
-            /* [1] Neck  */ { 11 },
-            /* [2] Torso */ { 6 },
-            /* [3] Arms  */ { 13 },
-            /* [4] Legs  */ { 27 },
+            /* [1] Neck  */ { 11, 60 },
+            /* [2] Torso */ { 9, 7, 6 },
+            /* [3] Arms  */ { 14, 19, 13, 18, 15, 20, 16, 21 },
+            /* [4] Legs  */ { 26, 30, 27, 31, 28, 32 },
         },
     }},
 
@@ -3942,10 +3942,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 12 },
-            /* [1] Neck  */ { 11 },
-            /* [2] Torso */ { 6 },
-            /* [3] Arms  */ { 13 },
-            /* [4] Legs  */ { 39 },
+            /* [1] Neck  */ { 11, 53 },
+            /* [2] Torso */ { 9, 7, 6 },
+            /* [3] Arms  */ { 14, 22, 15, 23, 16, 24 },
+            /* [4] Legs  */ { 38, 42, 39, 43, 40, 44 },
         },
     }},
 
@@ -4032,10 +4032,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 19 },
+            /* [1] Neck  */ { 6, 28 },
+            /* [2] Torso */ { 4, 2, 1 },
+            /* [3] Arms  */ { 13, 9, 14, 10, 15, 11, 8, 12 },
+            /* [4] Legs  */ { 18, 22, 19, 23, 20, 24 },
         },
     }},
 
@@ -4125,9 +4125,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 29 },
             /* [1] Neck  */ { 28 },
-            /* [2] Torso */ { 6 },
-            /* [3] Arms  */ { 11 },
-            /* [4] Legs  */ { 48 },
+            /* [2] Torso */ { 10, 9, 6 },
+            /* [3] Arms  */ { 12, 17, 11, 13, 18, 19, 14 },
+            /* [4] Legs  */ { 51, 47, 52, 48, 53, 49 },
         },
     }},
 
@@ -4189,9 +4189,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 13 },
             /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 38 },
+            /* [2] Torso */ { 10, 7, 8, 11 },
+            /* [3] Arms  */ { 17, 21, 16, 20, 18, 14, 19, 15 },
+            /* [4] Legs  */ { 37, 41, 42, 38, 39, 43 },
         },
     }},
 
@@ -4280,10 +4280,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
-            /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 29 },
+            /* [1] Neck  */ { 12, 48, 49 },
+            /* [2] Torso */ { 10, 8, 7 },
+            /* [3] Arms  */ { 21, 15, 19, 14, 18, 16, 20, 17 },
+            /* [4] Legs  */ { 28, 32, 29, 33, 30, 34 },
         },
     }},
 
@@ -4374,10 +4374,25 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 39 },
-            /* [1] Neck  */ { 38 },
-            /* [2] Torso */ { 29 },
-            /* [3] Arms  */ { 40 },
-            /* [4] Legs  */ { 31 },
+            /* [1] Neck  */ { 38, 221, 227 },
+            /* [2] Torso */ { 36, 37, 29 },
+            /* [3] Arms  */ { 41, 45, 42, 46, 43, 47 },
+            /* [4] Legs  */ { 30, 66, 31, 67, 32, 68 },
+        },
+    }},
+
+    // models/heroes_wip/mcginnis/turret/turret.vmdl
+    { "models/heroes_wip/mcginnis/turret/turret.vmdl", {
+        /* pairs */ {
+        },
+        /* ids */ {
+        },
+        /* slotBones */ {
+            /* [0] Head  */ {},
+            /* [1] Neck  */ {},
+            /* [2] Torso */ { 2, 3, 5, 7, 11, 14, 17, 20 },
+            /* [3] Arms  */ {},
+            /* [4] Legs  */ {},
         },
     }},
 
@@ -4479,9 +4494,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 13 },
             /* [1] Neck  */ { 12 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 14 },
-            /* [4] Legs  */ { 27 },
+            /* [2] Torso */ { 10, 7, 11 },
+            /* [3] Arms  */ { 15, 23, 16, 24, 17, 25 },
+            /* [4] Legs  */ { 26, 30, 27, 31, 28, 32 },
         },
     }},
 
@@ -4567,9 +4582,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 7 },
             /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 17 },
+            /* [2] Torso */ { 4, 2, 1 },
+            /* [3] Arms  */ { 13, 9, 14, 10, 11, 15, 12, 8 },
+            /* [4] Legs  */ { 16, 19, 17, 20, 18, 21 },
         },
     }},
 
@@ -4627,9 +4642,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 5 },
             /* [1] Neck  */ { 4 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 6 },
-            /* [4] Legs  */ { 18 },
+            /* [2] Torso */ { 1, 3 },
+            /* [3] Arms  */ { 8, 12 },
+            /* [4] Legs  */ { 18, 22 },
         },
     }},
 
@@ -4724,10 +4739,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 34 },
-            /* [1] Neck  */ { 33 },
-            /* [2] Torso */ { 7 },
-            /* [3] Arms  */ { 20 },
-            /* [4] Legs  */ { 9 },
+            /* [1] Neck  */ { 33, 194, 257, 258 },
+            /* [2] Torso */ { 18, 16, 7, 28, 20 },
+            /* [3] Arms  */ { 29, 24, 30, 25, 31, 26 },
+            /* [4] Legs  */ { 12, 13, 8, 9, 14, 10 },
         },
     }},
 
@@ -4816,10 +4831,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 14 },
-            /* [1] Neck  */ { 13 },
-            /* [2] Torso */ { 8 },
-            /* [3] Arms  */ { 15 },
-            /* [4] Legs  */ { 30 },
+            /* [1] Neck  */ { 13, 47, 48 },
+            /* [2] Torso */ { 11, 8, 12 },
+            /* [3] Arms  */ { 16, 23, 17, 24, 18, 25 },
+            /* [4] Legs  */ { 35, 29, 36, 30, 31, 37 },
         },
     }},
 
@@ -4906,10 +4921,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 18 },
-            /* [1] Neck  */ { 17 },
-            /* [2] Torso */ { 8 },
-            /* [3] Arms  */ { 20 },
-            /* [4] Legs  */ { 10 },
+            /* [1] Neck  */ { 17, 94 },
+            /* [2] Torso */ { 13, 15, 8 },
+            /* [3] Arms  */ { 21, 22, 28, 29, 23, 30 },
+            /* [4] Legs  */ { 9, 42, 10, 43, 11, 44 },
         },
     }},
 
@@ -5003,9 +5018,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
         /* slotBones */ {
             /* [0] Head  */ { 7 },
             /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 10 },
-            /* [4] Legs  */ { 22 },
+            /* [2] Torso */ { 4, 2, 1 },
+            /* [3] Arms  */ { 12, 18, 11, 17, 13, 19 },
+            /* [4] Legs  */ { 21, 25, 22, 26, 23, 27 },
         },
     }},
 
@@ -5095,11 +5110,11 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "spine_3",   5 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 9 },
-            /* [4] Legs  */ { 26 },
+            /* [0] Head  */ { 7, 6 },
+            /* [1] Neck  */ { 6, 38 },
+            /* [2] Torso */ { 4, 1, 5, 3, 2 },
+            /* [3] Arms  */ { 10, 16, 11, 17, 12, 18 },
+            /* [4] Legs  */ { 25, 29, 26, 30, 28, 32, 27, 31 },
         },
     }},
 
@@ -5192,10 +5207,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 11 },
-            /* [1] Neck  */ { 10 },
-            /* [2] Torso */ { 5 },
-            /* [3] Arms  */ { 13 },
-            /* [4] Legs  */ { 24 },
+            /* [1] Neck  */ { 10, 81, 82 },
+            /* [2] Torso */ { 7, 9, 5 },
+            /* [3] Arms  */ { 15, 19, 13 },
+            /* [4] Legs  */ { 24, 28, 29, 25 },
         },
     }},
 
@@ -5282,10 +5297,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 16 },
-            /* [1] Neck  */ { 15 },
-            /* [2] Torso */ { 6 },
-            /* [3] Arms  */ { 17 },
-            /* [4] Legs  */ { 8 },
+            /* [1] Neck  */ { 15, 53 },
+            /* [2] Torso */ { 13, 6, 12, 15 },
+            /* [3] Arms  */ { 18, 23, 19, 24, 20, 25 },
+            /* [4] Legs  */ { 7, 32, 8, 33, 9, 34 },
         },
     }},
 
@@ -5374,10 +5389,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 31 },
-            /* [1] Neck  */ { 30 },
-            /* [2] Torso */ { 5 },
-            /* [3] Arms  */ { 20 },
-            /* [4] Legs  */ { 7 },
+            /* [1] Neck  */ { 30, 106 },
+            /* [2] Torso */ { 18, 16, 5 },
+            /* [3] Arms  */ { 26, 21, 28, 23, 27, 22 },
+            /* [4] Legs  */ { 6, 11, 7, 12, 8, 10, 13 },
         },
     }},
 
@@ -5468,10 +5483,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 10 },
-            /* [1] Neck  */ { 9 },
-            /* [2] Torso */ { 4 },
-            /* [3] Arms  */ { 11 },
-            /* [4] Legs  */ { 22 },
+            /* [1] Neck  */ { 9, 49 },
+            /* [2] Torso */ { 5, 7, 4 },
+            /* [3] Arms  */ { 17, 12, 18, 13, 19, 14 },
+            /* [4] Legs  */ { 25, 21, 26, 22, 27, 23 },
         },
     }},
 
@@ -5562,10 +5577,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 68 },
-            /* [1] Neck  */ { 67 },
-            /* [2] Torso */ { 54 },
-            /* [3] Arms  */ { 99 },
-            /* [4] Legs  */ { 56 },
+            /* [1] Neck  */ { 67, 90 },
+            /* [2] Torso */ { 54, 63, 64, 65, 66 },
+            /* [3] Arms  */ { 99, 101, 130, 131, 137, 143, 145, 174, 175, 178 },
+            /* [4] Legs  */ { 56, 58, 59, 216 },
         },
     }},
 
@@ -5652,10 +5667,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 19 },
+            /* [1] Neck  */ { 6, 43 },
+            /* [2] Torso */ { 5, 1, 2 },
+            /* [3] Arms  */ { 9, 13, 8, 10, 14, 12, 11, 15 },
+            /* [4] Legs  */ { 18, 22, 19, 23, 20, 24 },
         },
     }},
 
@@ -5742,10 +5757,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
-            /* [1] Neck  */ { 6 },
-            /* [2] Torso */ { 1 },
-            /* [3] Arms  */ { 8 },
-            /* [4] Legs  */ { 17 },
+            /* [1] Neck  */ { 6, 40 },
+            /* [2] Torso */ { 5, 1, 2 },
+            /* [3] Arms  */ { 9, 13, 8, 10, 14, 12, 11, 15 },
+            /* [4] Legs  */ { 16, 20, 17, 21, 18, 22 },
         },
     }},
 

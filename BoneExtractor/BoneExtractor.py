@@ -97,16 +97,16 @@ def find_vpk(relative: str) -> str | None:
 # Source2 resource file: extract DATA block
 # ──────────────────────────────────────────────────────────────────
 
-def extract_data_block(resource_bytes: bytes) -> bytes | None:
-    """Pull the raw DATA block bytes out of a compiled Source2 resource file."""
+def iter_blocks(resource_bytes: bytes, tag: bytes):
+    """Yield the raw bytes of every block carrying `tag` in a Source2 resource."""
     if len(resource_bytes) < 16:
-        return None
+        return
 
     # Header: uint32 fileSize, uint16 headerVersion, uint16 version,
     #         uint32 blockOffset, uint32 blockCount
     header_version = struct.unpack_from("<H", resource_bytes, 4)[0]
     if header_version != 12:
-        return None
+        return
 
     block_offset, block_count = struct.unpack_from("<II", resource_bytes, 8)
     # blockOffset is relative to position 8 (where blockOffset field lives)
@@ -115,18 +115,64 @@ def extract_data_block(resource_bytes: bytes) -> bytes | None:
     for i in range(block_count):
         entry = table_start + i * 12
         if entry + 12 > len(resource_bytes):
-            break
-        tag = resource_bytes[entry:entry + 4]
-        if tag != b"DATA":
+            return
+        if resource_bytes[entry:entry + 4] != tag:
             continue
         rel_off, size = struct.unpack_from("<II", resource_bytes, entry + 4)
         # rel_off is relative to the position of the offset field itself (entry+4)
         abs_off = (entry + 4) + rel_off
         if abs_off + size > len(resource_bytes):
-            return None
-        return resource_bytes[abs_off: abs_off + size]
+            return
+        yield resource_bytes[abs_off: abs_off + size]
 
-    return None
+
+def extract_data_block(resource_bytes: bytes) -> bytes | None:
+    """Pull the raw DATA block bytes out of a compiled Source2 resource file."""
+    return next(iter_blocks(resource_bytes, b"DATA"), None)
+
+
+def collect_hitboxes(resource_bytes: bytes) -> list[tuple[str, int, float]]:
+    """
+    Gather (bone name, group id, shape radius) for the "default" hitbox set.
+
+    These live in the embedded mesh (MDAT) blocks under `m_hitboxsets`, keyed
+    by set name. The model's own DATA block has no m_HitboxSets and its
+    m_refPhysicsHitboxData is empty for every hero, so reading only DATA
+    yields nothing and every slot silently degrades to the name fallback.
+    """
+    out: list[tuple[str, int, float]] = []
+    seen: set[str] = set()
+
+    for blob in iter_blocks(resource_bytes, b"MDAT"):
+        try:
+            root = kv3.read(io.BytesIO(blob))
+        except Exception:
+            continue
+
+        mesh = root.value if hasattr(root, "value") else root
+
+        for entry in _kv_get(mesh, "m_hitboxsets", default=[]) or []:
+            if not isinstance(entry, dict):
+                continue
+            hb_set = entry.get("value")
+            if not isinstance(hb_set, dict):
+                continue
+            set_name = str(hb_set.get("m_name") or entry.get("key") or "").lower()
+            if set_name != "default":
+                continue
+
+            for hb in hb_set.get("m_HitBoxes") or []:
+                if not isinstance(hb, dict):
+                    continue
+                bone_name = str(hb.get("m_sBoneName", "")).lower()
+                if not bone_name or bone_name in seen:
+                    continue
+                seen.add(bone_name)
+                out.append((bone_name,
+                            int(hb.get("m_nGroupId", 0)),
+                            float(hb.get("m_flShapeRadius", 0.0))))
+
+    return out
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -189,9 +235,10 @@ def _kv_get(obj, *keys, default=None):
     return obj
 
 
-def extract_model_data(root) -> dict | None:
+def extract_model_data(root, hitboxes: list[tuple[str, int, float]]) -> dict | None:
     """
     Extract bone pairs, bone IDs, and hitbox slot data from a parsed KV3 root.
+    `hitboxes` comes from collect_hitboxes() over the same resource.
     Returns a dict with keys 'pairs', 'ids', 'slot_bones', or None on failure.
     """
     # keyvalues3 returns either a KV3File (subscriptable) or a plain dict
@@ -235,39 +282,30 @@ def extract_model_data(root) -> dict | None:
     groups: list[list[tuple[int, str, float]]] = [[] for _ in range(SLOT_COUNT)]
     seen_per_slot: list[set[int]] = [set() for _ in range(SLOT_COUNT)]
 
-    hitbox_sets = _kv_get(data, "m_HitboxSets", default=[])
-    for hb_set in hitbox_sets:
-        if not isinstance(hb_set, dict):
-            continue
-        if str(hb_set.get("m_name", "")).lower() != "default":
+    for bone_name, group_id, radius in hitboxes:
+        slot = _classify_hitbox(group_id, bone_name)
+        if slot < 0:
             continue
 
-        for hb in hb_set.get("m_HitBoxes", []):
-            if not isinstance(hb, dict):
-                continue
-            bone_name  = str(hb.get("m_sBoneName", "")).lower()
-            group_id   = int(hb.get("m_nGroupId", 0))
-            radius     = float(hb.get("m_flShapeRadius", 0.0))
+        bone_idx = next((i for i, (n, _) in enumerate(bones) if n == bone_name), None)
+        if bone_idx is None:
+            continue
+        if bone_idx in seen_per_slot[slot]:
+            continue
+        seen_per_slot[slot].add(bone_idx)
+        groups[slot].append((bone_idx, bone_name, radius))
 
-            slot = _classify_hitbox(group_id, bone_name)
-            if slot < 0:
-                continue
-
-            bone_idx = next((i for i, (n, _) in enumerate(bones) if n == bone_name), None)
-            if bone_idx is None:
-                continue
-            if bone_idx in seen_per_slot[slot]:
-                continue
-            seen_per_slot[slot].add(bone_idx)
-            groups[slot].append((bone_idx, bone_name, radius))
-
-        break  # found "default" set
-
-    # Fallback: fill empty slots from skeleton by name
+    # Fallback by bone name, for slots the hitbox set never covered. Snapshot
+    # which slots are empty first — appending here must not stop the loop from
+    # collecting the rest of that slot's bones.
+    empty_slots = {s for s in range(SLOT_COUNT) if not groups[s]}
     for i, (name, _) in enumerate(bones):
         slot = _classify_by_name(name)
-        if slot < 0 or groups[slot]:
+        if slot < 0 or slot not in empty_slots:
             continue
+        if i in seen_per_slot[slot]:
+            continue
+        seen_per_slot[slot].add(i)
         groups[slot].append((i, name, 0.0))
 
     # Sort each group by radius descending
@@ -454,7 +492,7 @@ def main():
                 continue
 
             root   = kv3.read(io.BytesIO(data))
-            model  = extract_model_data(root)
+            model  = extract_model_data(root, collect_hitboxes(raw))
             if model is None:
                 skipped += 1
                 continue

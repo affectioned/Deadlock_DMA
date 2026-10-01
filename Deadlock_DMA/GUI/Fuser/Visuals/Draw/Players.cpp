@@ -137,7 +137,7 @@ Draw_Players::Box Draw_Players::ComputeBox(const Ctx& c)
 
 	// Fallback: head bone → pawn origin, width from on-screen height.
 	const auto& headSlot = pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
-	if (headSlot.empty()) return box;
+	if (headSlot.empty() || headSlot[0] >= MAX_BONES) return box;
 
 	ImVec2 head;
 	if (!c.snap->Project(pawn.m_BonePositions[headSlot[0]], c.origin, head)) return box;
@@ -329,7 +329,7 @@ void Draw_Players::DrawHeadCircle(const Ctx& c)
 	if (!pawn.m_pBoneData) return;
 
 	const auto& headSlot = pawn.m_pBoneData->slotBones[static_cast<int>(HitboxSlot::Head)];
-	if (headSlot.empty()) return;
+	if (headSlot.empty() || headSlot[0] >= MAX_BONES) return;
 
 	ImVec2 head;
 	if (!c.snap->Project(pawn.m_BonePositions[headSlot[0]], c.origin, head)) return;
