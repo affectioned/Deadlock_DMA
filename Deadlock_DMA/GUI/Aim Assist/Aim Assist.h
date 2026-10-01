@@ -38,6 +38,11 @@ public:
 	static inline float fMissChance{ 0.08f };
 	static inline int   iMinVisibleTicks{ 2 };
 
+	// Manual aggression dial, multiplying both the FOV radius and the miss
+	// probability. Deliberately not auto-regulated — nothing cheat-side tracks
+	// performance, so there is no K/D-shaped state for a report to corroborate.
+	static inline float fSessionConfidenceBias{ 1.0f };
+
 	// Lead prediction. Auto-detect path reads the base bullet speed from the
 	// local pawn's primary-weapon-ability VData (CCitadelWeaponInfo). That's
 	// the *template* base — hero stat scaling and item bonuses aren't applied;
@@ -78,6 +83,7 @@ private:
 	};
 
 	static AimTarget GetAimDelta(DMA_Connection* Conn, const Vector2& CenterScreen);
+	static float EffectiveFOV();
 
 	static inline TargetTracker m_Tracker{};
 	static inline Humanizer m_Humanizer{};

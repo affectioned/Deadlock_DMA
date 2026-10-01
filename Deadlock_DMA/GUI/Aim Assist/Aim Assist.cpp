@@ -12,6 +12,11 @@
 
 namespace
 {
+	float ConfidenceBias()
+	{
+		return std::clamp(AimAssist::fSessionConfidenceBias, 0.5f, 1.5f);
+	}
+
 	Humanizer::Params CurrentParams()
 	{
 		return Humanizer::Params{
@@ -22,9 +27,14 @@ namespace
 			AimAssist::fSettleAlpha,
 			AimAssist::fOvershootChance,
 			AimAssist::fVelocityCapPxSec,
-			AimAssist::fMissChance,
+			AimAssist::fMissChance * ConfidenceBias(),
 		};
 	}
+}
+
+float AimAssist::EffectiveFOV()
+{
+	return fMaxPixelDistance * ConfidenceBias();
 }
 
 uint32_t AimAssist::TargetTracker::Observe(uint64_t Key, bool bVisible)
@@ -117,6 +127,16 @@ void AimAssist::RenderSettings()
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Base per-engagement probability of a deliberate near-miss. Scales with range, capped at 0.35.");
 
+	ImGui::SeparatorText("Session");
+
+	ImGui::SliderFloat("Confidence Bias", &fSessionConfidenceBias, 0.5f, 1.5f, "%.2f");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Multiplies both the FOV radius and the miss chance.\n"
+		                  "Manual only — nothing auto-regulates this, and the cheat keeps no\n"
+		                  "performance history of its own to regulate against.");
+	ImGui::TextColored(Theme::Info(), "Effective FOV: %.0f px   Effective miss chance: %.3f",
+		EffectiveFOV(), fMissChance * std::clamp(fSessionConfidenceBias, 0.5f, 1.5f));
+
 	ImGui::SeparatorText("Prediction");
 
 	ImGui::Checkbox("Lead Prediction", &bUsePrediction);
@@ -143,6 +163,7 @@ AimAssist::AimTarget AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2&
 {
 	AimTarget Best{};
 	float BestDistance = FLT_MAX;
+	const float FovRadius = EffectiveFOV();
 
 	auto Consider = [&](const Vector3& WorldPos, uintptr_t Key, float RangeMeters, const Vector3* pOrigin)
 	{
@@ -152,7 +173,7 @@ AimAssist::AimTarget AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2&
 		Vector2 Delta = ScreenPos - CenterScreen;
 		float Distance = sqrtf(Delta.x * Delta.x + Delta.y * Delta.y);
 
-		if (Distance > fMaxPixelDistance) return;
+		if (Distance > FovRadius) return;
 		if (Distance >= BestDistance) return;
 
 		// Miss offsets are expressed as a fraction of the target's apparent
@@ -327,5 +348,5 @@ void AimAssist::RenderFOVCircle()
 
 	ImColor circleColor = bIsActive ? ColorPicker::AimAssistFOVCircleActive : ColorPicker::AimAssistFOVCircle;
 
-	ImGui::GetWindowDrawList()->AddCircle(CenterScreen, fMaxPixelDistance, circleColor, 100, 1.5f);
+	ImGui::GetWindowDrawList()->AddCircle(CenterScreen, EffectiveFOV(), circleColor, 100, 1.5f);
 }

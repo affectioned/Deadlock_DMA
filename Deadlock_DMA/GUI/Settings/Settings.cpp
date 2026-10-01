@@ -110,6 +110,7 @@ namespace
 			F ("AimAssist.fVelocityCapPxSec",   "Aim Assist: Velocity Cap (px/s)", &AimAssist::fVelocityCapPxSec, 200.0f, 6000.0f, "%.0f"),
 			F ("AimAssist.fMissChance",         "Aim Assist: Miss Chance",         &AimAssist::fMissChance, 0.0f, 0.35f, "%.3f"),
 			I ("AimAssist.iMinVisibleTicks",    "Aim Assist: Min Visible Ticks",   &AimAssist::iMinVisibleTicks, 1.0f, 10.0f),
+			F ("AimAssist.fSessionConfidenceBias","Aim Assist: Confidence Bias",   &AimAssist::fSessionConfidenceBias, 0.5f, 1.5f, "%.2f"),
 
 			// ---- Overlay host ------------------------------------------------
 			B ("Fuser.bMasterToggle",       "Overlay: Enable",          &Fuser::bMasterToggle),
