@@ -7,6 +7,8 @@
 #include "GUI/Watchdog/GuiWatchdog.h"
 #include "Makcu/MyMakcu.h"
 #include "Deadlock/DeadlockContext.h"
+#include "Deadlock/Offsets.h"
+#include "Deadlock/SchemaWalker.h"
 #include "Bootstrap/Bootstrap.h"
 #include "DMA/Memory/PhaseTimings.h"
 
@@ -32,6 +34,47 @@ static BOOL WINAPI OnConsoleExit(DWORD ctrlType)
 		return TRUE;
 	}
 	return FALSE;
+}
+
+// --offsets attaches, lets the DMA thread resolve every offset once, and
+// exits on its own. Generous enough to cover a slow DMA attach.
+static constexpr int kOffsetsTimeoutSec = 45;
+
+// Headless offset resolution: attach, run the schema walk and the signature
+// scans, exit. No overlay window, no Makcu, nothing to close by hand. Every
+// line Log:: writes already goes to stdout, so the walk reports itself.
+//   0 = the schema walk resolved fields
+//   1 = offsets resolved but the walk failed, so everything is baked
+//   2 = never got as far as resolving (no DMA, or the game is down)
+static int RunOffsets()
+{
+	g_GameContext = new DeadlockContext();
+	std::thread dma(DMA_Thread_Main);
+
+	const auto deadline = std::chrono::steady_clock::now()
+	                    + std::chrono::seconds(kOffsetsTimeoutSec);
+
+	while (bRunning
+	    && !Offsets::bResolved.load(std::memory_order_acquire)
+	    && std::chrono::steady_clock::now() < deadline)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+
+	const bool resolved = Offsets::bResolved.load(std::memory_order_acquire);
+	if (!resolved)
+		Log::Error("[Offsets] timed out after {}s — no attach", kOffsetsTimeoutSec);
+	else
+		Log::Info("[Offsets] schema: {}", SchemaWalker::Status());
+
+	bRunning = false;
+	// Deliberately detached, not joined: Process::GetProcessInfo waits for
+	// deadlock.exe in an unconditional loop, so joining would hang forever in
+	// exactly the case this mode exists for — running it with the game down.
+	dma.detach();
+
+	if (!resolved)                return 2;
+	return SchemaWalker::Ready() ? 0 : 1;
 }
 
 static PROCESS_INFORMATION s_tracyProc{};
@@ -75,12 +118,14 @@ int main(int argc, char** argv)
 		Log::Init(logPath.wstring());
 	}
 
-	bool tracy  = false;
-	bool uiOnly = false;
+	bool tracy    = false;
+	bool uiOnly   = false;
+	bool offsets  = false;
 	for (int i = 1; i < argc; ++i)
 	{
 		if (strcmp(argv[i], "--tracy") == 0) tracy = true;
 		else if (strcmp(argv[i], "--ui-only") == 0) uiOnly = true;
+		else if (strcmp(argv[i], "--offsets") == 0) offsets = true;
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
 			printf("Deadlock DMA\n\n"
@@ -88,6 +133,11 @@ int main(int argc, char** argv)
 			       "              MemProcFS bootstrap, the Makcu link and the DMA thread, so the\n"
 			       "              UI can be reviewed without the game or a second PC. Entity\n"
 			       "              lists stay empty, so nothing is drawn in the world.\n"
+			       "  --offsets   Attach, resolve every offset once (live schema walk plus the\n"
+			       "              signature scans), print the result and exit on its own. No\n"
+			       "              overlay window and no Makcu, so there is nothing to close.\n"
+			       "              Exit code: 0 the schema walk resolved fields, 1 it failed and\n"
+			       "              everything is baked, 2 never attached.\n"
 			       "  --tracy     Launch tracy-capture and write profiling_report.json.\n"
 			       "  --help      This text.\n");
 			return 0;
@@ -110,9 +160,15 @@ int main(int argc, char** argv)
 	if (!uiOnly && !Bootstrap::EnsureRuntimeDlls())
 	{
 		Log::Error("Bootstrap failed; MemProcFS DLLs unavailable. Aborting.");
-		system("pause");
-		return 1;
+		// --offsets exists to run unattended, so it must never stop on a
+		// keypress: pausing here would hang the one mode that is supposed to
+		// close itself.
+		if (!offsets) system("pause");
+		return 2;
 	}
+
+	if (offsets)
+		return RunOffsets();
 
 	Config::LoadConfig("default");
 

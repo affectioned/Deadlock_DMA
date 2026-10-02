@@ -31,16 +31,29 @@ namespace
 // instead of using a stale previous-hero value across hero swaps/respawns.
 void EntityList::RefreshPrimaryWeaponBulletSpeed(DMA_Connection* Conn, Process* Proc)
 {
-	auto ClearOnFailure = [] { g_LocalBulletSpeed.store(0.0f, std::memory_order_relaxed); };
+	// Logs only when the reason changes. This runs every 2s, and the useful
+	// signal is "which step is it dying at", not how often. OffsetHealth used
+	// to report a dead bullet speed; nothing does now, so it reports itself.
+	static const char* s_LastReason = "";
+	auto Bail = [](const char* why)
+	{
+		g_LocalBulletSpeed.store(0.0f, std::memory_order_relaxed);
+		if (why != s_LastReason)
+		{
+			Log::Warn("[Wpn] bullet speed unresolved: {} ({} primary-weapon abilities)",
+				why, m_PrimaryWeaponAbilityAddresses.size());
+			s_LastReason = why;
+		}
+	};
 
-	if (m_PrimaryWeaponAbilityAddresses.empty()) { ClearOnFailure(); return; }
+	if (m_PrimaryWeaponAbilityAddresses.empty()) { Bail("no primary-weapon ability entities"); return; }
 
 	uintptr_t LocalPawn = 0;
 	{
 		std::scoped_lock lk(Deadlock::m_LocalAddressMutex);
 		LocalPawn = Deadlock::m_LocalPlayerPawnAddress;
 	}
-	if (!LocalPawn) { ClearOnFailure(); return; }
+	if (!LocalPawn) { Bail("no local pawn"); return; }
 
 	std::vector<uint32_t> OwnerHandles(m_PrimaryWeaponAbilityAddresses.size(), 0);
 	m_sr->Clear();
@@ -57,14 +70,14 @@ void EntityList::RefreshPrimaryWeaponBulletSpeed(DMA_Connection* Conn, Process* 
 			break;
 		}
 	}
-	if (!MyAbility) { ClearOnFailure(); return; }
+	if (!MyAbility) { Bail("no ability owned by the local pawn"); return; }
 
 	uintptr_t VDataPtr = 0;
 	m_sr->Clear();
 	m_sr->Add(MyAbility + Offsets::C_BaseEntity::m_pSubclassVData, &VDataPtr);
 	m_sr->Execute();
 
-	if (!VDataPtr) { ClearOnFailure(); return; } // engine hasn't populated subclass data yet
+	if (!VDataPtr) { Bail("m_pSubclassVData is null"); return; } // engine may not have populated it yet
 
 	std::array<uint64_t, kMapHeaderSize / sizeof(uint64_t)> MapHeader{};
 	m_sr->Clear();
@@ -84,7 +97,7 @@ void EntityList::RefreshPrimaryWeaponBulletSpeed(DMA_Connection* Conn, Process* 
 			Candidates.push_back({ static_cast<uintptr_t>(Slot) + ValueOff
 				+ Offsets::CCitadelWeaponInfo::m_flBulletSpeed, 0.0f });
 	}
-	if (Candidates.empty()) { ClearOnFailure(); return; }
+	if (Candidates.empty()) { Bail("no heap pointers in the weapon-info map header"); return; }
 
 	m_sr->Clear();
 	for (auto& c : Candidates)
@@ -97,11 +110,12 @@ void EntityList::RefreshPrimaryWeaponBulletSpeed(DMA_Connection* Conn, Process* 
 		if (c.speed >= kMinBulletSpeedHu && c.speed <= kMaxBulletSpeedHu) { SpeedHu = c.speed; break; }
 	}
 
-	if (SpeedHu == 0.0f) { ClearOnFailure(); return; }
+	if (SpeedHu == 0.0f) { Bail("no candidate slot held a plausible muzzle speed"); return; }
 
 	if (g_LocalBulletSpeed.load(std::memory_order_relaxed) != SpeedHu)
 	{
 		g_LocalBulletSpeed.store(SpeedHu, std::memory_order_relaxed);
+		s_LastReason = "";
 		Log::Info("[Wpn] bulletSpd={:.0f}hu ({:.0f}m/s)",
 			SpeedHu, SpeedHu / HammerUnitsPerMeter);
 	}

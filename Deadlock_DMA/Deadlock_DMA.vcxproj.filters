@@ -111,6 +111,9 @@
     <ClCompile Include="GUI\Radar\Radar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Deadlock\SchemaWalker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Deadlock\Offsets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -201,6 +204,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deadlock\Deadlock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\SchemaWalker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deadlock\Offsets.h">

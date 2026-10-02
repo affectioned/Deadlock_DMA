@@ -191,6 +191,7 @@
     <ClCompile Include="Deadlock\Entity List\PrimaryWeapon.cpp">
       <ObjectFileName>$(IntDir)EntityList_PrimaryWeapon.obj</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="Deadlock\SchemaWalker.cpp" />
     <ClCompile Include="Deadlock\Offsets.cpp" />
     <ClCompile Include="DMA\DMA Thread.cpp" />
     <ClCompile Include="DMA\DMA.cpp" />
@@ -288,6 +289,7 @@
     <ClInclude Include="Deadlock\Deadlock.h" />
     <ClInclude Include="Deadlock\Engine\Vector4.h" />
     <ClInclude Include="Deadlock\Entity List\EntityList.h" />
+    <ClInclude Include="Deadlock\SchemaWalker.h" />
     <ClInclude Include="Deadlock\Offsets.h" />
     <ClInclude Include="DMA\DMA.h" />
     <ClInclude Include="DMA\Memory\Process.h" />

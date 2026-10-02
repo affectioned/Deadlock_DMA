@@ -215,7 +215,17 @@ void EntityList::SortEntityList()
 	uintptr_t BossTier3ClassPtr        = FindClass("npc_boss_tier3");
 	uintptr_t SinnerClassPtr             = FindClass("npc_neutral_sinners_sacrifice");
 	uintptr_t XpOrbClassPtr              = FindClass("item_xp");
-	uintptr_t PrimaryWeaponAbilityClass  = FindClass("citadel_ability_primary_weapon");
+
+	// The entity class is per hero and spells it as one word:
+	// "citadel_ability_ratking_primaryweapon", verified live via ClassProbe.
+	// Entity class names are runtime strings and do not appear in the schema
+	// dump at all, so the C++ class names there (CCitadel_Ability_Ratking_
+	// PrimaryWeapon) are no guide to the spelling — an earlier exact match on
+	// "citadel_ability_primary_weapon" matched nothing on any hero.
+	std::unordered_set<uintptr_t> PrimaryWeaponAbilityClasses;
+	for (const auto& [Name, Ptr] : m_EntityClassMap)
+		if (Name.find("primaryweapon") != std::string::npos)
+			PrimaryWeaponAbilityClasses.insert(Ptr);
 
 	// On-map breakable pickups. Names verified live via ClassProbe on 2026-07-06.
 	// If a future build renames any of these, re-enable a ClassProbe pass to find
@@ -246,7 +256,7 @@ void EntityList::SortEntityList()
 			else if (PunchableGoldClass         && Entry.pName == PunchableGoldClass)       m_PowerupAddresses.emplace_back(Entry.pEnt, "Souls");
 			else if (PickupIdolClass            && Entry.pName == PickupIdolClass)          m_PowerupAddresses.emplace_back(Entry.pEnt, "Idol");
 			else if (InWorldItemPanelClass      && Entry.pName == InWorldItemPanelClass)    m_PowerupAddresses.emplace_back(Entry.pEnt, "Panel");
-			else if (PrimaryWeaponAbilityClass  && Entry.pName == PrimaryWeaponAbilityClass) m_PrimaryWeaponAbilityAddresses.push_back(Entry.pEnt);
+			else if (PrimaryWeaponAbilityClasses.contains(Entry.pName))                     m_PrimaryWeaponAbilityAddresses.push_back(Entry.pEnt);
 		}
 	}
 

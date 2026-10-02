@@ -1,9 +1,22 @@
-﻿#pragma once
+#pragma once
 #include "DMA/Memory/SigScan.h"
 
+// Field offsets below are *defaults*, not constants: Offsets::ResolveOffsets
+// overwrites every schema-backed one from the live CSchemaSystem (see
+// SchemaWalker) and only falls back to the value written here when that walk
+// fails. The baked numbers track the dezlock-dump schema dump for the build
+// they were last checked against, so a fallback still starts.
+//
+// Entries still marked `constexpr` are the ones the schema does not publish —
+// non-schema slots and members of engine singletons. Those stay manual.
 namespace Offsets
 {
 	bool ResolveOffsets(DMA_Connection* Conn);
+
+	// Set once ResolveOffsets has finished, so a headless caller can wait for
+	// the real thing instead of sleeping a guessed interval. Read from the
+	// main thread while the DMA thread writes it, hence atomic.
+	inline std::atomic<bool> bResolved{ false };
 
 	inline constexpr std::ptrdiff_t FirstEntityList = 0x10;
 	inline std::ptrdiff_t GameEntitySystem = 0;
@@ -24,32 +37,34 @@ namespace Offsets
 
 	namespace CGameSceneNode
 	{
-		inline constexpr std::ptrdiff_t m_vecAbsOrigin = 0xC8; // VectorWS (12b)
-		inline constexpr std::ptrdiff_t m_bDormant     = 0x103; // bool (1b)
+		inline std::ptrdiff_t m_vecAbsOrigin = 0xC8; // VectorWS (12b)
+		inline std::ptrdiff_t m_bDormant     = 0x103; // bool (1b)
 	}
 
-	namespace CSkeletonInstance 
+	namespace CSkeletonInstance
 	{
-		inline constexpr std::ptrdiff_t m_modelState = 0x140; // CModelState (704b)
+		inline std::ptrdiff_t m_modelState = 0x140; // CModelState (704b)
 	}
 
 	namespace CModelState
 	{
-		inline constexpr std::ptrdiff_t m_pBones    = 0x80;
-		inline constexpr std::ptrdiff_t m_ModelName = 0xA8; // CUtlSymbolLarge (8b)
+		// Not a schema field — CModelState publishes m_ModelName but not the
+		// bone array, so this one is still hand-maintained.
+		inline constexpr std::ptrdiff_t m_pBones = 0x80;
+		inline std::ptrdiff_t m_ModelName = 0xA8; // CUtlSymbolLarge (8b)
 	}
 
 	namespace C_BaseEntity
 	{
-		inline constexpr std::ptrdiff_t m_pGameSceneNode  = 0x330; // CGameSceneNode* (8b)
-		inline constexpr std::ptrdiff_t m_iMaxHealth      = 0x350; // int32 (4b)
-		inline constexpr std::ptrdiff_t m_iHealth         = 0x354; // int32 (4b)
-		inline constexpr std::ptrdiff_t m_iTeamNum        = 0x3EF; // uint8 (1b)
+		inline std::ptrdiff_t m_pGameSceneNode  = 0x330; // CGameSceneNode* (8b)
+		inline std::ptrdiff_t m_iMaxHealth      = 0x350; // int32 (4b)
+		inline std::ptrdiff_t m_iHealth         = 0x354; // int32 (4b)
+		inline std::ptrdiff_t m_iTeamNum        = 0x3EF; // uint8 (1b)
 		// Non-schema slot between m_nSubclassID (0x388) and m_nSimulationTick (0x398).
 		// Set at runtime; null until the engine populates the subclass data table.
 		// Source: github.com/neverlosecc/source2sdk (deadlock branch).
-		inline constexpr std::ptrdiff_t m_pSubclassVData  = 0x390; // void* (8b)
-		inline constexpr std::ptrdiff_t m_hOwnerEntity    = 0x51C; // CHandle< C_BaseEntity > (4b)
+		inline constexpr std::ptrdiff_t m_pSubclassVData = 0x390; // void* (8b)
+		inline std::ptrdiff_t m_hOwnerEntity    = 0x51C; // CHandle< C_BaseEntity > (4b)
 	}
 
 	// Inside CitadelAbilityVData (the subclass-data type for ability entities
@@ -59,11 +74,12 @@ namespace Offsets
 	// see EntityList::RefreshPrimaryWeaponBulletSpeed for the map walk.
 	namespace CitadelAbilityVData
 	{
-		inline constexpr std::ptrdiff_t m_mapWeaponInfos = 0x170; // CUtlOrderedMap< CGlobalSymbol, CCitadelWeaponInfo > (40b)
+		inline std::ptrdiff_t m_mapWeaponInfos = 0x170; // CUtlOrderedMap< CGlobalSymbol, CCitadelWeaponInfo > (40b)
 	}
 
 	// Value type of m_mapWeaponInfos. Muzzle speed for hitscan bullets, not
-	// entity projectiles.
+	// entity projectiles. CCitadelWeaponInfo is bound in server.dll's type
+	// scope, not client.dll's, so the walker never sees it — manual.
 	namespace CCitadelWeaponInfo
 	{
 		inline constexpr std::ptrdiff_t m_flBulletSpeed = 0xD8; // float32 (4b) — base bullet speed in hu/s
@@ -71,41 +87,40 @@ namespace Offsets
 
 	namespace CCitadelPlayerController
 	{
-		inline constexpr std::ptrdiff_t m_hHeroPawn           = 0x8C0; // CHandle< C_CitadelPlayerPawn > (4b)
-		inline constexpr std::ptrdiff_t m_PlayerDataGlobal = 0x908; // PlayerDataGlobal_t (840b)
+		inline std::ptrdiff_t m_hHeroPawn       = 0x8C0; // CHandle< C_CitadelPlayerPawn > (4b)
+		inline std::ptrdiff_t m_PlayerDataGlobal = 0x908; // PlayerDataGlobal_t (840b)
 
 		namespace PlayerDataGlobal_t
 		{
-			inline constexpr std::ptrdiff_t m_iHealthMax               = 0x10; // int32 (4b)
-			inline constexpr std::ptrdiff_t m_nHeroID                  = 0x1C; // HeroID_t (4b)
-			inline constexpr std::ptrdiff_t m_nTotalSouls              = 0x2C; // m_iGoldNetWorth (int32, 4b)
-			inline constexpr std::ptrdiff_t m_iHealth                  = 0x54; // int32 (4b)
+			inline std::ptrdiff_t m_iHealthMax               = 0x10; // int32 (4b)
+			inline std::ptrdiff_t m_nHeroID                  = 0x1C; // HeroID_t (4b)
+			inline std::ptrdiff_t m_nTotalSouls              = 0x2C; // m_iGoldNetWorth (int32, 4b)
+			inline std::ptrdiff_t m_iHealth                  = 0x54; // int32 (4b)
 		}
 	}
 
 	namespace C_CitadelPlayerPawn
 	{
-		inline constexpr std::ptrdiff_t m_vecVelocity        = 0x438;  // CNetworkVelocityVector (40b)
-		inline constexpr std::ptrdiff_t m_nCurrencies        = 0x122C; // int32[6] (24b)
-		inline constexpr std::ptrdiff_t m_nUnsecuredSouls    = 0x1238; // m_nCurrencies[3]
-		inline constexpr std::ptrdiff_t m_nLevel             = 0x1228; // int32 (4b)
-		inline constexpr std::ptrdiff_t m_flRespawnTime      = 0x1264; // GameTime_t / float (4b)
+		inline std::ptrdiff_t m_vecVelocity        = 0x438;  // CNetworkVelocityVector (40b)
+		inline std::ptrdiff_t m_nCurrencies        = 0x1234; // int32[6] (24b)
+		inline std::ptrdiff_t m_nUnsecuredSouls    = 0x1240; // m_nCurrencies[3]
+		inline std::ptrdiff_t m_nLevel             = 0x1230; // int32 (4b)
+		inline std::ptrdiff_t m_flRespawnTime      = 0x126C; // GameTime_t / float (4b)
 	}
 
 	namespace C_BasePlayerPawn
 	{
-		inline constexpr std::ptrdiff_t m_hController = 0xFF8; // CHandle< CBasePlayerController > (4b)
+		inline std::ptrdiff_t m_hController = 0x1050; // CHandle< CBasePlayerController > (4b)
 	}
 
 	namespace C_CitadelTeam
 	{
-		constexpr std::ptrdiff_t m_vecFOWEntities = 0x6C8; // C_UtlVectorEmbeddedNetworkVar< STeamFOWEntity > (104b)
-
+		inline std::ptrdiff_t m_vecFOWEntities = 0x6C8; // C_UtlVectorEmbeddedNetworkVar< STeamFOWEntity > (104b)
 	}
 
 	namespace STeamFOWEntity
 	{
-		constexpr std::ptrdiff_t m_nEntIndex     = 0x30; // CEntityIndex (4b)
-		constexpr std::ptrdiff_t m_bVisibleOnMap = 0x41; // bool (1b)
+		inline std::ptrdiff_t m_nEntIndex     = 0x30; // CEntityIndex (4b)
+		inline std::ptrdiff_t m_bVisibleOnMap = 0x41; // bool (1b)
 	}
 }
