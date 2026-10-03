@@ -51,6 +51,29 @@ namespace HeroNames
 	const inline std::string Wraith = "Wraith";
 	const inline std::string Yamato = "Yamato";
 
+	// Disabled in heroes.vdata_c - present for id coverage, never spawns.
+	const inline std::string Boho = "Boho";
+	const inline std::string Bomber = "Bomber";
+	const inline std::string Cadence = "Cadence";
+	const inline std::string Druid = "Druid";
+	const inline std::string Fathom = "Fathom";
+	const inline std::string Fortuna = "Fortuna";
+	const inline std::string Graf = "Graf";
+	const inline std::string Gunslinger = "Gunslinger";
+	const inline std::string Kali = "Kali";
+	const inline std::string Opera = "Opera";
+	const inline std::string Raven = "Raven";
+	const inline std::string Rutger = "Rutger";
+	const inline std::string ShieldGuy = "Shield Guy";
+	const inline std::string Skyrunner = "Skyrunner";
+	const inline std::string Swan = "Swan";
+	const inline std::string TestHero = "TestHero";
+	const inline std::string TheBoss = "The Boss";
+	const inline std::string Thumper = "Thumper";
+	const inline std::string Trapper = "Trapper";
+	const inline std::string Vandal = "Vandal";
+	const inline std::string Wrecker = "Wrecker";
+
 	const inline std::unordered_map<HeroId, std::string_view> HeroNameMap = {
 		{HeroId::Abrams,Abrams},
 		{HeroId::Baba, Baba},
@@ -97,7 +120,30 @@ namespace HeroNames
 		{HeroId::Vyper, Vyper},
 		{HeroId::Warden, Warden},
 		{HeroId::Wraith, Wraith},
-		{HeroId::Yamato, Yamato}
+		{HeroId::Yamato, Yamato},
+
+		// Disabled in heroes.vdata_c - present for id coverage, never spawns.
+		{HeroId::Boho, Boho},
+		{HeroId::Bomber, Bomber},
+		{HeroId::Cadence, Cadence},
+		{HeroId::Druid, Druid},
+		{HeroId::Fathom, Fathom},
+		{HeroId::Fortuna, Fortuna},
+		{HeroId::Graf, Graf},
+		{HeroId::Gunslinger, Gunslinger},
+		{HeroId::Kali, Kali},
+		{HeroId::Opera, Opera},
+		{HeroId::Raven, Raven},
+		{HeroId::Rutger, Rutger},
+		{HeroId::ShieldGuy, ShieldGuy},
+		{HeroId::Skyrunner, Skyrunner},
+		{HeroId::Swan, Swan},
+		{HeroId::TestHero, TestHero},
+		{HeroId::TheBoss, TheBoss},
+		{HeroId::Thumper, Thumper},
+		{HeroId::Trapper, Trapper},
+		{HeroId::Vandal, Vandal},
+		{HeroId::Wrecker, Wrecker}
 	};
 }
 

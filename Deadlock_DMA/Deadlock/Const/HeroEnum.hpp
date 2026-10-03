@@ -48,5 +48,28 @@ enum class HeroId : int32_t
 	Vyper = 58,
 	Warden = 25,
 	Wraith = 7,
-	Yamato = 27
+	Yamato = 27,
+
+	// Disabled in heroes.vdata_c - present for id coverage, never spawns.
+	Boho = 68,
+	Bomber = 56,
+	Cadence = 54,
+	Druid = 73,
+	Fathom = 53,
+	Fortuna = 75,
+	Graf = 74,
+	Gunslinger = 38,
+	Kali = 21,
+	Opera = 82,
+	Raven = 62,
+	Rutger = 49,
+	ShieldGuy = 57,
+	Skyrunner = 70,
+	Swan = 71,
+	TestHero = 83,
+	TheBoss = 39,
+	Thumper = 51,
+	Trapper = 61,
+	Vandal = 59,
+	Wrecker = 48
 };
