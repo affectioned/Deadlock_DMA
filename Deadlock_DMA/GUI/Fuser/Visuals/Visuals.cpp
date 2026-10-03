@@ -147,6 +147,22 @@ void Visuals::RenderSettings()
 			ImGui::Unindent();
 		}
 
+		ImGui::Checkbox("Off-Screen Arrows", &Draw_Players::bOffscreenArrows);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Border arrows for players outside the view, labeled with\n"
+			                  "hero name and distance.");
+		if (Draw_Players::bOffscreenArrows)
+		{
+			ImGui::Indent();
+			ImGui::SetNextItemWidth(150.0f);
+			ImGui::SliderFloat("Arrow Size", &Draw_Players::fArrowSize, 4.0f, 40.0f, "%.0f");
+			ImGui::SetNextItemWidth(150.0f);
+			ImGui::SliderFloat("Edge Padding", &Draw_Players::fArrowPadding, 0.0f, 400.0f, "%.0f");
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("How far in from the screen edge the arrows ride.");
+			ImGui::Unindent();
+		}
+
 		ImGui::Checkbox("Show Distance", &Draw_Players::bShowDistance);
 		ImGui::Checkbox("Hero Level",    &Draw_Players::bShowHeroLevel);
 		ImGui::Checkbox("Respawn Timer", &Draw_Players::bShowRespawnTimer);

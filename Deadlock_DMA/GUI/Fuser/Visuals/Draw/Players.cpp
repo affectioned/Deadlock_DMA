@@ -6,11 +6,62 @@
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Fonts/Fonts.h"
 #include "GUI/Theme/Theme.h"
+#include "GUI/Fuser/Fuser.h"
 #include "GUI/Fuser/Visuals/WorldText.h"
 
 namespace
 {
 	ImU32 U32(const ImColor& c) { return ImGui::ColorConvertFloat4ToU32(c.Value); }
+
+	ImU32 TeamColor(const CCitadelPlayerController& pc)
+	{
+		return pc.m_TeamNum == ETeam::HIDDEN_KING
+			? U32(ColorPicker::HiddenKingTeamColor)
+			: U32(ColorPicker::ArchMotherTeamColor);
+	}
+
+	// Is the projected pawn origin inside the viewport?
+	//
+	// Tolerant vertically: in third person a target standing right in front of
+	// you has its feet below the bottom edge while its body fills the screen,
+	// and that is not "out of view" — an arrow there would point down at
+	// somebody you're already looking at.
+	bool OnScreen(const ImVec2& p, const ImVec2& origin)
+	{
+		const float toleranceY = Fuser::m_ScreenSize.y * 0.25f;
+		return p.x >= origin.x && p.x <= origin.x + Fuser::m_ScreenSize.x &&
+		       p.y >= origin.y - toleranceY &&
+		       p.y <= origin.y + Fuser::m_ScreenSize.y + toleranceY;
+	}
+
+	// Unit screen-space direction from the viewport center toward a world point,
+	// valid for points behind the camera too.
+	//
+	// WorldToScreen can't answer this: it rejects anything with w < 0.01
+	// outright, and dividing by a negative w mirrors the result through the
+	// center, which would send the arrow to the wrong side of the screen.
+	// Dividing by |w| keeps the sign of the clip-space x/y, which is the side
+	// the target is really on. The half-extents scale the axes into pixels, so
+	// the direction is correct on a non-square viewport.
+	bool CenterDirection(const Matrix44& m, const Vector3& pos, const ImVec2& half, ImVec2& outDir)
+	{
+		const float cx = m.m00 * pos.x + m.m01 * pos.y + m.m02 * pos.z + m.m03;
+		const float cy = m.m10 * pos.x + m.m11 * pos.y + m.m12 * pos.z + m.m13;
+		const float w  = m.m30 * pos.x + m.m31 * pos.y + m.m32 * pos.z + m.m33;
+
+		const float aw = std::fabs(w);
+		if (aw < 1e-4f) return false;
+
+		// Screen y grows downward, so clip-space y flips — same as WorldToScreen.
+		const float dx = (cx / aw) * half.x;
+		const float dy = -(cy / aw) * half.y;
+
+		const float len = std::sqrt(dx * dx + dy * dy);
+		if (len < 1e-4f) return false;
+
+		outDir = ImVec2(dx / len, dy / len);
+		return true;
+	}
 
 	// Health → color. Green through amber to red rather than a straight
 	// green→red lerp, which passes through a muddy olive at 50%.
@@ -50,8 +101,14 @@ void Draw_Players::operator()()
 		c.textSize = falloff.size;
 		c.alpha    = falloff.alpha;
 
-		if (!snap.Project(view.pawn->m_Position, origin, c.feet))
+		// A pawn that doesn't project, or projects outside the viewport, has no
+		// world tag to draw — it gets a border arrow instead, if enabled.
+		if (!snap.Project(view.pawn->m_Position, origin, c.feet) || !OnScreen(c.feet, origin))
+		{
+			if (bOffscreenArrows && !view.localPlayer && !view.controller->IsDead())
+				DrawOffscreenArrow(c);
 			continue;
+		}
 
 		if (view.controller->IsDead())
 		{
@@ -377,9 +434,7 @@ float Draw_Players::DrawNameTag(const Ctx& c)
 	const CCitadelPlayerController& PC   = c.PC();
 	const C_CitadelPlayerPawn&      pawn = c.Pawn();
 
-	const ImU32 teamCol = WorldText::Fade(PC.m_TeamNum == ETeam::HIDDEN_KING
-		? U32(ColorPicker::HiddenKingTeamColor)
-		: U32(ColorPicker::ArchMotherTeamColor), c.alpha);
+	const ImU32 teamCol = WorldText::Fade(TeamColor(PC), c.alpha);
 
 	std::string tag;
 	if (bShowHeroLevel && pawn.m_nLevel > 0)
@@ -405,6 +460,77 @@ float Draw_Players::DrawNameTag(const Ctx& c)
 	}
 
 	return stack.Cursor().y;
+}
+
+void Draw_Players::DrawOffscreenArrow(const Ctx& c)
+{
+	const ImVec2 half(Fuser::m_ScreenSize.x * 0.5f, Fuser::m_ScreenSize.y * 0.5f);
+
+	ImVec2 dir;
+	if (!CenterDirection(c.snap->viewMatrix, c.Pawn().m_Position, half, dir))
+		return;
+
+	const ImVec2 center(c.origin.x + half.x, c.origin.y + half.y);
+
+	// Walk the ray out to the inset border and stop at whichever edge it reaches
+	// first. The limits are floored so an oversized padding on a small viewport
+	// can't invert the box.
+	const float limX = std::max(half.x - fArrowPadding, 8.0f);
+	const float limY = std::max(half.y - fArrowPadding, 8.0f);
+	const float absX = std::fabs(dir.x);
+	const float absY = std::fabs(dir.y);
+	const float tX   = absX > 1e-4f ? limX / absX : FLT_MAX;
+	const float tY   = absY > 1e-4f ? limY / absY : FLT_MAX;
+	const bool  sideEdge = tX < tY; // hit a left/right border rather than top/bottom
+
+	const float t = std::min(tX, tY);
+	const ImVec2 tip(center.x + dir.x * t, center.y + dir.y * t);
+
+	// No distance fade here. Off-screen targets are usually the far ones, and
+	// the whole point of the arrow is that you can't see them — dimming it to
+	// nothing at range would defeat it. The max-distance cull still applies.
+	const ImU32 col = TeamColor(c.PC());
+
+	// Triangle pointing outward: tip on the border, base one arrow-length in.
+	const ImVec2 perp(-dir.y, dir.x);
+	const ImVec2 base(tip.x - dir.x * fArrowSize, tip.y - dir.y * fArrowSize);
+	const float  halfBase = fArrowSize * 0.6f;
+	const ImVec2 b1(base.x + perp.x * halfBase, base.y + perp.y * halfBase);
+	const ImVec2 b2(base.x - perp.x * halfBase, base.y - perp.y * halfBase);
+
+	c.dl->AddTriangleFilled(tip, b1, b2, col);
+	c.dl->AddTriangle(tip, b1, b2, Theme::Outline, 1.0f);
+
+	const std::string label = std::format("{} {:.0f}m", c.PC().GetHeroName(), c.view->distanceMeters);
+	const float px = WorldText::fBaseTextSize;
+
+	// Label sits inboard of the arrow, flowing away from the border so it can't
+	// run off the edge it's pinned to.
+	const float gap = fArrowSize + 6.0f;
+	ImVec2 anchor(tip.x - dir.x * gap, tip.y - dir.y * gap);
+
+	WorldText::Align align = WorldText::Align::Center;
+	if (sideEdge)
+	{
+		// Beside the arrow, vertically centered on it.
+		align = (dir.x < 0.0f) ? WorldText::Align::Left : WorldText::Align::Right;
+		anchor.y = tip.y - px * 0.5f;
+	}
+	else
+	{
+		// Above or below: centered on the arrow, nudged off the top-left corner
+		// cases by clamping the measured extent into the viewport.
+		const float halfWidth = ImGui::GetFont()->CalcTextSizeA(px, FLT_MAX, 0.0f, label.c_str()).x * 0.5f;
+		anchor.x = std::clamp(anchor.x,
+		                      c.origin.x + halfWidth + 4.0f,
+		                      c.origin.x + Fuser::m_ScreenSize.x - halfWidth - 4.0f);
+		// Text grows downward from its anchor, so a bottom-edge label has to be
+		// lifted by its own height to stay clear of the arrow.
+		if (dir.y > 0.0f)
+			anchor.y -= px;
+	}
+
+	WorldText::Draw(c.dl, anchor, label, col, px, align);
 }
 
 void Draw_Players::DrawRespawnTimer(const Ctx& c)

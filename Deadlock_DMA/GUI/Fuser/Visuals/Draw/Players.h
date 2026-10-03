@@ -47,6 +47,12 @@ public:
 	// color. Makes a low-health target readable without reading the number.
 	static inline bool bHealthGradient{ true };
 	static inline bool bHideLocalPlayer{ true };
+	// Border indicators for players the camera isn't looking at, carrying the
+	// hero name and distance so an off-screen threat is identifiable without
+	// turning toward it.
+	static inline bool bOffscreenArrows{ false };
+	static inline float fArrowSize{ 14.0f };
+	static inline float fArrowPadding{ 60.0f };
 	static inline bool bShowDistance{ false };
 	static inline bool bVisibleOnly{ false };
 	static inline bool bShowHeroLevel{ true };
@@ -91,4 +97,8 @@ private:
 	// Bottom mode can sit under the block without counting lines itself.
 	static float DrawNameTag(const Ctx& c);
 	static void DrawRespawnTimer(const Ctx& c);
+	// Border arrow for a pawn outside the viewport. Uses the pawn's world
+	// position rather than c.feet, which holds no usable value when the pawn
+	// failed to project.
+	static void DrawOffscreenArrow(const Ctx& c);
 };
