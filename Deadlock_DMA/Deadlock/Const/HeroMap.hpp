@@ -5,9 +5,11 @@
 namespace HeroNames
 {
 	const inline std::string Abrams = "Abrams";
+	const inline std::string Baba = "Baba";
 	const inline std::string Bebop = "Bebop";
 	const inline std::string Billy = "Billy";
 	const inline std::string Calico = "Calico";
+	const inline std::string DeadmanDanny = "Deadman Danny";
 	const inline std::string Doorman = "Doorman";
 	const inline std::string Drifter = "Drifter";
 	const inline std::string Dummy = "Dummy";
@@ -25,9 +27,11 @@ namespace HeroNames
 	const inline std::string Mina = "Mina";
 	const inline std::string Mirage = "Mirage";
 	const inline std::string MoKrill = "Mo+Krill";
+	const inline std::string NurseHarrow = "Nurse Harrow";
 	const inline std::string Paige = "Paige";
 	const inline std::string Paradox = "Paradox";
 	const inline std::string Pocket = "Pocket";
+	const inline std::string RatKing = "Rat King";
 	const inline std::string Rem = "Rem";
 	const inline std::string Silver = "Silver";
 	const inline std::string Apollo = "Apollo";
@@ -36,8 +40,10 @@ namespace HeroNames
 	const inline std::string Seven = "Seven";
 	const inline std::string Shiv = "Shiv";
 	const inline std::string Sinclair = "Sinclair";
+	const inline std::string Solomon = "Solomon";
 	const inline std::string Victor = "Victor";
 	const inline std::string Vindicta = "Vindicta";
+	const inline std::string Violet = "Violet";
 	const inline std::string Viscous = "Viscous";
 	const inline std::string Vyper = "Vyper";
 	const inline std::string Warden = "Warden";
@@ -46,9 +52,11 @@ namespace HeroNames
 
 	const inline std::unordered_map<HeroId, std::string_view> HeroNameMap = {
 		{HeroId::Abrams,Abrams},
+		{HeroId::Baba, Baba},
 		{HeroId::Bebop, Bebop},
 		{HeroId::Billy, Billy},
 		{HeroId::Calico, Calico},
+		{HeroId::DeadmanDanny, DeadmanDanny},
 		{HeroId::Doorman, Doorman},
 		{HeroId::Drifter, Drifter},
 		{HeroId::Dummy, Dummy},
@@ -66,9 +74,11 @@ namespace HeroNames
 		{HeroId::Mina, Mina},
 		{HeroId::Mirage, Mirage},
 		{HeroId::MoKrill, MoKrill},
+		{HeroId::NurseHarrow, NurseHarrow},
 		{HeroId::Paige, Paige},
 		{HeroId::Paradox, Paradox},
 		{HeroId::Pocket, Pocket},
+		{HeroId::RatKing, RatKing},
 		{HeroId::Rem, Rem},
 		{HeroId::Seven, Seven},
 		{HeroId::Silver, Silver},
@@ -77,8 +87,10 @@ namespace HeroNames
 		{HeroId::Apollo, Apollo},
 		{HeroId::Shiv, Shiv},
 		{HeroId::Sinclair, Sinclair},
+		{HeroId::Solomon, Solomon},
 		{HeroId::Victor, Victor},
 		{HeroId::Vindicta, Vindicta},
+		{HeroId::Violet, Violet},
 		{HeroId::Viscous, Viscous},
 		{HeroId::Vyper, Vyper},
 		{HeroId::Warden, Warden},

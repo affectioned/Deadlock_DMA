@@ -2876,44 +2876,44 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  14,  15 },  // leg_upper_r -> leg_lower_r
             BonePair{  15,  16 },  // leg_lower_r -> ankle_r
             BonePair{  16,  17 },  // ankle_r -> ball_r
-            BonePair{  15,  18 },  // leg_lower_r -> leg_lower_b_hlp_r
-            BonePair{  14,  19 },  // leg_upper_r -> leg_upper_b_hlp_r
-            BonePair{   9,  68 },  // leg_lower_l -> leg_lower_a_hlp_l
-            BonePair{   8,  69 },  // leg_upper_l -> leg_upper_a_hlp_l
-            BonePair{  15,  85 },  // leg_lower_r -> leg_lower_a_hlp_r
-            BonePair{  14,  86 },  // leg_upper_r -> leg_upper_a_hlp_r
-            BonePair{  11, 238 },  // ball_l -> ball_end_l
-            BonePair{  17, 244 },  // ball_r -> ball_end_r
+            BonePair{  17,  18 },  // ball_r -> ball_end_r
+            BonePair{  15,  19 },  // leg_lower_r -> leg_lower_b_hlp_r
+            BonePair{  14,  20 },  // leg_upper_r -> leg_upper_b_hlp_r
+            BonePair{   9,  69 },  // leg_lower_l -> leg_lower_a_hlp_l
+            BonePair{   8,  70 },  // leg_upper_l -> leg_upper_a_hlp_l
+            BonePair{  15,  86 },  // leg_lower_r -> leg_lower_a_hlp_r
+            BonePair{  14,  87 },  // leg_upper_r -> leg_upper_a_hlp_r
+            BonePair{  11, 239 },  // ball_l -> ball_end_l
         },
         /* ids */ {
             { "ankle_l",  10 },
             { "ankle_r",  16 },
-            { "ball_end_l", 238 },
-            { "ball_end_r", 244 },
+            { "ball_end_l", 239 },
+            { "ball_end_r",  18 },
             { "ball_l",  11 },
             { "ball_r",  17 },
             { "hand_l", 260 },
             { "hand_r", 251 },
-            { "leg_lower_a_hlp_l",  68 },
-            { "leg_lower_a_hlp_r",  85 },
+            { "leg_lower_a_hlp_l",  69 },
+            { "leg_lower_a_hlp_r",  86 },
             { "leg_lower_b_hlp_l",  12 },
-            { "leg_lower_b_hlp_r",  18 },
+            { "leg_lower_b_hlp_r",  19 },
             { "leg_lower_l",   9 },
             { "leg_lower_r",  15 },
-            { "leg_upper_a_hlp_l",  69 },
-            { "leg_upper_a_hlp_r",  86 },
+            { "leg_upper_a_hlp_l",  70 },
+            { "leg_upper_a_hlp_r",  87 },
             { "leg_upper_b_hlp_l",  13 },
-            { "leg_upper_b_hlp_r",  19 },
+            { "leg_upper_b_hlp_r",  20 },
             { "leg_upper_l",   8 },
             { "leg_upper_r",  14 },
             { "pelvis",   7 },
         },
         /* slotBones */ {
-            /* [0] Head  */ { 44, 51 },
+            /* [0] Head  */ { 45, 52 },
             /* [1] Neck  */ {},
-            /* [2] Torso */ { 31, 33, 43, 7, 45, 50 },
-            /* [3] Arms  */ { 40, 36, 41, 42, 37, 38 },
-            /* [4] Legs  */ { 8, 11, 10, 14, 17, 16, 13, 19, 27, 23, 9, 15, 28, 24, 12, 18, 29, 25, 30, 26 },
+            /* [2] Torso */ { 32, 34, 44, 7, 46, 51 },
+            /* [3] Arms  */ { 41, 37, 42, 43, 38, 39 },
+            /* [4] Legs  */ { 8, 11, 10, 14, 17, 16, 13, 20, 28, 24, 9, 15, 29, 25, 12, 19, 30, 26, 31, 27 },
         },
     }},
 
@@ -5115,6 +5115,115 @@ inline const std::unordered_map<std::string, ModelBoneData>
             /* [2] Torso */ { 4, 1, 5, 3, 2 },
             /* [3] Arms  */ { 10, 16, 11, 17, 12, 18 },
             /* [4] Legs  */ { 25, 29, 26, 30, 28, 32, 27, 31 },
+        },
+    }},
+
+    // models/heroes_wip/ratking/ratking_armor.vmdl
+    { "models/heroes_wip/ratking/ratking_armor.vmdl", {
+        /* pairs */ {
+            BonePair{   1,   2 },  // pelvis -> spine_0
+            BonePair{   2,   3 },  // spine_0 -> spine_1
+            BonePair{   3,   4 },  // spine_1 -> spine_2
+            BonePair{   4,   5 },  // spine_2 -> spine_3
+            BonePair{   5,   6 },  // spine_3 -> neck_0
+            BonePair{   6,   7 },  // neck_0 -> head
+            BonePair{   5,  13 },  // spine_3 -> clavicle_l
+            BonePair{  13,  14 },  // clavicle_l -> clavicle_l_twist
+            BonePair{   5,  16 },  // spine_3 -> clavicle_r
+            BonePair{  16,  17 },  // clavicle_r -> clavicle_r_twist
+            BonePair{   6,  23 },  // neck_0 -> neck_0_twist
+            BonePair{  13,  35 },  // clavicle_l -> arm_upper_l
+            BonePair{  35,  36 },  // arm_upper_l -> arm_upper_l_twist1
+            BonePair{  35,  37 },  // arm_upper_l -> arm_upper_l_twist
+            BonePair{  35,  38 },  // arm_upper_l -> arm_lower_l
+            BonePair{  38,  39 },  // arm_lower_l -> hand_l
+            BonePair{  38,  69 },  // arm_lower_l -> arm_lower_l_twist
+            BonePair{  38,  70 },  // arm_lower_l -> arm_lower_l_twist1
+            BonePair{  16,  88 },  // clavicle_r -> arm_upper_r
+            BonePair{  88,  89 },  // arm_upper_r -> arm_upper_r_twist1
+            BonePair{  88,  90 },  // arm_upper_r -> arm_upper_r_twist
+            BonePair{  88,  91 },  // arm_upper_r -> arm_lower_r
+            BonePair{  91,  92 },  // arm_lower_r -> hand_r
+            BonePair{  91, 122 },  // arm_lower_r -> arm_lower_r_twist
+            BonePair{  91, 123 },  // arm_lower_r -> arm_lower_r_twist1
+            BonePair{   1, 174 },  // pelvis -> leg_upper_l
+            BonePair{ 174, 175 },  // leg_upper_l -> leg_lower_l
+            BonePair{ 175, 176 },  // leg_lower_l -> ankle_l
+            BonePair{ 176, 177 },  // ankle_l -> ball_l
+            BonePair{ 177, 178 },  // ball_l -> ball_end_l
+            BonePair{ 174, 197 },  // leg_upper_l -> leg_upper_l_twist
+            BonePair{ 174, 198 },  // leg_upper_l -> leg_upper_l_twist1
+            BonePair{   1, 199 },  // pelvis -> leg_upper_r
+            BonePair{ 199, 200 },  // leg_upper_r -> leg_lower_r
+            BonePair{ 200, 201 },  // leg_lower_r -> ankle_r
+            BonePair{ 201, 202 },  // ankle_r -> ball_r
+            BonePair{ 202, 203 },  // ball_r -> ball_end_r
+            BonePair{ 199, 222 },  // leg_upper_r -> leg_upper_r_twist
+            BonePair{ 199, 223 },  // leg_upper_r -> leg_upper_r_twist1
+        },
+        /* ids */ {
+            { "ankle_l", 176 },
+            { "ankle_r", 201 },
+            { "arm_lower_l",  38 },
+            { "arm_lower_l_twist",  69 },
+            { "arm_lower_l_twist1",  70 },
+            { "arm_lower_r",  91 },
+            { "arm_lower_r_twist", 122 },
+            { "arm_lower_r_twist1", 123 },
+            { "arm_upper_l",  35 },
+            { "arm_upper_l_twist",  37 },
+            { "arm_upper_l_twist1",  36 },
+            { "arm_upper_r",  88 },
+            { "arm_upper_r_twist",  90 },
+            { "arm_upper_r_twist1",  89 },
+            { "ball_end_l", 178 },
+            { "ball_end_r", 203 },
+            { "ball_l", 177 },
+            { "ball_r", 202 },
+            { "clavicle_l",  13 },
+            { "clavicle_l_twist",  14 },
+            { "clavicle_r",  16 },
+            { "clavicle_r_twist",  17 },
+            { "hand_l",  39 },
+            { "hand_r",  92 },
+            { "head",   7 },
+            { "leg_lower_l", 175 },
+            { "leg_lower_r", 200 },
+            { "leg_upper_l", 174 },
+            { "leg_upper_l_twist", 197 },
+            { "leg_upper_l_twist1", 198 },
+            { "leg_upper_r", 199 },
+            { "leg_upper_r_twist", 222 },
+            { "leg_upper_r_twist1", 223 },
+            { "neck_0",   6 },
+            { "neck_0_twist",  23 },
+            { "pelvis",   1 },
+            { "spine_0",   2 },
+            { "spine_1",   3 },
+            { "spine_2",   4 },
+            { "spine_3",   5 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ { 7 },
+            /* [1] Neck  */ { 6, 23 },
+            /* [2] Torso */ { 1, 2, 3, 4, 5 },
+            /* [3] Arms  */ { 13, 14, 16, 17, 38, 69, 70, 91, 122, 123 },
+            /* [4] Legs  */ { 175, 176, 200, 201 },
+        },
+    }},
+
+    // models/heroes_wip/ratking/ratking_minion.vmdl
+    { "models/heroes_wip/ratking/ratking_minion.vmdl", {
+        /* pairs */ {
+        },
+        /* ids */ {
+        },
+        /* slotBones */ {
+            /* [0] Head  */ { 7, 6 },
+            /* [1] Neck  */ {},
+            /* [2] Torso */ { 2, 1, 4 },
+            /* [3] Arms  */ { 13, 10, 8, 12, 11, 9 },
+            /* [4] Legs  */ { 17, 18, 14, 19, 20, 15, 16 },
         },
     }},
 
