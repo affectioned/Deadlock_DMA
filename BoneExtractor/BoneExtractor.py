@@ -212,14 +212,49 @@ def _classify_hitbox(group_id: int, bone_lower: str) -> int:
     return -1  # accessories/equipment
 
 
-def _is_body_bone(lower: str) -> bool:
-    return lower in ("pelvis", "head") or any(lower.startswith(p) for p in (
-        "spine_", "neck_", "clavicle_",
-        "arm_upper_", "arm_lower_",
-        "hand_l", "hand_r",
-        "leg_upper_", "leg_lower_",
-        "ankle_", "ball_",
-    ))
+BODY_CORES = (
+    "spine_", "neck_", "clavicle_",
+    "arm_upper_", "arm_lower_",
+    "hand_l", "hand_r",
+    "leg_upper_", "leg_lower_",
+    "ankle_", "ball_",
+)
+BODY_EXACT = ("pelvis", "head")
+
+# Rig helpers that ride along a real bone: twists, bend helpers, aim targets.
+# They are not part of the silhouette and only ever drew as stray stubs.
+HELPER_RE = re.compile(r"(_twist\d*|_notwist|_hlp(_[lr])?|_aim(_upv)?)$")
+
+
+def _split_bone(lower: str) -> tuple[str, str] | None:
+    """Split a bone name into (rig prefix, canonical body-bone name).
+
+    Several heroes carry more than one body in a single skeleton and tell them
+    apart by prefix: Baba's hut has the unprefixed pelvis/leg chain while the
+    witch riding it is baba_spine_0 .. baba_head, Nano's cat is cat_*, Rat
+    King's minions are minion0_*. Matching the canonical name as a suffix
+    covers all of them.
+
+    Returns None for bones that are not part of a body - props, weapon
+    attachments, and the helpers matched by HELPER_RE.
+    """
+    if HELPER_RE.search(lower):
+        return None
+
+    for name in BODY_EXACT:
+        if lower == name:
+            return "", name
+        if lower.endswith("_" + name):
+            return lower[:-len(name) - 1], name
+
+    for core in BODY_CORES:
+        i = lower.find(core)
+        if i == 0:
+            return "", lower
+        if i > 0 and lower[i - 1] == "_":
+            return lower[:i - 1], lower[i:]
+
+    return None
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -271,14 +306,19 @@ def extract_model_data(root, hitboxes: list[tuple[str, int, float]]) -> dict | N
             break
         if parent < 0 or parent >= n_bones:
             continue
-        if not _is_body_bone(name):
+        child  = _split_bone(name)
+        anchor = _split_bone(bones[parent][0])
+        if not child or not anchor:
             continue
-        if not _is_body_bone(bones[parent][0]):
+        # Same rig only. Where the prefixes differ the parent link is mounting
+        # hardware - witch to hut, shoulder to cat - not a limb, and drawing it
+        # throws a line across the model.
+        if child[0] != anchor[0]:
             continue
         pairs.append((parent, i, bones[parent][0], name))
 
     # ---- Bone IDs (sorted by name) ----
-    ids = {name: i for i, (name, _) in enumerate(bones) if _is_body_bone(name)}
+    ids = {name: i for i, (name, _) in enumerate(bones) if _split_bone(name)}
 
     # ---- Hitbox groups ----
     groups: list[list[tuple[int, str, float]]] = [[] for _ in range(SLOT_COUNT)]

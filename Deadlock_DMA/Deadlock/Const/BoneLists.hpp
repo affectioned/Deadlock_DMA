@@ -21,6 +21,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  18,  19 },  // clavicle_r -> arm_upper_r
             BonePair{  19,  20 },  // arm_upper_r -> arm_lower_r
             BonePair{  20,  21 },  // arm_lower_r -> hand_r
+            BonePair{  25,  26 },  // owl_spine_0 -> owl_spine_1
             BonePair{  15,  27 },  // spine_3 -> clavicle_l
             BonePair{  27,  28 },  // clavicle_l -> arm_upper_l
             BonePair{  28,  29 },  // arm_upper_l -> arm_lower_l
@@ -33,6 +34,22 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  38,  39 },  // leg_upper_r -> leg_lower_r
             BonePair{  39,  40 },  // leg_lower_r -> ankle_r
             BonePair{  40,  41 },  // ankle_r -> ball_r
+            BonePair{  81,  82 },  // owl_clavicle_l -> owl_arm_upper_l
+            BonePair{  82,  83 },  // owl_arm_upper_l -> owl_arm_lower_l
+            BonePair{  83,  84 },  // owl_arm_lower_l -> owl_hand_l
+            BonePair{  26,  88 },  // owl_spine_1 -> owl_spine_2
+            BonePair{  88,  89 },  // owl_spine_2 -> owl_spine_3
+            BonePair{  26,  93 },  // owl_spine_1 -> owl_leg_upper_l
+            BonePair{  93,  94 },  // owl_leg_upper_l -> owl_leg_lower_l
+            BonePair{  94,  95 },  // owl_leg_lower_l -> owl_ankle_l
+            BonePair{  95,  96 },  // owl_ankle_l -> owl_ball_l
+            BonePair{  26, 103 },  // owl_spine_1 -> owl_leg_upper_r
+            BonePair{ 103, 104 },  // owl_leg_upper_r -> owl_leg_lower_r
+            BonePair{ 104, 105 },  // owl_leg_lower_r -> owl_ankle_r
+            BonePair{ 105, 106 },  // owl_ankle_r -> owl_ball_r
+            BonePair{ 114, 115 },  // owl_clavicle_r -> owl_arm_upper_r
+            BonePair{ 115, 116 },  // owl_arm_upper_r -> owl_arm_lower_r
+            BonePair{ 116, 117 },  // owl_arm_lower_r -> owl_hand_r
             BonePair{  41, 153 },  // ball_r -> ball_end_r
         },
         /* ids */ {
@@ -55,11 +72,34 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_upper_l",  34 },
             { "leg_upper_r",  38 },
             { "neck_0",  16 },
+            { "owl_ankle_l",  95 },
+            { "owl_ankle_r", 105 },
+            { "owl_arm_lower_l",  83 },
+            { "owl_arm_lower_r", 116 },
+            { "owl_arm_upper_l",  82 },
+            { "owl_arm_upper_r", 115 },
+            { "owl_ball_l",  96 },
+            { "owl_ball_r", 106 },
+            { "owl_clavicle_l",  81 },
+            { "owl_clavicle_r", 114 },
+            { "owl_hand_l",  84 },
+            { "owl_hand_r", 117 },
+            { "owl_leg_lower_l",  94 },
+            { "owl_leg_lower_r", 104 },
+            { "owl_leg_upper_l",  93 },
+            { "owl_leg_upper_r", 103 },
+            { "owl_neck_0",  23 },
+            { "owl_spine_0",  25 },
+            { "owl_spine_1",  26 },
+            { "owl_spine_2",  88 },
+            { "owl_spine_3",  89 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  15 },
+            { "weapon_hand_l",  31 },
+            { "weapon_hand_r",  55 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 17 },
@@ -67,6 +107,63 @@ inline const std::unordered_map<std::string, ModelBoneData>
             /* [2] Torso */ { 8, 7, 10, 15 },
             /* [3] Arms  */ { 27, 18, 28, 19, 29, 20, 30, 21 },
             /* [4] Legs  */ { 34, 38, 35, 39, 36, 40 },
+        },
+    }},
+
+    // models/heroes_staging/archer/archer_pet/archer_pet.vmdl
+    { "models/heroes_staging/archer/archer_pet/archer_pet.vmdl", {
+        /* pairs */ {
+            BonePair{   2,   3 },  // pet_pelvis -> pet_spine_0
+            BonePair{   3,   4 },  // pet_spine_0 -> pet_spine_1
+            BonePair{   4,   5 },  // pet_spine_1 -> pet_neck_0
+            BonePair{   5,   6 },  // pet_neck_0 -> pet_head
+            BonePair{   4,  80 },  // pet_spine_1 -> pet_clavicle_l
+            BonePair{  80,  81 },  // pet_clavicle_l -> pet_arm_upper_l
+            BonePair{  81,  82 },  // pet_arm_upper_l -> pet_arm_lower_l
+            BonePair{  82,  83 },  // pet_arm_lower_l -> pet_hand_l
+            BonePair{   4,  92 },  // pet_spine_1 -> pet_clavicle_r
+            BonePair{  92,  93 },  // pet_clavicle_r -> pet_arm_upper_r
+            BonePair{  93,  94 },  // pet_arm_upper_r -> pet_arm_lower_r
+            BonePair{  94,  95 },  // pet_arm_lower_r -> pet_hand_r
+            BonePair{   2, 104 },  // pet_pelvis -> pet_leg_upper_r
+            BonePair{ 104, 105 },  // pet_leg_upper_r -> pet_leg_lower_r
+            BonePair{ 105, 106 },  // pet_leg_lower_r -> pet_ankle_r
+            BonePair{ 106, 107 },  // pet_ankle_r -> pet_ball_r
+            BonePair{   2, 117 },  // pet_pelvis -> pet_leg_upper_l
+            BonePair{ 117, 118 },  // pet_leg_upper_l -> pet_leg_lower_l
+            BonePair{ 118, 119 },  // pet_leg_lower_l -> pet_ankle_l
+            BonePair{ 119, 120 },  // pet_ankle_l -> pet_ball_l
+        },
+        /* ids */ {
+            { "pet_ankle_l", 119 },
+            { "pet_ankle_r", 106 },
+            { "pet_arm_lower_l",  82 },
+            { "pet_arm_lower_r",  94 },
+            { "pet_arm_upper_l",  81 },
+            { "pet_arm_upper_r",  93 },
+            { "pet_ball_l", 120 },
+            { "pet_ball_r", 107 },
+            { "pet_clavicle_l",  80 },
+            { "pet_clavicle_r",  92 },
+            { "pet_hand_l",  83 },
+            { "pet_hand_r",  95 },
+            { "pet_head",   6 },
+            { "pet_leg_lower_l", 118 },
+            { "pet_leg_lower_r", 105 },
+            { "pet_leg_upper_l", 117 },
+            { "pet_leg_upper_r", 104 },
+            { "pet_neck_0",   5 },
+            { "pet_pelvis",   2 },
+            { "pet_spine_0",   3 },
+            { "pet_spine_1",   4 },
+            { "weapon_hand_r",   1 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ {},
+            /* [1] Neck  */ {},
+            /* [2] Torso */ {},
+            /* [3] Arms  */ {},
+            /* [4] Legs  */ {},
         },
     }},
 
@@ -83,6 +180,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  18,  19 },  // clavicle_r -> arm_upper_r
             BonePair{  19,  20 },  // arm_upper_r -> arm_lower_r
             BonePair{  20,  21 },  // arm_lower_r -> hand_r
+            BonePair{  23,  24 },  // owl_spine_0 -> owl_spine_1
             BonePair{  15,  25 },  // spine_3 -> clavicle_l
             BonePair{  25,  26 },  // clavicle_l -> arm_upper_l
             BonePair{  26,  27 },  // arm_upper_l -> arm_lower_l
@@ -95,6 +193,22 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  39,  40 },  // leg_upper_r -> leg_lower_r
             BonePair{  40,  41 },  // leg_lower_r -> ankle_r
             BonePair{  41,  42 },  // ankle_r -> ball_r
+            BonePair{  65,  66 },  // owl_clavicle_l -> owl_arm_upper_l
+            BonePair{  66,  67 },  // owl_arm_upper_l -> owl_arm_lower_l
+            BonePair{  67,  68 },  // owl_arm_lower_l -> owl_hand_l
+            BonePair{  24,  72 },  // owl_spine_1 -> owl_spine_2
+            BonePair{  72,  73 },  // owl_spine_2 -> owl_spine_3
+            BonePair{  24,  77 },  // owl_spine_1 -> owl_leg_upper_l
+            BonePair{  77,  78 },  // owl_leg_upper_l -> owl_leg_lower_l
+            BonePair{  78,  79 },  // owl_leg_lower_l -> owl_ankle_l
+            BonePair{  79,  80 },  // owl_ankle_l -> owl_ball_l
+            BonePair{  24,  88 },  // owl_spine_1 -> owl_leg_upper_r
+            BonePair{  88,  89 },  // owl_leg_upper_r -> owl_leg_lower_r
+            BonePair{  89,  90 },  // owl_leg_lower_r -> owl_ankle_r
+            BonePair{  90,  91 },  // owl_ankle_r -> owl_ball_r
+            BonePair{  99, 100 },  // owl_clavicle_r -> owl_arm_upper_r
+            BonePair{ 100, 101 },  // owl_arm_upper_r -> owl_arm_lower_r
+            BonePair{ 101, 102 },  // owl_arm_lower_r -> owl_hand_r
             BonePair{  42, 129 },  // ball_r -> ball_end_r
         },
         /* ids */ {
@@ -117,11 +231,34 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_upper_l",  35 },
             { "leg_upper_r",  39 },
             { "neck_0",  16 },
+            { "owl_ankle_l",  79 },
+            { "owl_ankle_r",  90 },
+            { "owl_arm_lower_l",  67 },
+            { "owl_arm_lower_r", 101 },
+            { "owl_arm_upper_l",  66 },
+            { "owl_arm_upper_r", 100 },
+            { "owl_ball_l",  80 },
+            { "owl_ball_r",  91 },
+            { "owl_clavicle_l",  65 },
+            { "owl_clavicle_r",  99 },
+            { "owl_hand_l",  68 },
+            { "owl_hand_r", 102 },
+            { "owl_leg_lower_l",  78 },
+            { "owl_leg_lower_r",  89 },
+            { "owl_leg_upper_l",  77 },
+            { "owl_leg_upper_r",  88 },
+            { "owl_neck_0",  61 },
+            { "owl_spine_0",  23 },
+            { "owl_spine_1",  24 },
+            { "owl_spine_2",  72 },
+            { "owl_spine_3",  73 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  15 },
+            { "weapon_hand_l",  29 },
+            { "weapon_hand_r",  44 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 17 },
@@ -221,19 +358,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  26,  27 },  // leg_upper_r -> leg_lower_r
             BonePair{  27,  28 },  // leg_lower_r -> ankle_r
             BonePair{  28,  29 },  // ankle_r -> ball_r
-            BonePair{   6,  44 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  86 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10,  87 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{   9,  88 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{   9,  89 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  17, 112 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  17, 113 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  16, 114 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  16, 115 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  22, 138 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  22, 139 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  26, 140 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  26, 141 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  25, 432 },  // ball_l -> ball_end_l
             BonePair{  29, 433 },  // ball_r -> ball_end_r
         },
@@ -241,17 +365,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  24 },
             { "ankle_r",  28 },
             { "arm_lower_l",  10 },
-            { "arm_lower_l_twist",  86 },
-            { "arm_lower_l_twist1",  87 },
             { "arm_lower_r",  17 },
-            { "arm_lower_r_twist", 112 },
-            { "arm_lower_r_twist1", 113 },
             { "arm_upper_l",   9 },
-            { "arm_upper_l_twist",  88 },
-            { "arm_upper_l_twist1",  89 },
             { "arm_upper_r",  16 },
-            { "arm_upper_r_twist", 114 },
-            { "arm_upper_r_twist1", 115 },
             { "ball_end_l", 432 },
             { "ball_end_r", 433 },
             { "ball_l",  25 },
@@ -264,18 +380,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  23 },
             { "leg_lower_r",  27 },
             { "leg_upper_l",  22 },
-            { "leg_upper_l_twist", 138 },
-            { "leg_upper_l_twist1", 139 },
             { "leg_upper_r",  26 },
-            { "leg_upper_r_twist", 140 },
-            { "leg_upper_r_twist1", 141 },
             { "neck_0",   6 },
-            { "neck_0_twist",  44 },
+            { "object_hand_l",  12 },
+            { "object_hand_r", 422 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_l", 415 },
+            { "weapon_hand_r",  19 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -311,28 +426,16 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  28,  29 },  // leg_upper_l -> leg_lower_l
             BonePair{  29,  30 },  // leg_lower_l -> ankle_l
             BonePair{  30,  31 },  // ankle_l -> ball_l
-            BonePair{   9,  60 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{   9,  61 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{   8,  83 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{   8,  84 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{  27, 120 },  // ball_r -> ball_end_r
-            BonePair{  24, 126 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  24, 127 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  31, 128 },  // ball_l -> ball_end_l
-            BonePair{  28, 143 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  28, 144 },  // leg_upper_l -> leg_upper_l_twist1
         },
         /* ids */ {
             { "ankle_l",  30 },
             { "ankle_r",  26 },
             { "arm_lower_l",  17 },
             { "arm_lower_r",   9 },
-            { "arm_lower_r_twist",  60 },
-            { "arm_lower_r_twist1",  61 },
             { "arm_upper_l",  16 },
             { "arm_upper_r",   8 },
-            { "arm_upper_r_twist",  83 },
-            { "arm_upper_r_twist1",  84 },
             { "ball_end_l", 128 },
             { "ball_end_r", 120 },
             { "ball_l",  31 },
@@ -345,17 +448,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  29 },
             { "leg_lower_r",  25 },
             { "leg_upper_l",  28 },
-            { "leg_upper_l_twist", 143 },
-            { "leg_upper_l_twist1", 144 },
             { "leg_upper_r",  24 },
-            { "leg_upper_r_twist", 126 },
-            { "leg_upper_r_twist1", 127 },
             { "neck_0",   5 },
             { "pelvis",   0 },
             { "spine_0",   1 },
             { "spine_1",   2 },
             { "spine_2",   3 },
             { "spine_3",   4 },
+            { "weapon_hand_r", 231 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 6 },
@@ -379,7 +479,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  10,  11 },  // clavicle_l -> arm_upper_l
             BonePair{  11,  12 },  // arm_upper_l -> arm_lower_l
             BonePair{  12,  13 },  // arm_lower_l -> hand_l
-            BonePair{  11,  14 },  // arm_upper_l -> arm_upper_l_twist1
             BonePair{   7,  15 },  // spine_3 -> clavicle_r
             BonePair{  15,  16 },  // clavicle_r -> arm_upper_r
             BonePair{  16,  17 },  // arm_upper_r -> arm_lower_r
@@ -392,34 +491,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  31,  32 },  // leg_upper_r -> leg_lower_r
             BonePair{  32,  33 },  // leg_lower_r -> ankle_r
             BonePair{  33,  34 },  // ankle_r -> ball_r
-            BonePair{   8,  35 },  // neck_0 -> neck_0_twist
-            BonePair{  12,  57 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  12,  58 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  11,  59 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  17,  91 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  17,  92 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  16,  93 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  16,  94 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  27,  95 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  27,  96 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  31,  97 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  31,  98 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  29 },
             { "ankle_r",  33 },
             { "arm_lower_l",  12 },
-            { "arm_lower_l_twist",  57 },
-            { "arm_lower_l_twist1",  58 },
             { "arm_lower_r",  17 },
-            { "arm_lower_r_twist",  91 },
-            { "arm_lower_r_twist1",  92 },
             { "arm_upper_l",  11 },
-            { "arm_upper_l_twist",  59 },
-            { "arm_upper_l_twist1",  14 },
             { "arm_upper_r",  16 },
-            { "arm_upper_r_twist",  93 },
-            { "arm_upper_r_twist1",  94 },
             { "ball_l",  30 },
             { "ball_r",  34 },
             { "clavicle_l",  10 },
@@ -430,18 +509,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  28 },
             { "leg_lower_r",  32 },
             { "leg_upper_l",  27 },
-            { "leg_upper_l_twist",  95 },
-            { "leg_upper_l_twist1",  96 },
             { "leg_upper_r",  31 },
-            { "leg_upper_r_twist",  97 },
-            { "leg_upper_r_twist1",  98 },
             { "neck_0",   8 },
-            { "neck_0_twist",  35 },
             { "pelvis",   3 },
             { "spine_0",   4 },
             { "spine_1",   5 },
             { "spine_2",   6 },
             { "spine_3",   7 },
+            { "weapon_hand_r",  19 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 9 },
@@ -469,6 +544,24 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  12,  13 },  // clavicle_r -> arm_upper_r
             BonePair{  13,  14 },  // arm_upper_r -> arm_lower_r
             BonePair{  14,  15 },  // arm_lower_r -> hand_r
+            BonePair{  16,  17 },  // rider_pelvis -> rider_spine_0
+            BonePair{  17,  18 },  // rider_spine_0 -> rider_spine_1
+            BonePair{  18,  19 },  // rider_spine_1 -> rider_spine_2
+            BonePair{  19,  20 },  // rider_spine_2 -> rider_spine_3
+            BonePair{  20,  21 },  // rider_spine_3 -> rider_neck_0
+            BonePair{  21,  22 },  // rider_neck_0 -> rider_head
+            BonePair{  20,  23 },  // rider_spine_3 -> rider_clavicle_l
+            BonePair{  23,  24 },  // rider_clavicle_l -> rider_arm_upper_l
+            BonePair{  24,  25 },  // rider_arm_upper_l -> rider_arm_lower_l
+            BonePair{  25,  26 },  // rider_arm_lower_l -> rider_hand_l
+            BonePair{  20,  27 },  // rider_spine_3 -> rider_clavicle_r
+            BonePair{  27,  28 },  // rider_clavicle_r -> rider_arm_upper_r
+            BonePair{  28,  29 },  // rider_arm_upper_r -> rider_arm_lower_r
+            BonePair{  29,  30 },  // rider_arm_lower_r -> rider_hand_r
+            BonePair{  16,  35 },  // rider_pelvis -> rider_leg_upper_l
+            BonePair{  35,  36 },  // rider_leg_upper_l -> rider_leg_lower_l
+            BonePair{  16,  37 },  // rider_pelvis -> rider_leg_upper_r
+            BonePair{  37,  38 },  // rider_leg_upper_r -> rider_leg_lower_r
             BonePair{   1,  39 },  // pelvis -> leg_upper_l
             BonePair{  39,  40 },  // leg_upper_l -> leg_lower_l
             BonePair{  40,  41 },  // leg_lower_l -> ankle_l
@@ -477,6 +570,12 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  43,  44 },  // leg_upper_r -> leg_lower_r
             BonePair{  44,  45 },  // leg_lower_r -> ankle_r
             BonePair{  45,  46 },  // ankle_r -> ball_r
+            BonePair{  36, 146 },  // rider_leg_lower_l -> rider_ankle_l
+            BonePair{ 146, 147 },  // rider_ankle_l -> rider_ball_l
+            BonePair{ 147, 148 },  // rider_ball_l -> rider_ball_end_l
+            BonePair{  38, 149 },  // rider_leg_lower_r -> rider_ankle_r
+            BonePair{ 149, 150 },  // rider_ankle_r -> rider_ball_r
+            BonePair{ 150, 151 },  // rider_ball_r -> rider_ball_end_r
             BonePair{  42, 152 },  // ball_l -> ball_end_l
             BonePair{  46, 159 },  // ball_r -> ball_end_r
         },
@@ -502,6 +601,34 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_upper_r",  43 },
             { "neck_0",   6 },
             { "pelvis",   1 },
+            { "rider_ankle_l", 146 },
+            { "rider_ankle_r", 149 },
+            { "rider_arm_lower_l",  25 },
+            { "rider_arm_lower_r",  29 },
+            { "rider_arm_upper_l",  24 },
+            { "rider_arm_upper_r",  28 },
+            { "rider_ball_end_l", 148 },
+            { "rider_ball_end_r", 151 },
+            { "rider_ball_l", 147 },
+            { "rider_ball_r", 150 },
+            { "rider_clavicle_l",  23 },
+            { "rider_clavicle_r",  27 },
+            { "rider_hand_l",  26 },
+            { "rider_hand_r",  30 },
+            { "rider_head",  22 },
+            { "rider_leg_lower_l",  36 },
+            { "rider_leg_lower_r",  38 },
+            { "rider_leg_upper_l",  35 },
+            { "rider_leg_upper_r",  37 },
+            { "rider_neck_0",  21 },
+            { "rider_object_hand_r", 145 },
+            { "rider_pelvis",  16 },
+            { "rider_spine_0",  17 },
+            { "rider_spine_1",  18 },
+            { "rider_spine_2",  19 },
+            { "rider_spine_3",  20 },
+            { "rider_weapon_hand_l", 116 },
+            { "rider_weapon_hand_r",  31 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
@@ -537,39 +664,18 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  54,  55 },  // leg_upper_l -> leg_lower_l
             BonePair{  55,  56 },  // leg_lower_l -> ankle_l
             BonePair{  56,  57 },  // ankle_l -> ball_l
-            BonePair{  54,  58 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  54,  59 },  // leg_upper_l -> leg_upper_l_twist1
             BonePair{   1,  60 },  // pelvis -> leg_upper_r
             BonePair{  60,  61 },  // leg_upper_r -> leg_lower_r
             BonePair{  61,  62 },  // leg_lower_r -> ankle_r
             BonePair{  62,  63 },  // ankle_r -> ball_r
-            BonePair{  60,  64 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  60,  65 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{   6,  74 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  98 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  10,  99 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{   9, 100 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{   9, 101 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  38, 125 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  38, 126 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  37, 127 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  37, 128 },  // arm_upper_l -> arm_upper_l_twist1
         },
         /* ids */ {
             { "ankle_l",  56 },
             { "ankle_r",  62 },
             { "arm_lower_l",  38 },
-            { "arm_lower_l_twist", 125 },
-            { "arm_lower_l_twist1", 126 },
             { "arm_lower_r",  10 },
-            { "arm_lower_r_twist",  98 },
-            { "arm_lower_r_twist1",  99 },
             { "arm_upper_l",  37 },
-            { "arm_upper_l_twist", 127 },
-            { "arm_upper_l_twist1", 128 },
             { "arm_upper_r",   9 },
-            { "arm_upper_r_twist", 100 },
-            { "arm_upper_r_twist1", 101 },
             { "ball_l",  57 },
             { "ball_r",  63 },
             { "clavicle_l",  36 },
@@ -580,18 +686,16 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  55 },
             { "leg_lower_r",  61 },
             { "leg_upper_l",  54 },
-            { "leg_upper_l_twist",  58 },
-            { "leg_upper_l_twist1",  59 },
             { "leg_upper_r",  60 },
-            { "leg_upper_r_twist",  64 },
-            { "leg_upper_r_twist1",  65 },
+            { "melee_hand_r",  97 },
             { "neck_0",   6 },
-            { "neck_0_twist",  74 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_r",  12 },
+            { "weapon_hand_r_offset",  41 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -627,35 +731,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  28,  29 },  // leg_upper_r -> leg_lower_r
             BonePair{  29,  30 },  // leg_lower_r -> ankle_r
             BonePair{  30,  31 },  // ankle_r -> ball_r
-            BonePair{  11,  36 },  // neck_0 -> neck_0_twist
-            BonePair{  15,  58 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  15,  59 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14,  60 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  14,  61 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  19,  85 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  19,  86 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18,  87 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  18,  88 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  24,  93 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  24,  94 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  28,  95 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  28,  96 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  26 },
             { "ankle_r",  30 },
             { "arm_lower_l",  15 },
-            { "arm_lower_l_twist",  58 },
-            { "arm_lower_l_twist1",  59 },
             { "arm_lower_r",  19 },
-            { "arm_lower_r_twist",  85 },
-            { "arm_lower_r_twist1",  86 },
             { "arm_upper_l",  14 },
-            { "arm_upper_l_twist",  60 },
-            { "arm_upper_l_twist1",  61 },
             { "arm_upper_r",  18 },
-            { "arm_upper_r_twist",  87 },
-            { "arm_upper_r_twist1",  88 },
             { "ball_l",  27 },
             { "ball_r",  31 },
             { "clavicle_l",  13 },
@@ -666,18 +749,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  25 },
             { "leg_lower_r",  29 },
             { "leg_upper_l",  24 },
-            { "leg_upper_l_twist",  93 },
-            { "leg_upper_l_twist1",  94 },
             { "leg_upper_r",  28 },
-            { "leg_upper_r_twist",  95 },
-            { "leg_upper_r_twist1",  96 },
             { "neck_0",  11 },
-            { "neck_0_twist",  36 },
             { "pelvis",   6 },
             { "spine_0",   7 },
             { "spine_1",   8 },
             { "spine_2",   9 },
             { "spine_3",  10 },
+            { "weapon_hand_r",  21 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 12 },
@@ -713,35 +792,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  40,  41 },  // leg_upper_r -> leg_lower_r
             BonePair{  41,  42 },  // leg_lower_r -> ankle_r
             BonePair{  42,  43 },  // ankle_r -> ball_r
-            BonePair{  10,  72 },  // neck_0 -> neck_0_twist
-            BonePair{  14,  93 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  14,  94 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  13,  95 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  13,  96 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  22, 117 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  22, 118 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  21, 120 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  21, 121 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  36, 133 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  36, 134 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  40, 139 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  40, 140 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  38 },
             { "ankle_r",  42 },
             { "arm_lower_l",  14 },
-            { "arm_lower_l_twist",  93 },
-            { "arm_lower_l_twist1",  94 },
             { "arm_lower_r",  22 },
-            { "arm_lower_r_twist", 117 },
-            { "arm_lower_r_twist1", 118 },
             { "arm_upper_l",  13 },
-            { "arm_upper_l_twist",  95 },
-            { "arm_upper_l_twist1",  96 },
             { "arm_upper_r",  21 },
-            { "arm_upper_r_twist", 120 },
-            { "arm_upper_r_twist1", 121 },
             { "ball_l",  39 },
             { "ball_r",  43 },
             { "clavicle_l",  12 },
@@ -752,18 +810,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  37 },
             { "leg_lower_r",  41 },
             { "leg_upper_l",  36 },
-            { "leg_upper_l_twist", 133 },
-            { "leg_upper_l_twist1", 134 },
             { "leg_upper_r",  40 },
-            { "leg_upper_r_twist", 139 },
-            { "leg_upper_r_twist1", 140 },
             { "neck_0",  10 },
-            { "neck_0_twist",  72 },
             { "pelvis",   5 },
             { "spine_0",   6 },
             { "spine_1",   7 },
             { "spine_2",   8 },
             { "spine_3",   9 },
+            { "weapon_hand_l",  16 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 11 },
@@ -823,19 +877,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  67,  68 },  // leg_upper_r -> leg_lower_r
             BonePair{  68,  69 },  // leg_lower_r -> ankle_r
             BonePair{  69,  70 },  // ankle_r -> ball_r
-            BonePair{  13,  72 },  // neck_0 -> neck_0_twist
-            BonePair{  20,  94 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  20,  95 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  19, 109 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  19, 110 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  24, 152 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  24, 153 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  23, 156 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  23, 157 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  63, 215 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  63, 216 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  67, 219 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  67, 220 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  66, 243 },  // ball_l -> ball_end_l
             BonePair{  70, 244 },  // ball_r -> ball_end_r
         },
@@ -843,17 +884,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  65 },
             { "ankle_r",  69 },
             { "arm_lower_l",  20 },
-            { "arm_lower_l_twist",  94 },
-            { "arm_lower_l_twist1",  95 },
             { "arm_lower_r",  24 },
-            { "arm_lower_r_twist", 152 },
-            { "arm_lower_r_twist1", 153 },
             { "arm_upper_l",  19 },
-            { "arm_upper_l_twist", 109 },
-            { "arm_upper_l_twist1", 110 },
             { "arm_upper_r",  23 },
-            { "arm_upper_r_twist", 156 },
-            { "arm_upper_r_twist1", 157 },
             { "ball_end_l", 243 },
             { "ball_end_r", 244 },
             { "ball_l",  66 },
@@ -866,18 +899,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  64 },
             { "leg_lower_r",  68 },
             { "leg_upper_l",  63 },
-            { "leg_upper_l_twist", 215 },
-            { "leg_upper_l_twist1", 216 },
             { "leg_upper_r",  67 },
-            { "leg_upper_r_twist", 219 },
-            { "leg_upper_r_twist1", 220 },
             { "neck_0",  13 },
-            { "neck_0_twist",  72 },
             { "pelvis",   8 },
             { "spine_0",   9 },
             { "spine_1",  10 },
             { "spine_2",  11 },
             { "spine_3",  12 },
+            { "weapon_hand_r",  26 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 14 },
@@ -885,6 +914,59 @@ inline const std::unordered_map<std::string, ModelBoneData>
             /* [2] Torso */ { 12, 11, 8 },
             /* [3] Arms  */ { 19, 20, 24, 21, 25 },
             /* [4] Legs  */ { 63, 67, 64, 68, 65, 69 },
+        },
+    }},
+
+    // models/heroes_staging/grey_talon/grey_talon_owl.vmdl
+    { "models/heroes_staging/grey_talon/grey_talon_owl.vmdl", {
+        /* pairs */ {
+            BonePair{   6,   7 },  // owl_clavicle_l -> owl_arm_upper_l
+            BonePair{   7,   8 },  // owl_arm_upper_l -> owl_arm_lower_l
+            BonePair{   8,   9 },  // owl_arm_lower_l -> owl_hand_l
+            BonePair{  13,  14 },  // owl_spine_0 -> owl_spine_1
+            BonePair{  14,  15 },  // owl_spine_1 -> owl_spine_2
+            BonePair{  15,  16 },  // owl_spine_2 -> owl_spine_3
+            BonePair{  14,  20 },  // owl_spine_1 -> owl_leg_upper_l
+            BonePair{  20,  21 },  // owl_leg_upper_l -> owl_leg_lower_l
+            BonePair{  21,  22 },  // owl_leg_lower_l -> owl_ankle_l
+            BonePair{  22,  23 },  // owl_ankle_l -> owl_ball_l
+            BonePair{  14,  31 },  // owl_spine_1 -> owl_leg_upper_r
+            BonePair{  31,  32 },  // owl_leg_upper_r -> owl_leg_lower_r
+            BonePair{  32,  33 },  // owl_leg_lower_r -> owl_ankle_r
+            BonePair{  33,  34 },  // owl_ankle_r -> owl_ball_r
+            BonePair{  42,  43 },  // owl_clavicle_r -> owl_arm_upper_r
+            BonePair{  43,  44 },  // owl_arm_upper_r -> owl_arm_lower_r
+            BonePair{  44,  45 },  // owl_arm_lower_r -> owl_hand_r
+        },
+        /* ids */ {
+            { "owl_ankle_l",  22 },
+            { "owl_ankle_r",  33 },
+            { "owl_arm_lower_l",   8 },
+            { "owl_arm_lower_r",  44 },
+            { "owl_arm_upper_l",   7 },
+            { "owl_arm_upper_r",  43 },
+            { "owl_ball_l",  23 },
+            { "owl_ball_r",  34 },
+            { "owl_clavicle_l",   6 },
+            { "owl_clavicle_r",  42 },
+            { "owl_hand_l",   9 },
+            { "owl_hand_r",  45 },
+            { "owl_leg_lower_l",  21 },
+            { "owl_leg_lower_r",  32 },
+            { "owl_leg_upper_l",  20 },
+            { "owl_leg_upper_r",  31 },
+            { "owl_neck_0",   2 },
+            { "owl_spine_0",  13 },
+            { "owl_spine_1",  14 },
+            { "owl_spine_2",  15 },
+            { "owl_spine_3",  16 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ {},
+            /* [1] Neck  */ {},
+            /* [2] Torso */ {},
+            /* [3] Arms  */ {},
+            /* [4] Legs  */ {},
         },
     }},
 
@@ -942,6 +1024,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "spine_1",  10 },
             { "spine_2",  11 },
             { "spine_3",  12 },
+            { "weapon_hand_l",  20 },
+            { "weapon_hand_r",  26 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 14 },
@@ -1039,20 +1123,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  52,  53 },  // leg_upper_l -> leg_lower_l
             BonePair{  53,  54 },  // leg_lower_l -> ankle_l
             BonePair{  54,  55 },  // ankle_l -> ball_l
-            BonePair{  14,  57 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  14,  58 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  13,  78 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  13,  79 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  19, 106 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  19, 107 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18, 108 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  18, 109 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  29, 110 },  // neck_0 -> neck_0_twist
-            BonePair{  29, 131 },  // neck_0 -> neck_notwist
-            BonePair{  48, 142 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  48, 143 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  52, 144 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  52, 145 },  // leg_upper_l -> leg_upper_l_twist1
             BonePair{  51, 157 },  // ball_r -> ball_end_r
             BonePair{  55, 158 },  // ball_l -> ball_end_l
         },
@@ -1060,17 +1130,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  54 },
             { "ankle_r",  50 },
             { "arm_lower_l",  14 },
-            { "arm_lower_l_twist",  57 },
-            { "arm_lower_l_twist1",  58 },
             { "arm_lower_r",  19 },
-            { "arm_lower_r_twist", 106 },
-            { "arm_lower_r_twist1", 107 },
             { "arm_upper_l",  13 },
-            { "arm_upper_l_twist",  78 },
-            { "arm_upper_l_twist1",  79 },
             { "arm_upper_r",  18 },
-            { "arm_upper_r_twist", 108 },
-            { "arm_upper_r_twist1", 109 },
             { "ball_end_l", 158 },
             { "ball_end_r", 157 },
             { "ball_l",  55 },
@@ -1083,19 +1145,16 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  53 },
             { "leg_lower_r",  49 },
             { "leg_upper_l",  52 },
-            { "leg_upper_l_twist", 144 },
-            { "leg_upper_l_twist1", 145 },
             { "leg_upper_r",  48 },
-            { "leg_upper_r_twist", 142 },
-            { "leg_upper_r_twist1", 143 },
             { "neck_0",  29 },
-            { "neck_0_twist", 110 },
-            { "neck_notwist", 131 },
+            { "object_hand_l",  16 },
+            { "object_hand_r",  27 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  11 },
+            { "weapon_hand_r",  28 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 30 },
@@ -1131,19 +1190,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  32,  33 },  // leg_upper_r -> leg_lower_r
             BonePair{  33,  34 },  // leg_lower_r -> ankle_r
             BonePair{  34,  35 },  // ankle_r -> ball_r
-            BonePair{  11,  40 },  // neck_0 -> neck_0_twist
-            BonePair{  15,  56 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  15,  57 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14,  58 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  14,  59 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  19,  85 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  19,  86 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18,  87 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  18,  88 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  28, 109 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  28, 111 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  32, 112 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  32, 114 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  31, 128 },  // ball_l -> ball_end_l
             BonePair{  35, 129 },  // ball_r -> ball_end_r
         },
@@ -1151,17 +1197,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  30 },
             { "ankle_r",  34 },
             { "arm_lower_l",  15 },
-            { "arm_lower_l_twist",  56 },
-            { "arm_lower_l_twist1",  57 },
             { "arm_lower_r",  19 },
-            { "arm_lower_r_twist",  85 },
-            { "arm_lower_r_twist1",  86 },
             { "arm_upper_l",  14 },
-            { "arm_upper_l_twist",  58 },
-            { "arm_upper_l_twist1",  59 },
             { "arm_upper_r",  18 },
-            { "arm_upper_r_twist",  87 },
-            { "arm_upper_r_twist1",  88 },
             { "ball_end_l", 128 },
             { "ball_end_r", 129 },
             { "ball_l",  31 },
@@ -1174,13 +1212,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  29 },
             { "leg_lower_r",  33 },
             { "leg_upper_l",  28 },
-            { "leg_upper_l_twist", 109 },
-            { "leg_upper_l_twist1", 111 },
             { "leg_upper_r",  32 },
-            { "leg_upper_r_twist", 112 },
-            { "leg_upper_r_twist1", 114 },
             { "neck_0",  11 },
-            { "neck_0_twist",  40 },
             { "pelvis",   6 },
             { "spine_0",   7 },
             { "spine_1",   8 },
@@ -1221,19 +1254,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  41,  42 },  // leg_upper_r -> leg_lower_r
             BonePair{  42,  43 },  // leg_lower_r -> ankle_r
             BonePair{  43,  44 },  // ankle_r -> ball_r
-            BonePair{  12,  45 },  // neck_0 -> neck_0_twist
-            BonePair{  19,  70 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  19,  71 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  18,  72 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  18,  73 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  23,  97 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  23,  98 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  22,  99 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  22, 100 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  37, 101 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  37, 102 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  41, 103 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  41, 104 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  40, 105 },  // ball_l -> ball_end_l
             BonePair{  44, 106 },  // ball_r -> ball_end_r
         },
@@ -1241,17 +1261,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  39 },
             { "ankle_r",  43 },
             { "arm_lower_l",  19 },
-            { "arm_lower_l_twist",  70 },
-            { "arm_lower_l_twist1",  71 },
             { "arm_lower_r",  23 },
-            { "arm_lower_r_twist",  97 },
-            { "arm_lower_r_twist1",  98 },
             { "arm_upper_l",  18 },
-            { "arm_upper_l_twist",  72 },
-            { "arm_upper_l_twist1",  73 },
             { "arm_upper_r",  22 },
-            { "arm_upper_r_twist",  99 },
-            { "arm_upper_r_twist1", 100 },
             { "ball_end_l", 105 },
             { "ball_end_r", 106 },
             { "ball_l",  40 },
@@ -1264,18 +1276,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  38 },
             { "leg_lower_r",  42 },
             { "leg_upper_l",  37 },
-            { "leg_upper_l_twist", 101 },
-            { "leg_upper_l_twist1", 102 },
             { "leg_upper_r",  41 },
-            { "leg_upper_r_twist", 103 },
-            { "leg_upper_r_twist1", 104 },
             { "neck_0",  12 },
-            { "neck_0_twist",  45 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  11 },
+            { "weapon_hand_r",  25 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
@@ -1311,19 +1319,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  22,  23 },  // leg_upper_r -> leg_lower_r
             BonePair{  23,  24 },  // leg_lower_r -> ankle_r
             BonePair{  24,  25 },  // ankle_r -> ball_r
-            BonePair{   6,  28 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  49 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10,  50 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14,  70 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  14,  71 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18,  78 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  18,  79 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  22,  80 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  22,  81 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{   9, 132 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{   9, 133 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  13, 145 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  13, 146 },  // arm_upper_r -> arm_upper_r_twist
             BonePair{  21, 167 },  // ball_l -> ball_end_l
             BonePair{  25, 168 },  // ball_r -> ball_end_r
         },
@@ -1331,17 +1326,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  20 },
             { "ankle_r",  24 },
             { "arm_lower_l",  10 },
-            { "arm_lower_l_twist",  49 },
-            { "arm_lower_l_twist1",  50 },
             { "arm_lower_r",  14 },
-            { "arm_lower_r_twist",  70 },
-            { "arm_lower_r_twist1",  71 },
             { "arm_upper_l",   9 },
-            { "arm_upper_l_twist", 133 },
-            { "arm_upper_l_twist1", 132 },
             { "arm_upper_r",  13 },
-            { "arm_upper_r_twist", 146 },
-            { "arm_upper_r_twist1", 145 },
             { "ball_end_l", 167 },
             { "ball_end_r", 168 },
             { "ball_l",  21 },
@@ -1354,18 +1341,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  19 },
             { "leg_lower_r",  23 },
             { "leg_upper_l",  18 },
-            { "leg_upper_l_twist",  78 },
-            { "leg_upper_l_twist1",  79 },
             { "leg_upper_r",  22 },
-            { "leg_upper_r_twist",  80 },
-            { "leg_upper_r_twist1",  81 },
             { "neck_0",   6 },
-            { "neck_0_twist",  28 },
+            { "object_hand_l", 140 },
+            { "object_hand_r", 153 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_l", 141 },
+            { "weapon_hand_r",  16 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -1401,19 +1387,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  32,  33 },  // leg_upper_r -> leg_lower_r
             BonePair{  33,  34 },  // leg_lower_r -> ankle_r
             BonePair{  34,  35 },  // ankle_r -> ball_r
-            BonePair{   6,  42 },  // neck_0 -> neck_0_twist
-            BonePair{   9,  43 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{   9,  44 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  10,  91 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10,  92 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  23,  94 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  23,  95 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  24, 117 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  24, 118 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  28, 124 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  28, 125 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  32, 126 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  32, 127 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  31, 211 },  // ball_l -> ball_end_l
             BonePair{  35, 212 },  // ball_r -> ball_end_r
         },
@@ -1421,41 +1394,33 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  30 },
             { "ankle_r",  34 },
             { "arm_lower_l",  10 },
-            { "arm_lower_l_twist",  91 },
-            { "arm_lower_l_twist1",  92 },
             { "arm_lower_r",  24 },
-            { "arm_lower_r_twist", 117 },
-            { "arm_lower_r_twist1", 118 },
             { "arm_upper_l",   9 },
-            { "arm_upper_l_twist",  44 },
-            { "arm_upper_l_twist1",  43 },
             { "arm_upper_r",  23 },
-            { "arm_upper_r_twist",  95 },
-            { "arm_upper_r_twist1",  94 },
             { "ball_end_l", 211 },
             { "ball_end_r", 212 },
             { "ball_l",  31 },
             { "ball_r",  35 },
             { "clavicle_l",   8 },
             { "clavicle_r",  22 },
+            { "darm_hand_r",  21 },
             { "hand_l",  11 },
             { "hand_r",  25 },
             { "head",   7 },
             { "leg_lower_l",  29 },
             { "leg_lower_r",  33 },
             { "leg_upper_l",  28 },
-            { "leg_upper_l_twist", 124 },
-            { "leg_upper_l_twist1", 125 },
             { "leg_upper_r",  32 },
-            { "leg_upper_r_twist", 126 },
-            { "leg_upper_r_twist1", 127 },
             { "neck_0",   6 },
-            { "neck_0_twist",  42 },
+            { "object_hand_l", 191 },
+            { "object_hand_r", 208 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_l", 192 },
+            { "weapon_hand_r",  26 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -1495,6 +1460,13 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  15,  16 },  // clavicle_l -> arm_upper_l
             BonePair{  16,  17 },  // arm_upper_l -> arm_lower_l
             BonePair{  17,  18 },  // arm_lower_l -> hand_l
+            BonePair{  20,  21 },  // cat_pelvis -> cat_spine_0
+            BonePair{  21,  22 },  // cat_spine_0 -> cat_spine_1
+            BonePair{  22,  23 },  // cat_spine_1 -> cat_spine_2
+            BonePair{  23,  24 },  // cat_spine_2 -> cat_spine_3
+            BonePair{  24,  25 },  // cat_spine_3 -> cat_neck_0
+            BonePair{  25,  26 },  // cat_neck_0 -> cat_neck_1
+            BonePair{  26,  27 },  // cat_neck_1 -> cat_head
             BonePair{  12,  28 },  // spine_3 -> clavicle_r
             BonePair{  28,  29 },  // clavicle_r -> arm_upper_r
             BonePair{  29,  30 },  // arm_upper_r -> arm_lower_r
@@ -1507,37 +1479,52 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  38,  39 },  // leg_upper_r -> leg_lower_r
             BonePair{  39,  40 },  // leg_lower_r -> ankle_r
             BonePair{  40,  41 },  // ankle_r -> ball_r
-            BonePair{  13,  49 },  // neck_0 -> neck_0_twist
-            BonePair{  17,  73 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  17,  74 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  16,  75 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  16,  76 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  30, 131 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  30, 132 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  29, 133 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  29, 134 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  34, 135 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  34, 136 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  38, 137 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  38, 138 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  77,  78 },  // cat_back_leg_upper_l -> cat_back_leg_lower_l
+            BonePair{  78,  79 },  // cat_back_leg_lower_l -> cat_back_ankle_l
+            BonePair{  79,  80 },  // cat_back_ankle_l -> cat_back_ball_l
+            BonePair{  87,  89 },  // cat_front_leg_upper_l -> cat_front_leg_lower_l
+            BonePair{  89,  90 },  // cat_front_leg_lower_l -> cat_front_ankle_l
+            BonePair{  90,  91 },  // cat_front_ankle_l -> cat_front_ball_l
+            BonePair{  93,  95 },  // cat_front_leg_upper_r -> cat_front_leg_lower_r
+            BonePair{  95,  96 },  // cat_front_leg_lower_r -> cat_front_ankle_r
+            BonePair{  96,  97 },  // cat_front_ankle_r -> cat_front_ball_r
+            BonePair{ 107, 108 },  // cat_back_leg_upper_r -> cat_back_leg_lower_r
+            BonePair{ 108, 109 },  // cat_back_leg_lower_r -> cat_back_ankle_r
+            BonePair{ 109, 110 },  // cat_back_ankle_r -> cat_back_ball_r
         },
         /* ids */ {
             { "ankle_l",  36 },
             { "ankle_r",  40 },
             { "arm_lower_l",  17 },
-            { "arm_lower_l_twist",  73 },
-            { "arm_lower_l_twist1",  74 },
             { "arm_lower_r",  30 },
-            { "arm_lower_r_twist", 131 },
-            { "arm_lower_r_twist1", 132 },
             { "arm_upper_l",  16 },
-            { "arm_upper_l_twist",  76 },
-            { "arm_upper_l_twist1",  75 },
             { "arm_upper_r",  29 },
-            { "arm_upper_r_twist", 134 },
-            { "arm_upper_r_twist1", 133 },
             { "ball_l",  37 },
             { "ball_r",  41 },
+            { "cat_back_ankle_l",  79 },
+            { "cat_back_ankle_r", 109 },
+            { "cat_back_ball_l",  80 },
+            { "cat_back_ball_r", 110 },
+            { "cat_back_leg_lower_l",  78 },
+            { "cat_back_leg_lower_r", 108 },
+            { "cat_back_leg_upper_l",  77 },
+            { "cat_back_leg_upper_r", 107 },
+            { "cat_front_ankle_l",  90 },
+            { "cat_front_ankle_r",  96 },
+            { "cat_front_ball_l",  91 },
+            { "cat_front_ball_r",  97 },
+            { "cat_front_leg_lower_l",  89 },
+            { "cat_front_leg_lower_r",  95 },
+            { "cat_front_leg_upper_l",  87 },
+            { "cat_front_leg_upper_r",  93 },
+            { "cat_head",  27 },
+            { "cat_neck_0",  25 },
+            { "cat_neck_1",  26 },
+            { "cat_pelvis",  20 },
+            { "cat_spine_0",  21 },
+            { "cat_spine_1",  22 },
+            { "cat_spine_2",  23 },
+            { "cat_spine_3",  24 },
             { "clavicle_l",  15 },
             { "clavicle_r",  28 },
             { "hand_l",  18 },
@@ -1546,18 +1533,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  35 },
             { "leg_lower_r",  39 },
             { "leg_upper_l",  34 },
-            { "leg_upper_l_twist", 135 },
-            { "leg_upper_l_twist1", 136 },
             { "leg_upper_r",  38 },
-            { "leg_upper_r_twist", 137 },
-            { "leg_upper_r_twist1", 138 },
             { "neck_0",  13 },
-            { "neck_0_twist",  49 },
             { "pelvis",   8 },
             { "spine_0",   9 },
             { "spine_1",  10 },
             { "spine_2",  11 },
             { "spine_3",  12 },
+            { "weapon_hand_l",  19 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 14 },
@@ -1593,35 +1576,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  22,  23 },  // leg_upper_r -> leg_lower_r
             BonePair{  23,  24 },  // leg_lower_r -> ankle_r
             BonePair{  24,  25 },  // ankle_r -> ball_r
-            BonePair{   6,  34 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  54 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10,  55 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{   9,  56 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{   9,  57 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  14,  77 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  14,  78 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  13,  79 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  13,  80 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  18,  81 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  18,  82 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  22,  83 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  22,  84 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  20 },
             { "ankle_r",  24 },
             { "arm_lower_l",  10 },
-            { "arm_lower_l_twist",  54 },
-            { "arm_lower_l_twist1",  55 },
             { "arm_lower_r",  14 },
-            { "arm_lower_r_twist",  77 },
-            { "arm_lower_r_twist1",  78 },
             { "arm_upper_l",   9 },
-            { "arm_upper_l_twist",  56 },
-            { "arm_upper_l_twist1",  57 },
             { "arm_upper_r",  13 },
-            { "arm_upper_r_twist",  79 },
-            { "arm_upper_r_twist1",  80 },
             { "ball_l",  21 },
             { "ball_r",  25 },
             { "clavicle_l",   8 },
@@ -1632,13 +1594,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  19 },
             { "leg_lower_r",  23 },
             { "leg_upper_l",  18 },
-            { "leg_upper_l_twist",  81 },
-            { "leg_upper_l_twist1",  82 },
             { "leg_upper_r",  22 },
-            { "leg_upper_r_twist",  83 },
-            { "leg_upper_r_twist1",  84 },
             { "neck_0",   6 },
-            { "neck_0_twist",  34 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
@@ -1673,36 +1630,16 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  43,  44 },  // leg_upper_r -> leg_lower_r
             BonePair{  44,  45 },  // leg_lower_r -> ankle_r
             BonePair{  45,  46 },  // ankle_r -> ball_r
-            BonePair{  18,  68 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  18,  69 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  23, 101 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  23, 102 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  19, 313 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  19, 314 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  24, 327 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  24, 328 },  // arm_lower_r -> arm_lower_r_twist1
             BonePair{  42, 349 },  // ball_l -> ball_end_l
-            BonePair{  39, 350 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  39, 351 },  // leg_upper_l -> leg_upper_l_twist1
             BonePair{  46, 352 },  // ball_r -> ball_end_r
-            BonePair{  43, 353 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  43, 354 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  41 },
             { "ankle_r",  45 },
             { "arm_lower_l",  19 },
-            { "arm_lower_l_twist", 313 },
-            { "arm_lower_l_twist1", 314 },
             { "arm_lower_r",  24 },
-            { "arm_lower_r_twist", 327 },
-            { "arm_lower_r_twist1", 328 },
             { "arm_upper_l",  18 },
-            { "arm_upper_l_twist",  68 },
-            { "arm_upper_l_twist1",  69 },
             { "arm_upper_r",  23 },
-            { "arm_upper_r_twist", 101 },
-            { "arm_upper_r_twist1", 102 },
             { "ball_end_l", 349 },
             { "ball_end_r", 352 },
             { "ball_l",  42 },
@@ -1715,14 +1652,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  40 },
             { "leg_lower_r",  44 },
             { "leg_upper_l",  39 },
-            { "leg_upper_l_twist", 350 },
-            { "leg_upper_l_twist1", 351 },
             { "leg_upper_r",  43 },
-            { "leg_upper_r_twist", 353 },
-            { "leg_upper_r_twist1", 354 },
             { "neck_0",  12 },
+            { "object_hand_l", 310 },
+            { "object_hand_r", 323 },
             { "pelvis",   7 },
             { "spine_0",   8 },
+            { "weapon_hand_l", 311 },
+            { "weapon_hand_r",  26 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
@@ -1750,6 +1687,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  22,  23 },  // clavicle_r -> arm_upper_r
             BonePair{  23,  24 },  // arm_upper_r -> arm_lower_r
             BonePair{  24,  25 },  // arm_lower_r -> hand_r
+            BonePair{  39,  40 },  // knifearm_clavicle_l -> knifearm_arm_upper_l
+            BonePair{  40,  41 },  // knifearm_arm_upper_l -> knifearm_arm_lower_l
+            BonePair{  42,  43 },  // knifearm_clavicle_r -> knifearm_arm_upper_r
+            BonePair{  43,  44 },  // knifearm_arm_upper_r -> knifearm_arm_lower_r
             BonePair{   7,  45 },  // pelvis -> leg_upper_l
             BonePair{  45,  46 },  // leg_upper_l -> leg_lower_l
             BonePair{  46,  47 },  // leg_lower_l -> ankle_l
@@ -1758,6 +1699,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  50,  51 },  // leg_upper_r -> leg_lower_r
             BonePair{  51,  52 },  // leg_lower_r -> ankle_r
             BonePair{  52,  53 },  // ankle_r -> ball_r
+            BonePair{  41, 130 },  // knifearm_arm_lower_l -> knifearm_hand_l
+            BonePair{  44, 140 },  // knifearm_arm_lower_r -> knifearm_hand_r
         },
         /* ids */ {
             { "ankle_l",  47 },
@@ -1773,6 +1716,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "hand_l",  17 },
             { "hand_r",  25 },
             { "head",  13 },
+            { "knifearm_arm_lower_l",  41 },
+            { "knifearm_arm_lower_r",  44 },
+            { "knifearm_arm_upper_l",  40 },
+            { "knifearm_arm_upper_r",  43 },
+            { "knifearm_clavicle_l",  39 },
+            { "knifearm_clavicle_r",  42 },
+            { "knifearm_hand_l", 130 },
+            { "knifearm_hand_r", 140 },
             { "leg_lower_l",  46 },
             { "leg_lower_r",  51 },
             { "leg_upper_l",  45 },
@@ -1783,6 +1734,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  11 },
+            { "weapon_hand_r",  27 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
@@ -1878,20 +1830,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  34,  35 },  // leg_upper_r -> leg_lower_r
             BonePair{  35,  36 },  // leg_lower_r -> ankle_r
             BonePair{  36,  37 },  // ankle_r -> ball_r
-            BonePair{  12,  46 },  // neck_0 -> neck_0_twist
-            BonePair{  12,  47 },  // neck_0 -> neck_notwist
-            BonePair{  16, 115 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  16, 116 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  15, 117 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  15, 118 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  23, 153 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  23, 154 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  22, 155 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  22, 156 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  28, 190 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  28, 191 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  34, 192 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  34, 193 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  69,  70 },  // frog_spine_0 -> frog_spine_1
+            BonePair{  70,  71 },  // frog_spine_1 -> frog_clavicle_l
+            BonePair{  71,  72 },  // frog_clavicle_l -> frog_arm_upper_l
+            BonePair{  72,  73 },  // frog_arm_upper_l -> frog_arm_lower_l
+            BonePair{  73,  74 },  // frog_arm_lower_l -> frog_hand_l
+            BonePair{  70,  84 },  // frog_spine_1 -> frog_neck_0
+            BonePair{  84,  85 },  // frog_neck_0 -> frog_head
+            BonePair{  70, 101 },  // frog_spine_1 -> frog_clavicle_r
+            BonePair{ 101, 102 },  // frog_clavicle_r -> frog_arm_upper_r
+            BonePair{ 102, 103 },  // frog_arm_upper_r -> frog_arm_lower_r
+            BonePair{ 103, 104 },  // frog_arm_lower_r -> frog_hand_r
             BonePair{  31, 369 },  // ball_l -> ball_end_l
             BonePair{  37, 371 },  // ball_r -> ball_end_r
         },
@@ -1899,37 +1848,35 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  30 },
             { "ankle_r",  36 },
             { "arm_lower_l",  16 },
-            { "arm_lower_l_twist", 115 },
-            { "arm_lower_l_twist1", 116 },
             { "arm_lower_r",  23 },
-            { "arm_lower_r_twist", 153 },
-            { "arm_lower_r_twist1", 154 },
             { "arm_upper_l",  15 },
-            { "arm_upper_l_twist", 117 },
-            { "arm_upper_l_twist1", 118 },
             { "arm_upper_r",  22 },
-            { "arm_upper_r_twist", 155 },
-            { "arm_upper_r_twist1", 156 },
             { "ball_end_l", 369 },
             { "ball_end_r", 371 },
             { "ball_l",  31 },
             { "ball_r",  37 },
             { "clavicle_l",  14 },
             { "clavicle_r",  21 },
+            { "frog_arm_lower_l",  73 },
+            { "frog_arm_lower_r", 103 },
+            { "frog_arm_upper_l",  72 },
+            { "frog_arm_upper_r", 102 },
+            { "frog_clavicle_l",  71 },
+            { "frog_clavicle_r", 101 },
+            { "frog_hand_l",  74 },
+            { "frog_hand_r", 104 },
+            { "frog_head",  85 },
+            { "frog_neck_0",  84 },
+            { "frog_spine_0",  69 },
+            { "frog_spine_1",  70 },
             { "hand_l",  17 },
             { "hand_r",  24 },
             { "head",  13 },
             { "leg_lower_l",  29 },
             { "leg_lower_r",  35 },
             { "leg_upper_l",  28 },
-            { "leg_upper_l_twist", 190 },
-            { "leg_upper_l_twist1", 191 },
             { "leg_upper_r",  34 },
-            { "leg_upper_r_twist", 192 },
-            { "leg_upper_r_twist1", 193 },
             { "neck_0",  12 },
-            { "neck_0_twist",  46 },
-            { "neck_notwist",  47 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
@@ -1999,6 +1946,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  11 },
+            { "weapon_hand_l", 105 },
+            { "weapon_hand_r",  22 },
+            { "weaponik_hand_l",  23 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
@@ -2117,6 +2067,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  11 },
+            { "weapon_hand_r",  23 },
+            { "weaponik_hand_l",  26 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
@@ -2167,6 +2119,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "hand_l",  11 },
             { "hand_r",  15 },
             { "head",   7 },
+            { "inflated_hand_l",  80 },
+            { "inflated_hand_r",  81 },
             { "leg_lower_l",  22 },
             { "leg_lower_r",  26 },
             { "leg_upper_l",  21 },
@@ -2204,7 +2158,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  16,  17 },  // clavicle_r -> arm_upper_r
             BonePair{  17,  18 },  // arm_upper_r -> arm_lower_r
             BonePair{  18,  19 },  // arm_lower_r -> hand_r
-            BonePair{  17,  29 },  // arm_upper_r -> arm_upper_r_twist
             BonePair{   5,  30 },  // pelvis -> leg_upper_l
             BonePair{  30,  31 },  // leg_upper_l -> leg_lower_l
             BonePair{  31,  32 },  // leg_lower_l -> ankle_l
@@ -2213,35 +2166,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  34,  35 },  // leg_upper_r -> leg_lower_r
             BonePair{  35,  36 },  // leg_lower_r -> ankle_r
             BonePair{  36,  37 },  // ankle_r -> ball_r
-            BonePair{  10,  39 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  40 },  // neck_0 -> neck_notwist
-            BonePair{  14,  60 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14,  61 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  13,  62 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  13,  63 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  18,  90 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18,  91 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  17,  92 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  30, 122 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  30, 123 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  34, 124 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  34, 125 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  32 },
             { "ankle_r",  36 },
             { "arm_lower_l",  14 },
-            { "arm_lower_l_twist",  61 },
-            { "arm_lower_l_twist1",  60 },
             { "arm_lower_r",  18 },
-            { "arm_lower_r_twist",  91 },
-            { "arm_lower_r_twist1",  90 },
             { "arm_upper_l",  13 },
-            { "arm_upper_l_twist",  62 },
-            { "arm_upper_l_twist1",  63 },
             { "arm_upper_r",  17 },
-            { "arm_upper_r_twist",  29 },
-            { "arm_upper_r_twist1",  92 },
             { "ball_l",  33 },
             { "ball_r",  37 },
             { "clavicle_l",  12 },
@@ -2252,14 +2184,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  31 },
             { "leg_lower_r",  35 },
             { "leg_upper_l",  30 },
-            { "leg_upper_l_twist", 122 },
-            { "leg_upper_l_twist1", 123 },
             { "leg_upper_r",  34 },
-            { "leg_upper_r_twist", 124 },
-            { "leg_upper_r_twist1", 125 },
             { "neck_0",  10 },
-            { "neck_0_twist",  39 },
-            { "neck_notwist",  40 },
             { "pelvis",   5 },
             { "spine_0",   6 },
             { "spine_1",   7 },
@@ -2288,10 +2214,16 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  19,  20 },  // clavicle_l -> arm_upper_l
             BonePair{  20,  21 },  // arm_upper_l -> arm_lower_l
             BonePair{  21,  22 },  // arm_lower_l -> hand_l
+            BonePair{  24,  25 },  // inner_clavicle_l -> inner_arm_upper_l
+            BonePair{  25,  26 },  // inner_arm_upper_l -> inner_arm_lower_l
+            BonePair{  26,  27 },  // inner_arm_lower_l -> inner_hand_l
             BonePair{  16,  28 },  // spine_3 -> clavicle_r
             BonePair{  28,  29 },  // clavicle_r -> arm_upper_r
             BonePair{  29,  30 },  // arm_upper_r -> arm_lower_r
             BonePair{  30,  31 },  // arm_lower_r -> hand_r
+            BonePair{  33,  34 },  // inner_clavicle_r -> inner_arm_upper_r
+            BonePair{  34,  35 },  // inner_arm_upper_r -> inner_arm_lower_r
+            BonePair{  35,  36 },  // inner_arm_lower_r -> inner_hand_r
             BonePair{  12,  37 },  // pelvis -> leg_upper_l
             BonePair{  37,  38 },  // leg_upper_l -> leg_lower_l
             BonePair{  38,  39 },  // leg_lower_l -> ankle_l
@@ -2300,11 +2232,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  41,  42 },  // leg_upper_r -> leg_lower_r
             BonePair{  42,  43 },  // leg_lower_r -> ankle_r
             BonePair{  43,  44 },  // ankle_r -> ball_r
-            BonePair{  17,  58 },  // neck_0 -> neck_0_twist
-            BonePair{  37, 164 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  37, 165 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  41, 166 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  41, 167 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  39 },
@@ -2320,16 +2247,19 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "hand_l",  22 },
             { "hand_r",  31 },
             { "head",  18 },
+            { "inner_arm_lower_l",  26 },
+            { "inner_arm_lower_r",  35 },
+            { "inner_arm_upper_l",  25 },
+            { "inner_arm_upper_r",  34 },
+            { "inner_clavicle_l",  24 },
+            { "inner_clavicle_r",  33 },
+            { "inner_hand_l",  27 },
+            { "inner_hand_r",  36 },
             { "leg_lower_l",  38 },
             { "leg_lower_r",  42 },
             { "leg_upper_l",  37 },
-            { "leg_upper_l_twist", 164 },
-            { "leg_upper_l_twist1", 165 },
             { "leg_upper_r",  41 },
-            { "leg_upper_r_twist", 166 },
-            { "leg_upper_r_twist1", 167 },
             { "neck_0",  17 },
-            { "neck_0_twist",  58 },
             { "pelvis",  12 },
             { "spine_0",  13 },
             { "spine_1",  14 },
@@ -2370,19 +2300,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  22,  23 },  // leg_upper_r -> leg_lower_r
             BonePair{  23,  24 },  // leg_lower_r -> ankle_r
             BonePair{  24,  25 },  // ankle_r -> ball_r
-            BonePair{   6,  42 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  70 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10,  71 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{   9,  72 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{   9,  73 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  14, 108 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  14, 109 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  13, 110 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  13, 111 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  18, 139 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  18, 140 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  22, 141 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  22, 142 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  21, 423 },  // ball_l -> ball_end_l
             BonePair{  25, 424 },  // ball_r -> ball_end_r
         },
@@ -2390,17 +2307,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  20 },
             { "ankle_r",  24 },
             { "arm_lower_l",  10 },
-            { "arm_lower_l_twist",  70 },
-            { "arm_lower_l_twist1",  71 },
             { "arm_lower_r",  14 },
-            { "arm_lower_r_twist", 108 },
-            { "arm_lower_r_twist1", 109 },
             { "arm_upper_l",   9 },
-            { "arm_upper_l_twist",  72 },
-            { "arm_upper_l_twist1",  73 },
             { "arm_upper_r",  13 },
-            { "arm_upper_r_twist", 110 },
-            { "arm_upper_r_twist1", 111 },
             { "ball_end_l", 423 },
             { "ball_end_r", 424 },
             { "ball_l",  21 },
@@ -2413,18 +2322,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  19 },
             { "leg_lower_r",  23 },
             { "leg_upper_l",  18 },
-            { "leg_upper_l_twist", 139 },
-            { "leg_upper_l_twist1", 140 },
             { "leg_upper_r",  22 },
-            { "leg_upper_r_twist", 141 },
-            { "leg_upper_r_twist1", 142 },
             { "neck_0",   6 },
-            { "neck_0_twist",  42 },
+            { "object_hand_l", 418 },
+            { "object_hand_r", 420 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_l", 419 },
+            { "weapon_hand_r",  16 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -2444,6 +2352,12 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  10,  11 },  // spine_2 -> spine_3
             BonePair{  11,  12 },  // spine_3 -> neck_0
             BonePair{  12,  13 },  // neck_0 -> head
+            BonePair{  15,  16 },  // magic_clavicle_r -> magic_arm_upper_r
+            BonePair{  16,  17 },  // magic_arm_upper_r -> magic_arm_lower_r
+            BonePair{  17,  18 },  // magic_arm_lower_r -> magic_hand_r
+            BonePair{  19,  20 },  // magic_clavicle_l -> magic_arm_upper_l
+            BonePair{  20,  21 },  // magic_arm_upper_l -> magic_arm_lower_l
+            BonePair{  21,  22 },  // magic_arm_lower_l -> magic_hand_l
             BonePair{  11,  47 },  // spine_3 -> clavicle_l
             BonePair{  47,  48 },  // clavicle_l -> arm_upper_l
             BonePair{  48,  49 },  // arm_upper_l -> arm_lower_l
@@ -2483,12 +2397,28 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_r",  62 },
             { "leg_upper_l",  57 },
             { "leg_upper_r",  61 },
+            { "magic_arm_lower_l",  21 },
+            { "magic_arm_lower_r",  17 },
+            { "magic_arm_upper_l",  20 },
+            { "magic_arm_upper_r",  16 },
+            { "magic_clavicle_l",  19 },
+            { "magic_clavicle_r",  15 },
+            { "magic_hand_l",  22 },
+            { "magic_hand_r",  18 },
+            { "magic_object_hand_l", 331 },
+            { "magic_object_hand_r", 323 },
+            { "magic_weapon_hand_l", 332 },
+            { "magic_weapon_hand_r", 324 },
             { "neck_0",  12 },
+            { "object_hand_l", 348 },
+            { "object_hand_r", 356 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  11 },
+            { "weapon_hand_l", 347 },
+            { "weapon_hand_r", 355 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
@@ -2524,19 +2454,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  30,  31 },  // leg_upper_r -> leg_lower_r
             BonePair{  31,  32 },  // leg_lower_r -> ankle_r
             BonePair{  32,  33 },  // ankle_r -> ball_r
-            BonePair{   7,  34 },  // neck_0 -> neck_0_twist
-            BonePair{  11,  55 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  11,  56 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  10,  57 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  10,  58 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  16,  90 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  16,  91 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  15,  92 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  15,  93 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  26,  94 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  26,  95 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  30,  96 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  30,  97 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  29, 171 },  // ball_l -> ball_end_l
             BonePair{  33, 172 },  // ball_r -> ball_end_r
         },
@@ -2544,17 +2461,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  28 },
             { "ankle_r",  32 },
             { "arm_lower_l",  11 },
-            { "arm_lower_l_twist",  55 },
-            { "arm_lower_l_twist1",  56 },
             { "arm_lower_r",  16 },
-            { "arm_lower_r_twist",  90 },
-            { "arm_lower_r_twist1",  91 },
             { "arm_upper_l",  10 },
-            { "arm_upper_l_twist",  57 },
-            { "arm_upper_l_twist1",  58 },
             { "arm_upper_r",  15 },
-            { "arm_upper_r_twist",  92 },
-            { "arm_upper_r_twist1",  93 },
             { "ball_end_l", 171 },
             { "ball_end_r", 172 },
             { "ball_l",  29 },
@@ -2567,18 +2476,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  27 },
             { "leg_lower_r",  31 },
             { "leg_upper_l",  26 },
-            { "leg_upper_l_twist",  94 },
-            { "leg_upper_l_twist1",  95 },
             { "leg_upper_r",  30 },
-            { "leg_upper_r_twist",  96 },
-            { "leg_upper_r_twist1",  97 },
             { "neck_0",   7 },
-            { "neck_0_twist",  34 },
             { "pelvis",   2 },
             { "spine_0",   3 },
             { "spine_1",   4 },
             { "spine_2",   5 },
             { "spine_3",   6 },
+            { "weapon_hand_l", 109 },
+            { "weapon_hand_r",  18 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 8 },
@@ -2614,32 +2520,16 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  24,  25 },  // arm_lower_r -> hand_r
             BonePair{  17,  33 },  // spine_3 -> neck_0
             BonePair{  33,  34 },  // neck_0 -> head
-            BonePair{   6,  40 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{   6,  41 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  10,  42 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  10,  43 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  19,  63 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  19,  73 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  23,  93 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  23, 103 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{   9, 505 },  // ball_l -> ball_end_l
             BonePair{  13, 506 },  // ball_r -> ball_end_r
-            BonePair{  24, 507 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  24, 508 },  // arm_lower_r -> arm_lower_r_twist1
         },
         /* ids */ {
             { "ankle_l",   8 },
             { "ankle_r",  12 },
             { "arm_lower_l",  20 },
             { "arm_lower_r",  24 },
-            { "arm_lower_r_twist", 507 },
-            { "arm_lower_r_twist1", 508 },
             { "arm_upper_l",  19 },
-            { "arm_upper_l_twist",  63 },
-            { "arm_upper_l_twist1",  73 },
             { "arm_upper_r",  23 },
-            { "arm_upper_r_twist",  93 },
-            { "arm_upper_r_twist1", 103 },
             { "ball_end_l", 505 },
             { "ball_end_r", 506 },
             { "ball_l",   9 },
@@ -2652,17 +2542,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",   7 },
             { "leg_lower_r",  11 },
             { "leg_upper_l",   6 },
-            { "leg_upper_l_twist",  40 },
-            { "leg_upper_l_twist1",  41 },
             { "leg_upper_r",  10 },
-            { "leg_upper_r_twist",  42 },
-            { "leg_upper_r_twist1",  43 },
             { "neck_0",  33 },
             { "pelvis",   5 },
             { "spine_0",  14 },
             { "spine_1",  15 },
             { "spine_2",  16 },
             { "spine_3",  17 },
+            { "weapon_hand_r",  26 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 34 },
@@ -2698,20 +2585,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  30,  31 },  // leg_upper_r -> leg_lower_r
             BonePair{  31,  32 },  // leg_lower_r -> ankle_r
             BonePair{  32,  33 },  // ankle_r -> ball_r
-            BonePair{   6, 179 },  // neck_0 -> neck_0_twist
-            BonePair{   6, 185 },  // neck_0 -> neck_0_notwist
-            BonePair{  11, 243 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  11, 244 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  10, 245 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  10, 246 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  19, 267 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  19, 268 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18, 269 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  18, 270 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  26, 292 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  26, 293 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  30, 295 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  30, 296 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  29, 494 },  // ball_l -> ball_end_l
             BonePair{  33, 495 },  // ball_r -> ball_end_r
         },
@@ -2719,17 +2592,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  28 },
             { "ankle_r",  32 },
             { "arm_lower_l",  11 },
-            { "arm_lower_l_twist", 243 },
-            { "arm_lower_l_twist1", 244 },
             { "arm_lower_r",  19 },
-            { "arm_lower_r_twist", 267 },
-            { "arm_lower_r_twist1", 268 },
             { "arm_upper_l",  10 },
-            { "arm_upper_l_twist", 245 },
-            { "arm_upper_l_twist1", 246 },
             { "arm_upper_r",  18 },
-            { "arm_upper_r_twist", 269 },
-            { "arm_upper_r_twist1", 270 },
             { "ball_end_l", 494 },
             { "ball_end_r", 495 },
             { "ball_l",  29 },
@@ -2742,19 +2607,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  27 },
             { "leg_lower_r",  31 },
             { "leg_upper_l",  26 },
-            { "leg_upper_l_twist", 292 },
-            { "leg_upper_l_twist1", 293 },
             { "leg_upper_r",  30 },
-            { "leg_upper_r_twist", 295 },
-            { "leg_upper_r_twist1", 296 },
             { "neck_0",   6 },
-            { "neck_0_notwist", 185 },
-            { "neck_0_twist", 179 },
+            { "object_hand_l",  13 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_r",  25 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -2778,7 +2639,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  18,  19 },  // clavicle_r -> arm_upper_r
             BonePair{  19,  20 },  // arm_upper_r -> arm_lower_r
             BonePair{  20,  21 },  // arm_lower_r -> hand_r
-            BonePair{  19,  22 },  // arm_upper_r -> arm_upper_r_twist
             BonePair{  15,  26 },  // spine_3 -> clavicle_l
             BonePair{  26,  27 },  // clavicle_l -> arm_upper_l
             BonePair{  27,  28 },  // arm_upper_l -> arm_lower_l
@@ -2791,39 +2651,20 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  35,  36 },  // leg_upper_l -> leg_lower_l
             BonePair{  36,  37 },  // leg_lower_l -> ankle_l
             BonePair{  37,  38 },  // ankle_l -> ball_l
-            BonePair{  20,  77 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  20,  78 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  19,  99 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{ 101, 102 },  // arm_upper_sleeve_top_r -> arm_upper_sleeve_outer_r
             BonePair{ 102, 103 },  // arm_upper_sleeve_outer_r -> arm_upper_sleeve_bottom_r
             BonePair{ 103, 104 },  // arm_upper_sleeve_bottom_r -> arm_upper_sleeve_inner_r
-            BonePair{  27, 131 },  // arm_upper_l -> arm_upper_l_twist1
             BonePair{ 133, 134 },  // arm_upper_sleeve_top_l -> arm_upper_sleeve_outer_l
             BonePair{ 134, 135 },  // arm_upper_sleeve_outer_l -> arm_upper_sleeve_bottom_l
             BonePair{ 135, 136 },  // arm_upper_sleeve_bottom_l -> arm_upper_sleeve_inner_l
-            BonePair{  27, 137 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  28, 138 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  28, 139 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  31, 180 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  31, 181 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  35, 187 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  35, 188 },  // leg_upper_l -> leg_upper_l_twist1
         },
         /* ids */ {
             { "ankle_l",  37 },
             { "ankle_r",  33 },
             { "arm_lower_l",  28 },
-            { "arm_lower_l_twist", 138 },
-            { "arm_lower_l_twist1", 139 },
             { "arm_lower_r",  20 },
-            { "arm_lower_r_twist",  77 },
-            { "arm_lower_r_twist1",  78 },
             { "arm_upper_l",  27 },
-            { "arm_upper_l_twist", 137 },
-            { "arm_upper_l_twist1", 131 },
             { "arm_upper_r",  19 },
-            { "arm_upper_r_twist",  22 },
-            { "arm_upper_r_twist1",  99 },
             { "arm_upper_sleeve_bottom_l", 135 },
             { "arm_upper_sleeve_bottom_r", 103 },
             { "arm_upper_sleeve_inner_l", 136 },
@@ -2842,17 +2683,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  36 },
             { "leg_lower_r",  32 },
             { "leg_upper_l",  35 },
-            { "leg_upper_l_twist", 187 },
-            { "leg_upper_l_twist1", 188 },
             { "leg_upper_r",  31 },
-            { "leg_upper_r_twist", 180 },
-            { "leg_upper_r_twist1", 181 },
             { "neck_0",  16 },
             { "pelvis",  11 },
             { "spine_0",  12 },
             { "spine_1",  13 },
             { "spine_2",  14 },
             { "spine_3",  15 },
+            { "weapon_target_hand_l", 228 },
+            { "weapon_target_hand_r", 223 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 17 },
@@ -2870,43 +2709,100 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{   8,   9 },  // leg_upper_l -> leg_lower_l
             BonePair{   9,  10 },  // leg_lower_l -> ankle_l
             BonePair{  10,  11 },  // ankle_l -> ball_l
-            BonePair{   9,  12 },  // leg_lower_l -> leg_lower_b_hlp_l
-            BonePair{   8,  13 },  // leg_upper_l -> leg_upper_b_hlp_l
             BonePair{   7,  14 },  // pelvis -> leg_upper_r
             BonePair{  14,  15 },  // leg_upper_r -> leg_lower_r
             BonePair{  15,  16 },  // leg_lower_r -> ankle_r
             BonePair{  16,  17 },  // ankle_r -> ball_r
             BonePair{  17,  18 },  // ball_r -> ball_end_r
-            BonePair{  15,  19 },  // leg_lower_r -> leg_lower_b_hlp_r
-            BonePair{  14,  20 },  // leg_upper_r -> leg_upper_b_hlp_r
-            BonePair{   9,  69 },  // leg_lower_l -> leg_lower_a_hlp_l
-            BonePair{   8,  70 },  // leg_upper_l -> leg_upper_a_hlp_l
-            BonePair{  15,  86 },  // leg_lower_r -> leg_lower_a_hlp_r
-            BonePair{  14,  87 },  // leg_upper_r -> leg_upper_a_hlp_r
+            BonePair{  23,  24 },  // baba_pelvis -> baba_leg_upper_r
+            BonePair{  24,  25 },  // baba_leg_upper_r -> baba_leg_lower_r
+            BonePair{  25,  26 },  // baba_leg_lower_r -> baba_ankle_r
+            BonePair{  26,  27 },  // baba_ankle_r -> baba_ball_r
+            BonePair{  23,  28 },  // baba_pelvis -> baba_leg_upper_l
+            BonePair{  28,  29 },  // baba_leg_upper_l -> baba_leg_lower_l
+            BonePair{  29,  30 },  // baba_leg_lower_l -> baba_ankle_l
+            BonePair{  30,  31 },  // baba_ankle_l -> baba_ball_l
+            BonePair{  23,  32 },  // baba_pelvis -> baba_spine_0
+            BonePair{  32,  33 },  // baba_spine_0 -> baba_spine_1
+            BonePair{  33,  34 },  // baba_spine_1 -> baba_spine_2
+            BonePair{  34,  35 },  // baba_spine_2 -> baba_spine_3
+            BonePair{  35,  36 },  // baba_spine_3 -> baba_clavicle_r
+            BonePair{  36,  37 },  // baba_clavicle_r -> baba_arm_upper_r
+            BonePair{  37,  38 },  // baba_arm_upper_r -> baba_arm_lower_r
+            BonePair{  38,  39 },  // baba_arm_lower_r -> baba_hand_r
+            BonePair{  35,  40 },  // baba_spine_3 -> baba_clavicle_l
+            BonePair{  40,  41 },  // baba_clavicle_l -> baba_arm_upper_l
+            BonePair{  41,  42 },  // baba_arm_upper_l -> baba_arm_lower_l
+            BonePair{  42,  43 },  // baba_arm_lower_l -> baba_hand_l
+            BonePair{  35,  44 },  // baba_spine_3 -> baba_neck_0
+            BonePair{  44,  45 },  // baba_neck_0 -> baba_head
+            BonePair{  49, 214 },  // pidge_pelvis -> pidge_leg_upper_l
+            BonePair{ 214, 215 },  // pidge_leg_upper_l -> pidge_leg_lower_l
+            BonePair{ 215, 216 },  // pidge_leg_lower_l -> pidge_ankle_l
+            BonePair{ 216, 217 },  // pidge_ankle_l -> pidge_ball_l
+            BonePair{  49, 218 },  // pidge_pelvis -> pidge_leg_upper_r
+            BonePair{ 218, 219 },  // pidge_leg_upper_r -> pidge_leg_lower_r
+            BonePair{ 219, 220 },  // pidge_leg_lower_r -> pidge_ankle_r
+            BonePair{ 220, 221 },  // pidge_ankle_r -> pidge_ball_r
             BonePair{  11, 239 },  // ball_l -> ball_end_l
+            BonePair{  27, 249 },  // baba_ball_r -> baba_ball_end_r
+            BonePair{  31, 250 },  // baba_ball_l -> baba_ball_end_l
+            BonePair{ 217, 296 },  // pidge_ball_l -> pidge_ball_end_l
+            BonePair{ 221, 297 },  // pidge_ball_r -> pidge_ball_end_r
         },
         /* ids */ {
             { "ankle_l",  10 },
             { "ankle_r",  16 },
+            { "baba_ankle_l",  30 },
+            { "baba_ankle_r",  26 },
+            { "baba_arm_lower_l",  42 },
+            { "baba_arm_lower_r",  38 },
+            { "baba_arm_upper_l",  41 },
+            { "baba_arm_upper_r",  37 },
+            { "baba_ball_end_l", 250 },
+            { "baba_ball_end_r", 249 },
+            { "baba_ball_l",  31 },
+            { "baba_ball_r",  27 },
+            { "baba_clavicle_l",  40 },
+            { "baba_clavicle_r",  36 },
+            { "baba_hand_l",  43 },
+            { "baba_hand_r",  39 },
+            { "baba_head",  45 },
+            { "baba_leg_lower_l",  29 },
+            { "baba_leg_lower_r",  25 },
+            { "baba_leg_upper_l",  28 },
+            { "baba_leg_upper_r",  24 },
+            { "baba_neck_0",  44 },
+            { "baba_pelvis",  23 },
+            { "baba_spine_0",  32 },
+            { "baba_spine_1",  33 },
+            { "baba_spine_2",  34 },
+            { "baba_spine_3",  35 },
             { "ball_end_l", 239 },
             { "ball_end_r",  18 },
             { "ball_l",  11 },
             { "ball_r",  17 },
             { "hand_l", 260 },
             { "hand_r", 251 },
-            { "leg_lower_a_hlp_l",  69 },
-            { "leg_lower_a_hlp_r",  86 },
-            { "leg_lower_b_hlp_l",  12 },
-            { "leg_lower_b_hlp_r",  19 },
             { "leg_lower_l",   9 },
             { "leg_lower_r",  15 },
-            { "leg_upper_a_hlp_l",  70 },
-            { "leg_upper_a_hlp_r",  87 },
-            { "leg_upper_b_hlp_l",  13 },
-            { "leg_upper_b_hlp_r",  20 },
             { "leg_upper_l",   8 },
             { "leg_upper_r",  14 },
             { "pelvis",   7 },
+            { "pidge_ankle_l", 216 },
+            { "pidge_ankle_r", 220 },
+            { "pidge_ball_end_l", 296 },
+            { "pidge_ball_end_r", 297 },
+            { "pidge_ball_l", 217 },
+            { "pidge_ball_r", 221 },
+            { "pidge_leg_lower_l", 215 },
+            { "pidge_leg_lower_r", 219 },
+            { "pidge_leg_upper_l", 214 },
+            { "pidge_leg_upper_r", 218 },
+            { "pidge_pelvis",  49 },
+            { "pigeon_pelvis",  46 },
+            { "weapon_target_hand_l", 261 },
+            { "weapon_target_hand_r", 253 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 45, 52 },
@@ -2920,9 +2816,30 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_wip/baba/baba_pigeon.vmdl
     { "models/heroes_wip/baba/baba_pigeon.vmdl", {
         /* pairs */ {
+            BonePair{   4,  20 },  // pigeon_pelvis -> pigeon_leg_upper_l
+            BonePair{  20,  21 },  // pigeon_leg_upper_l -> pigeon_leg_lower_l
+            BonePair{  21,  22 },  // pigeon_leg_lower_l -> pigeon_ankle_l
+            BonePair{  22,  23 },  // pigeon_ankle_l -> pigeon_ball_l
+            BonePair{   4,  24 },  // pigeon_pelvis -> pigeon_leg_upper_r
+            BonePair{  24,  25 },  // pigeon_leg_upper_r -> pigeon_leg_lower_r
+            BonePair{  25,  26 },  // pigeon_leg_lower_r -> pigeon_ankle_r
+            BonePair{  26,  27 },  // pigeon_ankle_r -> pigeon_ball_r
+            BonePair{  23,  32 },  // pigeon_ball_l -> pigeon_ball_end_l
+            BonePair{  27,  33 },  // pigeon_ball_r -> pigeon_ball_end_r
         },
         /* ids */ {
             { "pelvis",   1 },
+            { "pigeon_ankle_l",  22 },
+            { "pigeon_ankle_r",  26 },
+            { "pigeon_ball_end_l",  32 },
+            { "pigeon_ball_end_r",  33 },
+            { "pigeon_ball_l",  23 },
+            { "pigeon_ball_r",  27 },
+            { "pigeon_leg_lower_l",  21 },
+            { "pigeon_leg_lower_r",  25 },
+            { "pigeon_leg_upper_l",  20 },
+            { "pigeon_leg_upper_r",  24 },
+            { "pigeon_pelvis",   4 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -2936,8 +2853,29 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_wip/baba/baba_pigeon_transform.vmdl
     { "models/heroes_wip/baba/baba_pigeon_transform.vmdl", {
         /* pairs */ {
+            BonePair{   1,  41 },  // pigeon_pelvis -> pigeon_leg_upper_l
+            BonePair{  41,  42 },  // pigeon_leg_upper_l -> pigeon_leg_lower_l
+            BonePair{  42,  43 },  // pigeon_leg_lower_l -> pigeon_ankle_l
+            BonePair{  43,  46 },  // pigeon_ankle_l -> pigeon_ball_l
+            BonePair{   1,  56 },  // pigeon_pelvis -> pigeon_leg_upper_r
+            BonePair{  56,  57 },  // pigeon_leg_upper_r -> pigeon_leg_lower_r
+            BonePair{  57,  58 },  // pigeon_leg_lower_r -> pigeon_ankle_r
+            BonePair{  58,  61 },  // pigeon_ankle_r -> pigeon_ball_r
+            BonePair{  46,  85 },  // pigeon_ball_l -> pigeon_ball_end_l
+            BonePair{  61,  90 },  // pigeon_ball_r -> pigeon_ball_end_r
         },
         /* ids */ {
+            { "pigeon_ankle_l",  43 },
+            { "pigeon_ankle_r",  58 },
+            { "pigeon_ball_end_l",  85 },
+            { "pigeon_ball_end_r",  90 },
+            { "pigeon_ball_l",  46 },
+            { "pigeon_ball_r",  61 },
+            { "pigeon_leg_lower_l",  42 },
+            { "pigeon_leg_lower_r",  57 },
+            { "pigeon_leg_upper_l",  41 },
+            { "pigeon_leg_upper_r",  56 },
+            { "pigeon_pelvis",   1 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 5 },
@@ -2973,19 +2911,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  36,  37 },  // leg_upper_r -> leg_lower_r
             BonePair{  37,  38 },  // leg_lower_r -> ankle_r
             BonePair{  38,  39 },  // ankle_r -> ball_r
-            BonePair{  21,  61 },  // neck_0 -> neck_0_twist
-            BonePair{  25,  82 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  25,  83 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  24,  85 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  24,  86 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  29, 109 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  29, 110 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  28, 112 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  28, 113 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  32, 120 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  32, 121 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  36, 123 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  36, 124 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  35, 158 },  // ball_l -> ball_end_l
             BonePair{  39, 161 },  // ball_r -> ball_end_r
         },
@@ -2993,17 +2918,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  34 },
             { "ankle_r",  38 },
             { "arm_lower_l",  25 },
-            { "arm_lower_l_twist",  82 },
-            { "arm_lower_l_twist1",  83 },
             { "arm_lower_r",  29 },
-            { "arm_lower_r_twist", 109 },
-            { "arm_lower_r_twist1", 110 },
             { "arm_upper_l",  24 },
-            { "arm_upper_l_twist",  85 },
-            { "arm_upper_l_twist1",  86 },
             { "arm_upper_r",  28 },
-            { "arm_upper_r_twist", 112 },
-            { "arm_upper_r_twist1", 113 },
             { "ball_end_l", 158 },
             { "ball_end_r", 161 },
             { "ball_l",  35 },
@@ -3016,18 +2933,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  33 },
             { "leg_lower_r",  37 },
             { "leg_upper_l",  32 },
-            { "leg_upper_l_twist", 120 },
-            { "leg_upper_l_twist1", 121 },
             { "leg_upper_r",  36 },
-            { "leg_upper_r_twist", 123 },
-            { "leg_upper_r_twist1", 124 },
             { "neck_0",  21 },
-            { "neck_0_twist",  61 },
             { "pelvis",  16 },
             { "spine_0",  17 },
             { "spine_1",  18 },
             { "spine_2",  19 },
             { "spine_3",  20 },
+            { "weapon_target_hand_l", 147 },
+            { "weapon_target_hand_r", 155 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 22 },
@@ -3098,16 +3012,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  29,  30 },  // leg_upper_r -> leg_lower_r
             BonePair{  30,  31 },  // leg_lower_r -> ankle_r
             BonePair{  31,  32 },  // ankle_r -> ball_r
-            BonePair{  14,  67 },  // neck_0 -> neck_0_twist
-            BonePair{  14,  68 },  // neck_0 -> neck_0_fwd_twist
-            BonePair{  17,  89 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  18,  90 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  16, 124 },  // clavicle_l -> clavicle_l_twist
-            BonePair{  21, 125 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  22, 126 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  20, 160 },  // clavicle_r -> clavicle_r_twist
-            BonePair{  25, 191 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  29, 192 },  // leg_upper_r -> leg_upper_r_twist
             BonePair{  28, 233 },  // ball_l -> ball_end_l
             BonePair{  32, 237 },  // ball_r -> ball_end_r
         },
@@ -3115,38 +3019,30 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  27 },
             { "ankle_r",  31 },
             { "arm_lower_l",  18 },
-            { "arm_lower_l_twist",  90 },
             { "arm_lower_r",  22 },
-            { "arm_lower_r_twist", 126 },
             { "arm_upper_l",  17 },
-            { "arm_upper_l_twist",  89 },
             { "arm_upper_r",  21 },
-            { "arm_upper_r_twist", 125 },
             { "ball_end_l", 233 },
             { "ball_end_r", 237 },
             { "ball_l",  28 },
             { "ball_r",  32 },
             { "clavicle_l",  16 },
-            { "clavicle_l_twist", 124 },
             { "clavicle_r",  20 },
-            { "clavicle_r_twist", 160 },
             { "hand_l",  19 },
             { "hand_r",  23 },
             { "head",  15 },
             { "leg_lower_l",  26 },
             { "leg_lower_r",  30 },
             { "leg_upper_l",  25 },
-            { "leg_upper_l_twist", 191 },
             { "leg_upper_r",  29 },
-            { "leg_upper_r_twist", 192 },
             { "neck_0",  14 },
-            { "neck_0_fwd_twist",  68 },
-            { "neck_0_twist",  67 },
             { "pelvis",   9 },
             { "spine_0",  10 },
             { "spine_1",  11 },
             { "spine_2",  12 },
             { "spine_3",  13 },
+            { "weapon_target_hand_l", 212 },
+            { "weapon_target_hand_r", 228 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 15 },
@@ -3168,11 +3064,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{   6,   7 },  // clavicle_r -> arm_upper_r
             BonePair{   7,   8 },  // arm_upper_r -> arm_lower_r
             BonePair{   8,   9 },  // arm_lower_r -> hand_r
-            BonePair{   8,  10 },  // arm_lower_r -> arm_lower_r_twist
         },
         /* ids */ {
             { "arm_lower_r",   8 },
-            { "arm_lower_r_twist",  10 },
             { "arm_upper_r",   7 },
             { "clavicle_r",   6 },
             { "hand_r",   9 },
@@ -3204,7 +3098,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  14,  15 },  // clavicle_r -> arm_upper_r
             BonePair{  15,  16 },  // arm_upper_r -> arm_lower_r
             BonePair{  16,  17 },  // arm_lower_r -> hand_r
-            BonePair{  15,  19 },  // arm_upper_r -> arm_upper_r_twist
             BonePair{  11,  20 },  // spine_3 -> clavicle_l
             BonePair{  20,  21 },  // clavicle_l -> arm_upper_l
             BonePair{  21,  22 },  // arm_upper_l -> arm_lower_l
@@ -3213,25 +3106,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  45,  46 },  // leg_upper_r -> leg_lower_r
             BonePair{  46,  47 },  // leg_lower_r -> ankle_r
             BonePair{  47,  48 },  // ankle_r -> ball_r
-            BonePair{  45,  49 },  // leg_upper_r -> leg_upper_r_twist
             BonePair{   7,  50 },  // pelvis -> leg_upper_l
             BonePair{  50,  51 },  // leg_upper_l -> leg_lower_l
             BonePair{  51,  52 },  // leg_lower_l -> ankle_l
             BonePair{  52,  53 },  // ankle_l -> ball_l
-            BonePair{  12,  84 },  // neck_0 -> neck_0_twist
-            BonePair{  12,  85 },  // neck_0 -> neck_0_notwist
-            BonePair{  16, 106 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  16, 107 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  15, 108 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  14, 110 },  // clavicle_r -> clavicle_r_twist
-            BonePair{  22, 130 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  22, 131 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  21, 132 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  21, 133 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  20, 135 },  // clavicle_l -> clavicle_l_twist
-            BonePair{  45, 175 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  50, 177 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  50, 178 },  // leg_upper_l -> leg_upper_l_twist1
             BonePair{  48, 228 },  // ball_r -> ball_end_r
             BonePair{  53, 231 },  // ball_l -> ball_end_l
         },
@@ -3239,44 +3117,30 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  52 },
             { "ankle_r",  47 },
             { "arm_lower_l",  22 },
-            { "arm_lower_l_twist", 130 },
-            { "arm_lower_l_twist1", 131 },
             { "arm_lower_r",  16 },
-            { "arm_lower_r_twist", 106 },
-            { "arm_lower_r_twist1", 107 },
             { "arm_upper_l",  21 },
-            { "arm_upper_l_twist", 132 },
-            { "arm_upper_l_twist1", 133 },
             { "arm_upper_r",  15 },
-            { "arm_upper_r_twist",  19 },
-            { "arm_upper_r_twist1", 108 },
             { "ball_end_l", 231 },
             { "ball_end_r", 228 },
             { "ball_l",  53 },
             { "ball_r",  48 },
             { "clavicle_l",  20 },
-            { "clavicle_l_twist", 135 },
             { "clavicle_r",  14 },
-            { "clavicle_r_twist", 110 },
             { "hand_l",  23 },
             { "hand_r",  17 },
             { "head",  13 },
             { "leg_lower_l",  51 },
             { "leg_lower_r",  46 },
             { "leg_upper_l",  50 },
-            { "leg_upper_l_twist", 177 },
-            { "leg_upper_l_twist1", 178 },
             { "leg_upper_r",  45 },
-            { "leg_upper_r_twist",  49 },
-            { "leg_upper_r_twist1", 175 },
             { "neck_0",  12 },
-            { "neck_0_notwist",  85 },
-            { "neck_0_twist",  84 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  11 },
+            { "weapon_target_hand_l", 214 },
+            { "weapon_target_hand_r", 199 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
@@ -3312,21 +3176,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  37,  38 },  // leg_upper_r -> leg_lower_r
             BonePair{  38,  39 },  // leg_lower_r -> ankle_r
             BonePair{  39,  40 },  // ankle_r -> ball_r
-            BonePair{  20,  55 },  // neck_0 -> neck_0_twist
-            BonePair{  24,  75 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  24,  76 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  23,  77 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  23,  78 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  22,  80 },  // clavicle_l -> clavicle_l_notwist
-            BonePair{  28, 101 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  28, 102 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  27, 103 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  27, 104 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  26, 106 },  // clavicle_r -> clavicle_r_notwist
-            BonePair{  33, 119 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  33, 120 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  37, 122 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  37, 123 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  36, 158 },  // ball_l -> ball_end_l
             BonePair{  40, 161 },  // ball_r -> ball_end_r
         },
@@ -3334,43 +3183,30 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  35 },
             { "ankle_r",  39 },
             { "arm_lower_l",  24 },
-            { "arm_lower_l_twist",  75 },
-            { "arm_lower_l_twist1",  76 },
             { "arm_lower_r",  28 },
-            { "arm_lower_r_twist", 101 },
-            { "arm_lower_r_twist1", 102 },
             { "arm_upper_l",  23 },
-            { "arm_upper_l_twist",  77 },
-            { "arm_upper_l_twist1",  78 },
             { "arm_upper_r",  27 },
-            { "arm_upper_r_twist", 103 },
-            { "arm_upper_r_twist1", 104 },
             { "ball_end_l", 158 },
             { "ball_end_r", 161 },
             { "ball_l",  36 },
             { "ball_r",  40 },
             { "clavicle_l",  22 },
-            { "clavicle_l_notwist",  80 },
             { "clavicle_r",  26 },
-            { "clavicle_r_notwist", 106 },
             { "hand_l",  25 },
             { "hand_r",  29 },
             { "head",  21 },
             { "leg_lower_l",  34 },
             { "leg_lower_r",  38 },
             { "leg_upper_l",  33 },
-            { "leg_upper_l_twist", 119 },
-            { "leg_upper_l_twist1", 120 },
             { "leg_upper_r",  37 },
-            { "leg_upper_r_twist", 122 },
-            { "leg_upper_r_twist1", 123 },
             { "neck_0",  20 },
-            { "neck_0_twist",  55 },
             { "pelvis",  15 },
             { "spine_0",  16 },
             { "spine_1",  17 },
             { "spine_2",  18 },
             { "spine_3",  19 },
+            { "weapon_target_hand_l", 145 },
+            { "weapon_target_hand_r", 155 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 21 },
@@ -3406,21 +3242,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  27,  28 },  // leg_upper_r -> leg_lower_r
             BonePair{  28,  29 },  // leg_lower_r -> ankle_r
             BonePair{  29,  30 },  // ankle_r -> ball_r
-            BonePair{  11,  51 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  11,  52 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  10,  54 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  10,  55 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{   9,  56 },  // clavicle_l -> clavicle_l_notwist
-            BonePair{  15,  78 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  15,  79 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  14,  81 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  14,  82 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  13,  83 },  // clavicle_r -> clavicle_r_notwist
-            BonePair{  17,  85 },  // neck_0 -> neck_0_twist
-            BonePair{  23,  89 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  23,  90 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  27,  92 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  27,  93 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  26, 120 },  // ball_l -> ball_end_l
             BonePair{  30, 123 },  // ball_r -> ball_end_r
         },
@@ -3428,38 +3249,23 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  25 },
             { "ankle_r",  29 },
             { "arm_lower_l",  11 },
-            { "arm_lower_l_twist",  51 },
-            { "arm_lower_l_twist1",  52 },
             { "arm_lower_r",  15 },
-            { "arm_lower_r_twist",  78 },
-            { "arm_lower_r_twist1",  79 },
             { "arm_upper_l",  10 },
-            { "arm_upper_l_twist",  54 },
-            { "arm_upper_l_twist1",  55 },
             { "arm_upper_r",  14 },
-            { "arm_upper_r_twist",  81 },
-            { "arm_upper_r_twist1",  82 },
             { "ball_end_l", 120 },
             { "ball_end_r", 123 },
             { "ball_l",  26 },
             { "ball_r",  30 },
             { "clavicle_l",   9 },
-            { "clavicle_l_notwist",  56 },
             { "clavicle_r",  13 },
-            { "clavicle_r_notwist",  83 },
             { "hand_l",  12 },
             { "hand_r",  16 },
             { "head",  18 },
             { "leg_lower_l",  24 },
             { "leg_lower_r",  28 },
             { "leg_upper_l",  23 },
-            { "leg_upper_l_twist",  89 },
-            { "leg_upper_l_twist1",  90 },
             { "leg_upper_r",  27 },
-            { "leg_upper_r_twist",  92 },
-            { "leg_upper_r_twist1",  93 },
             { "neck_0",  17 },
-            { "neck_0_twist",  85 },
             { "pelvis",   4 },
             { "spine_0",   5 },
             { "spine_1",   6 },
@@ -3494,18 +3300,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  47,  48 },  // leg_upper_r -> leg_lower_r
             BonePair{  48,  49 },  // leg_lower_r -> ankle_r
             BonePair{  49,  50 },  // ankle_r -> ball_r
-            BonePair{  30,  74 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  30,  75 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  29,  76 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  29,  77 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  35, 122 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  35, 123 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  34, 124 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  34, 125 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  43, 166 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  43, 167 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  47, 169 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  47, 170 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  46, 370 },  // ball_l -> ball_end_l
             BonePair{  50, 373 },  // ball_r -> ball_end_r
         },
@@ -3513,17 +3307,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  45 },
             { "ankle_r",  49 },
             { "arm_lower_l",  30 },
-            { "arm_lower_l_twist",  74 },
-            { "arm_lower_l_twist1",  75 },
             { "arm_lower_r",  35 },
-            { "arm_lower_r_twist", 122 },
-            { "arm_lower_r_twist1", 123 },
             { "arm_upper_l",  29 },
-            { "arm_upper_l_twist",  76 },
-            { "arm_upper_l_twist1",  77 },
             { "arm_upper_r",  34 },
-            { "arm_upper_r_twist", 124 },
-            { "arm_upper_r_twist1", 125 },
             { "ball_end_l", 370 },
             { "ball_end_r", 373 },
             { "ball_l",  46 },
@@ -3536,11 +3322,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  44 },
             { "leg_lower_r",  48 },
             { "leg_upper_l",  43 },
-            { "leg_upper_l_twist", 166 },
-            { "leg_upper_l_twist1", 167 },
             { "leg_upper_r",  47 },
-            { "leg_upper_r_twist", 169 },
-            { "leg_upper_r_twist1", 170 },
             { "neck_0",  23 },
             { "pelvis",  18 },
             { "spine_0",  19 },
@@ -3579,37 +3361,16 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  26,  27 },  // leg_upper_r -> leg_lower_r
             BonePair{  27,  28 },  // leg_lower_r -> ankle_r
             BonePair{  28,  29 },  // ankle_r -> ball_r
-            BonePair{  11,  65 },  // neck_0 -> neck_0_twist
-            BonePair{  15,  93 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  15,  94 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14,  97 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  14,  98 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  19, 126 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  19, 127 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18, 136 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  18, 137 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{  25, 146 },  // ball_l -> ball_end_l
-            BonePair{  22, 150 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  22, 151 },  // leg_upper_l -> leg_upper_l_twist1
             BonePair{  29, 152 },  // ball_r -> ball_end_r
-            BonePair{  26, 156 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  26, 157 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  24 },
             { "ankle_r",  28 },
             { "arm_lower_l",  15 },
-            { "arm_lower_l_twist",  93 },
-            { "arm_lower_l_twist1",  94 },
             { "arm_lower_r",  19 },
-            { "arm_lower_r_twist", 126 },
-            { "arm_lower_r_twist1", 127 },
             { "arm_upper_l",  14 },
-            { "arm_upper_l_twist",  97 },
-            { "arm_upper_l_twist1",  98 },
             { "arm_upper_r",  18 },
-            { "arm_upper_r_twist", 136 },
-            { "arm_upper_r_twist1", 137 },
             { "ball_end_l", 146 },
             { "ball_end_r", 152 },
             { "ball_l",  25 },
@@ -3622,13 +3383,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  23 },
             { "leg_lower_r",  27 },
             { "leg_upper_l",  22 },
-            { "leg_upper_l_twist", 150 },
-            { "leg_upper_l_twist1", 151 },
             { "leg_upper_r",  26 },
-            { "leg_upper_r_twist", 156 },
-            { "leg_upper_r_twist1", 157 },
             { "neck_0",  11 },
-            { "neck_0_twist",  65 },
             { "pelvis",   6 },
             { "spine_0",   7 },
             { "spine_1",   8 },
@@ -3669,21 +3425,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  38,  39 },  // leg_upper_r -> leg_lower_r
             BonePair{  39,  40 },  // leg_lower_r -> ankle_r
             BonePair{  40,  41 },  // ankle_r -> ball_r
-            BonePair{  10,  59 },  // neck_0 -> neck_0_twist
-            BonePair{  18, 102 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  18, 103 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  17, 104 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  17, 105 },  // arm_upper_l -> arm_upper_l_twist1
             BonePair{  16, 107 },  // clavicle_l -> clavicle_notwist_l
-            BonePair{  31, 124 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  31, 125 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  30, 126 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  30, 127 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{  29, 129 },  // clavicle_r -> clavicle_notwist_r
-            BonePair{  34, 134 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  34, 135 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  38, 137 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  38, 138 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  37, 274 },  // ball_l -> ball_end_l
             BonePair{  41, 277 },  // ball_r -> ball_end_r
         },
@@ -3691,17 +3434,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  36 },
             { "ankle_r",  40 },
             { "arm_lower_l",  18 },
-            { "arm_lower_l_twist", 102 },
-            { "arm_lower_l_twist1", 103 },
             { "arm_lower_r",  31 },
-            { "arm_lower_r_twist", 124 },
-            { "arm_lower_r_twist1", 125 },
             { "arm_upper_l",  17 },
-            { "arm_upper_l_twist", 104 },
-            { "arm_upper_l_twist1", 105 },
             { "arm_upper_r",  30 },
-            { "arm_upper_r_twist", 126 },
-            { "arm_upper_r_twist1", 127 },
             { "ball_end_l", 274 },
             { "ball_end_r", 277 },
             { "ball_l",  37 },
@@ -3716,18 +3451,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  35 },
             { "leg_lower_r",  39 },
             { "leg_upper_l",  34 },
-            { "leg_upper_l_twist", 134 },
-            { "leg_upper_l_twist1", 135 },
             { "leg_upper_r",  38 },
-            { "leg_upper_r_twist", 137 },
-            { "leg_upper_r_twist1", 138 },
             { "neck_0",  10 },
-            { "neck_0_twist",  59 },
             { "pelvis",   5 },
             { "spine_0",   6 },
             { "spine_1",   7 },
             { "spine_2",   8 },
             { "spine_3",   9 },
+            { "weapon_target_hand_l", 259 },
+            { "weapon_target_hand_r", 267 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 11, 15, 14 },
@@ -3763,22 +3495,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  33,  34 },  // leg_upper_r -> leg_lower_r
             BonePair{  34,  35 },  // leg_lower_r -> ankle_r
             BonePair{  35,  36 },  // ankle_r -> ball_r
-            BonePair{  16,  41 },  // neck_0 -> neck_0_twist
-            BonePair{  16,  42 },  // neck_0 -> neck_notwist
-            BonePair{  22,  62 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  22,  63 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  21,  64 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  21,  65 },  // arm_upper_l -> arm_upper_l_twist1
             BonePair{  20,  67 },  // clavicle_l -> clavicle_notwist_l
-            BonePair{  26,  88 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  26,  89 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  25,  90 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  25,  91 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{  24,  93 },  // clavicle_r -> clavicle_notwist_r
-            BonePair{  29, 101 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  29, 102 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  33, 107 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  33, 108 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  32, 357 },  // ball_l -> ball_end_l
             BonePair{  36, 362 },  // ball_r -> ball_end_r
         },
@@ -3786,17 +3504,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  31 },
             { "ankle_r",  35 },
             { "arm_lower_l",  22 },
-            { "arm_lower_l_twist",  62 },
-            { "arm_lower_l_twist1",  63 },
             { "arm_lower_r",  26 },
-            { "arm_lower_r_twist",  88 },
-            { "arm_lower_r_twist1",  89 },
             { "arm_upper_l",  21 },
-            { "arm_upper_l_twist",  64 },
-            { "arm_upper_l_twist1",  65 },
             { "arm_upper_r",  25 },
-            { "arm_upper_r_twist",  90 },
-            { "arm_upper_r_twist1",  91 },
             { "ball_end_l", 357 },
             { "ball_end_r", 362 },
             { "ball_l",  32 },
@@ -3811,19 +3521,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  30 },
             { "leg_lower_r",  34 },
             { "leg_upper_l",  29 },
-            { "leg_upper_l_twist", 101 },
-            { "leg_upper_l_twist1", 102 },
             { "leg_upper_r",  33 },
-            { "leg_upper_r_twist", 107 },
-            { "leg_upper_r_twist1", 108 },
             { "neck_0",  16 },
-            { "neck_0_twist",  41 },
-            { "neck_notwist",  42 },
             { "pelvis",  11 },
             { "spine_0",  12 },
             { "spine_1",  13 },
             { "spine_2",  14 },
             { "spine_3",  15 },
+            { "weapon_target_hand_l", 345 },
+            { "weapon_target_hand_r",  28 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 17 },
@@ -3851,8 +3557,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  18,  19 },  // clavicle_r -> arm_upper_r
             BonePair{  19,  20 },  // arm_upper_r -> arm_lower_r
             BonePair{  20,  21 },  // arm_lower_r -> hand_r
-            BonePair{  20,  23 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  19,  24 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{   6,  26 },  // pelvis -> leg_upper_l
             BonePair{  26,  27 },  // leg_upper_l -> leg_lower_l
             BonePair{  27,  28 },  // leg_lower_l -> ankle_l
@@ -3861,17 +3565,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  30,  31 },  // leg_upper_r -> leg_lower_r
             BonePair{  31,  32 },  // leg_lower_r -> ankle_r
             BonePair{  32,  33 },  // ankle_r -> ball_r
-            BonePair{  11,  60 },  // neck_0 -> neck_0_twist
-            BonePair{  15,  81 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  15,  82 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14,  84 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  14,  85 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  20, 105 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  19, 112 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  26, 119 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  26, 120 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  30, 122 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  30, 123 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  29, 153 },  // ball_l -> ball_end_l
             BonePair{  33, 156 },  // ball_r -> ball_end_r
         },
@@ -3879,17 +3572,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  28 },
             { "ankle_r",  32 },
             { "arm_lower_l",  15 },
-            { "arm_lower_l_twist",  81 },
-            { "arm_lower_l_twist1",  82 },
             { "arm_lower_r",  20 },
-            { "arm_lower_r_twist",  23 },
-            { "arm_lower_r_twist1", 105 },
             { "arm_upper_l",  14 },
-            { "arm_upper_l_twist",  84 },
-            { "arm_upper_l_twist1",  85 },
             { "arm_upper_r",  19 },
-            { "arm_upper_r_twist", 112 },
-            { "arm_upper_r_twist1",  24 },
             { "ball_end_l", 153 },
             { "ball_end_r", 156 },
             { "ball_l",  29 },
@@ -3902,13 +3587,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  27 },
             { "leg_lower_r",  31 },
             { "leg_upper_l",  26 },
-            { "leg_upper_l_twist", 119 },
-            { "leg_upper_l_twist1", 120 },
             { "leg_upper_r",  30 },
-            { "leg_upper_r_twist", 122 },
-            { "leg_upper_r_twist1", 123 },
             { "neck_0",  11 },
-            { "neck_0_twist",  60 },
             { "pelvis",   6 },
             { "spine_0",   7 },
             { "spine_1",   8 },
@@ -3941,7 +3621,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  21,  22 },  // clavicle_r -> arm_upper_r
             BonePair{  22,  23 },  // arm_upper_r -> arm_lower_r
             BonePair{  23,  24 },  // arm_lower_r -> hand_r
-            BonePair{  22,  25 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{   6,  38 },  // pelvis -> leg_upper_l
             BonePair{  38,  39 },  // leg_upper_l -> leg_lower_l
             BonePair{  39,  40 },  // leg_lower_l -> ankle_l
@@ -3950,18 +3629,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  42,  43 },  // leg_upper_r -> leg_lower_r
             BonePair{  43,  44 },  // leg_lower_r -> ankle_r
             BonePair{  44,  45 },  // ankle_r -> ball_r
-            BonePair{  11,  53 },  // neck_0 -> neck_0_twist
-            BonePair{  15,  73 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  15,  74 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14,  75 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  14,  76 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  23,  97 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  23,  98 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  22, 101 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  38, 114 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  38, 115 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  42, 116 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  42, 117 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  41, 575 },  // ball_l -> ball_end_l
             BonePair{  45, 599 },  // ball_r -> ball_end_r
         },
@@ -3969,17 +3636,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  40 },
             { "ankle_r",  44 },
             { "arm_lower_l",  15 },
-            { "arm_lower_l_twist",  73 },
-            { "arm_lower_l_twist1",  74 },
             { "arm_lower_r",  23 },
-            { "arm_lower_r_twist",  97 },
-            { "arm_lower_r_twist1",  98 },
             { "arm_upper_l",  14 },
-            { "arm_upper_l_twist",  75 },
-            { "arm_upper_l_twist1",  76 },
             { "arm_upper_r",  22 },
-            { "arm_upper_r_twist", 101 },
-            { "arm_upper_r_twist1",  25 },
             { "ball_end_l", 575 },
             { "ball_end_r", 599 },
             { "ball_l",  41 },
@@ -3992,18 +3651,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  39 },
             { "leg_lower_r",  43 },
             { "leg_upper_l",  38 },
-            { "leg_upper_l_twist", 114 },
-            { "leg_upper_l_twist1", 115 },
             { "leg_upper_r",  42 },
-            { "leg_upper_r_twist", 116 },
-            { "leg_upper_r_twist1", 117 },
             { "neck_0",  11 },
-            { "neck_0_twist",  53 },
+            { "object_hand_l", 557 },
+            { "object_hand_r", 565 },
             { "pelvis",   6 },
             { "spine_0",   7 },
             { "spine_1",   8 },
             { "spine_2",   9 },
             { "spine_3",  10 },
+            { "weapon_hand_l",  17 },
+            { "weapon_hand_r", 566 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 12 },
@@ -4039,19 +3697,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  22,  23 },  // leg_upper_r -> leg_lower_r
             BonePair{  23,  24 },  // leg_lower_r -> ankle_r
             BonePair{  24,  25 },  // ankle_r -> ball_r
-            BonePair{   6,  28 },  // neck_0 -> neck_0_twist
-            BonePair{   9,  35 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{   9,  36 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  10,  56 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10,  57 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  13,  59 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  13,  60 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  14,  82 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  14,  83 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18,  89 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  18,  90 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  22,  91 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  22,  92 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  21, 128 },  // ball_l -> ball_end_l
             BonePair{  25, 129 },  // ball_r -> ball_end_r
         },
@@ -4059,17 +3704,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  20 },
             { "ankle_r",  24 },
             { "arm_lower_l",  10 },
-            { "arm_lower_l_twist",  56 },
-            { "arm_lower_l_twist1",  57 },
             { "arm_lower_r",  14 },
-            { "arm_lower_r_twist",  82 },
-            { "arm_lower_r_twist1",  83 },
             { "arm_upper_l",   9 },
-            { "arm_upper_l_twist",  36 },
-            { "arm_upper_l_twist1",  35 },
             { "arm_upper_r",  13 },
-            { "arm_upper_r_twist",  60 },
-            { "arm_upper_r_twist1",  59 },
             { "ball_end_l", 128 },
             { "ball_end_r", 129 },
             { "ball_l",  21 },
@@ -4082,18 +3719,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  19 },
             { "leg_lower_r",  23 },
             { "leg_upper_l",  18 },
-            { "leg_upper_l_twist",  89 },
-            { "leg_upper_l_twist1",  90 },
             { "leg_upper_r",  22 },
-            { "leg_upper_r_twist",  91 },
-            { "leg_upper_r_twist1",  92 },
             { "neck_0",   6 },
-            { "neck_0_twist",  28 },
+            { "object_hand_l", 102 },
+            { "object_hand_r", 112 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_l", 103 },
+            { "weapon_hand_r",  16 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -4129,20 +3765,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  51,  52 },  // leg_upper_l -> leg_lower_l
             BonePair{  52,  53 },  // leg_lower_l -> ankle_l
             BonePair{  53,  54 },  // ankle_l -> ball_l
-            BonePair{  13,  56 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  13,  57 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  12,  77 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  12,  78 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  18, 105 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  18, 106 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  17, 107 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  17, 108 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  28, 109 },  // neck_0 -> neck_0_twist
-            BonePair{  28, 130 },  // neck_0 -> neck_notwist
-            BonePair{  47, 141 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  47, 142 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  51, 143 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  51, 144 },  // leg_upper_l -> leg_upper_l_twist1
             BonePair{  50, 156 },  // ball_r -> ball_end_r
             BonePair{  54, 157 },  // ball_l -> ball_end_l
         },
@@ -4150,17 +3772,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  53 },
             { "ankle_r",  49 },
             { "arm_lower_l",  13 },
-            { "arm_lower_l_twist",  56 },
-            { "arm_lower_l_twist1",  57 },
             { "arm_lower_r",  18 },
-            { "arm_lower_r_twist", 105 },
-            { "arm_lower_r_twist1", 106 },
             { "arm_upper_l",  12 },
-            { "arm_upper_l_twist",  77 },
-            { "arm_upper_l_twist1",  78 },
             { "arm_upper_r",  17 },
-            { "arm_upper_r_twist", 107 },
-            { "arm_upper_r_twist1", 108 },
             { "ball_end_l", 157 },
             { "ball_end_r", 156 },
             { "ball_l",  54 },
@@ -4173,19 +3787,16 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  52 },
             { "leg_lower_r",  48 },
             { "leg_upper_l",  51 },
-            { "leg_upper_l_twist", 143 },
-            { "leg_upper_l_twist1", 144 },
             { "leg_upper_r",  47 },
-            { "leg_upper_r_twist", 141 },
-            { "leg_upper_r_twist1", 142 },
             { "neck_0",  28 },
-            { "neck_0_twist", 109 },
-            { "neck_notwist", 130 },
+            { "object_hand_l",  15 },
+            { "object_hand_r",  26 },
             { "pelvis",   6 },
             { "spine_0",   7 },
             { "spine_1",   8 },
             { "spine_2",   9 },
             { "spine_3",  10 },
+            { "weapon_hand_r",  27 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 29 },
@@ -4250,6 +3861,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  11 },
+            { "weapon_hand_l", 100 },
+            { "weapon_hand_r",  22 },
+            { "weaponik_hand_l",  23 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
@@ -4285,20 +3899,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  32,  33 },  // leg_upper_r -> leg_lower_r
             BonePair{  33,  34 },  // leg_lower_r -> ankle_r
             BonePair{  34,  35 },  // ankle_r -> ball_r
-            BonePair{  12,  48 },  // neck_0 -> neck_0_twist
-            BonePair{  12,  49 },  // neck_0 -> neck_notwist
-            BonePair{  16,  69 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  16,  77 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  15,  78 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  15,  79 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  20, 103 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  20, 104 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  19, 105 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  19, 106 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  28, 124 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  28, 125 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  32, 126 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  32, 127 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  31, 169 },  // ball_l -> ball_end_l
             BonePair{  35, 170 },  // ball_r -> ball_end_r
         },
@@ -4306,17 +3906,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  30 },
             { "ankle_r",  34 },
             { "arm_lower_l",  16 },
-            { "arm_lower_l_twist",  69 },
-            { "arm_lower_l_twist1",  77 },
             { "arm_lower_r",  20 },
-            { "arm_lower_r_twist", 103 },
-            { "arm_lower_r_twist1", 104 },
             { "arm_upper_l",  15 },
-            { "arm_upper_l_twist",  78 },
-            { "arm_upper_l_twist1",  79 },
             { "arm_upper_r",  19 },
-            { "arm_upper_r_twist", 105 },
-            { "arm_upper_r_twist1", 106 },
             { "ball_end_l", 169 },
             { "ball_end_r", 170 },
             { "ball_l",  31 },
@@ -4329,19 +3921,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  29 },
             { "leg_lower_r",  33 },
             { "leg_upper_l",  28 },
-            { "leg_upper_l_twist", 124 },
-            { "leg_upper_l_twist1", 125 },
             { "leg_upper_r",  32 },
-            { "leg_upper_r_twist", 126 },
-            { "leg_upper_r_twist1", 127 },
             { "neck_0",  12 },
-            { "neck_0_twist",  48 },
-            { "neck_notwist",  49 },
+            { "object_hand_l", 151 },
+            { "object_hand_r", 161 },
             { "pelvis",   7 },
             { "spine_0",   8 },
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  11 },
+            { "weapon_hand_l", 152 },
+            { "weapon_hand_r", 162 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
@@ -4373,69 +3963,36 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  44,  45 },  // clavicle_r -> arm_upper_r
             BonePair{  45,  46 },  // arm_upper_r -> arm_lower_r
             BonePair{  46,  47 },  // arm_lower_r -> hand_r
-            BonePair{  45,  54 },  // arm_upper_r -> arm_upper_r_twist
             BonePair{  29,  66 },  // pelvis -> leg_upper_r
             BonePair{  66,  67 },  // leg_upper_r -> leg_lower_r
             BonePair{  67,  68 },  // leg_lower_r -> ankle_r
             BonePair{  68,  69 },  // ankle_r -> ball_r
-            BonePair{  30,  81 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  30,  82 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  34,  84 },  // spine_0 -> spine_0_notwist
-            BonePair{  38, 221 },  // neck_0 -> neck_0_twist
-            BonePair{  38, 227 },  // neck_0 -> neck_0_notwist
-            BonePair{  42, 263 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  42, 264 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  41, 265 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  41, 268 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  40, 269 },  // clavicle_l -> clavicle_l_notwist
-            BonePair{  46, 300 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  46, 301 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  45, 302 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  44, 305 },  // clavicle_r -> clavicle_r_notwist
-            BonePair{  66, 353 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  66, 354 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l",  32 },
             { "ankle_r",  68 },
             { "arm_lower_l",  42 },
-            { "arm_lower_l_twist", 263 },
-            { "arm_lower_l_twist1", 264 },
             { "arm_lower_r",  46 },
-            { "arm_lower_r_twist", 300 },
-            { "arm_lower_r_twist1", 301 },
             { "arm_upper_l",  41 },
-            { "arm_upper_l_twist", 268 },
-            { "arm_upper_l_twist1", 265 },
             { "arm_upper_r",  45 },
-            { "arm_upper_r_twist",  54 },
-            { "arm_upper_r_twist1", 302 },
             { "ball_l",  33 },
             { "ball_r",  69 },
             { "clavicle_l",  40 },
-            { "clavicle_l_notwist", 269 },
             { "clavicle_r",  44 },
-            { "clavicle_r_notwist", 305 },
             { "hand_l",  43 },
             { "hand_r",  47 },
             { "head",  39 },
             { "leg_lower_l",  31 },
             { "leg_lower_r",  67 },
             { "leg_upper_l",  30 },
-            { "leg_upper_l_twist",  81 },
-            { "leg_upper_l_twist1",  82 },
             { "leg_upper_r",  66 },
-            { "leg_upper_r_twist", 353 },
-            { "leg_upper_r_twist1", 354 },
             { "neck_0",  38 },
-            { "neck_0_notwist", 227 },
-            { "neck_0_twist", 221 },
             { "pelvis",  29 },
             { "spine_0",  34 },
-            { "spine_0_notwist",  84 },
             { "spine_1",  35 },
             { "spine_2",  36 },
             { "spine_3",  37 },
+            { "weapon_hand_r",  25 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 39 },
@@ -4461,9 +4018,28 @@ inline const std::unordered_map<std::string, ModelBoneData>
         },
     }},
 
+    // models/heroes_wip/necro/hand/necro_hand.vmdl
+    { "models/heroes_wip/necro/hand/necro_hand.vmdl", {
+        /* pairs */ {
+            BonePair{   2,   3 },  // prop_arm_lower_r -> prop_hand_r
+        },
+        /* ids */ {
+            { "prop_arm_lower_r",   2 },
+            { "prop_hand_r",   3 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ {},
+            /* [1] Neck  */ {},
+            /* [2] Torso */ {},
+            /* [3] Arms  */ {},
+            /* [4] Legs  */ {},
+        },
+    }},
+
     // models/heroes_wip/necro/necro.vmdl
     { "models/heroes_wip/necro/necro.vmdl", {
         /* pairs */ {
+            BonePair{   3,   4 },  // prop_arm_lower_r -> prop_hand_r
             BonePair{   7,   8 },  // pelvis -> spine_0
             BonePair{   8,   9 },  // spine_0 -> spine_1
             BonePair{   9,  10 },  // spine_1 -> spine_2
@@ -4487,25 +4063,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  30,  31 },  // leg_upper_r -> leg_lower_r
             BonePair{  31,  32 },  // leg_lower_r -> ankle_r
             BonePair{  32,  33 },  // ankle_r -> ball_r
-            BonePair{  12,  78 },  // neck_0 -> neck_0_twist
-            BonePair{  12,  79 },  // neck_0 -> neck_notwist
-            BonePair{  16, 103 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  16, 104 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  15, 107 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  15, 108 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  24, 131 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  24, 132 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  23, 133 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  23, 134 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{  22, 136 },  // clavicle_r -> clavicle_notwist_r
-            BonePair{  26, 141 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  26, 142 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  26, 144 },  // leg_upper_l -> leg_upper_l_aim
-            BonePair{  26, 145 },  // leg_upper_l -> leg_upper_l_aim_upv
-            BonePair{  30, 146 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  30, 147 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  30, 149 },  // leg_upper_r -> leg_upper_r_aim
-            BonePair{  30, 150 },  // leg_upper_r -> leg_upper_r_aim_upv
             BonePair{  29, 188 },  // ball_l -> ball_end_l
             BonePair{  33, 191 },  // ball_r -> ball_end_r
         },
@@ -4513,17 +4071,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  28 },
             { "ankle_r",  32 },
             { "arm_lower_l",  16 },
-            { "arm_lower_l_twist", 103 },
-            { "arm_lower_l_twist1", 104 },
             { "arm_lower_r",  24 },
-            { "arm_lower_r_twist", 131 },
-            { "arm_lower_r_twist1", 132 },
             { "arm_upper_l",  15 },
-            { "arm_upper_l_twist", 107 },
-            { "arm_upper_l_twist1", 108 },
             { "arm_upper_r",  23 },
-            { "arm_upper_r_twist", 133 },
-            { "arm_upper_r_twist1", 134 },
             { "ball_end_l", 188 },
             { "ball_end_r", 191 },
             { "ball_l",  29 },
@@ -4538,23 +4088,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  27 },
             { "leg_lower_r",  31 },
             { "leg_upper_l",  26 },
-            { "leg_upper_l_aim", 144 },
-            { "leg_upper_l_aim_upv", 145 },
-            { "leg_upper_l_twist", 141 },
-            { "leg_upper_l_twist1", 142 },
             { "leg_upper_r",  30 },
-            { "leg_upper_r_aim", 149 },
-            { "leg_upper_r_aim_upv", 150 },
-            { "leg_upper_r_twist", 146 },
-            { "leg_upper_r_twist1", 147 },
             { "neck_0",  12 },
-            { "neck_0_twist",  78 },
-            { "neck_notwist",  79 },
             { "pelvis",   7 },
+            { "prop_arm_lower_r",   3 },
+            { "prop_hand_r",   4 },
             { "spine_0",   8 },
             { "spine_1",   9 },
             { "spine_2",  10 },
             { "spine_3",  11 },
+            { "weapon_target_hand_l", 174 },
+            { "weapon_target_hand_r", 185 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 13 },
@@ -4588,20 +4132,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{   1,  19 },  // pelvis -> leg_upper_r
             BonePair{  19,  20 },  // leg_upper_r -> leg_lower_r
             BonePair{  20,  21 },  // leg_lower_r -> ankle_r
-            BonePair{  10,  29 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  10,  30 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{   9,  31 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{   9,  32 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  14,  41 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  14,  42 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  13,  43 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  13,  44 },  // arm_upper_l -> arm_upper_l_twist1
             BonePair{  18,  46 },  // ankle_l -> ball_l
-            BonePair{  16,  47 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  16,  48 },  // leg_upper_l -> leg_upper_l_twist1
             BonePair{  21,  49 },  // ankle_r -> ball_r
-            BonePair{  19,  50 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  19,  51 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  46,  68 },  // ball_l -> ball_end_l
             BonePair{  49,  70 },  // ball_r -> ball_end_r
         },
@@ -4609,17 +4141,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  18 },
             { "ankle_r",  21 },
             { "arm_lower_l",  14 },
-            { "arm_lower_l_twist",  41 },
-            { "arm_lower_l_twist1",  42 },
             { "arm_lower_r",  10 },
-            { "arm_lower_r_twist",  29 },
-            { "arm_lower_r_twist1",  30 },
             { "arm_upper_l",  13 },
-            { "arm_upper_l_twist",  43 },
-            { "arm_upper_l_twist1",  44 },
             { "arm_upper_r",   9 },
-            { "arm_upper_r_twist",  31 },
-            { "arm_upper_r_twist1",  32 },
             { "ball_end_l",  68 },
             { "ball_end_r",  70 },
             { "ball_l",  46 },
@@ -4632,11 +4156,7 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  17 },
             { "leg_lower_r",  20 },
             { "leg_upper_l",  16 },
-            { "leg_upper_l_twist",  47 },
-            { "leg_upper_l_twist1",  48 },
             { "leg_upper_r",  19 },
-            { "leg_upper_r_twist",  50 },
-            { "leg_upper_r_twist1",  51 },
             { "neck_0",   6 },
             { "pelvis",   1 },
             { "spine_0",   2 },
@@ -4729,7 +4249,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  17,  18 },  // spine_1 -> spine_2
             BonePair{  18,  19 },  // spine_2 -> spine_3
             BonePair{  19,  20 },  // spine_3 -> clavicle_r
-            BonePair{  20,  21 },  // clavicle_r -> clavicle_r_twist
             BonePair{  20,  24 },  // clavicle_r -> arm_upper_r
             BonePair{  24,  25 },  // arm_upper_r -> arm_lower_r
             BonePair{  25,  26 },  // arm_lower_r -> hand_r
@@ -4739,20 +4258,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  30,  31 },  // arm_lower_l -> hand_l
             BonePair{  19,  33 },  // spine_3 -> neck_0
             BonePair{  33,  34 },  // neck_0 -> head
-            BonePair{   8,  48 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{   8,  55 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  12,  69 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  12,  76 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  24, 109 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  24, 110 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  25, 111 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  25, 112 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  28, 133 },  // clavicle_l -> clavicle_l_twist
-            BonePair{  29, 150 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  29, 151 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  30, 152 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  30, 153 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  33, 194 },  // neck_0 -> neck_0_twist
             BonePair{  11, 231 },  // ball_r -> ball_end_r
             BonePair{  15, 232 },  // ball_l -> ball_end_l
             BonePair{  33, 257 },  // neck_0 -> neck_hlp_0
@@ -4762,38 +4267,23 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  14 },
             { "ankle_r",  10 },
             { "arm_lower_l",  30 },
-            { "arm_lower_l_twist", 152 },
-            { "arm_lower_l_twist1", 153 },
             { "arm_lower_r",  25 },
-            { "arm_lower_r_twist", 111 },
-            { "arm_lower_r_twist1", 112 },
             { "arm_upper_l",  29 },
-            { "arm_upper_l_twist", 151 },
-            { "arm_upper_l_twist1", 150 },
             { "arm_upper_r",  24 },
-            { "arm_upper_r_twist", 110 },
-            { "arm_upper_r_twist1", 109 },
             { "ball_end_l", 232 },
             { "ball_end_r", 231 },
             { "ball_l",  15 },
             { "ball_r",  11 },
             { "clavicle_l",  28 },
-            { "clavicle_l_twist", 133 },
             { "clavicle_r",  20 },
-            { "clavicle_r_twist",  21 },
             { "hand_l",  31 },
             { "hand_r",  26 },
             { "head",  34 },
             { "leg_lower_l",  13 },
             { "leg_lower_r",   9 },
             { "leg_upper_l",  12 },
-            { "leg_upper_l_twist",  69 },
-            { "leg_upper_l_twist1",  76 },
             { "leg_upper_r",   8 },
-            { "leg_upper_r_twist",  48 },
-            { "leg_upper_r_twist1",  55 },
             { "neck_0",  33 },
-            { "neck_0_twist", 194 },
             { "neck_hlp_0", 257 },
             { "neck_hlp_end", 258 },
             { "pelvis",   7 },
@@ -4801,6 +4291,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "spine_1",  17 },
             { "spine_2",  18 },
             { "spine_3",  19 },
+            { "weapon_target_hand_l", 154 },
+            { "weapon_target_hand_r", 113 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 34 },
@@ -4836,20 +4328,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  35,  36 },  // leg_upper_r -> leg_lower_r
             BonePair{  36,  37 },  // leg_lower_r -> ankle_r
             BonePair{  37,  38 },  // ankle_r -> ball_r
-            BonePair{  13,  47 },  // neck_0 -> neck_0_twist
-            BonePair{  13,  48 },  // neck_0 -> neck_notwist
-            BonePair{  17, 116 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  17, 117 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  16, 118 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  16, 119 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  24, 154 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  24, 155 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  23, 156 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  23, 157 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  29, 194 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  29, 195 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  35, 196 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  35, 197 },  // leg_upper_r -> leg_upper_r_twist1
+            BonePair{  70,  71 },  // frog_spine_0 -> frog_spine_1
+            BonePair{  71,  72 },  // frog_spine_1 -> frog_clavicle_l
+            BonePair{  72,  73 },  // frog_clavicle_l -> frog_arm_upper_l
+            BonePair{  73,  74 },  // frog_arm_upper_l -> frog_arm_lower_l
+            BonePair{  74,  75 },  // frog_arm_lower_l -> frog_hand_l
+            BonePair{  71,  85 },  // frog_spine_1 -> frog_neck_0
+            BonePair{  85,  86 },  // frog_neck_0 -> frog_head
+            BonePair{  71, 102 },  // frog_spine_1 -> frog_clavicle_r
+            BonePair{ 102, 103 },  // frog_clavicle_r -> frog_arm_upper_r
+            BonePair{ 103, 104 },  // frog_arm_upper_r -> frog_arm_lower_r
+            BonePair{ 104, 105 },  // frog_arm_lower_r -> frog_hand_r
             BonePair{  32, 367 },  // ball_l -> ball_end_l
             BonePair{  38, 369 },  // ball_r -> ball_end_r
         },
@@ -4857,37 +4346,35 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  31 },
             { "ankle_r",  37 },
             { "arm_lower_l",  17 },
-            { "arm_lower_l_twist", 116 },
-            { "arm_lower_l_twist1", 117 },
             { "arm_lower_r",  24 },
-            { "arm_lower_r_twist", 154 },
-            { "arm_lower_r_twist1", 155 },
             { "arm_upper_l",  16 },
-            { "arm_upper_l_twist", 118 },
-            { "arm_upper_l_twist1", 119 },
             { "arm_upper_r",  23 },
-            { "arm_upper_r_twist", 156 },
-            { "arm_upper_r_twist1", 157 },
             { "ball_end_l", 367 },
             { "ball_end_r", 369 },
             { "ball_l",  32 },
             { "ball_r",  38 },
             { "clavicle_l",  15 },
             { "clavicle_r",  22 },
+            { "frog_arm_lower_l",  74 },
+            { "frog_arm_lower_r", 104 },
+            { "frog_arm_upper_l",  73 },
+            { "frog_arm_upper_r", 103 },
+            { "frog_clavicle_l",  72 },
+            { "frog_clavicle_r", 102 },
+            { "frog_hand_l",  75 },
+            { "frog_hand_r", 105 },
+            { "frog_head",  86 },
+            { "frog_neck_0",  85 },
+            { "frog_spine_0",  70 },
+            { "frog_spine_1",  71 },
             { "hand_l",  18 },
             { "hand_r",  25 },
             { "head",  14 },
             { "leg_lower_l",  30 },
             { "leg_lower_r",  36 },
             { "leg_upper_l",  29 },
-            { "leg_upper_l_twist", 194 },
-            { "leg_upper_l_twist1", 195 },
             { "leg_upper_r",  35 },
-            { "leg_upper_r_twist", 196 },
-            { "leg_upper_r_twist1", 197 },
             { "neck_0",  13 },
-            { "neck_0_twist",  47 },
-            { "neck_notwist",  48 },
             { "pelvis",   8 },
             { "spine_0",   9 },
             { "spine_1",  10 },
@@ -4928,19 +4415,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  42,  43 },  // leg_upper_r -> leg_lower_r
             BonePair{  43,  44 },  // leg_lower_r -> ankle_r
             BonePair{  44,  45 },  // ankle_r -> ball_r
-            BonePair{   9,  70 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{   9,  72 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  17,  94 },  // neck_0 -> neck_0_twist
-            BonePair{  22, 117 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  22, 118 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  21, 119 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  21, 120 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  29, 142 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  29, 143 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  28, 144 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  28, 145 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  42, 170 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  42, 171 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  12, 193 },  // ball_l -> ball_end_l
             BonePair{  45, 224 },  // ball_r -> ball_end_r
         },
@@ -4948,17 +4422,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  11 },
             { "ankle_r",  44 },
             { "arm_lower_l",  22 },
-            { "arm_lower_l_twist", 117 },
-            { "arm_lower_l_twist1", 118 },
             { "arm_lower_r",  29 },
-            { "arm_lower_r_twist", 142 },
-            { "arm_lower_r_twist1", 143 },
             { "arm_upper_l",  21 },
-            { "arm_upper_l_twist", 119 },
-            { "arm_upper_l_twist1", 120 },
             { "arm_upper_r",  28 },
-            { "arm_upper_r_twist", 144 },
-            { "arm_upper_r_twist1", 145 },
             { "ball_end_l", 193 },
             { "ball_end_r", 224 },
             { "ball_l",  12 },
@@ -4971,18 +4437,14 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  10 },
             { "leg_lower_r",  43 },
             { "leg_upper_l",   9 },
-            { "leg_upper_l_twist",  70 },
-            { "leg_upper_l_twist1",  72 },
             { "leg_upper_r",  42 },
-            { "leg_upper_r_twist", 170 },
-            { "leg_upper_r_twist1", 171 },
             { "neck_0",  17 },
-            { "neck_0_twist",  94 },
             { "pelvis",   8 },
             { "spine_0",  13 },
             { "spine_1",  14 },
             { "spine_2",  15 },
             { "spine_3",  16 },
+            { "weapon_target_hand_r", 218 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 18 },
@@ -5018,21 +4480,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  25,  26 },  // leg_upper_r -> leg_lower_r
             BonePair{  26,  27 },  // leg_lower_r -> ankle_r
             BonePair{  27,  28 },  // ankle_r -> ball_r
-            BonePair{   6,  46 },  // neck_0 -> neck_0_twist
-            BonePair{  12,  66 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  12,  67 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  11,  68 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  11,  69 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  10,  71 },  // clavicle_l -> clavicle_l_notwist
-            BonePair{  18,  97 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  18,  98 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  17,  99 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  17, 100 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  16, 102 },  // clavicle_r -> clavicle_r_notwist
-            BonePair{  21, 104 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  21, 105 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  25, 107 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  25, 108 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{   7, 122 },  // head -> hand_r_head_space_target
             BonePair{  24, 146 },  // ball_l -> ball_end_l
             BonePair{  28, 149 },  // ball_r -> ball_end_r
@@ -5041,25 +4488,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  23 },
             { "ankle_r",  27 },
             { "arm_lower_l",  12 },
-            { "arm_lower_l_twist",  66 },
-            { "arm_lower_l_twist1",  67 },
             { "arm_lower_r",  18 },
-            { "arm_lower_r_twist",  97 },
-            { "arm_lower_r_twist1",  98 },
             { "arm_upper_l",  11 },
-            { "arm_upper_l_twist",  68 },
-            { "arm_upper_l_twist1",  69 },
             { "arm_upper_r",  17 },
-            { "arm_upper_r_twist",  99 },
-            { "arm_upper_r_twist1", 100 },
             { "ball_end_l", 146 },
             { "ball_end_r", 149 },
             { "ball_l",  24 },
             { "ball_r",  28 },
             { "clavicle_l",  10 },
-            { "clavicle_l_notwist",  71 },
             { "clavicle_r",  16 },
-            { "clavicle_r_notwist", 102 },
             { "hand_l",  13 },
             { "hand_r",  19 },
             { "hand_r_head_space_target", 122 },
@@ -5067,18 +4504,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  22 },
             { "leg_lower_r",  26 },
             { "leg_upper_l",  21 },
-            { "leg_upper_l_twist", 104 },
-            { "leg_upper_l_twist1", 105 },
             { "leg_upper_r",  25 },
-            { "leg_upper_r_twist", 107 },
-            { "leg_upper_r_twist1", 108 },
             { "neck_0",   6 },
-            { "neck_0_twist",  46 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_target_hand_l", 130 },
+            { "weapon_target_hand_r", 141 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -5102,12 +4536,10 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{   9,  10 },  // clavicle_l -> arm_upper_l
             BonePair{  10,  11 },  // arm_upper_l -> arm_lower_l
             BonePair{  11,  12 },  // arm_lower_l -> hand_l
-            BonePair{   9,  13 },  // clavicle_l -> clavicle_l_twist
             BonePair{   5,  15 },  // spine_3 -> clavicle_r
             BonePair{  15,  16 },  // clavicle_r -> arm_upper_r
             BonePair{  16,  17 },  // arm_upper_r -> arm_lower_r
             BonePair{  17,  18 },  // arm_lower_r -> hand_r
-            BonePair{  15,  19 },  // clavicle_r -> clavicle_r_twist
             BonePair{   1,  25 },  // pelvis -> leg_upper_l
             BonePair{  25,  26 },  // leg_upper_l -> leg_lower_l
             BonePair{  26,  27 },  // leg_lower_l -> ankle_l
@@ -5116,63 +4548,155 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  29,  30 },  // leg_upper_r -> leg_lower_r
             BonePair{  30,  31 },  // leg_lower_r -> ankle_r
             BonePair{  31,  32 },  // ankle_r -> ball_r
-            BonePair{   6,  38 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  46 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  10,  47 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  11,  67 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  11,  68 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  16,  83 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  16,  84 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  17, 103 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  17, 104 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  25, 264 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  25, 265 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  29, 272 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  29, 273 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  28, 357 },  // ball_l -> ball_end_l
-            BonePair{  32, 364 },  // ball_r -> ball_end_r
+            BonePair{ 123, 124 },  // minion0_pelvis -> minion0_spine_0
+            BonePair{ 124, 125 },  // minion0_spine_0 -> minion0_spine_1
+            BonePair{ 125, 126 },  // minion0_spine_1 -> minion0_spine_2
+            BonePair{ 126, 127 },  // minion0_spine_2 -> minion0_spine_3
+            BonePair{ 127, 128 },  // minion0_spine_3 -> minion0_neck_0
+            BonePair{ 128, 129 },  // minion0_neck_0 -> minion0_head
+            BonePair{ 127, 135 },  // minion0_spine_3 -> minion0_arm_upper_r
+            BonePair{ 135, 136 },  // minion0_arm_upper_r -> minion0_arm_lower_r
+            BonePair{ 136, 137 },  // minion0_arm_lower_r -> minion0_hand_r
+            BonePair{ 127, 139 },  // minion0_spine_3 -> minion0_arm_upper_l
+            BonePair{ 139, 140 },  // minion0_arm_upper_l -> minion0_arm_lower_l
+            BonePair{ 140, 141 },  // minion0_arm_lower_l -> minion0_hand_l
+            BonePair{ 123, 143 },  // minion0_pelvis -> minion0_leg_upper_r
+            BonePair{ 143, 144 },  // minion0_leg_upper_r -> minion0_leg_lower_r
+            BonePair{ 144, 145 },  // minion0_leg_lower_r -> minion0_ankle_r
+            BonePair{ 145, 146 },  // minion0_ankle_r -> minion0_ball_r
+            BonePair{ 123, 148 },  // minion0_pelvis -> minion0_leg_upper_l
+            BonePair{ 148, 149 },  // minion0_leg_upper_l -> minion0_leg_lower_l
+            BonePair{ 149, 150 },  // minion0_leg_lower_l -> minion0_ankle_l
+            BonePair{ 150, 151 },  // minion0_ankle_l -> minion0_ball_l
+            BonePair{ 158, 159 },  // minion1_pelvis -> minion1_spine_0
+            BonePair{ 159, 160 },  // minion1_spine_0 -> minion1_spine_1
+            BonePair{ 160, 161 },  // minion1_spine_1 -> minion1_spine_2
+            BonePair{ 161, 162 },  // minion1_spine_2 -> minion1_spine_3
+            BonePair{ 162, 163 },  // minion1_spine_3 -> minion1_neck_0
+            BonePair{ 163, 164 },  // minion1_neck_0 -> minion1_head
+            BonePair{ 162, 170 },  // minion1_spine_3 -> minion1_arm_upper_r
+            BonePair{ 170, 171 },  // minion1_arm_upper_r -> minion1_arm_lower_r
+            BonePair{ 171, 172 },  // minion1_arm_lower_r -> minion1_hand_r
+            BonePair{ 162, 174 },  // minion1_spine_3 -> minion1_arm_upper_l
+            BonePair{ 174, 175 },  // minion1_arm_upper_l -> minion1_arm_lower_l
+            BonePair{ 175, 176 },  // minion1_arm_lower_l -> minion1_hand_l
+            BonePair{ 158, 178 },  // minion1_pelvis -> minion1_leg_upper_r
+            BonePair{ 178, 179 },  // minion1_leg_upper_r -> minion1_leg_lower_r
+            BonePair{ 179, 180 },  // minion1_leg_lower_r -> minion1_ankle_r
+            BonePair{ 180, 181 },  // minion1_ankle_r -> minion1_ball_r
+            BonePair{ 158, 183 },  // minion1_pelvis -> minion1_leg_upper_l
+            BonePair{ 183, 184 },  // minion1_leg_upper_l -> minion1_leg_lower_l
+            BonePair{ 184, 185 },  // minion1_leg_lower_l -> minion1_ankle_l
+            BonePair{ 185, 186 },  // minion1_ankle_l -> minion1_ball_l
+            BonePair{ 193, 194 },  // minion2_pelvis -> minion2_spine_0
+            BonePair{ 194, 195 },  // minion2_spine_0 -> minion2_spine_1
+            BonePair{ 195, 196 },  // minion2_spine_1 -> minion2_spine_2
+            BonePair{ 196, 197 },  // minion2_spine_2 -> minion2_spine_3
+            BonePair{ 197, 198 },  // minion2_spine_3 -> minion2_neck_0
+            BonePair{ 198, 199 },  // minion2_neck_0 -> minion2_head
+            BonePair{ 197, 205 },  // minion2_spine_3 -> minion2_arm_upper_r
+            BonePair{ 205, 206 },  // minion2_arm_upper_r -> minion2_arm_lower_r
         },
         /* ids */ {
             { "ankle_l",  27 },
             { "ankle_r",  31 },
             { "arm_lower_l",  11 },
-            { "arm_lower_l_twist",  67 },
-            { "arm_lower_l_twist1",  68 },
             { "arm_lower_r",  17 },
-            { "arm_lower_r_twist", 103 },
-            { "arm_lower_r_twist1", 104 },
             { "arm_upper_l",  10 },
-            { "arm_upper_l_twist",  47 },
-            { "arm_upper_l_twist1",  46 },
             { "arm_upper_r",  16 },
-            { "arm_upper_r_twist",  84 },
-            { "arm_upper_r_twist1",  83 },
             { "ball_end_l", 357 },
             { "ball_end_r", 364 },
             { "ball_l",  28 },
             { "ball_r",  32 },
             { "clavicle_l",   9 },
-            { "clavicle_l_twist",  13 },
             { "clavicle_r",  15 },
-            { "clavicle_r_twist",  19 },
             { "hand_l",  12 },
             { "hand_r",  18 },
             { "head",   7 },
             { "leg_lower_l",  26 },
             { "leg_lower_r",  30 },
             { "leg_upper_l",  25 },
-            { "leg_upper_l_twist", 264 },
-            { "leg_upper_l_twist1", 265 },
             { "leg_upper_r",  29 },
-            { "leg_upper_r_twist", 272 },
-            { "leg_upper_r_twist1", 273 },
+            { "minion0_ankle_l", 150 },
+            { "minion0_ankle_r", 145 },
+            { "minion0_arm_lower_l", 140 },
+            { "minion0_arm_lower_r", 136 },
+            { "minion0_arm_upper_l", 139 },
+            { "minion0_arm_upper_r", 135 },
+            { "minion0_ball_end_l", 347 },
+            { "minion0_ball_end_r", 345 },
+            { "minion0_ball_l", 151 },
+            { "minion0_ball_r", 146 },
+            { "minion0_hand_l", 141 },
+            { "minion0_hand_r", 137 },
+            { "minion0_head", 129 },
+            { "minion0_leg_lower_l", 149 },
+            { "minion0_leg_lower_r", 144 },
+            { "minion0_leg_upper_l", 148 },
+            { "minion0_leg_upper_r", 143 },
+            { "minion0_neck_0", 128 },
+            { "minion0_pelvis", 123 },
+            { "minion0_spine_0", 124 },
+            { "minion0_spine_1", 125 },
+            { "minion0_spine_2", 126 },
+            { "minion0_spine_3", 127 },
+            { "minion1_ankle_l", 185 },
+            { "minion1_ankle_r", 180 },
+            { "minion1_arm_lower_l", 175 },
+            { "minion1_arm_lower_r", 171 },
+            { "minion1_arm_upper_l", 174 },
+            { "minion1_arm_upper_r", 170 },
+            { "minion1_ball_end_l", 351 },
+            { "minion1_ball_end_r", 349 },
+            { "minion1_ball_l", 186 },
+            { "minion1_ball_r", 181 },
+            { "minion1_hand_l", 176 },
+            { "minion1_hand_r", 172 },
+            { "minion1_head", 164 },
+            { "minion1_leg_lower_l", 184 },
+            { "minion1_leg_lower_r", 179 },
+            { "minion1_leg_upper_l", 183 },
+            { "minion1_leg_upper_r", 178 },
+            { "minion1_neck_0", 163 },
+            { "minion1_pelvis", 158 },
+            { "minion1_spine_0", 159 },
+            { "minion1_spine_1", 160 },
+            { "minion1_spine_2", 161 },
+            { "minion1_spine_3", 162 },
+            { "minion2_ankle_l", 220 },
+            { "minion2_ankle_r", 215 },
+            { "minion2_arm_lower_l", 210 },
+            { "minion2_arm_lower_r", 206 },
+            { "minion2_arm_upper_l", 209 },
+            { "minion2_arm_upper_r", 205 },
+            { "minion2_ball_end_l", 355 },
+            { "minion2_ball_end_r", 353 },
+            { "minion2_ball_l", 221 },
+            { "minion2_ball_r", 216 },
+            { "minion2_hand_l", 211 },
+            { "minion2_hand_r", 207 },
+            { "minion2_head", 199 },
+            { "minion2_leg_lower_l", 219 },
+            { "minion2_leg_lower_r", 214 },
+            { "minion2_leg_upper_l", 218 },
+            { "minion2_leg_upper_r", 213 },
+            { "minion2_neck_0", 198 },
+            { "minion2_pelvis", 193 },
+            { "minion2_spine_0", 194 },
+            { "minion2_spine_1", 195 },
+            { "minion2_spine_2", 196 },
+            { "minion2_spine_3", 197 },
             { "neck_0",   6 },
-            { "neck_0_twist",  38 },
             { "pelvis",   1 },
+            { "rattyguard_shield_g_head",   8 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_l", 330 },
+            { "weapon_hand_r", 341 },
+            { "weapon_target_hand_l", 325 },
+            { "weapon_target_hand_r", 336 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7, 6 },
@@ -5193,80 +4717,58 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{   5,   6 },  // spine_3 -> neck_0
             BonePair{   6,   7 },  // neck_0 -> head
             BonePair{   5,  13 },  // spine_3 -> clavicle_l
-            BonePair{  13,  14 },  // clavicle_l -> clavicle_l_twist
             BonePair{   5,  16 },  // spine_3 -> clavicle_r
-            BonePair{  16,  17 },  // clavicle_r -> clavicle_r_twist
-            BonePair{   6,  23 },  // neck_0 -> neck_0_twist
             BonePair{  13,  35 },  // clavicle_l -> arm_upper_l
-            BonePair{  35,  36 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  35,  37 },  // arm_upper_l -> arm_upper_l_twist
             BonePair{  35,  38 },  // arm_upper_l -> arm_lower_l
             BonePair{  38,  39 },  // arm_lower_l -> hand_l
-            BonePair{  38,  69 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  38,  70 },  // arm_lower_l -> arm_lower_l_twist1
             BonePair{  16,  88 },  // clavicle_r -> arm_upper_r
-            BonePair{  88,  89 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  88,  90 },  // arm_upper_r -> arm_upper_r_twist
             BonePair{  88,  91 },  // arm_upper_r -> arm_lower_r
             BonePair{  91,  92 },  // arm_lower_r -> hand_r
-            BonePair{  91, 122 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  91, 123 },  // arm_lower_r -> arm_lower_r_twist1
             BonePair{   1, 174 },  // pelvis -> leg_upper_l
             BonePair{ 174, 175 },  // leg_upper_l -> leg_lower_l
             BonePair{ 175, 176 },  // leg_lower_l -> ankle_l
             BonePair{ 176, 177 },  // ankle_l -> ball_l
             BonePair{ 177, 178 },  // ball_l -> ball_end_l
-            BonePair{ 174, 197 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{ 174, 198 },  // leg_upper_l -> leg_upper_l_twist1
             BonePair{   1, 199 },  // pelvis -> leg_upper_r
             BonePair{ 199, 200 },  // leg_upper_r -> leg_lower_r
             BonePair{ 200, 201 },  // leg_lower_r -> ankle_r
             BonePair{ 201, 202 },  // ankle_r -> ball_r
             BonePair{ 202, 203 },  // ball_r -> ball_end_r
-            BonePair{ 199, 222 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{ 199, 223 },  // leg_upper_r -> leg_upper_r_twist1
         },
         /* ids */ {
             { "ankle_l", 176 },
             { "ankle_r", 201 },
             { "arm_lower_l",  38 },
-            { "arm_lower_l_twist",  69 },
-            { "arm_lower_l_twist1",  70 },
             { "arm_lower_r",  91 },
-            { "arm_lower_r_twist", 122 },
-            { "arm_lower_r_twist1", 123 },
             { "arm_upper_l",  35 },
-            { "arm_upper_l_twist",  37 },
-            { "arm_upper_l_twist1",  36 },
             { "arm_upper_r",  88 },
-            { "arm_upper_r_twist",  90 },
-            { "arm_upper_r_twist1",  89 },
             { "ball_end_l", 178 },
             { "ball_end_r", 203 },
             { "ball_l", 177 },
             { "ball_r", 202 },
             { "clavicle_l",  13 },
-            { "clavicle_l_twist",  14 },
             { "clavicle_r",  16 },
-            { "clavicle_r_twist",  17 },
             { "hand_l",  39 },
             { "hand_r",  92 },
             { "head",   7 },
             { "leg_lower_l", 175 },
             { "leg_lower_r", 200 },
             { "leg_upper_l", 174 },
-            { "leg_upper_l_twist", 197 },
-            { "leg_upper_l_twist1", 198 },
             { "leg_upper_r", 199 },
-            { "leg_upper_r_twist", 222 },
-            { "leg_upper_r_twist1", 223 },
+            { "minion0_pelvis", 145 },
+            { "minion1_pelvis", 146 },
+            { "minion2_pelvis", 147 },
             { "neck_0",   6 },
-            { "neck_0_twist",  23 },
             { "pelvis",   1 },
+            { "rattyguard_shield_g_head",  12 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_l",  68 },
+            { "weapon_hand_r", 121 },
+            { "weapon_target_hand_l",  42 },
+            { "weapon_target_hand_r",  95 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -5280,8 +4782,53 @@ inline const std::unordered_map<std::string, ModelBoneData>
     // models/heroes_wip/ratking/ratking_minion.vmdl
     { "models/heroes_wip/ratking/ratking_minion.vmdl", {
         /* pairs */ {
+            BonePair{   1,   2 },  // minion0_pelvis -> minion0_spine_0
+            BonePair{   2,   3 },  // minion0_spine_0 -> minion0_spine_1
+            BonePair{   3,   4 },  // minion0_spine_1 -> minion0_spine_2
+            BonePair{   4,   5 },  // minion0_spine_2 -> minion0_spine_3
+            BonePair{   5,   6 },  // minion0_spine_3 -> minion0_neck_0
+            BonePair{   6,   7 },  // minion0_neck_0 -> minion0_head
+            BonePair{   5,   8 },  // minion0_spine_3 -> minion0_arm_upper_r
+            BonePair{   8,   9 },  // minion0_arm_upper_r -> minion0_arm_lower_r
+            BonePair{   5,  10 },  // minion0_spine_3 -> minion0_arm_upper_l
+            BonePair{  10,  11 },  // minion0_arm_upper_l -> minion0_arm_lower_l
+            BonePair{  11,  12 },  // minion0_arm_lower_l -> minion0_hand_l
+            BonePair{   1,  13 },  // minion0_pelvis -> minion0_leg_upper_r
+            BonePair{  13,  14 },  // minion0_leg_upper_r -> minion0_leg_lower_r
+            BonePair{  14,  15 },  // minion0_leg_lower_r -> minion0_ankle_r
+            BonePair{  15,  16 },  // minion0_ankle_r -> minion0_ball_r
+            BonePair{   1,  17 },  // minion0_pelvis -> minion0_leg_upper_l
+            BonePair{  17,  18 },  // minion0_leg_upper_l -> minion0_leg_lower_l
+            BonePair{  18,  19 },  // minion0_leg_lower_l -> minion0_ankle_l
+            BonePair{  19,  20 },  // minion0_ankle_l -> minion0_ball_l
+            BonePair{   9,  26 },  // minion0_arm_lower_r -> minion0_hand_r
+            BonePair{  16,  40 },  // minion0_ball_r -> minion0_ball_end_r
+            BonePair{  20,  42 },  // minion0_ball_l -> minion0_ball_end_l
         },
         /* ids */ {
+            { "minion0_ankle_l",  19 },
+            { "minion0_ankle_r",  15 },
+            { "minion0_arm_lower_l",  11 },
+            { "minion0_arm_lower_r",   9 },
+            { "minion0_arm_upper_l",  10 },
+            { "minion0_arm_upper_r",   8 },
+            { "minion0_ball_end_l",  42 },
+            { "minion0_ball_end_r",  40 },
+            { "minion0_ball_l",  20 },
+            { "minion0_ball_r",  16 },
+            { "minion0_hand_l",  12 },
+            { "minion0_hand_r",  26 },
+            { "minion0_head",   7 },
+            { "minion0_leg_lower_l",  18 },
+            { "minion0_leg_lower_r",  14 },
+            { "minion0_leg_upper_l",  17 },
+            { "minion0_leg_upper_r",  13 },
+            { "minion0_neck_0",   6 },
+            { "minion0_pelvis",   1 },
+            { "minion0_spine_0",   2 },
+            { "minion0_spine_1",   3 },
+            { "minion0_spine_2",   4 },
+            { "minion0_spine_3",   5 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7, 6 },
@@ -5289,6 +4836,101 @@ inline const std::unordered_map<std::string, ModelBoneData>
             /* [2] Torso */ { 2, 1, 4 },
             /* [3] Arms  */ { 13, 10, 8, 12, 11, 9 },
             /* [4] Legs  */ { 17, 18, 14, 19, 20, 15, 16 },
+        },
+    }},
+
+    // models/heroes_wip/ratking/ratking_minion_geo.vmdl
+    { "models/heroes_wip/ratking/ratking_minion_geo.vmdl", {
+        /* pairs */ {
+            BonePair{   0,   1 },  // minion0_pelvis -> minion0_spine_1
+            BonePair{   1,   3 },  // minion0_spine_1 -> minion0_spine_3
+            BonePair{   0,   4 },  // minion0_pelvis -> minion0_leg_upper_r
+            BonePair{   0,   5 },  // minion0_pelvis -> minion0_leg_upper_l
+            BonePair{   3,   7 },  // minion0_spine_3 -> minion0_neck_0
+            BonePair{   3,   8 },  // minion0_spine_3 -> minion0_arm_upper_r
+            BonePair{   3,   9 },  // minion0_spine_3 -> minion0_arm_upper_l
+            BonePair{   4,  10 },  // minion0_leg_upper_r -> minion0_leg_lower_r
+            BonePair{   5,  11 },  // minion0_leg_upper_l -> minion0_leg_lower_l
+            BonePair{   7,  13 },  // minion0_neck_0 -> minion0_head
+            BonePair{   8,  14 },  // minion0_arm_upper_r -> minion0_arm_lower_r
+            BonePair{   9,  15 },  // minion0_arm_upper_l -> minion0_arm_lower_l
+            BonePair{  10,  16 },  // minion0_leg_lower_r -> minion0_ankle_r
+            BonePair{  11,  17 },  // minion0_leg_lower_l -> minion0_ankle_l
+            BonePair{  14,  21 },  // minion0_arm_lower_r -> minion0_hand_r
+            BonePair{  15,  22 },  // minion0_arm_lower_l -> minion0_hand_l
+            BonePair{  16,  23 },  // minion0_ankle_r -> minion0_ball_r
+            BonePair{  17,  24 },  // minion0_ankle_l -> minion0_ball_l
+        },
+        /* ids */ {
+            { "minion0_ankle_l",  17 },
+            { "minion0_ankle_r",  16 },
+            { "minion0_arm_lower_l",  15 },
+            { "minion0_arm_lower_r",  14 },
+            { "minion0_arm_upper_l",   9 },
+            { "minion0_arm_upper_r",   8 },
+            { "minion0_ball_l",  24 },
+            { "minion0_ball_r",  23 },
+            { "minion0_hand_l",  22 },
+            { "minion0_hand_r",  21 },
+            { "minion0_head",  13 },
+            { "minion0_leg_lower_l",  11 },
+            { "minion0_leg_lower_r",  10 },
+            { "minion0_leg_upper_l",   5 },
+            { "minion0_leg_upper_r",   4 },
+            { "minion0_neck_0",   7 },
+            { "minion0_pelvis",   0 },
+            { "minion0_spine_1",   1 },
+            { "minion0_spine_3",   3 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ {},
+            /* [1] Neck  */ {},
+            /* [2] Torso */ {},
+            /* [3] Arms  */ {},
+            /* [4] Legs  */ {},
+        },
+    }},
+
+    // models/heroes_wip/ratking/ratking_minion_nibbler.vmdl
+    { "models/heroes_wip/ratking/ratking_minion_nibbler.vmdl", {
+        /* pairs */ {
+            BonePair{   7,   8 },  // minion0_leg_upper_r -> minion0_leg_lower_r
+            BonePair{   8,   9 },  // minion0_leg_lower_r -> minion0_ankle_r
+            BonePair{  10,  11 },  // minion0_leg_upper_l -> minion0_leg_lower_l
+            BonePair{  11,  12 },  // minion0_leg_lower_l -> minion0_ankle_l
+            BonePair{  17,  18 },  // minion0_arm_upper_r -> minion0_arm_lower_r
+            BonePair{  18,  19 },  // minion0_arm_lower_r -> minion0_hand_r
+            BonePair{  20,  21 },  // minion0_arm_upper_l -> minion0_arm_lower_l
+            BonePair{  21,  22 },  // minion0_arm_lower_l -> minion0_hand_l
+            BonePair{   9,  26 },  // minion0_ankle_r -> minion0_ball_r
+            BonePair{  12,  27 },  // minion0_ankle_l -> minion0_ball_l
+            BonePair{  26,  33 },  // minion0_ball_r -> minion0_ball_end_r
+            BonePair{  27,  36 },  // minion0_ball_l -> minion0_ball_end_l
+        },
+        /* ids */ {
+            { "minion0_ankle_l",  12 },
+            { "minion0_ankle_r",   9 },
+            { "minion0_arm_lower_l",  21 },
+            { "minion0_arm_lower_r",  18 },
+            { "minion0_arm_upper_l",  20 },
+            { "minion0_arm_upper_r",  17 },
+            { "minion0_ball_end_l",  36 },
+            { "minion0_ball_end_r",  33 },
+            { "minion0_ball_l",  27 },
+            { "minion0_ball_r",  26 },
+            { "minion0_hand_l",  22 },
+            { "minion0_hand_r",  19 },
+            { "minion0_leg_lower_l",  11 },
+            { "minion0_leg_lower_r",   8 },
+            { "minion0_leg_upper_l",  10 },
+            { "minion0_leg_upper_r",   7 },
+        },
+        /* slotBones */ {
+            /* [0] Head  */ {},
+            /* [1] Neck  */ {},
+            /* [2] Torso */ {},
+            /* [3] Arms  */ {},
+            /* [4] Legs  */ {},
         },
     }},
 
@@ -5309,7 +4951,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  17,  18 },  // clavicle_r -> arm_upper_r
             BonePair{  18,  19 },  // arm_upper_r -> arm_lower_r
             BonePair{  19,  20 },  // arm_lower_r -> hand_r
-            BonePair{  18,  22 },  // arm_upper_r -> arm_upper_r_twist
             BonePair{   5,  23 },  // pelvis -> leg_upper_l
             BonePair{  23,  24 },  // leg_upper_l -> leg_lower_l
             BonePair{  24,  25 },  // leg_lower_l -> ankle_l
@@ -5318,21 +4959,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  27,  28 },  // leg_upper_r -> leg_lower_r
             BonePair{  28,  29 },  // leg_lower_r -> ankle_r
             BonePair{  29,  30 },  // ankle_r -> ball_r
-            BonePair{  10,  81 },  // neck_0 -> neck_notwist
-            BonePair{  10,  82 },  // neck_0 -> neck_0_twist
-            BonePair{  15, 102 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  15, 103 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  14, 104 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  14, 105 },  // arm_upper_l -> arm_upper_l_twist1
             BonePair{  13, 106 },  // clavicle_l -> clavicle_notwist_l1
-            BonePair{  19, 128 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  19, 129 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  18, 137 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{  17, 138 },  // clavicle_r -> clavicle_notwist_r1
-            BonePair{  23, 146 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  23, 147 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  27, 149 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  27, 150 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  26, 380 },  // ball_l -> ball_end_l
             BonePair{  30, 382 },  // ball_r -> ball_end_r
         },
@@ -5340,17 +4968,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  25 },
             { "ankle_r",  29 },
             { "arm_lower_l",  15 },
-            { "arm_lower_l_twist", 102 },
-            { "arm_lower_l_twist1", 103 },
             { "arm_lower_r",  19 },
-            { "arm_lower_r_twist", 128 },
-            { "arm_lower_r_twist1", 129 },
             { "arm_upper_l",  14 },
-            { "arm_upper_l_twist", 104 },
-            { "arm_upper_l_twist1", 105 },
             { "arm_upper_r",  18 },
-            { "arm_upper_r_twist",  22 },
-            { "arm_upper_r_twist1", 137 },
             { "ball_end_l", 380 },
             { "ball_end_r", 382 },
             { "ball_l",  26 },
@@ -5365,19 +4985,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  24 },
             { "leg_lower_r",  28 },
             { "leg_upper_l",  23 },
-            { "leg_upper_l_twist", 146 },
-            { "leg_upper_l_twist1", 147 },
             { "leg_upper_r",  27 },
-            { "leg_upper_r_twist", 149 },
-            { "leg_upper_r_twist1", 150 },
             { "neck_0",  10 },
-            { "neck_0_twist",  82 },
-            { "neck_notwist",  81 },
             { "pelvis",   5 },
             { "spine_0",   6 },
             { "spine_1",   7 },
             { "spine_2",   8 },
             { "spine_3",   9 },
+            { "weapon_target_hand_l", 365 },
+            { "weapon_target_hand_r",  21 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 11 },
@@ -5413,19 +5029,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  32,  33 },  // leg_upper_r -> leg_lower_r
             BonePair{  33,  34 },  // leg_lower_r -> ankle_r
             BonePair{  34,  35 },  // ankle_r -> ball_r
-            BonePair{   7,  42 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{   7,  43 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  15,  53 },  // neck_0 -> neck_0_twist
-            BonePair{  19,  74 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  19,  75 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  18,  76 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  18,  77 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  24,  99 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  24, 100 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  23, 101 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  23, 102 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  32, 127 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  32, 128 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  10, 184 },  // ball_l -> ball_end_l
             BonePair{  35, 221 },  // ball_r -> ball_end_r
         },
@@ -5433,17 +5036,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",   9 },
             { "ankle_r",  34 },
             { "arm_lower_l",  19 },
-            { "arm_lower_l_twist",  74 },
-            { "arm_lower_l_twist1",  75 },
             { "arm_lower_r",  24 },
-            { "arm_lower_r_twist",  99 },
-            { "arm_lower_r_twist1", 100 },
             { "arm_upper_l",  18 },
-            { "arm_upper_l_twist",  76 },
-            { "arm_upper_l_twist1",  77 },
             { "arm_upper_r",  23 },
-            { "arm_upper_r_twist", 101 },
-            { "arm_upper_r_twist1", 102 },
             { "ball_end_l", 184 },
             { "ball_end_r", 221 },
             { "ball_l",  10 },
@@ -5456,18 +5051,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",   8 },
             { "leg_lower_r",  33 },
             { "leg_upper_l",   7 },
-            { "leg_upper_l_twist",  42 },
-            { "leg_upper_l_twist1",  43 },
             { "leg_upper_r",  32 },
-            { "leg_upper_r_twist", 127 },
-            { "leg_upper_r_twist1", 128 },
             { "neck_0",  15 },
-            { "neck_0_twist",  53 },
             { "pelvis",   6 },
             { "spine_0",  11 },
             { "spine_1",  12 },
             { "spine_2",  13 },
             { "spine_3",  14 },
+            { "weapon_target_hand_l", 202 },
+            { "weapon_target_hand_r", 211 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 16 },
@@ -5501,21 +5093,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  27,  28 },  // arm_lower_l -> hand_l
             BonePair{  19,  30 },  // spine_3 -> neck_0
             BonePair{  30,  31 },  // neck_0 -> head
-            BonePair{   6,  36 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{   6,  37 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  11,  38 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  11,  39 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  20,  66 },  // clavicle_r -> clavicle_r_twist
-            BonePair{  21,  67 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  21,  68 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  22,  69 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  22,  70 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  25,  86 },  // clavicle_l -> clavicle_l_twist
-            BonePair{  26,  87 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  26,  88 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  27,  89 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  27,  90 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  30, 106 },  // neck_0 -> neck_0_twist
             BonePair{  10, 128 },  // ball_l -> ball_end_l
             BonePair{  15, 130 },  // ball_r -> ball_end_r
         },
@@ -5523,38 +5100,23 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",   8 },
             { "ankle_r",  13 },
             { "arm_lower_l",  27 },
-            { "arm_lower_l_twist",  89 },
-            { "arm_lower_l_twist1",  90 },
             { "arm_lower_r",  22 },
-            { "arm_lower_r_twist",  69 },
-            { "arm_lower_r_twist1",  70 },
             { "arm_upper_l",  26 },
-            { "arm_upper_l_twist",  88 },
-            { "arm_upper_l_twist1",  87 },
             { "arm_upper_r",  21 },
-            { "arm_upper_r_twist",  68 },
-            { "arm_upper_r_twist1",  67 },
             { "ball_end_l", 128 },
             { "ball_end_r", 130 },
             { "ball_l",  10 },
             { "ball_r",  15 },
             { "clavicle_l",  25 },
-            { "clavicle_l_twist",  86 },
             { "clavicle_r",  20 },
-            { "clavicle_r_twist",  66 },
             { "hand_l",  28 },
             { "hand_r",  23 },
             { "head",  31 },
             { "leg_lower_l",   7 },
             { "leg_lower_r",  12 },
             { "leg_upper_l",   6 },
-            { "leg_upper_l_twist",  36 },
-            { "leg_upper_l_twist1",  37 },
             { "leg_upper_r",  11 },
-            { "leg_upper_r_twist",  38 },
-            { "leg_upper_r_twist1",  39 },
             { "neck_0",  30 },
-            { "neck_0_twist", 106 },
             { "pelvis",   5 },
             { "spine_0",  16 },
             { "spine_1",  17 },
@@ -5595,21 +5157,8 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  25,  26 },  // leg_upper_l -> leg_lower_l
             BonePair{  26,  27 },  // leg_lower_l -> ankle_l
             BonePair{  27,  28 },  // ankle_l -> ball_l
-            BonePair{   9,  49 },  // neck_0 -> neck_0_twist
-            BonePair{  13,  76 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  13,  77 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  12,  81 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  12,  82 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{  11,  83 },  // clavicle_r -> clavicle_notwist_r
-            BonePair{  18, 108 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  18, 109 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{  17, 110 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{  17, 111 },  // arm_upper_l -> arm_upper_l_twist1
             BonePair{  16, 112 },  // clavicle_l -> clavicle_notwist_l
-            BonePair{  21, 144 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  21, 151 },  // leg_upper_r -> leg_upper_r_twist1
-            BonePair{  25, 152 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  25, 153 },  // leg_upper_l -> leg_upper_l_twist1
             BonePair{  24, 196 },  // ball_r -> ball_end_r
             BonePair{  28, 204 },  // ball_l -> ball_end_l
         },
@@ -5617,17 +5166,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  27 },
             { "ankle_r",  23 },
             { "arm_lower_l",  18 },
-            { "arm_lower_l_twist", 108 },
-            { "arm_lower_l_twist1", 109 },
             { "arm_lower_r",  13 },
-            { "arm_lower_r_twist",  76 },
-            { "arm_lower_r_twist1",  77 },
             { "arm_upper_l",  17 },
-            { "arm_upper_l_twist", 110 },
-            { "arm_upper_l_twist1", 111 },
             { "arm_upper_r",  12 },
-            { "arm_upper_r_twist",  81 },
-            { "arm_upper_r_twist1",  82 },
             { "ball_end_l", 204 },
             { "ball_end_r", 196 },
             { "ball_l",  28 },
@@ -5642,18 +5183,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  26 },
             { "leg_lower_r",  22 },
             { "leg_upper_l",  25 },
-            { "leg_upper_l_twist", 152 },
-            { "leg_upper_l_twist1", 153 },
             { "leg_upper_r",  21 },
-            { "leg_upper_r_twist", 144 },
-            { "leg_upper_r_twist1", 151 },
             { "neck_0",   9 },
-            { "neck_0_twist",  49 },
             { "pelvis",   4 },
             { "spine_0",   5 },
             { "spine_1",   6 },
             { "spine_2",   7 },
             { "spine_3",   8 },
+            { "weapon_target_hand_l", 183 },
+            { "weapon_target_hand_r", 176 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 10 },
@@ -5678,50 +5216,29 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  65,  66 },  // spine_2 -> spine_3
             BonePair{  66,  67 },  // spine_3 -> neck_0
             BonePair{  67,  68 },  // neck_0 -> head
-            BonePair{  67,  90 },  // neck_0 -> neck_0_twist
             BonePair{  66,  99 },  // spine_3 -> clavicle_r
             BonePair{  99, 100 },  // clavicle_r -> arm_upper_r
             BonePair{ 100, 101 },  // arm_upper_r -> arm_lower_r
             BonePair{ 101, 102 },  // arm_lower_r -> hand_r
-            BonePair{ 101, 130 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{ 101, 131 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{ 100, 135 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{ 100, 136 },  // arm_upper_r -> arm_upper_r_twist1
             BonePair{  99, 137 },  // clavicle_r -> clavicle_notwist_r
             BonePair{  66, 143 },  // spine_3 -> clavicle_l
             BonePair{ 143, 144 },  // clavicle_l -> arm_upper_l
             BonePair{ 144, 145 },  // arm_upper_l -> arm_lower_l
             BonePair{ 145, 146 },  // arm_lower_l -> hand_l
-            BonePair{ 145, 174 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{ 145, 175 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{ 144, 176 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{ 144, 177 },  // arm_upper_l -> arm_upper_l_twist1
             BonePair{ 143, 178 },  // clavicle_l -> clavicle_notwist_l
             BonePair{  56, 216 },  // leg_lower_r -> ankle_r
             BonePair{ 216, 218 },  // ankle_r -> ball_r
             BonePair{ 218, 219 },  // ball_r -> ball_end_r
-            BonePair{  55, 220 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  55, 227 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  59, 229 },  // ankle_l -> ball_l
             BonePair{ 229, 230 },  // ball_l -> ball_end_l
-            BonePair{  57, 231 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  57, 232 },  // leg_upper_l -> leg_upper_l_twist1
         },
         /* ids */ {
             { "ankle_l",  59 },
             { "ankle_r", 216 },
             { "arm_lower_l", 145 },
-            { "arm_lower_l_twist", 174 },
-            { "arm_lower_l_twist1", 175 },
             { "arm_lower_r", 101 },
-            { "arm_lower_r_twist", 130 },
-            { "arm_lower_r_twist1", 131 },
             { "arm_upper_l", 144 },
-            { "arm_upper_l_twist", 176 },
-            { "arm_upper_l_twist1", 177 },
             { "arm_upper_r", 100 },
-            { "arm_upper_r_twist", 135 },
-            { "arm_upper_r_twist1", 136 },
             { "ball_end_l", 230 },
             { "ball_end_r", 219 },
             { "ball_l", 229 },
@@ -5736,18 +5253,15 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  58 },
             { "leg_lower_r",  56 },
             { "leg_upper_l",  57 },
-            { "leg_upper_l_twist", 231 },
-            { "leg_upper_l_twist1", 232 },
             { "leg_upper_r",  55 },
-            { "leg_upper_r_twist", 220 },
-            { "leg_upper_r_twist1", 227 },
             { "neck_0",  67 },
-            { "neck_0_twist",  90 },
             { "pelvis",  54 },
             { "spine_0",  63 },
             { "spine_1",  64 },
             { "spine_2",  65 },
             { "spine_3",  66 },
+            { "weapon_target_hand_l", 148 },
+            { "weapon_target_hand_r", 104 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 68 },
@@ -5783,19 +5297,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  22,  23 },  // leg_upper_r -> leg_lower_r
             BonePair{  23,  24 },  // leg_lower_r -> ankle_r
             BonePair{  24,  25 },  // ankle_r -> ball_r
-            BonePair{   6,  43 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  66 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10,  67 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{   9,  68 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{   9,  69 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  14,  98 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  14,  99 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  13, 100 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  13, 101 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  18, 129 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  18, 130 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  22, 131 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  22, 132 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  21, 412 },  // ball_l -> ball_end_l
             BonePair{  25, 413 },  // ball_r -> ball_end_r
         },
@@ -5803,17 +5304,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  20 },
             { "ankle_r",  24 },
             { "arm_lower_l",  10 },
-            { "arm_lower_l_twist",  66 },
-            { "arm_lower_l_twist1",  67 },
             { "arm_lower_r",  14 },
-            { "arm_lower_r_twist",  98 },
-            { "arm_lower_r_twist1",  99 },
             { "arm_upper_l",   9 },
-            { "arm_upper_l_twist",  68 },
-            { "arm_upper_l_twist1",  69 },
             { "arm_upper_r",  13 },
-            { "arm_upper_r_twist", 100 },
-            { "arm_upper_r_twist1", 101 },
             { "ball_end_l", 412 },
             { "ball_end_r", 413 },
             { "ball_l",  21 },
@@ -5826,18 +5319,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  19 },
             { "leg_lower_r",  23 },
             { "leg_upper_l",  18 },
-            { "leg_upper_l_twist", 129 },
-            { "leg_upper_l_twist1", 130 },
             { "leg_upper_r",  22 },
-            { "leg_upper_r_twist", 131 },
-            { "leg_upper_r_twist1", 132 },
             { "neck_0",   6 },
-            { "neck_0_twist",  43 },
+            { "object_hand_l", 407 },
+            { "object_hand_r", 409 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_l", 408 },
+            { "weapon_hand_r",  16 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
@@ -5873,19 +5365,6 @@ inline const std::unordered_map<std::string, ModelBoneData>
             BonePair{  20,  21 },  // leg_upper_r -> leg_lower_r
             BonePair{  21,  22 },  // leg_lower_r -> ankle_r
             BonePair{  22,  23 },  // ankle_r -> ball_r
-            BonePair{   6,  40 },  // neck_0 -> neck_0_twist
-            BonePair{  10,  68 },  // arm_lower_l -> arm_lower_l_twist
-            BonePair{  10,  69 },  // arm_lower_l -> arm_lower_l_twist1
-            BonePair{   9,  70 },  // arm_upper_l -> arm_upper_l_twist
-            BonePair{   9,  71 },  // arm_upper_l -> arm_upper_l_twist1
-            BonePair{  14, 106 },  // arm_lower_r -> arm_lower_r_twist
-            BonePair{  14, 107 },  // arm_lower_r -> arm_lower_r_twist1
-            BonePair{  13, 108 },  // arm_upper_r -> arm_upper_r_twist
-            BonePair{  13, 109 },  // arm_upper_r -> arm_upper_r_twist1
-            BonePair{  16, 137 },  // leg_upper_l -> leg_upper_l_twist
-            BonePair{  16, 138 },  // leg_upper_l -> leg_upper_l_twist1
-            BonePair{  20, 139 },  // leg_upper_r -> leg_upper_r_twist
-            BonePair{  20, 140 },  // leg_upper_r -> leg_upper_r_twist1
             BonePair{  19, 150 },  // ball_l -> ball_end_l
             BonePair{  23, 151 },  // ball_r -> ball_end_r
         },
@@ -5893,17 +5372,9 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "ankle_l",  18 },
             { "ankle_r",  22 },
             { "arm_lower_l",  10 },
-            { "arm_lower_l_twist",  68 },
-            { "arm_lower_l_twist1",  69 },
             { "arm_lower_r",  14 },
-            { "arm_lower_r_twist", 106 },
-            { "arm_lower_r_twist1", 107 },
             { "arm_upper_l",   9 },
-            { "arm_upper_l_twist",  70 },
-            { "arm_upper_l_twist1",  71 },
             { "arm_upper_r",  13 },
-            { "arm_upper_r_twist", 108 },
-            { "arm_upper_r_twist1", 109 },
             { "ball_end_l", 150 },
             { "ball_end_r", 151 },
             { "ball_l",  19 },
@@ -5916,18 +5387,17 @@ inline const std::unordered_map<std::string, ModelBoneData>
             { "leg_lower_l",  17 },
             { "leg_lower_r",  21 },
             { "leg_upper_l",  16 },
-            { "leg_upper_l_twist", 137 },
-            { "leg_upper_l_twist1", 138 },
             { "leg_upper_r",  20 },
-            { "leg_upper_r_twist", 139 },
-            { "leg_upper_r_twist1", 140 },
             { "neck_0",   6 },
-            { "neck_0_twist",  40 },
+            { "object_hand_l", 147 },
+            { "object_hand_r", 149 },
             { "pelvis",   1 },
             { "spine_0",   2 },
             { "spine_1",   3 },
             { "spine_2",   4 },
             { "spine_3",   5 },
+            { "weapon_hand_l", 148 },
+            { "weapon_hand_r", 105 },
         },
         /* slotBones */ {
             /* [0] Head  */ { 7 },
