@@ -18,6 +18,12 @@ namespace Offsets
 	// main thread while the DMA thread writes it, hence atomic.
 	inline std::atomic<bool> bResolved{ false };
 
+	// Clear the resolved flag so the next ResolveOffsets rewalks the schema
+	// against the new process. The ptrdiff_t fields themselves get rewritten
+	// unconditionally when Resolve runs, so no explicit zeroing is needed —
+	// only the gate matters.
+	inline void Reset() { bResolved.store(false, std::memory_order_release); }
+
 	inline constexpr std::ptrdiff_t FirstEntityList = 0x10;
 	inline std::ptrdiff_t GameEntitySystem = 0;
 	inline std::ptrdiff_t ViewMatrix = 0;

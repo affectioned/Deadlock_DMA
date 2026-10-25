@@ -900,3 +900,12 @@ std::string SchemaWalker::Status()
 	std::scoped_lock lock(s_StatusMutex);
 	return s_Status;
 }
+
+void SchemaWalker::Reset()
+{
+	s_Classes.clear();
+	s_FieldCount.store(0);
+	s_ClassCount.store(0);
+	s_Ready.store(false);
+	SetStatus("not run");
+}

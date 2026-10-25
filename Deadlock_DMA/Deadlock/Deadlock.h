@@ -11,6 +11,12 @@ public:
 	static bool Initialize(DMA_Connection* Conn);
 	static Process& Proc();
 
+	// Clear every per-process cache this class owns (process + modules, local
+	// pawn/controller pointers, prediction address, view matrix, server time).
+	// Called by the supervisor when the attached PID dies so a reattach
+	// doesn't inherit addresses from the previous game instance.
+	static void Reset();
+
 private:
 	static inline Process m_DeadlockProc{};
 

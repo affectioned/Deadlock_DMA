@@ -41,4 +41,9 @@ namespace SchemaWalker
 
 	// One-line summary of the last walk, for the Offsets tab.
 	std::string Status();
+
+	// Drop every cached class → field table and reset the ready flag so the
+	// next Resolve rewalks the schema against the fresh process. Called by
+	// the supervisor on game-process death.
+	void Reset();
 }

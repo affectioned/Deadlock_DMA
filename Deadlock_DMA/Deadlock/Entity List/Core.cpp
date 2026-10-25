@@ -11,6 +11,64 @@ void EntityList::InitScatterHandle(DMA_Connection* Conn, Process* Proc)
 	m_sr = std::make_unique<ScatterRead>(Conn->GetHandle(), Proc->GetPID());
 }
 
+void EntityList::Reset()
+{
+	// Scatter handle owns a Pid; drop it so the next InitScatterHandle
+	// rebinds to the new process's Pid instead of using a dead one.
+	m_sr.reset();
+
+	m_EntitySystem_Address = 0;
+	m_EntityList_Addresses.fill(0);
+	for (auto& row : m_CompleteEntityList)
+		std::fill(row.begin(), row.end(), CEntityIdentity{});
+
+	m_PlayerController_Addresses.clear();
+	m_PlayerPawn_Addresses.clear();
+	m_PlayerPawnVTable = 0;
+	m_PlayerControllerVTable = 0;
+	m_TrooperAddresses.clear();
+	m_MonsterCampAddresses.clear();
+	m_SinnersAddresses.clear();
+	m_XpOrbAddresses.clear();
+	m_PowerupAddresses.clear();
+	m_PrimaryWeaponAbilityAddresses.clear();
+
+	{
+		std::scoped_lock lock(m_PawnMutex);
+		m_PlayerPawns.clear();
+		m_LocalPawnIndex = -1;
+	}
+	m_PawnsUpdatedAtNs.store(0, std::memory_order_release);
+
+	{
+		std::scoped_lock lock(m_ControllerMutex);
+		m_PlayerControllers.clear();
+		m_LocalControllerIndex = -1;
+	}
+
+	{ std::scoped_lock lock(m_TrooperMutex);     m_Troopers.clear(); }
+	{ std::scoped_lock lock(m_MonsterCampMutex); m_MonsterCamps.clear(); }
+	{ std::scoped_lock lock(m_SinnerMutex);      m_Sinners.clear(); }
+	{ std::scoped_lock lock(m_XpOrbMutex);       m_XpOrbs.clear(); }
+	{ std::scoped_lock lock(m_PowerupMutex);     m_Powerups.clear(); }
+
+	{
+		std::scoped_lock lock(m_ClassMapMutex);
+		m_EntityClassMap.clear();
+		m_EntityClassNameByPtr.clear();
+	}
+
+	{
+		std::scoped_lock lock(m_FOWMutex);
+		m_FOWTeamAddress = 0;
+		m_FOWVisibleByAddr.clear();
+	}
+	m_bFOWReady.store(false, std::memory_order_release);
+	m_FOWLocalTeam.store(ETeam::UNKNOWN, std::memory_order_release);
+
+	g_LocalBulletSpeed.store(0.0f, std::memory_order_release);
+}
+
 void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 {
 	// UpdateCrucialInformation is two pointer reads — measurement noise floor,

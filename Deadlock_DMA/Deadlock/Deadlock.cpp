@@ -34,6 +34,30 @@ Process& Deadlock::Proc()
 	return m_DeadlockProc;
 }
 
+void Deadlock::Reset()
+{
+	m_DeadlockProc.Reset();
+	m_PredictionAddress = 0;
+	{
+		std::scoped_lock lock(ViewMatrixMutex);
+		m_ViewMatrix = Matrix44{ 0.0f };
+	}
+	{
+		std::scoped_lock lock(m_LocalAddressMutex);
+		m_LocalPlayerPawnAddress       = 0;
+		m_LocalPlayerControllerAddress = 0;
+	}
+	{
+		std::scoped_lock lock(m_ServerTimeMutex);
+		m_ServerTime            = 0.0f;
+		m_ServerTimeUpdatedAt   = {};
+	}
+	{
+		std::scoped_lock lock(m_ClientYawMutex);
+		m_ClientYaw = 0.0f;
+	}
+}
+
 void Deadlock::UpdateViewMatrix(DMA_Connection* Conn)
 {
 	uintptr_t ViewMatrixAddress = Proc().GetModuleBase(GameModules::ClientDll) + Offsets::ViewMatrix;

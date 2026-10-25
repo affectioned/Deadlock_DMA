@@ -10,6 +10,7 @@ bool Process::GetProcessInfo(const std::string& processName,
 	Log::Info("Waiting for {}", processName);
 
 	m_PID = 0;
+	m_ProcessName = processName;
 
 	while (true)
 	{
@@ -26,6 +27,27 @@ bool Process::GetProcessInfo(const std::string& processName,
 	}
 
 	return true;
+}
+
+bool Process::IsAlive(DMA_Connection* conn) const
+{
+	if (!m_PID || m_ProcessName.empty()) return false;
+	DWORD livePid = 0;
+	// VMMDLL_PidGetFromName can return true-ish with a zero pid in some
+	// states; guard against that too. Treat zero as not-alive.
+	if (!VMMDLL_PidGetFromName(conn->GetHandle(), m_ProcessName.c_str(), &livePid) || !livePid)
+		return false;
+	// Catches "game restarted into a fresh PID": lookup resolves but to a
+	// different PID than the one we attached to, so our caches are stale.
+	return livePid == m_PID;
+}
+
+void Process::Reset()
+{
+	m_PID = 0;
+	m_ProcessName.clear();
+	m_Modules.clear();
+	m_ModuleSizes.clear();
 }
 
 uintptr_t Process::GetModuleBase(const std::string& name) const

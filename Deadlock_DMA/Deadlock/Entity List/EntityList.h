@@ -9,6 +9,13 @@ public: /* Interface methods */
 	static void InitScatterHandle(DMA_Connection* Conn, Process* Proc);
 	static void FullUpdate(DMA_Connection* Conn, Process* Proc);
 
+	// Drop every per-process cache this class owns — entity lists, class
+	// maps, pawn/controller vtable snapshots, FOW visibility maps, scatter
+	// handle. Called by the supervisor on game-process death so a reattach
+	// to the new instance doesn't inherit entity addresses from the dead
+	// one. The next FullUpdate repopulates from scratch.
+	static void Reset();
+
 	static void GetEntityListAddresses(DMA_Connection* Conn, Process* Proc);
 	static void GetEntitySystemAddress(DMA_Connection* Conn, Process* Proc);
 
