@@ -165,6 +165,7 @@ void Keybinds::Render()
 		// target-PC input reader and should be rebindable even before DMA is up.
 		Menu.Render();
 		AimAssist.Render();
+		SoulAim.Render();
 
 		ImGui::EndTable();
 	}
@@ -258,9 +259,18 @@ void CKeybind::Render()
 
 void Keybinds::OnDMAFrame(DMA_Connection* Conn)
 {
-	AimAssist::bIsActive = AimAssist::bMasterToggle && AimAssist.IsActive(Conn);
+	const bool bPlayerKey = AimAssist.IsActive(Conn);
+	const bool bSoulKey   = SoulAim.IsActive(Conn);
+
+	// Player aim takes priority — if both held, orbs-only is suppressed so
+	// the pawn path still runs normally.
+	AimAssist::bOrbsOnlyActive = !bPlayerKey && bSoulKey;
+	AimAssist::bIsActive = AimAssist::bMasterToggle && (bPlayerKey || bSoulKey);
+
 	if (AimAssist::bIsActive)
 		AimAssist::OnFrame(Conn);
+	else
+		AimAssist::bOrbsOnlyActive = false;
 }
 
 const bool CKeybind::IsActive(DMA_Connection* Conn) const

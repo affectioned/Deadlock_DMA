@@ -26,6 +26,17 @@ public:
 	static inline bool bAllowAimThroughOcclusion{ false };
 	static inline bool bIsActive = false;
 
+	// Soul-only mode: driven by the dedicated Soul Aim keybind. When set, the
+	// pawn path is skipped and only orbs are considered, regardless of
+	// bAimAtOrbs. Runtime-only — never persisted.
+	static inline bool bOrbsOnlyActive{ false };
+
+	// Triggerbot that only fires while the soul-aim key is held and only on
+	// orbs. Cooldown prevents burst-click spam on a hovering soul.
+	static inline bool  bSoulTriggerbot{ true };
+	static inline float fSoulTriggerRadiusPx{ 14.0f };
+	static inline float fSoulTriggerCooldownMs{ 120.0f };
+
 	// Humanization. Reaction / snap timings are drawn per engagement from
 	// N(mean, stddev); the settle alpha is the closing gain per 5 ms tick.
 	static inline float fReactionMeanMs{ 190.0f };

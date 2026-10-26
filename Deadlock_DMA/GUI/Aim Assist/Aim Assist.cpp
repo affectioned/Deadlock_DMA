@@ -91,6 +91,23 @@ void AimAssist::RenderSettings()
 	ImGui::Checkbox("FOV Circle", &bDrawMaxFOV);
 
 	ImGui::Checkbox("Aim At Orbs", &bAimAtOrbs);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Lets the main Aim Assist key also pull onto souls. Independent of the Soul Aim key.");
+
+	ImGui::SeparatorText("Soul Aim (dedicated key)");
+
+	ImGui::Checkbox("Soul Triggerbot", &bSoulTriggerbot);
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("While the Soul Aim key is held, fire a left click once the crosshair is\n"
+		                  "inside the trigger radius of a soul. Great for farm/deny timing.");
+
+	if (bSoulTriggerbot)
+	{
+		ImGui::SetNextItemWidth(140.0f);
+		ImGui::SliderFloat("Trigger Radius (px)", &fSoulTriggerRadiusPx, 2.0f, 60.0f, "%.1f");
+		ImGui::SetNextItemWidth(140.0f);
+		ImGui::SliderFloat("Trigger Cooldown (ms)", &fSoulTriggerCooldownMs, 40.0f, 500.0f, "%.0f");
+	}
 
 	ImGui::Checkbox("Allow Aim Through Occlusion", &bAllowAimThroughOcclusion);
 	if (ImGui::IsItemHovered())
@@ -195,6 +212,7 @@ AimAssist::AimTarget AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2&
 		Best = AimTarget{ true, static_cast<uint64_t>(Key), Delta, RangeMeters, RadiusPx };
 	};
 
+	if (!bOrbsOnlyActive)
 	{
 		GuiWatchdog::DmaStage("Aim Assist/awaiting Pawn+Controller");
 		std::scoped_lock lk(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
@@ -292,7 +310,7 @@ AimAssist::AimTarget AimAssist::GetAimDelta(DMA_Connection* Conn, const Vector2&
 		}
 	}
 
-	if (bAimAtOrbs)
+	if (bAimAtOrbs || bOrbsOnlyActive)
 	{
 		GuiWatchdog::DmaStage("Aim Assist/awaiting XpOrb");
 		std::scoped_lock orbLk(EntityList::m_XpOrbMutex);
@@ -367,10 +385,26 @@ void AimAssist::OnFrame(DMA_Connection* Conn)
 
 	const Vector2 Move = m_Humanizer.Step(Target.Delta, DeltaSeconds, Params);
 
-	if (Move.x == 0.0f && Move.y == 0.0f)
-		return;
+	if (Move.x != 0.0f || Move.y != 0.0f)
+		(void)MyMakcu::m_Device.mouseMove(static_cast<int32_t>(Move.x), static_cast<int32_t>(Move.y));
 
-	(void)MyMakcu::m_Device.mouseMove(static_cast<int32_t>(Move.x), static_cast<int32_t>(Move.y));
+	// Soul triggerbot: only in orbs-only mode, only once the humanizer has
+	// pulled the crosshair inside the configured radius of the orb. Cooldown
+	// stops a hovering soul from eating a stream of clicks.
+	if (bOrbsOnlyActive && bSoulTriggerbot)
+	{
+		const float DeltaPx = sqrtf(Target.Delta.x * Target.Delta.x + Target.Delta.y * Target.Delta.y);
+		if (DeltaPx <= fSoulTriggerRadiusPx)
+		{
+			static auto LastClick = std::chrono::steady_clock::time_point{};
+			const auto Cooldown = std::chrono::milliseconds(static_cast<int>(fSoulTriggerCooldownMs));
+			if (CurrentTime - LastClick >= Cooldown)
+			{
+				(void)MyMakcu::m_Device.click(makcu::MouseButton::LEFT);
+				LastClick = CurrentTime;
+			}
+		}
+	}
 }
 
 void AimAssist::RenderFOVCircle()
