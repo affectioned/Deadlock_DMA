@@ -365,3 +365,6 @@ FodyWeavers.xsd
 *.zip
 /schema-dump
 /BoneExtractor/venv
+
+# VRF CLI binary for BoneExtractor fallback — download separately
+/BoneExtractor/vrf/

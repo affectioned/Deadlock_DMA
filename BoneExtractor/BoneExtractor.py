@@ -6,6 +6,14 @@ BoneExtractor – extracts hero skeleton/hitbox data from Deadlock's VPK.
 Dependencies (install once):
     pip install vpk keyvalues3
 
+Optional VRF fallback (needed when Valve ships new KV3 BinaryTypes the
+Python keyvalues3 package hasn't caught up to; without it, affected
+models — e.g. new hero rigs — are silently skipped):
+    Download Source2Viewer-CLI from
+    https://github.com/ValveResourceFormat/ValveResourceFormat/releases
+    and unzip into BoneExtractor/vrf/ (or set VRF_CLI env var to point
+    at Source2Viewer-CLI.exe elsewhere).
+
 Usage:
     python BoneExtractor.py [path/to/BoneLists.hpp]
 
@@ -22,6 +30,7 @@ import re
 import sys
 import struct
 import hashlib
+import subprocess
 import winreg
 
 # keyvalues3 >= 0.4 is required for KV3 v4/v5 magic support (Deadlock's current
@@ -133,24 +142,15 @@ def extract_data_block(resource_bytes: bytes) -> bytes | None:
     return next(iter_blocks(resource_bytes, b"DATA"), None)
 
 
-def collect_hitboxes(resource_bytes: bytes) -> list[tuple[str, int, float]]:
+def hitboxes_from_mdat_roots(mdat_roots) -> list[tuple[str, int, float]]:
     """
-    Gather (bone name, group id, shape radius) for the "default" hitbox set.
-
-    These live in the embedded mesh (MDAT) blocks under `m_hitboxsets`, keyed
-    by set name. The model's own DATA block has no m_HitboxSets and its
-    m_refPhysicsHitboxData is empty for every hero, so reading only DATA
-    yields nothing and every slot silently degrades to the name fallback.
+    Gather (bone name, group id, shape radius) for the "default" hitbox set
+    from an iterable of already-parsed MDAT KV3 roots.
     """
     out: list[tuple[str, int, float]] = []
     seen: set[str] = set()
 
-    for blob in iter_blocks(resource_bytes, b"MDAT"):
-        try:
-            root = kv3.read(io.BytesIO(blob))
-        except Exception:
-            continue
-
+    for root in mdat_roots:
         mesh = root.value if hasattr(root, "value") else root
 
         for entry in _kv_get(mesh, "m_hitboxsets", default=[]) or []:
@@ -175,6 +175,101 @@ def collect_hitboxes(resource_bytes: bytes) -> list[tuple[str, int, float]]:
                             float(hb.get("m_flShapeRadius", 0.0))))
 
     return out
+
+
+def collect_hitboxes(resource_bytes: bytes) -> list[tuple[str, int, float]]:
+    """
+    Gather (bone name, group id, shape radius) for the "default" hitbox set.
+
+    These live in the embedded mesh (MDAT) blocks under `m_hitboxsets`, keyed
+    by set name. The model's own DATA block has no m_HitboxSets and its
+    m_refPhysicsHitboxData is empty for every hero, so reading only DATA
+    yields nothing and every slot silently degrades to the name fallback.
+    """
+    roots = []
+    for blob in iter_blocks(resource_bytes, b"MDAT"):
+        try:
+            roots.append(kv3.read(io.BytesIO(blob)))
+        except Exception:
+            continue
+    return hitboxes_from_mdat_roots(roots)
+
+
+# ──────────────────────────────────────────────────────────────────
+# VRF (ValveResourceFormat) fallback for KV3 BinaryTypes the Python
+# keyvalues3 package doesn't support yet. Shells out to
+# Source2Viewer-CLI.exe to render the DATA + MDAT blocks as text KV3,
+# which we can then parse with KV3TextReader regardless of what new
+# binary types Valve shipped this patch.
+# ──────────────────────────────────────────────────────────────────
+
+VRF_CLI_DEFAULT = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "vrf", "Source2Viewer-CLI.exe",
+)
+VRF_CLI = os.environ.get("VRF_CLI") or VRF_CLI_DEFAULT
+
+_VRF_BLOCK_RE = re.compile(rb'^--- Data for block "([A-Z0-9]+)" ---\r?\n',
+                           re.MULTILINE)
+
+
+def _vrf_available() -> bool:
+    return bool(VRF_CLI) and os.path.exists(VRF_CLI)
+
+
+def _vrf_split_blocks(stdout: bytes) -> list[tuple[str, bytes]]:
+    """
+    Split VRF `-b DATA,MDAT` stdout into [(block_name, kv3_text_bytes), ...].
+    Preserves order so the caller can distinguish DATA from the MDAT stream.
+    """
+    matches = list(_VRF_BLOCK_RE.finditer(stdout))
+    out: list[tuple[str, bytes]] = []
+    for i, m in enumerate(matches):
+        name = m.group(1).decode("ascii")
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(stdout)
+        out.append((name, stdout[start:end].rstrip()))
+    return out
+
+
+def _parse_vmdl_via_vrf(vpk_path: str, inner_path: str):
+    """
+    Shell VRF to dump DATA + MDAT as text KV3, parse, and return
+    (data_root, hitboxes) for the same callers as the native path.
+    Returns None when VRF is unavailable or the dump is unusable.
+    """
+    if not _vrf_available():
+        return None
+
+    from keyvalues3.textreader import KV3TextReader
+
+    try:
+        proc = subprocess.run(
+            [VRF_CLI, "-i", vpk_path, "-f", inner_path, "-b", "DATA,MDAT"],
+            capture_output=True, check=False, timeout=120,
+        )
+    except Exception:
+        return None
+    if proc.returncode != 0:
+        return None
+
+    data_root = None
+    mdat_roots = []
+    reader = KV3TextReader()
+
+    for name, body in _vrf_split_blocks(proc.stdout):
+        try:
+            root = reader.parse(body.decode("utf-8", errors="replace"))
+        except Exception:
+            continue
+        if name == "DATA" and data_root is None:
+            data_root = root
+        elif name == "MDAT":
+            mdat_roots.append(root)
+
+    if data_root is None:
+        return None
+    return data_root, hitboxes_from_mdat_roots(mdat_roots)
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -710,7 +805,7 @@ def main():
     pak = vpk.open(vpk_path)
 
     model_map: dict[str, dict] = {}
-    processed = skipped = 0
+    processed = skipped = vrf_rescued = 0
 
     for filepath in pak:
         if not filepath.endswith(".vmdl_c"):
@@ -724,6 +819,7 @@ def main():
         if model_path in model_map:
             continue
 
+        source = "ok"
         try:
             raw  = pak[filepath].read()
             data = extract_data_block(raw)
@@ -731,8 +827,28 @@ def main():
                 skipped += 1
                 continue
 
-            root   = kv3.read(io.BytesIO(data))
-            model  = extract_model_data(root, collect_hitboxes(raw))
+            try:
+                root     = kv3.read(io.BytesIO(data))
+                hitboxes = collect_hitboxes(raw)
+            except Exception as native_err:
+                # Newer Valve builds ship KV3 BinaryTypes the Python parser
+                # doesn't recognize. Fall back to VRF for just these files.
+                parsed = _parse_vmdl_via_vrf(vpk_path, filepath)
+                if parsed is None:
+                    if not _vrf_available():
+                        print(f"  [err] {filepath}: {native_err} "
+                              f"(VRF fallback unavailable at {VRF_CLI})",
+                              file=sys.stderr)
+                    else:
+                        print(f"  [err] {filepath}: {native_err} "
+                              f"(VRF fallback also failed)", file=sys.stderr)
+                    skipped += 1
+                    continue
+                root, hitboxes = parsed
+                source = "vrf"
+                vrf_rescued += 1
+
+            model = extract_model_data(root, hitboxes)
             if model is None:
                 skipped += 1
                 continue
@@ -743,7 +859,8 @@ def main():
                 continue
 
             pair_note = " (capped)" if len(model['pairs']) == 70 else ""
-            print(f"  [ok] {model_path:<72}  {len(model['pairs'])} pairs{pair_note}  {len(model['ids'])} ids")
+            tag = "[vrf]" if source == "vrf" else "[ok] "
+            print(f"  {tag} {model_path:<72}  {len(model['pairs'])} pairs{pair_note}  {len(model['ids'])} ids")
             model_map[model_path] = model
             processed += 1
 
@@ -751,7 +868,8 @@ def main():
             print(f"  [err] {filepath}: {e}", file=sys.stderr)
             skipped += 1
 
-    print(f"\n[*] {processed} models extracted, {skipped} skipped")
+    vrf_note = f" ({vrf_rescued} via VRF)" if vrf_rescued else ""
+    print(f"\n[*] {processed} models extracted{vrf_note}, {skipped} skipped")
 
     if not model_map:
         sys.exit("[error] No data extracted")
