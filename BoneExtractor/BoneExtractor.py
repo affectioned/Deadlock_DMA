@@ -1,18 +1,20 @@
-
 #!/usr/bin/env python3
 """
 BoneExtractor – extracts hero skeleton/hitbox data from Deadlock's VPK.
 
-Dependencies (install once):
-    pip install vpk keyvalues3
+All VPK I/O and Source2 resource decompilation goes through
+Source2Viewer-CLI; Python only parses the CLI's text KV3 output. This keeps
+us aligned with Valve's format churn without having to track every new KV3
+BinaryType in the Python keyvalues3 package.
 
-Optional VRF fallback (needed when Valve ships new KV3 BinaryTypes the
-Python keyvalues3 package hasn't caught up to; without it, affected
-models — e.g. new hero rigs — are silently skipped):
-    Download Source2Viewer-CLI from
+Dependencies (install once, via requirements.txt):
+    pip install -r requirements.txt   (keyvalues3 >= 0.4 for KV3 v4/v5 text parsing)
+
+Source2Viewer-CLI.exe must be in BoneExtractor/vrf/ (version 21.0 or newer).
+Download cli-windows-x64.zip from
     https://github.com/ValveResourceFormat/ValveResourceFormat/releases
-    and unzip into BoneExtractor/vrf/ (or set VRF_CLI env var to point
-    at Source2Viewer-CLI.exe elsewhere).
+and unzip into BoneExtractor/vrf/, or set the VRF_CLI env var to point at
+Source2Viewer-CLI.exe elsewhere.
 
 Usage:
     python BoneExtractor.py [path/to/BoneLists.hpp]
@@ -24,34 +26,27 @@ Outputs four files into the same directory as BoneLists.hpp:
     HeroMap.hpp        – HeroNames::HeroNameMap, HeroId -> display name
 """
 
-import io
 import os
 import re
 import sys
-import struct
 import hashlib
 import subprocess
 import winreg
 
-# keyvalues3 >= 0.4 is required for KV3 v4/v5 magic support (Deadlock's current
-# hero models). 0.4+ needs Python 3.12+; on older Pythons pip silently falls
-# back to 0.3, which rejects every hero model with "Invalid binary KV3 magic".
+# keyvalues3 >= 0.4 is required for KV3 v4/v5 text parsing. 0.4+ needs Python
+# 3.12+; on older Pythons pip silently falls back to 0.3 which can't parse
+# Deadlock's current hero data.
 if sys.version_info < (3, 12):
     sys.exit(
         f"[error] Python 3.12+ required (found {sys.version_info.major}.{sys.version_info.minor}).\n"
         "        keyvalues3 >= 0.4 needs it for KV3 v4/v5 support; older wheels\n"
-        "        cannot parse Deadlock's current hero models."
+        "        cannot parse Deadlock's current hero data."
     )
 
 try:
-    import vpk
+    from keyvalues3.textreader import KV3TextReader
 except ImportError:
-    sys.exit("[error] Missing dependency: pip install vpk")
-
-try:
-    import keyvalues3 as kv3
-except ImportError:
-    sys.exit("[error] Missing dependency: pip install keyvalues3")
+    sys.exit("[error] Missing dependency: pip install -r requirements.txt")
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -105,42 +100,132 @@ def find_vpk(relative: str) -> str | None:
 
 
 # ──────────────────────────────────────────────────────────────────
-# Source2 resource file: extract DATA block
+# Source2Viewer-CLI driver
+#
+# All VPK reads and resource decompiles go through the CLI. `_s2v_blocks`
+# invokes `-b DATA,MDAT` (or similar) to stream named resource blocks as
+# text KV3, which we split per source file and parse with KV3TextReader.
 # ──────────────────────────────────────────────────────────────────
 
-def iter_blocks(resource_bytes: bytes, tag: bytes):
-    """Yield the raw bytes of every block carrying `tag` in a Source2 resource."""
-    if len(resource_bytes) < 16:
-        return
+_VRF_CLI_DEFAULT = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "vrf", "Source2Viewer-CLI.exe",
+)
+VRF_CLI = os.environ.get("VRF_CLI") or _VRF_CLI_DEFAULT
 
-    # Header: uint32 fileSize, uint16 headerVersion, uint16 version,
-    #         uint32 blockOffset, uint32 blockCount
-    header_version = struct.unpack_from("<H", resource_bytes, 4)[0]
-    if header_version != 12:
-        return
-
-    block_offset, block_count = struct.unpack_from("<II", resource_bytes, 8)
-    # blockOffset is relative to position 8 (where blockOffset field lives)
-    table_start = 8 + block_offset
-
-    for i in range(block_count):
-        entry = table_start + i * 12
-        if entry + 12 > len(resource_bytes):
-            return
-        if resource_bytes[entry:entry + 4] != tag:
-            continue
-        rel_off, size = struct.unpack_from("<II", resource_bytes, entry + 4)
-        # rel_off is relative to the position of the offset field itself (entry+4)
-        abs_off = (entry + 4) + rel_off
-        if abs_off + size > len(resource_bytes):
-            return
-        yield resource_bytes[abs_off: abs_off + size]
+# Headers Source2Viewer-CLI prints per source file processed in a batch,
+# and per block inside each source file. Keep both patterns anchored to
+# a line start so we don't match body text that happens to use the words.
+_FILE_HDR_RE  = re.compile(rb'^\[\d+/\d+\]\s+(\S+)\s*$',  re.MULTILINE)
+_BLOCK_HDR_RE = re.compile(rb'^--- Data for block "([A-Z0-9]+)" ---\r?\n',
+                            re.MULTILINE)
+# Max approximate chars for a Windows command line is ~8191; we chunk `-f`
+# path lists well under that to stay safely under CreateProcess limits.
+_BATCH_CHARS = 6000
 
 
-def extract_data_block(resource_bytes: bytes) -> bytes | None:
-    """Pull the raw DATA block bytes out of a compiled Source2 resource file."""
-    return next(iter_blocks(resource_bytes, b"DATA"), None)
+def _require_cli() -> None:
+    if not os.path.exists(VRF_CLI):
+        sys.exit(
+            f"[error] Source2Viewer-CLI.exe not found at {VRF_CLI}\n"
+            "        Download cli-windows-x64.zip from\n"
+            "          https://github.com/ValveResourceFormat/ValveResourceFormat/releases\n"
+            "        and unzip into BoneExtractor/vrf/, or set VRF_CLI to its path."
+        )
 
+
+def _run_cli(args: list[str], timeout: int = 300) -> bytes:
+    """Run the CLI, return raw stdout bytes. Raises on non-zero exit."""
+    proc = subprocess.run(
+        [VRF_CLI, *args],
+        capture_output=True, check=False, timeout=timeout,
+    )
+    if proc.returncode != 0:
+        err = proc.stderr.decode("utf-8", errors="replace").rstrip()
+        raise RuntimeError(f"Source2Viewer-CLI exited {proc.returncode}: {err}")
+    return proc.stdout
+
+
+def list_vpk_paths(vpk_path: str, extension: str, prefix: str) -> list[str]:
+    """Enumerate VPK contents via `--vpk_list -e <ext> -f <prefix>`.
+    Returns lowercased inner paths (no CRC/size suffix)."""
+    out = _run_cli(["-i", vpk_path, "--vpk_list", "-e", extension, "-f", prefix])
+    paths: list[str] = []
+    for line in out.decode("utf-8", errors="replace").splitlines():
+        # Lines are "<path> CRC:<hex> size:<n>"
+        path = line.split(" ", 1)[0].strip()
+        if path:
+            paths.append(path.lower())
+    return paths
+
+
+def _chunk_paths(paths: list[str], max_chars: int) -> list[list[str]]:
+    """Split a path list into chunks so each `-f` value stays under a byte cap."""
+    chunks: list[list[str]] = [[]]
+    size = 0
+    for p in paths:
+        # +1 for the comma separator between entries
+        incr = len(p) + 1
+        if chunks[-1] and size + incr > max_chars:
+            chunks.append([])
+            size = 0
+        chunks[-1].append(p)
+        size += incr
+    return [c for c in chunks if c]
+
+
+def dump_blocks_batch(vpk_path: str, inner_paths: list[str],
+                      blocks: str) -> dict[str, dict[str, list[bytes]]]:
+    """
+    Run CLI once (or in chunks) for the given inner paths and return:
+        { inner_path: { block_name: [raw_kv3_text_bytes_per_occurrence, ...] } }
+
+    Each inner path gets its own entry; a file with multiple blocks of the
+    same type (e.g. several MDAT blocks per vmdl_c) returns them in order.
+    """
+    if not inner_paths:
+        return {}
+
+    result: dict[str, dict[str, list[bytes]]] = {}
+    for chunk in _chunk_paths(inner_paths, _BATCH_CHARS):
+        joined = ",".join(chunk)
+        out = _run_cli(["-i", vpk_path, "-f", joined, "-b", blocks])
+
+        # Split the stdout stream by "[n/m] <path>" file headers. Everything
+        # between two file headers belongs to the first one.
+        file_markers = list(_FILE_HDR_RE.finditer(out))
+        for i, m in enumerate(file_markers):
+            path = m.group(1).decode("utf-8", errors="replace").lower()
+            seg_start = m.end()
+            seg_end   = file_markers[i + 1].start() if i + 1 < len(file_markers) else len(out)
+            segment   = out[seg_start:seg_end]
+
+            per_block: dict[str, list[bytes]] = {}
+            blk_hits = list(_BLOCK_HDR_RE.finditer(segment))
+            for j, bh in enumerate(blk_hits):
+                name  = bh.group(1).decode("ascii")
+                bstart = bh.end()
+                bend   = blk_hits[j + 1].start() if j + 1 < len(blk_hits) else len(segment)
+                per_block.setdefault(name, []).append(segment[bstart:bend].rstrip())
+            result[path] = per_block
+    return result
+
+
+def dump_blocks_single(vpk_path: str, inner_path: str,
+                       blocks: str) -> dict[str, list[bytes]]:
+    """Convenience wrapper for a single file; matches dump_blocks_batch's inner dict shape."""
+    batch = dump_blocks_batch(vpk_path, [inner_path], blocks)
+    return batch.get(inner_path.lower(), {})
+
+
+def _parse_kv3(blob: bytes):
+    """Parse one KV3 text block (already stripped of its '--- Data for block ...' header)."""
+    return KV3TextReader().parse(blob.decode("utf-8", errors="replace"))
+
+
+# ──────────────────────────────────────────────────────────────────
+# Hitbox + model extraction (consume parsed KV3 roots)
+# ──────────────────────────────────────────────────────────────────
 
 def hitboxes_from_mdat_roots(mdat_roots) -> list[tuple[str, int, float]]:
     """
@@ -175,101 +260,6 @@ def hitboxes_from_mdat_roots(mdat_roots) -> list[tuple[str, int, float]]:
                             float(hb.get("m_flShapeRadius", 0.0))))
 
     return out
-
-
-def collect_hitboxes(resource_bytes: bytes) -> list[tuple[str, int, float]]:
-    """
-    Gather (bone name, group id, shape radius) for the "default" hitbox set.
-
-    These live in the embedded mesh (MDAT) blocks under `m_hitboxsets`, keyed
-    by set name. The model's own DATA block has no m_HitboxSets and its
-    m_refPhysicsHitboxData is empty for every hero, so reading only DATA
-    yields nothing and every slot silently degrades to the name fallback.
-    """
-    roots = []
-    for blob in iter_blocks(resource_bytes, b"MDAT"):
-        try:
-            roots.append(kv3.read(io.BytesIO(blob)))
-        except Exception:
-            continue
-    return hitboxes_from_mdat_roots(roots)
-
-
-# ──────────────────────────────────────────────────────────────────
-# VRF (ValveResourceFormat) fallback for KV3 BinaryTypes the Python
-# keyvalues3 package doesn't support yet. Shells out to
-# Source2Viewer-CLI.exe to render the DATA + MDAT blocks as text KV3,
-# which we can then parse with KV3TextReader regardless of what new
-# binary types Valve shipped this patch.
-# ──────────────────────────────────────────────────────────────────
-
-VRF_CLI_DEFAULT = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "vrf", "Source2Viewer-CLI.exe",
-)
-VRF_CLI = os.environ.get("VRF_CLI") or VRF_CLI_DEFAULT
-
-_VRF_BLOCK_RE = re.compile(rb'^--- Data for block "([A-Z0-9]+)" ---\r?\n',
-                           re.MULTILINE)
-
-
-def _vrf_available() -> bool:
-    return bool(VRF_CLI) and os.path.exists(VRF_CLI)
-
-
-def _vrf_split_blocks(stdout: bytes) -> list[tuple[str, bytes]]:
-    """
-    Split VRF `-b DATA,MDAT` stdout into [(block_name, kv3_text_bytes), ...].
-    Preserves order so the caller can distinguish DATA from the MDAT stream.
-    """
-    matches = list(_VRF_BLOCK_RE.finditer(stdout))
-    out: list[tuple[str, bytes]] = []
-    for i, m in enumerate(matches):
-        name = m.group(1).decode("ascii")
-        start = m.end()
-        end = matches[i + 1].start() if i + 1 < len(matches) else len(stdout)
-        out.append((name, stdout[start:end].rstrip()))
-    return out
-
-
-def _parse_vmdl_via_vrf(vpk_path: str, inner_path: str):
-    """
-    Shell VRF to dump DATA + MDAT as text KV3, parse, and return
-    (data_root, hitboxes) for the same callers as the native path.
-    Returns None when VRF is unavailable or the dump is unusable.
-    """
-    if not _vrf_available():
-        return None
-
-    from keyvalues3.textreader import KV3TextReader
-
-    try:
-        proc = subprocess.run(
-            [VRF_CLI, "-i", vpk_path, "-f", inner_path, "-b", "DATA,MDAT"],
-            capture_output=True, check=False, timeout=120,
-        )
-    except Exception:
-        return None
-    if proc.returncode != 0:
-        return None
-
-    data_root = None
-    mdat_roots = []
-    reader = KV3TextReader()
-
-    for name, body in _vrf_split_blocks(proc.stdout):
-        try:
-            root = reader.parse(body.decode("utf-8", errors="replace"))
-        except Exception:
-            continue
-        if name == "DATA" and data_root is None:
-            data_root = root
-        elif name == "MDAT":
-            mdat_roots.append(root)
-
-    if data_root is None:
-        return None
-    return data_root, hitboxes_from_mdat_roots(mdat_roots)
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -352,10 +342,6 @@ def _split_bone(lower: str) -> tuple[str, str] | None:
     return None
 
 
-# ──────────────────────────────────────────────────────────────────
-# Extraction from a parsed KV3 root dict
-# ──────────────────────────────────────────────────────────────────
-
 def _kv_get(obj, *keys, default=None):
     """Safe nested get for dicts; tolerates missing keys."""
     for k in keys:
@@ -370,7 +356,7 @@ def _kv_get(obj, *keys, default=None):
 def extract_model_data(root, hitboxes: list[tuple[str, int, float]]) -> dict | None:
     """
     Extract bone pairs, bone IDs, and hitbox slot data from a parsed KV3 root.
-    `hitboxes` comes from collect_hitboxes() over the same resource.
+    `hitboxes` comes from hitboxes_from_mdat_roots() over the same resource.
     Returns a dict with keys 'pairs', 'ids', 'slot_bones', or None on failure.
     """
     # keyvalues3 returns either a KV3File (subscriptable) or a plain dict
@@ -508,19 +494,20 @@ def to_identifier(text: str) -> str:
                    for w in re.split(r"[^A-Za-z0-9]+", text) if w)
 
 
-def collect_heroes(resource_bytes: bytes, loc_names: dict[str, str]) -> list[dict]:
+def collect_heroes(vpk_path: str, loc_names: dict[str, str]) -> list[dict]:
     """
-    Pull every hero carrying an m_HeroID out of heroes.vdata_c.
+    Pull every hero carrying an m_HeroID out of heroes.vdata_c (via CLI).
 
     Disabled heroes are kept: they cannot spawn, but covering their ids means
     an unexpected m_HeroID still resolves to a name instead of falling
     through the lookup. They are flagged so the output can group them.
     """
-    data = extract_data_block(resource_bytes)
-    if data is None:
+    blocks = dump_blocks_single(vpk_path, "scripts/heroes.vdata_c", "DATA")
+    data_blobs = blocks.get("DATA") or []
+    if not data_blobs:
         return []
 
-    root = kv3.read(io.BytesIO(data))
+    root = _parse_kv3(data_blobs[0])
     entries = root.value if hasattr(root, "value") else root
     if not isinstance(entries, dict):
         return []
@@ -762,6 +749,9 @@ def is_up_to_date(cache_path: str, current_hash: str, *output_paths: str) -> boo
 
 VPK_RELATIVE = r"steamapps\common\Deadlock\game\citadel\pak01_dir.vpk"
 FALLBACK_VPK = r"C:\Program Files (x86)\Steam\steamapps\common\Deadlock\game\citadel\pak01_dir.vpk"
+# Hero models live under one of three prefixes depending on release state;
+# all three go in the same CLI `-f` call (comma-separated).
+HERO_PREFIXES = "models/heroes/,models/heroes_staging/,models/heroes_wip/"
 HERO_RE = re.compile(r"^models/heroes(?:_staging|_wip)?/", re.IGNORECASE)
 HERO_VDATA = "scripts/heroes.vdata_c"
 
@@ -779,6 +769,8 @@ def main():
     # Anchored to the script, not the cwd, so the cache is found wherever the
     # script is run from.
     cache_path = os.path.join(_SCRIPT_DIR, "vpk.cache")
+
+    _require_cli()
 
     # Find VPK
     vpk_path = find_vpk(VPK_RELATIVE) or (FALLBACK_VPK if os.path.exists(FALLBACK_VPK) else None)
@@ -801,86 +793,79 @@ def main():
         print(f"[*] Delete '{cache_path}' to force regeneration")
         return
 
-    print(f"[*] Opening VPK: {vpk_path}")
-    pak = vpk.open(vpk_path)
+    print(f"[*] VPK: {vpk_path}")
+    print(f"[*] CLI: {VRF_CLI}")
+
+    # Enumerate hero models in one call. VPK lists include _lod variants and
+    # the _prefabs thirdperson camera stubs; strip both.
+    all_paths = list_vpk_paths(vpk_path, "vmdl_c", HERO_PREFIXES)
+    hero_paths = [
+        p for p in all_paths
+        if HERO_RE.match(p) and "_lod" not in p and "/_prefabs/" not in p
+    ]
+    print(f"[*] {len(hero_paths)} candidate hero models to process")
+
+    # Decompile DATA + MDAT blocks for every hero vmdl_c. Batched so each CLI
+    # invocation stays under the Windows command-line length limit; stdout is
+    # split into per-file blocks on the "[n/m] <path>" markers.
+    print("[*] Dumping DATA+MDAT blocks via Source2Viewer-CLI...")
+    blocks_by_path = dump_blocks_batch(vpk_path, hero_paths, "DATA,MDAT")
 
     model_map: dict[str, dict] = {}
-    processed = skipped = vrf_rescued = 0
+    processed = skipped = 0
 
-    for filepath in pak:
-        if not filepath.endswith(".vmdl_c"):
-            continue
-        if not HERO_RE.match(filepath):
-            continue
-        if "_lod" in filepath.lower():
-            continue
-
+    for filepath in hero_paths:
         model_path = filepath[:-2].lower()  # strip "_c" suffix
         if model_path in model_map:
             continue
 
-        source = "ok"
-        try:
-            raw  = pak[filepath].read()
-            data = extract_data_block(raw)
-            if data is None:
-                skipped += 1
-                continue
-
-            try:
-                root     = kv3.read(io.BytesIO(data))
-                hitboxes = collect_hitboxes(raw)
-            except Exception as native_err:
-                # Newer Valve builds ship KV3 BinaryTypes the Python parser
-                # doesn't recognize. Fall back to VRF for just these files.
-                parsed = _parse_vmdl_via_vrf(vpk_path, filepath)
-                if parsed is None:
-                    if not _vrf_available():
-                        print(f"  [err] {filepath}: {native_err} "
-                              f"(VRF fallback unavailable at {VRF_CLI})",
-                              file=sys.stderr)
-                    else:
-                        print(f"  [err] {filepath}: {native_err} "
-                              f"(VRF fallback also failed)", file=sys.stderr)
-                    skipped += 1
-                    continue
-                root, hitboxes = parsed
-                source = "vrf"
-                vrf_rescued += 1
-
-            model = extract_model_data(root, hitboxes)
-            if model is None:
-                skipped += 1
-                continue
-
-            has_data = bool(model["pairs"]) or any(model["slot_bones"])
-            if not has_data:
-                skipped += 1
-                continue
-
-            pair_note = " (capped)" if len(model['pairs']) == 70 else ""
-            tag = "[vrf]" if source == "vrf" else "[ok] "
-            print(f"  {tag} {model_path:<72}  {len(model['pairs'])} pairs{pair_note}  {len(model['ids'])} ids")
-            model_map[model_path] = model
-            processed += 1
-
-        except Exception as e:
-            print(f"  [err] {filepath}: {e}", file=sys.stderr)
+        blocks = blocks_by_path.get(filepath, {})
+        data_blobs = blocks.get("DATA") or []
+        mdat_blobs = blocks.get("MDAT") or []
+        if not data_blobs:
             skipped += 1
+            continue
 
-    vrf_note = f" ({vrf_rescued} via VRF)" if vrf_rescued else ""
-    print(f"\n[*] {processed} models extracted{vrf_note}, {skipped} skipped")
+        try:
+            root = _parse_kv3(data_blobs[0])
+        except Exception as e:
+            print(f"  [err] {filepath}: DATA parse failed: {e}", file=sys.stderr)
+            skipped += 1
+            continue
+
+        mdat_roots = []
+        for blob in mdat_blobs:
+            try:
+                mdat_roots.append(_parse_kv3(blob))
+            except Exception:
+                # Individual MDAT parse failures are tolerable — hitboxes are
+                # best-effort and the per-name fallback picks them up.
+                continue
+        hitboxes = hitboxes_from_mdat_roots(mdat_roots)
+
+        model = extract_model_data(root, hitboxes)
+        if model is None:
+            skipped += 1
+            continue
+
+        has_data = bool(model["pairs"]) or any(model["slot_bones"])
+        if not has_data:
+            skipped += 1
+            continue
+
+        pair_note = " (capped)" if len(model['pairs']) == 70 else ""
+        print(f"  [ok] {model_path:<72}  {len(model['pairs'])} pairs{pair_note}  {len(model['ids'])} ids")
+        model_map[model_path] = model
+        processed += 1
+
+    print(f"\n[*] {processed} models extracted, {skipped} skipped")
 
     if not model_map:
         sys.exit("[error] No data extracted")
 
     # Hero ids
     loc_names = parse_hero_names(loc_path) if loc_path else {}
-    try:
-        heroes = collect_heroes(pak[HERO_VDATA].read(), loc_names)
-    except KeyError:
-        sys.exit(f"[error] {HERO_VDATA} not found in the VPK")
-
+    heroes = collect_heroes(vpk_path, loc_names)
     if not heroes:
         sys.exit(f"[error] No hero ids extracted from {HERO_VDATA}")
 
