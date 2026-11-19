@@ -7,10 +7,13 @@ bool Process::GetProcessInfo(const std::string& processName,
                               const std::vector<std::string>& moduleNames,
                               DMA_Connection* conn)
 {
-	Log::Info("Waiting for {}", processName);
+	Log::Info("Waiting for {} — launch the game whenever, this loop sits here until it shows up", processName);
 
 	m_PID = 0;
 	m_ProcessName = processName;
+
+	const auto start = std::chrono::steady_clock::now();
+	auto lastHeartbeat = start;
 
 	while (true)
 	{
@@ -21,6 +24,14 @@ bool Process::GetProcessInfo(const std::string& processName,
 			Log::Info("{} pid={}", processName, m_PID);
 			PopulateModules(moduleNames, conn);
 			break;
+		}
+
+		auto now = std::chrono::steady_clock::now();
+		if (now - lastHeartbeat >= std::chrono::seconds(5))
+		{
+			auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - start).count();
+			Log::Info("Still waiting for {} ({}s)", processName, elapsed);
+			lastHeartbeat = now;
 		}
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -80,12 +91,26 @@ bool Process::PopulateModules(const std::vector<std::string>& names, DMA_Connect
 		return true;
 	};
 
+	const auto start = std::chrono::steady_clock::now();
+	auto lastHeartbeat = start;
+
 	while (!allResolved())
 	{
 		for (const auto& name : names)
 		{
 			if (!m_Modules[name])
 				m_Modules[name] = VMMDLL_ProcessGetModuleBaseU(handle, m_PID, name.c_str());
+		}
+
+		auto now = std::chrono::steady_clock::now();
+		if (now - lastHeartbeat >= std::chrono::seconds(5))
+		{
+			auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - start).count();
+			for (const auto& name : names) {
+				if (!m_Modules[name])
+					Log::Info("Still waiting for module {} ({}s)", name, elapsed);
+			}
+			lastHeartbeat = now;
 		}
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));
