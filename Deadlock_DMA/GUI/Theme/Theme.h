@@ -11,17 +11,21 @@
 // panel or text outline would punch a hole straight through to the game.
 namespace Theme
 {
-	inline constexpr ImU32 Base        = IM_COL32(0x16, 0x12, 0x0E, 0xFF); // window ground
-	inline constexpr ImU32 Panel       = IM_COL32(0x21, 0x1B, 0x15, 0xFF); // child / popup
-	inline constexpr ImU32 PanelRaised = IM_COL32(0x2C, 0x24, 0x1B, 0xFF); // frame bg, button
-	inline constexpr ImU32 PanelHover  = IM_COL32(0x3A, 0x2F, 0x23, 0xFF);
-	inline constexpr ImU32 BrassDim    = IM_COL32(0x8C, 0x6B, 0x3F, 0xFF); // borders, rules
-	inline constexpr ImU32 Brass       = IM_COL32(0xB0, 0x8D, 0x57, 0xFF); // hovered rules
-	inline constexpr ImU32 Amber       = IM_COL32(0xD4, 0x87, 0x0C, 0xFF); // accent (= HiddenKing)
-	inline constexpr ImU32 AmberHot    = IM_COL32(0xE8, 0xA9, 0x3D, 0xFF); // active / pressed
+	// Hex values sampled from Deadlock's in-game UI (shop, hero select, settings
+	// panels). Brass `#E1C16E` and Amber `#FFBF00` are the game's own crosshair
+	// presets; Cream `#EFDEBF` and the brown-black ground are from the shipping
+	// panel chrome.
+	inline constexpr ImU32 Base        = IM_COL32(0x1A, 0x16, 0x12, 0xFF); // window ground
+	inline constexpr ImU32 Panel       = IM_COL32(0x25, 0x1F, 0x18, 0xFF); // child / popup
+	inline constexpr ImU32 PanelRaised = IM_COL32(0x30, 0x28, 0x1E, 0xFF); // frame bg, button
+	inline constexpr ImU32 PanelHover  = IM_COL32(0x3F, 0x34, 0x26, 0xFF);
+	inline constexpr ImU32 BrassDim    = IM_COL32(0xB0, 0x95, 0x4A, 0xFF); // borders, rules
+	inline constexpr ImU32 Brass       = IM_COL32(0xE1, 0xC1, 0x6E, 0xFF); // hovered rules, accent
+	inline constexpr ImU32 Amber       = IM_COL32(0xFF, 0xBF, 0x00, 0xFF); // hot accent (= HiddenKing)
+	inline constexpr ImU32 AmberHot    = IM_COL32(0xFF, 0xD1, 0x4A, 0xFF); // active / pressed
 	inline constexpr ImU32 Sapphire    = IM_COL32(0x4E, 0x76, 0xC4, 0xFF); // secondary (= ArchMother)
-	inline constexpr ImU32 Cream       = IM_COL32(0xE8, 0xDC, 0xC8, 0xFF); // primary text
-	inline constexpr ImU32 TextDim     = IM_COL32(0x9C, 0x8F, 0x7A, 0xFF); // disabled / hints
+	inline constexpr ImU32 Cream       = IM_COL32(0xEF, 0xDE, 0xBF, 0xFF); // primary text
+	inline constexpr ImU32 TextDim     = IM_COL32(0x8A, 0x7E, 0x68, 0xFF); // disabled / hints
 	inline constexpr ImU32 SoulGreen   = IM_COL32(0x7F, 0xB0, 0x69, 0xFF); // souls / economy
 	inline constexpr ImU32 Danger      = IM_COL32(0xC0, 0x39, 0x2B, 0xFF); // low health, critical
 

@@ -75,8 +75,10 @@ void Theme::Apply()
 	s.WindowRounding    = 0.0f;
 	s.ChildRounding     = 0.0f;
 	s.PopupRounding     = 0.0f;
-	s.FrameRounding     = 2.0f;
-	s.GrabRounding      = 2.0f;
+	// Deadlock's panels are entirely sharp — no rounding on frames, grabs, or
+	// anything else. Any residual radius immediately reads as stock ImGui.
+	s.FrameRounding     = 0.0f;
+	s.GrabRounding      = 0.0f;
 	s.ScrollbarRounding = 0.0f;
 	s.TabRounding       = 0.0f;
 

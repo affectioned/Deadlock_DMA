@@ -14,195 +14,176 @@
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Debug GUI/Class List/Class List.h"
 #include "GUI/Debug GUI/Trooper List/Trooper List.h"
+#include "DMA/DMA Thread.h"
 
 namespace
 {
-	// imgui_internal.h would expose IM_PI but it's heavy; define locally instead.
-	constexpr float kPI = 3.14159265358979323846f;
+	// Mirrors Deadlock's in-game shop/hero-select chrome: a top header with
+	// title + status, a primary tab row (COMBAT/VISUALS/SYSTEM/DEBUG) with a
+	// 2px brass underline on the active tab, a secondary row of sub-tabs
+	// filtered to that group, and a footer rule with build + hotkey.
+
+	struct Tab
+	{
+		const char* label;
+		const char* group;   // primary category this section belongs to
+		void (*draw)();
+	};
+
+	// Order within a group here is the order shown in the secondary tab row.
+	// The primary tab order (kGroups below) is independent — if you reorder a
+	// section, update nothing else.
+	const Tab kTabs[] = {
+		{ "Aim Assist", "COMBAT",  AimAssist::RenderSettings },
+		{ "Keybinds",   "COMBAT",  Keybinds::Render          },
+
+		{ "Overlay",    "VISUALS", Fuser::RenderSettings     },
+		{ "Entities",   "VISUALS", Visuals::RenderSettings   },
+		{ "Radar",      "VISUALS", Radar::RenderSettings     },
+		{ "Colors",     "VISUALS", ColorPicker::Render       },
+
+		{ "General",    "SYSTEM",  nullptr                   }, // DrawGeneralTab, bound below
+		{ "Config",     "SYSTEM",  Config::Render            },
+
+		{ "Players",    "DEBUG",   PlayerList::Render        },
+		{ "Troopers",   "DEBUG",   TrooperList::Render       },
+		{ "Classes",    "DEBUG",   ClassList::Render         },
+	};
+	constexpr int kTabCount = (int)(sizeof(kTabs) / sizeof(kTabs[0]));
+
+	// Primary category order along the top tab row.
+	const char* const kGroups[] = { "COMBAT", "VISUALS", "SYSTEM", "DEBUG" };
+	constexpr int kGroupCount = (int)(sizeof(kGroups) / sizeof(kGroups[0]));
 
 	void DrawGeneralTab()
 	{
-		ImGui::SeparatorText("Performance");
 		ImGui::Checkbox("VSync", &MainMenu::bVSync);
-		ImGui::SetNextItemWidth(100.0f);
+		ImGui::SetNextItemWidth(140.0f);
 		ImGui::SliderInt("Target FPS", &MainMenu::iTargetFPS, 60, 240);
 
 		ImGui::Spacing();
 		ImGuiIO& io = ImGui::GetIO();
-		ImGui::Text("ImGui IO FPS: %.1f", io.Framerate);
-		ImGui::Text("Frame Time: %.3f ms", 1000.0f / io.Framerate);
-		ImGui::Text("Delta Time: %.3f ms", io.DeltaTime * 1000.0f);
+		ImGui::TextColored(Theme::Muted(), "ImGui FPS");  ImGui::SameLine(140.0f); ImGui::Text("%.1f", io.Framerate);
+		ImGui::TextColored(Theme::Muted(), "Frame time"); ImGui::SameLine(140.0f); ImGui::Text("%.3f ms", 1000.0f / io.Framerate);
+		ImGui::TextColored(Theme::Muted(), "Delta");      ImGui::SameLine(140.0f); ImGui::Text("%.3f ms", io.DeltaTime * 1000.0f);
 	}
 
-	// Icon drawing primitives. Each takes the ImDrawList, the icon's center
-	// point in screen space, a bounding-box edge length, and a color. Designed
-	// to read clearly at ~14-18px and scale up cleanly.
-	using IconFn = void (*)(ImDrawList*, ImVec2, float, ImU32);
-
-	void Icon_General(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
+	// Letter-spaced uppercase text, drawn via ImDrawList so we aren't at the
+	// mercy of ImGui's built-in text layout. Returns the pixel width consumed.
+	float DrawUpperSpaced(ImDrawList* dl, ImVec2 pos, const char* text, ImU32 col, float spacing = 2.5f)
 	{
-		// Gear: ring of 8 teeth + center hub
-		const float r = s * 0.5f;
-		dl->AddCircle(c, r * 0.85f, col, 0, 1.5f);
-		dl->AddCircle(c, r * 0.30f, col, 0, 1.5f);
-		for (int i = 0; i < 8; ++i)
+		float x = pos.x;
+		for (const char* p = text; *p; ++p)
 		{
-			float a = i * (kPI / 4.0f);
-			ImVec2 p1(c.x + cosf(a) * r * 0.85f, c.y + sinf(a) * r * 0.85f);
-			ImVec2 p2(c.x + cosf(a) * r,         c.y + sinf(a) * r);
-			dl->AddLine(p1, p2, col, 1.5f);
+			char c = (*p >= 'a' && *p <= 'z') ? char(*p - 32) : *p;
+			char buf[2] = { c, 0 };
+			dl->AddText(ImVec2(x, pos.y), col, buf);
+			x += ImGui::CalcTextSize(buf).x + (c == ' ' ? 3.0f : spacing);
 		}
+		return x - pos.x;
 	}
 
-	void Icon_AimAssist(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
+	float MeasureUpperSpaced(const char* text, float spacing = 2.5f)
 	{
-		// Crosshair: circle + 4 ticks + center dot
-		const float r = s * 0.5f;
-		dl->AddCircle(c, r * 0.75f, col, 0, 1.5f);
-		dl->AddLine(ImVec2(c.x - r,        c.y), ImVec2(c.x - r * 0.45f, c.y), col, 1.5f);
-		dl->AddLine(ImVec2(c.x + r * 0.45f, c.y), ImVec2(c.x + r,         c.y), col, 1.5f);
-		dl->AddLine(ImVec2(c.x, c.y - r),         ImVec2(c.x, c.y - r * 0.45f), col, 1.5f);
-		dl->AddLine(ImVec2(c.x, c.y + r * 0.45f), ImVec2(c.x, c.y + r),         col, 1.5f);
-		dl->AddCircleFilled(c, 1.2f, col);
-	}
-
-	void Icon_Fuser(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
-	{
-		// HUD overlay frame: four L-shaped corner brackets
-		const float r = s * 0.45f;
-		const float arm = r * 0.5f;
-		const ImVec2 corners[4] = {
-			{ c.x - r, c.y - r }, { c.x + r, c.y - r },
-			{ c.x - r, c.y + r }, { c.x + r, c.y + r },
-		};
-		const float sx[4] = { +1, -1, +1, -1 };
-		const float sy[4] = { +1, +1, -1, -1 };
-		for (int i = 0; i < 4; ++i)
+		float w = 0.0f;
+		for (const char* p = text; *p; ++p)
 		{
-			dl->AddLine(corners[i], ImVec2(corners[i].x + sx[i] * arm, corners[i].y), col, 1.5f);
-			dl->AddLine(corners[i], ImVec2(corners[i].x, corners[i].y + sy[i] * arm), col, 1.5f);
+			char c = (*p >= 'a' && *p <= 'z') ? char(*p - 32) : *p;
+			char buf[2] = { c, 0 };
+			w += ImGui::CalcTextSize(buf).x + (c == ' ' ? 3.0f : spacing);
 		}
+		return w;
 	}
 
-	void Icon_Visuals(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
+	// Four L-shaped brass corner brackets inside the given rect. Deadlock uses
+	// these to frame active cards and the shop panel.
+	void DecoCornerBrackets(ImDrawList* dl, ImVec2 tl, ImVec2 br, float arm, float thick, ImU32 col)
 	{
-		// Eye: two arcs forming an almond + iris dot
-		const float r = s * 0.5f;
-		dl->PathClear();
-		dl->PathArcTo(ImVec2(c.x, c.y + r * 0.7f), r * 1.05f, -kPI * 0.72f, -kPI * 0.28f, 14);
-		dl->PathStroke(col, 0, 1.5f);
-		dl->PathClear();
-		dl->PathArcTo(ImVec2(c.x, c.y - r * 0.7f), r * 1.05f, kPI * 0.28f, kPI * 0.72f, 14);
-		dl->PathStroke(col, 0, 1.5f);
-		dl->AddCircleFilled(c, r * 0.28f, col);
+		dl->AddLine(tl, ImVec2(tl.x + arm, tl.y), col, thick);
+		dl->AddLine(tl, ImVec2(tl.x, tl.y + arm), col, thick);
+		dl->AddLine(ImVec2(br.x, tl.y), ImVec2(br.x - arm, tl.y), col, thick);
+		dl->AddLine(ImVec2(br.x, tl.y), ImVec2(br.x, tl.y + arm), col, thick);
+		dl->AddLine(ImVec2(tl.x, br.y), ImVec2(tl.x + arm, br.y), col, thick);
+		dl->AddLine(ImVec2(tl.x, br.y), ImVec2(tl.x, br.y - arm), col, thick);
+		dl->AddLine(br, ImVec2(br.x - arm, br.y), col, thick);
+		dl->AddLine(br, ImVec2(br.x, br.y - arm), col, thick);
 	}
 
-	void Icon_Radar(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
+	// A single top-row tab button. Returns true when clicked. Active tab gets a
+	// 2px brass bar flush under the baseline — Deadlock's active-tab signature.
+	bool DecoTab(const char* label, bool active, float padX = 18.0f, float padY = 10.0f)
 	{
-		// Concentric circles + sweep line
-		const float r = s * 0.5f;
-		dl->AddCircle(c, r,         col, 0, 1.5f);
-		dl->AddCircle(c, r * 0.62f, col, 0, 1.0f);
-		dl->AddCircle(c, r * 0.25f, col, 0, 1.0f);
-		dl->AddLine(c, ImVec2(c.x + cosf(-kPI * 0.25f) * r, c.y + sinf(-kPI * 0.25f) * r), col, 1.5f);
-	}
+		ImDrawList* dl   = ImGui::GetWindowDrawList();
+		const float textW = MeasureUpperSpaced(label);
+		const float textH = ImGui::GetTextLineHeight();
+		const ImVec2 size(textW + padX * 2.0f, textH + padY * 2.0f);
 
-	void Icon_Colors(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
-	{
-		// Three overlapping dots (color swatches)
-		const float r = s * 0.20f;
-		dl->AddCircle(ImVec2(c.x - r,         c.y - r * 0.5f), r, col, 0, 1.2f);
-		dl->AddCircle(ImVec2(c.x + r,         c.y - r * 0.5f), r, col, 0, 1.2f);
-		dl->AddCircle(ImVec2(c.x,             c.y + r * 0.9f), r, col, 0, 1.2f);
-	}
+		const ImVec2 tl = ImGui::GetCursorScreenPos();
+		const ImVec2 br(tl.x + size.x, tl.y + size.y);
 
-	void Icon_Keybinds(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
-	{
-		// Keycap: rounded rect + small label line inside
-		const float rx = s * 0.45f;
-		const float ry = s * 0.36f;
-		dl->AddRect(ImVec2(c.x - rx, c.y - ry), ImVec2(c.x + rx, c.y + ry), col, 2.0f, 0, 1.5f);
-		dl->AddLine(ImVec2(c.x - rx * 0.4f, c.y + ry * 0.35f), ImVec2(c.x + rx * 0.4f, c.y + ry * 0.35f), col, 1.5f);
-	}
+		ImGui::PushID(label);
+		ImGui::InvisibleButton("##tab", size);
+		const bool clicked = ImGui::IsItemClicked();
+		const bool hovered = ImGui::IsItemHovered();
+		ImGui::PopID();
 
-	void Icon_Config(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
-	{
-		// Floppy disk: outer body with cut corner + slider + label
-		const float r = s * 0.45f;
-		const ImVec2 tl(c.x - r, c.y - r);
-		const ImVec2 br(c.x + r, c.y + r);
-		// body with notched top-right corner
-		dl->AddLine(tl, ImVec2(br.x - r * 0.4f, tl.y), col, 1.5f);
-		dl->AddLine(ImVec2(br.x - r * 0.4f, tl.y), ImVec2(br.x, tl.y + r * 0.4f), col, 1.5f);
-		dl->AddLine(ImVec2(br.x, tl.y + r * 0.4f), br, col, 1.5f);
-		dl->AddLine(br, ImVec2(tl.x, br.y), col, 1.5f);
-		dl->AddLine(ImVec2(tl.x, br.y), tl, col, 1.5f);
-		// metal slider near top
-		dl->AddRect(ImVec2(c.x - r * 0.55f, tl.y), ImVec2(c.x + r * 0.25f, c.y - r * 0.45f), col, 0, 0, 1.0f);
-		// label strip near bottom
-		dl->AddRect(ImVec2(c.x - r * 0.6f, c.y + r * 0.05f), ImVec2(c.x + r * 0.6f, c.y + r * 0.75f), col, 0, 0, 1.0f);
-	}
+		const ImU32 col = active  ? Theme::Cream
+		                  : hovered ? Theme::Cream
+		                            : Theme::TextDim;
 
-	void Icon_Players(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
-	{
-		// Person silhouette: head circle + shoulder arc
-		const float r = s * 0.5f;
-		dl->AddCircle(ImVec2(c.x, c.y - r * 0.45f), r * 0.30f, col, 0, 1.5f);
-		dl->PathClear();
-		dl->PathArcTo(ImVec2(c.x, c.y + r * 1.15f), r * 0.90f, -kPI * 0.82f, -kPI * 0.18f, 16);
-		dl->PathStroke(col, 0, 1.5f);
-	}
+		DrawUpperSpaced(dl, ImVec2(tl.x + padX, tl.y + padY), label, col);
 
-	void Icon_Troopers(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
-	{
-		// Sword: blade diagonal + crossguard + pommel
-		const float r = s * 0.5f;
-		// blade
-		dl->AddLine(ImVec2(c.x - r * 0.55f, c.y + r * 0.55f), ImVec2(c.x + r * 0.7f, c.y - r * 0.7f), col, 1.7f);
-		// crossguard (perpendicular near hilt)
-		dl->AddLine(ImVec2(c.x - r * 0.65f, c.y + r * 0.25f), ImVec2(c.x - r * 0.15f, c.y + r * 0.75f), col, 1.5f);
-		// pommel
-		dl->AddCircleFilled(ImVec2(c.x - r * 0.7f, c.y + r * 0.7f), 1.5f, col);
-	}
-
-	void Icon_Classes(ImDrawList* dl, ImVec2 c, float s, ImU32 col)
-	{
-		// List rows: bullet + line repeated three times
-		const float r = s * 0.45f;
-		for (int i = 0; i < 3; ++i)
+		if (active)
 		{
-			float y = c.y - r * 0.7f + i * r * 0.7f;
-			dl->AddCircleFilled(ImVec2(c.x - r * 0.85f, y), 1.3f, col);
-			dl->AddLine(ImVec2(c.x - r * 0.55f, y), ImVec2(c.x + r * 0.85f, y), col, 1.5f);
+			// 2px brass bar flush with the tab-row bottom.
+			dl->AddRectFilled(ImVec2(tl.x + padX, br.y - 2.0f),
+			                  ImVec2(br.x - padX, br.y),
+			                  Theme::Brass);
 		}
+		else if (hovered)
+		{
+			dl->AddRectFilled(ImVec2(tl.x + padX, br.y - 2.0f),
+			                  ImVec2(br.x - padX, br.y),
+			                  IM_COL32(0xE1, 0xC1, 0x6E, 0x50));
+		}
+
+		return clicked;
 	}
 
-	struct Tab
+	// Secondary sub-tab, under the primary row. Smaller, lighter weight. Active
+	// one carries a dimmer brass underline than the primary tabs.
+	bool DecoSubTab(const char* label, bool active)
 	{
-		IconFn      icon;
-		const char* label;
-		void (*draw)();
-		// Group heading this row sits under; nullptr continues the previous group.
-		// Eleven flat rows gave no sense of which panel does what.
-		const char* group;
-	};
+		ImDrawList* dl   = ImGui::GetWindowDrawList();
+		const float padX = 12.0f;
+		const float padY = 6.0f;
+		const ImVec2 textSize = ImGui::CalcTextSize(label);
+		const ImVec2 size(textSize.x + padX * 2.0f, textSize.y + padY * 2.0f);
 
-	// Order here is the tab order in the menu. Each draw fn writes only the
-	// body — the panel functions had their ImGui::Begin/End stripped so they
-	// can be hosted inside our shared sidebar layout.
-	const Tab kTabs[] = {
-		{ Icon_AimAssist, "Aim Assist", AimAssist::RenderSettings, "Combat"  },
-		{ Icon_Fuser,     "Overlay",    Fuser::RenderSettings,     "Visuals" },
-		{ Icon_Visuals,   "Entities",   Visuals::RenderSettings,   nullptr   },
-		{ Icon_Radar,     "Radar",      Radar::RenderSettings,     nullptr   },
-		{ Icon_Colors,    "Colors",     ColorPicker::Render,       nullptr   },
-		{ Icon_General,   "General",    DrawGeneralTab,            "System"  },
-		{ Icon_Keybinds,  "Keybinds",   Keybinds::Render,          nullptr   },
-		{ Icon_Config,    "Config",     Config::Render,            nullptr   },
-		{ Icon_Players,   "Players",    PlayerList::Render,        "Debug"   },
-		{ Icon_Troopers,  "Troopers",   TrooperList::Render,       nullptr   },
-		{ Icon_Classes,   "Classes",    ClassList::Render,         nullptr   },
-	};
+		const ImVec2 tl = ImGui::GetCursorScreenPos();
+		const ImVec2 br(tl.x + size.x, tl.y + size.y);
+
+		ImGui::PushID(label);
+		ImGui::InvisibleButton("##subtab", size);
+		const bool clicked = ImGui::IsItemClicked();
+		const bool hovered = ImGui::IsItemHovered();
+		ImGui::PopID();
+
+		const ImU32 col = active ? Theme::Brass
+		                           : hovered ? Theme::Cream
+		                                     : Theme::TextDim;
+
+		dl->AddText(ImVec2(tl.x + padX, tl.y + padY), col, label);
+
+		if (active)
+		{
+			dl->AddLine(ImVec2(tl.x + padX, br.y - 1.0f),
+			            ImVec2(br.x - padX, br.y - 1.0f),
+			            Theme::BrassDim, 1.5f);
+		}
+
+		return clicked;
+	}
 
 	void SetClickThrough(bool clickThrough)
 	{
@@ -214,14 +195,47 @@ namespace
 			::SetWindowLongPtrW(hwnd, GWL_EXSTYLE, want);
 	}
 
+	// Default tab index in each group. Persists across group switches so a user
+	// bouncing between COMBAT and VISUALS stays on the sub-section they picked.
+	int sSelectedInGroup[kGroupCount] = { 0, 0, 0, 0 };
+
+	int GroupIndexOf(const char* g)
+	{
+		for (int i = 0; i < kGroupCount; ++i)
+			if (strcmp(kGroups[i], g) == 0) return i;
+		return 0;
+	}
+
+	// Enumerate the global tab indices that belong to a group, in kTabs order.
+	int CollectGroupTabs(int groupIdx, int out[kTabCount])
+	{
+		int n = 0;
+		for (int i = 0; i < kTabCount; ++i)
+			if (strcmp(kTabs[i].group, kGroups[groupIdx]) == 0)
+				out[n++] = i;
+		return n;
+	}
+
+	void CallTabDraw(int tabIdx)
+	{
+		// SYSTEM/General is bound inline because DrawGeneralTab lives in this
+		// TU — kTabs can't hold a pointer to a static with internal linkage
+		// that is declared later in the same namespace via a const global init.
+		if (strcmp(kTabs[tabIdx].label, "General") == 0)
+		{
+			DrawGeneralTab();
+			return;
+		}
+		if (kTabs[tabIdx].draw) kTabs[tabIdx].draw();
+	}
 }
 
 void MainMenu::Render()
 {
-	// Edge-detect the toggle key. High bit ('currently down') is robust against any
-	// other code that consumes the low 'pressed since last call' bit via the same API.
-	// When the user rebinds Keybinds::Menu the new key may already be held — pretend
-	// it was already down so the rebind keystroke doesn't immediately fire as a toggle.
+	// Toggle key edge-detect. See the note in the pre-redo file: the high bit
+	// is robust against other code consuming the low 'pressed since last call'
+	// bit, and a key just rebound in the UI pretends it was already down so
+	// the rebind keystroke itself doesn't immediately flip the menu.
 	{
 		static bool sPrevDown = false;
 		static uint32_t sLastSeenKey = 0;
@@ -245,7 +259,7 @@ void MainMenu::Render()
 	if (!MainMenu::bOpen)
 		return;
 
-	// Resolve sentinel position on first show: center on the primary monitor.
+	// Sentinel position on first show: center on primary monitor.
 	if (WindowPos.x < 0.0f || WindowPos.y < 0.0f)
 	{
 		const float screenW = static_cast<float>(::GetSystemMetrics(SM_CXSCREEN));
@@ -256,77 +270,163 @@ void MainMenu::Render()
 	ImGui::SetNextWindowPos(WindowPos, ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(WindowSize, ImGuiCond_FirstUseEver);
 
-	// Style lives in ImGui::GetStyle() and is rewritten only when the accent
-	// changes, instead of 18 PushStyleColor calls on every frame.
 	Theme::EnsureApplied();
 
-	if (ImGui::Begin("DEADLOCK DMA"))
+	// Chromeless window: we draw our own title row, so ImGui's title bar would
+	// be dead weight above it. The content fills edge-to-edge and we lay out
+	// the header, tabs, body, and footer by hand.
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar
+	                       | ImGuiWindowFlags_NoCollapse
+	                       | ImGuiWindowFlags_NoScrollbar
+	                       | ImGuiWindowFlags_NoScrollWithMouse;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	if (ImGui::Begin("DEADLOCK DMA", nullptr, flags))
 	{
-		static int sSelected = 0;
-		constexpr int kTabCount = (int)(sizeof(kTabs) / sizeof(kTabs[0]));
-		if (sSelected < 0 || sSelected >= kTabCount) sSelected = 0;
+		ImGui::PopStyleVar();
 
-		const float sidebarWidth = 158.0f;
-		ImGui::BeginChild("##Sidebar", ImVec2(sidebarWidth, 0), ImGuiChildFlags_Borders);
+		ImDrawList* dl   = ImGui::GetWindowDrawList();
+		const ImVec2 wtl = ImGui::GetWindowPos();
+		const ImVec2 wsz = ImGui::GetWindowSize();
+		const ImVec2 wbr(wtl.x + wsz.x, wtl.y + wsz.y);
+
+		// --- Title row -----------------------------------------------------
+		// "DEADLOCK  DMA" letter-spaced on the left, status chip on the right.
+		// Doubles as the drag region.
+		const float titleH = 46.0f;
+		ImGui::SetCursorPos(ImVec2(0.0f, 0.0f));
+		ImGui::InvisibleButton("##drag", ImVec2(wsz.x, titleH));
+		if (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left))
 		{
-			const float lineH    = ImGui::GetTextLineHeight();
-			const float iconBoxW = lineH * 1.5f;   // gutter reserved on the left of every row
-			const float iconSize = lineH * 0.95f;  // icon's own bounding box
-			ImDrawList* dl       = ImGui::GetWindowDrawList();
-
-			for (int i = 0; i < kTabCount; ++i)
-			{
-				if (kTabs[i].group)
-				{
-					if (i > 0) ImGui::Spacing();
-					ImGui::PushStyleColor(ImGuiCol_Text, ImGui::ColorConvertU32ToFloat4(Theme::Brass));
-					ImGui::SeparatorText(kTabs[i].group);
-					ImGui::PopStyleColor();
-				}
-
-				const ImVec2 rowStart = ImGui::GetCursorScreenPos();
-				const bool   selected = (sSelected == i);
-
-				// An empty Selectable owns the whole row; icon and label are both
-				// drawn into the gutter-aware positions below. The old version
-				// padded the label with six literal spaces to clear the icon,
-				// which only lined up because the font happened to be monospaced.
-				ImGui::PushID(i);
-				if (ImGui::Selectable("##tab", selected, 0, ImVec2(0.0f, lineH)))
-					sSelected = i;
-				ImGui::PopID();
-
-				const ImU32 rowCol = selected
-					? ImGui::GetColorU32(ImGuiCol_Text)
-					: Theme::TextDim;
-
-				kTabs[i].icon(dl, ImVec2(rowStart.x + iconBoxW * 0.5f, rowStart.y + lineH * 0.5f),
-				              iconSize, rowCol);
-				dl->AddText(ImVec2(rowStart.x + iconBoxW, rowStart.y), rowCol, kTabs[i].label);
-
-				// Amber rule down the left edge of the active row — deco framing,
-				// and it survives the accent being changed.
-				if (selected)
-				{
-					dl->AddRectFilled(ImVec2(rowStart.x - 4.0f, rowStart.y),
-					                  ImVec2(rowStart.x - 2.0f, rowStart.y + lineH),
-					                  ImGui::ColorConvertFloat4ToU32(ColorPicker::MenuAccent.Value));
-				}
-			}
+			ImVec2 d = ImGui::GetIO().MouseDelta;
+			ImGui::SetWindowPos(ImVec2(wtl.x + d.x, wtl.y + d.y));
 		}
-		ImGui::EndChild();
 
-		ImGui::SameLine();
+		DrawUpperSpaced(dl, ImVec2(wtl.x + 22.0f, wtl.y + 15.0f), "DEADLOCK  DMA", Theme::Cream, 3.5f);
 
-		ImGui::BeginChild("##Content", ImVec2(0, 0));
+		// Status chip, right-aligned. Dot colour reflects attach state.
+		{
+			const bool  attached = globals::g_attached.load(std::memory_order_acquire);
+			const char* statusTxt = attached ? "ATTACHED" : "WAITING";
+			const ImU32 dotCol    = attached ? IM_COL32(0x7F, 0xB0, 0x69, 0xFF) : Theme::Amber;
+
+			char fpsBuf[32];
+			snprintf(fpsBuf, sizeof(fpsBuf), "%.0f FPS", ImGui::GetIO().Framerate);
+
+			const float statusW = MeasureUpperSpaced(statusTxt, 2.0f);
+			const float fpsW    = ImGui::CalcTextSize(fpsBuf).x;
+			const float gap     = 14.0f;
+			const float totalW  = 10.0f + statusW + gap + fpsW;
+
+			const float baseX = wbr.x - 22.0f - totalW;
+			const float baseY = wtl.y + 17.0f;
+
+			dl->AddCircleFilled(ImVec2(baseX + 5.0f, baseY + ImGui::GetTextLineHeight() * 0.5f), 3.5f, dotCol);
+			DrawUpperSpaced(dl, ImVec2(baseX + 14.0f, baseY), statusTxt, Theme::Cream, 2.0f);
+			dl->AddText(ImVec2(baseX + 14.0f + statusW + gap, baseY), Theme::TextDim, fpsBuf);
+		}
+
+		// Double brass rule under the title.
+		{
+			const float y = wtl.y + titleH - 10.0f;
+			dl->AddRectFilled(ImVec2(wtl.x + 22.0f, y),      ImVec2(wbr.x - 22.0f, y + 2.0f), Theme::Brass);
+			dl->AddLine      (ImVec2(wtl.x + 22.0f, y + 6.0f), ImVec2(wbr.x - 22.0f, y + 6.0f), Theme::Brass, 1.0f);
+		}
+
+		// --- Primary tab row ----------------------------------------------
+		ImGui::SetCursorPos(ImVec2(16.0f, titleH + 8.0f));
+		static int sPrimary = 0;
+		if (sPrimary < 0 || sPrimary >= kGroupCount) sPrimary = 0;
+
+		for (int g = 0; g < kGroupCount; ++g)
+		{
+			if (g > 0) ImGui::SameLine(0.0f, 2.0f);
+			if (DecoTab(kGroups[g], sPrimary == g))
+				sPrimary = g;
+		}
+
+		// Thin brass divider below the primary tab row.
+		{
+			const float y = wtl.y + titleH + 8.0f + ImGui::GetTextLineHeight() + 20.0f + 4.0f;
+			dl->AddLine(ImVec2(wtl.x + 22.0f, y), ImVec2(wbr.x - 22.0f, y), Theme::BrassDim, 1.0f);
+		}
+
+		// --- Secondary sub-tab row ----------------------------------------
+		ImGui::SetCursorPos(ImVec2(16.0f, titleH + 8.0f + ImGui::GetTextLineHeight() + 20.0f + 12.0f));
+
+		int groupTabs[kTabCount];
+		const int groupTabCount = CollectGroupTabs(sPrimary, groupTabs);
+		int& selectedInGroup = sSelectedInGroup[sPrimary];
+		if (selectedInGroup < 0 || selectedInGroup >= groupTabCount) selectedInGroup = 0;
+
+		for (int i = 0; i < groupTabCount; ++i)
+		{
+			if (i > 0) ImGui::SameLine(0.0f, 4.0f);
+			if (DecoSubTab(kTabs[groupTabs[i]].label, selectedInGroup == i))
+				selectedInGroup = i;
+		}
+
+		// --- Body ---------------------------------------------------------
+		const float bodyTop = titleH + 8.0f + ImGui::GetTextLineHeight() + 20.0f + 12.0f + 36.0f;
+		const float footerH = 28.0f;
+
+		ImGui::SetCursorPos(ImVec2(22.0f, bodyTop));
+		ImGui::BeginChild("##body", ImVec2(wsz.x - 44.0f, wsz.y - bodyTop - footerH),
+		                  ImGuiChildFlags_None);
+
+		// Settings::RenderSearch owns both the search field and the filter
+		// behaviour: when its field is non-empty it prints the filtered
+		// results list and the panel-specific draw() is skipped for that
+		// frame. Returning early here when it draws results is what panels
+		// did before; keep that contract.
 		Settings::RenderSearch();
-		kTabs[sSelected].draw();
+		CallTabDraw(groupTabs[selectedInGroup]);
+
 		ImGui::EndChild();
 
-		// Capture window geometry every frame so Config::SaveActive() picks up
-		// the current pos/size on exit.
+		// --- Footer -------------------------------------------------------
+		{
+			const float y = wbr.y - footerH + 2.0f;
+			dl->AddLine(ImVec2(wtl.x + 22.0f, y), ImVec2(wbr.x - 22.0f, y), Theme::BrassDim, 1.0f);
+
+			const char* hotkey = "END TO EXIT   ·   TOGGLE: INSERT";
+			DrawUpperSpaced(dl, ImVec2(wtl.x + 22.0f, y + 10.0f), hotkey, Theme::TextDim, 1.5f);
+		}
+
+		// Capture geometry for Config persistence.
 		WindowPos  = ImGui::GetWindowPos();
 		WindowSize = ImGui::GetWindowSize();
+
+		// Resize grip in the bottom-right, so the chromeless window is still
+		// user-resizable. Draws its own brass triangle; hit-tests a 16px box.
+		{
+			const ImVec2 gripTL(wbr.x - 16.0f, wbr.y - 16.0f);
+			ImGui::SetCursorScreenPos(gripTL);
+			ImGui::InvisibleButton("##grip", ImVec2(16.0f, 16.0f));
+			if (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+			{
+				ImVec2 d = ImGui::GetIO().MouseDelta;
+				ImVec2 cur = ImGui::GetWindowSize();
+				const float minW = 560.0f, minH = 400.0f;
+				ImVec2 target(std::max(minW, cur.x + d.x), std::max(minH, cur.y + d.y));
+				ImGui::SetWindowSize(target);
+			}
+			const ImU32 gripCol = ImGui::IsItemHovered() ? Theme::Brass : Theme::BrassDim;
+			for (int i = 0; i < 3; ++i)
+			{
+				float off = 4.0f + i * 4.0f;
+				dl->AddLine(ImVec2(wbr.x - off, wbr.y - 3.0f),
+				            ImVec2(wbr.x - 3.0f, wbr.y - off),
+				            gripCol, 1.2f);
+			}
+		}
+
+		// Corner brackets last so they sit on top of everything.
+		DecoCornerBrackets(dl, wtl, wbr, 14.0f, 1.5f, Theme::Brass);
+	}
+	else
+	{
+		ImGui::PopStyleVar();
 	}
 	ImGui::End();
 }
