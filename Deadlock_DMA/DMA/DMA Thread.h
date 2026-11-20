@@ -38,4 +38,19 @@ namespace globals {
 	// readers can also use this to distinguish "no data yet" from "game
 	// is up but between raids".
 	inline std::atomic<bool> g_attached{ false };
+
+	// Finer-grained state for the overlay's waiting banner. The console
+	// Log::Info output lives behind the fullscreen Fuser window, so a user
+	// on a single monitor can't see it; this is what the overlay reads to
+	// draw a human-visible progress banner while init blocks. Process.cpp
+	// updates these on each tick of its wait loops.
+	enum class AttachPhase : int {
+		Idle,                 // nothing started yet, DMA hasn't connected
+		WaitingForProcess,    // DMA attached but game process not found
+		WaitingForModules,    // PID resolved, module bases not yet
+		WaitingForImages,     // module bases resolved, image pages not fully paged in
+		Ready,                // fully attached, overlay should hide the banner
+	};
+	inline std::atomic<AttachPhase> g_attachPhase{ AttachPhase::Idle };
+	inline std::atomic<uint32_t>    g_attachElapsedSec{ 0 };
 }

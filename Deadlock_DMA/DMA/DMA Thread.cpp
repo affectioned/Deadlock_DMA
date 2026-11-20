@@ -27,6 +27,8 @@ static void TearDownForReattach()
 {
 	Log::Info("[DMA] game process gone — tearing down per-process state");
 	globals::g_attached.store(false, std::memory_order_release);
+	globals::g_attachPhase.store(globals::AttachPhase::Idle, std::memory_order_release);
+	globals::g_attachElapsedSec.store(0, std::memory_order_release);
 
 	Deadlock::Reset();
 	EntityList::Reset();
@@ -69,6 +71,7 @@ void DMA_Thread_Main()
 			continue;
 		}
 		globals::g_attached.store(true, std::memory_order_release);
+		globals::g_attachPhase.store(globals::AttachPhase::Ready, std::memory_order_release);
 		Log::Info("[DMA] attached — entering tick loop");
 
 		auto lastTlbRefresh    = std::chrono::steady_clock::now();

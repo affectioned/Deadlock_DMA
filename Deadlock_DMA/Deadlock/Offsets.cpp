@@ -4,6 +4,7 @@
 #include "SchemaWalker.h"
 #include "Deadlock.h"
 #include "GameModules.h"
+#include "DMA/DMA Thread.h"
 
 // Resolve a RIP-relative MOV/LEA reference and return the module-relative offset.
 // sigHit   – absolute address of the first byte of the matched instruction
@@ -102,12 +103,57 @@ namespace
 			if (std::find(Wanted.begin(), Wanted.end(), b.Class) == Wanted.end())
 				Wanted.emplace_back(b.Class);
 
-		if (!SchemaWalker::Resolve(Conn, pid, Wanted))
+		// Retry if the first walk misses any wanted class. CSchemaSystem registers
+		// classes as the DLLs that declare them finish initializing; a walk that
+		// runs during a cold attach can catch only the bindings registered so far,
+		// and the missed classes then fall back to baked offsets for the whole
+		// session — stale on any patch that moved them. Up to 15 retries (~30 s)
+		// is enough for the hideout to finish initializing in practice; past
+		// that we accept the incomplete walk rather than hang forever.
+		constexpr int kMaxAttempts = 15;
+		const auto retryStart = std::chrono::steady_clock::now();
+
+		bool walked = false;
+		for (int attempt = 0; attempt < kMaxAttempts; ++attempt)
 		{
-			Log::Warn("[Off] schema walk failed ({}) — all field offsets baked",
-				SchemaWalker::Status());
-			return;
+			if (!SchemaWalker::Resolve(Conn, pid, Wanted))
+			{
+				Log::Warn("[Off] schema walk failed ({}) — all field offsets baked",
+					SchemaWalker::Status());
+				return;
+			}
+			walked = true;
+
+			std::vector<std::string> Missing;
+			for (const auto& want : Wanted)
+				if (!SchemaWalker::HasClass(want)) Missing.emplace_back(want);
+
+			if (Missing.empty()) break;
+
+			auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(
+				std::chrono::steady_clock::now() - retryStart).count();
+			globals::g_attachPhase.store(globals::AttachPhase::WaitingForImages, std::memory_order_release);
+			globals::g_attachElapsedSec.store((uint32_t)elapsed, std::memory_order_release);
+
+			if (attempt + 1 == kMaxAttempts)
+			{
+				Log::Warn("[Off] schema walk incomplete after {} attempts, missing: {} — baking remainder",
+					kMaxAttempts, [&]{
+						std::string s;
+						for (size_t i = 0; i < Missing.size(); ++i) {
+							if (i) s += ", ";
+							s += Missing[i];
+						}
+						return s;
+					}());
+				break;
+			}
+
+			Log::Info("[Off] schema walk missed {} class(es), retrying in 2s (attempt {}/{})",
+				Missing.size(), attempt + 2, kMaxAttempts);
+			std::this_thread::sleep_for(std::chrono::seconds(2));
 		}
+		(void)walked;
 
 		size_t Applied = 0, Moved = 0, Missing = 0;
 		for (const auto& b : kSchemaBindings)

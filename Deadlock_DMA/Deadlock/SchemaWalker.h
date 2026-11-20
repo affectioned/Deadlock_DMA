@@ -39,6 +39,12 @@ namespace SchemaWalker
 	size_t ClassCount();
 	size_t FieldCount();
 
+	// True if the named class is in the cached table — a class is present only
+	// when the last walk collected at least one field for it. ApplySchema uses
+	// this to detect "walked too early" (one of the target classes hadn't
+	// finished registering with CSchemaSystem yet) and retry.
+	bool HasClass(std::string_view ClassName);
+
 	// One-line summary of the last walk, for the Offsets tab.
 	std::string Status();
 

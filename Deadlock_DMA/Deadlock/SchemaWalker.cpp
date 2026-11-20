@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "SchemaWalker.h"
+#include "DMA/DMA Thread.h"
 
 #include <cctype>
 #include <cstring>
@@ -286,17 +287,44 @@ namespace
 		std::vector<uintptr_t> Out;
 
 		std::vector<uint8_t> Image(Size);
+
+		// Loop until the full image reads cleanly. The loader can publish the
+		// module into the PEB long before every page is faulted in, and a
+		// short image here silently changes the instance scan — the type
+		// descriptor can sit in the unread portion and the walker fails for
+		// no apparent reason, baking stale fallback offsets. Retry with a
+		// VMMDLL memory-cache nudge between tries so freshly-paged content
+		// shows up.
 		DWORD Got = 0;
-		if (!C.ReadBlock(Base, Image.data(), Size, &Got))
+		const auto start = std::chrono::steady_clock::now();
+		auto lastHeartbeat = start;
+		globals::g_attachPhase.store(globals::AttachPhase::WaitingForImages, std::memory_order_release);
+		globals::g_attachElapsedSec.store(0, std::memory_order_release);
+
+		while (true)
 		{
-			Log::Warn("[Schema] could not read schemasystem.dll image");
-			return Out;
+			Got = 0;
+			if (!C.ReadBlock(Base, Image.data(), Size, &Got))
+			{
+				Log::Warn("[Schema] could not read schemasystem.dll image");
+				return Out;
+			}
+			if (Got >= Size) break;
+
+			auto now = std::chrono::steady_clock::now();
+			auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - start).count();
+			globals::g_attachElapsedSec.store((uint32_t)elapsed, std::memory_order_release);
+
+			if (now - lastHeartbeat >= std::chrono::seconds(5))
+			{
+				Log::Info("[Schema] schemasystem.dll not fully mapped yet: {} of {} bytes ({}s)",
+				          Got, Size, elapsed);
+				lastHeartbeat = now;
+			}
+
+			VMMDLL_ConfigSet(C.Conn->GetHandle(), VMMDLL_OPT_REFRESH_FREQ_MEM, 1);
+			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
-		// ZEROPAD_ON_FAIL means a partly-unreadable image still reports
-		// success, and the instance scan is a byte search over exactly these
-		// bytes — a short read silently changes which candidates exist.
-		if (Got < Size)
-			Log::Warn("[Schema] schemasystem.dll image short: {} of {} bytes", Got, Size);
 
 		static constexpr char kTypeName[] = ".?AVCSchemaSystem@@";
 		auto NameHits = FindAll(Image, kTypeName, sizeof(kTypeName), 1); // includes the NUL
@@ -894,6 +922,11 @@ std::ptrdiff_t SchemaWalker::Find(std::string_view ClassName, std::string_view F
 bool   SchemaWalker::Ready()      { return s_Ready.load(); }
 size_t SchemaWalker::ClassCount() { return s_ClassCount.load(); }
 size_t SchemaWalker::FieldCount() { return s_FieldCount.load(); }
+
+bool SchemaWalker::HasClass(std::string_view ClassName)
+{
+	return s_Classes.find(std::string(ClassName)) != s_Classes.end();
+}
 
 std::string SchemaWalker::Status()
 {

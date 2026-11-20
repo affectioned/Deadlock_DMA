@@ -10,6 +10,7 @@
 #include "Visuals/Snapshot.h"
 #include "Visuals/WorldText.h"
 #include "GUI/Theme/Theme.h"
+#include "DMA/DMA Thread.h"
 
 namespace
 {
@@ -17,6 +18,110 @@ namespace
 	// to force the overlay back to (0,0). TU-private so toggling it doesn't trigger
 	// a rebuild of every header consumer.
 	bool s_bRequestRecenter = false;
+
+	// The Fuser is a fullscreen opaque-black overlay so the console (where
+	// Log::Info prints) lives behind it on a single-monitor rig. This draws
+	// what the console would have said, centered at the top of the screen,
+	// so the user can see "waiting for the game" / "resolving modules" etc.
+	// while init blocks.
+	void DrawWaitingBanner()
+	{
+		using Phase = globals::AttachPhase;
+		const Phase phase = globals::g_attachPhase.load(std::memory_order_acquire);
+		if (phase == Phase::Ready) return;
+
+		const uint32_t elapsed = globals::g_attachElapsedSec.load(std::memory_order_acquire);
+
+		const char* title = nullptr;
+		const char* hint  = nullptr;
+		switch (phase)
+		{
+		case Phase::Idle:
+			title = "DMA CONNECTING";
+			hint  = "waiting for FPGA bridge";
+			break;
+		case Phase::WaitingForProcess:
+			title = "WAITING FOR DEADLOCK.EXE";
+			hint  = "launch the game whenever — this screen sits here until it's up";
+			break;
+		case Phase::WaitingForModules:
+			title = "RESOLVING MODULES";
+			hint  = "game process found — walking its module table";
+			break;
+		case Phase::WaitingForImages:
+			title = "MAPPING IMAGES";
+			hint  = "waiting for client.dll / schemasystem.dll to finish loading in";
+			break;
+		default: return;
+		}
+
+		char elapsedBuf[32];
+		snprintf(elapsedBuf, sizeof(elapsedBuf), "%us", elapsed);
+
+		ImDrawList* dl = ImGui::GetWindowDrawList();
+		const ImVec2 screen = Fuser::m_ScreenSize;
+		const float cx = screen.x * 0.5f;
+		const float topY = screen.y * 0.18f;
+
+		// Card dimensions
+		const float cardW = 640.0f;
+		const float cardH = 150.0f;
+		const ImVec2 tl(cx - cardW * 0.5f, topY);
+		const ImVec2 br(cx + cardW * 0.5f, topY + cardH);
+
+		// Opaque brown-black panel so it reads even if the game HUD were
+		// drawing behind the overlay (it's not, but the composed scene is
+		// otherwise pure black and the eye needs something to land on).
+		dl->AddRectFilled(tl, br, IM_COL32(0x1A, 0x16, 0x12, 0xF5));
+		dl->AddRect(tl, br, Theme::BrassDim, 0.0f, 0, 1.0f);
+
+		// Double brass rule across the top of the card.
+		const float ruleY = tl.y + 18.0f;
+		dl->AddRectFilled(ImVec2(tl.x + 24.0f, ruleY),      ImVec2(br.x - 24.0f, ruleY + 2.0f), Theme::Brass);
+		dl->AddLine      (ImVec2(tl.x + 24.0f, ruleY + 6.0f), ImVec2(br.x - 24.0f, ruleY + 6.0f), Theme::Brass, 1.0f);
+
+		// Title (letter-spaced manually so it reads like the menu's title).
+		{
+			float x = tl.x + 36.0f;
+			const float y = ruleY + 20.0f;
+			for (const char* p = title; *p; ++p)
+			{
+				char buf[2] = { *p, 0 };
+				dl->AddText(ImVec2(x, y), Theme::Cream, buf);
+				x += ImGui::CalcTextSize(buf).x + (*p == ' ' ? 4.0f : 3.0f);
+			}
+		}
+
+		// Hint subtitle in dim brass.
+		dl->AddText(ImVec2(tl.x + 36.0f, ruleY + 48.0f), Theme::TextDim, hint);
+
+		// Elapsed, right-aligned bottom-right with an amber pulse dot. The
+		// dot alpha is a sine so it reads as "still working."
+		{
+			const float t = (float)ImGui::GetTime();
+			const float pulse = 0.55f + 0.45f * sinf(t * 3.2f);
+			const ImU32 dotCol = IM_COL32(0xFF, 0xBF, 0x00, (int)(pulse * 255.0f));
+
+			const float elapsedW = ImGui::CalcTextSize(elapsedBuf).x;
+			const float by = br.y - 28.0f;
+
+			dl->AddCircleFilled(ImVec2(br.x - 36.0f - elapsedW - 10.0f, by + 7.0f), 4.0f, dotCol);
+			dl->AddText(ImVec2(br.x - 36.0f - elapsedW, by), Theme::Cream, elapsedBuf);
+		}
+
+		// Four L-shaped brass corner brackets around the card.
+		const float arm = 14.0f;
+		const float thick = 1.5f;
+		const ImU32 col = Theme::Brass;
+		dl->AddLine(tl, ImVec2(tl.x + arm, tl.y), col, thick);
+		dl->AddLine(tl, ImVec2(tl.x, tl.y + arm), col, thick);
+		dl->AddLine(ImVec2(br.x, tl.y), ImVec2(br.x - arm, tl.y), col, thick);
+		dl->AddLine(ImVec2(br.x, tl.y), ImVec2(br.x, tl.y + arm), col, thick);
+		dl->AddLine(ImVec2(tl.x, br.y), ImVec2(tl.x + arm, br.y), col, thick);
+		dl->AddLine(ImVec2(tl.x, br.y), ImVec2(tl.x, br.y - arm), col, thick);
+		dl->AddLine(br, ImVec2(br.x - arm, br.y), col, thick);
+		dl->AddLine(br, ImVec2(br.x, br.y - arm), col, thick);
+	}
 }
 
 void Fuser::Render()
@@ -51,6 +156,11 @@ void Fuser::Render()
 
 	GuiWatchdog::GuiStage("Fuser/StatusBars");
 	StatusBars::Render();
+
+	// Draw last so it sits on top of entity ESP — if the DMA detaches
+	// mid-game the banner needs to be unmistakably visible, not buried.
+	GuiWatchdog::GuiStage("Fuser/WaitingBanner");
+	DrawWaitingBanner();
 
 	ImGui::End();
 	ImGui::PopStyleVar();
