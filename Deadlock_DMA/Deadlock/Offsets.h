@@ -80,7 +80,7 @@ namespace Offsets
 	// see EntityList::RefreshPrimaryWeaponBulletSpeed for the map walk.
 	namespace CitadelAbilityVData
 	{
-		inline std::ptrdiff_t m_mapWeaponInfos = 0x170; // CUtlOrderedMap< CGlobalSymbol, CCitadelWeaponInfo > (40b)
+		inline std::ptrdiff_t m_mapWeaponInfos = 0x180; // CUtlOrderedMap< CGlobalSymbol, CCitadelWeaponInfo > (40b)
 	}
 
 	// Value type of m_mapWeaponInfos. Muzzle speed for hitscan bullets, not
@@ -108,10 +108,10 @@ namespace Offsets
 	namespace C_CitadelPlayerPawn
 	{
 		inline std::ptrdiff_t m_vecVelocity        = 0x438;  // CNetworkVelocityVector (40b)
-		inline std::ptrdiff_t m_nCurrencies        = 0x1234; // int32[6] (24b)
-		inline std::ptrdiff_t m_nUnsecuredSouls    = 0x1240; // m_nCurrencies[3]
-		inline std::ptrdiff_t m_nLevel             = 0x1230; // int32 (4b)
-		inline std::ptrdiff_t m_flRespawnTime      = 0x126C; // GameTime_t / float (4b)
+		inline std::ptrdiff_t m_nCurrencies        = 0x1244; // int32[6] (24b)
+		inline std::ptrdiff_t m_nUnsecuredSouls    = 0x1250; // m_nCurrencies[3]
+		inline std::ptrdiff_t m_nLevel             = 0x1240; // int32 (4b)
+		inline std::ptrdiff_t m_flRespawnTime      = 0x127C; // GameTime_t / float (4b)
 	}
 
 	namespace C_BasePlayerPawn
