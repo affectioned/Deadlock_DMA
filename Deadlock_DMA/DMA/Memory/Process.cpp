@@ -73,13 +73,30 @@ bool Process::IsAlive(DMA_Connection* conn) const
 		sLastRefresh = now;
 	}
 
+	// A failed lookup is not proof of death. Right after the refresh above,
+	// VMMDLL_PidGetFromName can miss a perfectly live process for a probe or
+	// two; treating that as a detach tore down and reattached to the same pid
+	// twice in one session. So a miss only counts as dead once it repeats.
+	// ~6 s at the 2 s probe interval.
+	constexpr int kMissesBeforeDead = 3;
+	static int sConsecutiveMisses = 0;
+
 	DWORD livePid = 0;
 	// VMMDLL_PidGetFromName can return true-ish with a zero pid in some
-	// states; guard against that too. Treat zero as not-alive.
+	// states; guard against that too. Treat zero as a miss.
 	if (!VMMDLL_PidGetFromName(conn->GetHandle(), m_ProcessName.c_str(), &livePid) || !livePid)
+	{
+		if (++sConsecutiveMisses < kMissesBeforeDead)
+			return true;
+		Log::Warn("[Proc] {} not found for {} consecutive probes", m_ProcessName, sConsecutiveMisses);
+		sConsecutiveMisses = 0;
 		return false;
+	}
+	sConsecutiveMisses = 0;
+
 	// Catches "game restarted into a fresh PID": lookup resolves but to a
 	// different PID than the one we attached to, so our caches are stale.
+	// Unlike a miss, this is a positive answer and is trusted immediately.
 	return livePid == m_PID;
 }
 

@@ -3,6 +3,8 @@
 #include "Deadlock/Classes/CEntityIdentity.h"
 #include "Deadlock/Classes/Classes.h"
 
+#include <unordered_set>
+
 class EntityList
 {
 public: /* Interface methods */
@@ -171,6 +173,8 @@ private: /* Internal variables */
 	// without re-reading the entity classname every frame.
 	static inline std::vector<std::pair<uintptr_t, const char*>> m_PowerupAddresses{};
 	static inline std::vector<uintptr_t> m_PrimaryWeaponAbilityAddresses{};
+	// Class-name pointers UpdateEntityClassMap has already read. DMA thread only.
+	static inline std::unordered_set<uintptr_t> m_ResolvedClassPtrs{};
 
 	// Single ScatterRead shared across all DMA operations on the DMA thread.
 	// Initialized once via InitScatterHandle(); cleared before each batch.

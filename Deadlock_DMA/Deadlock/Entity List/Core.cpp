@@ -57,6 +57,11 @@ void EntityList::Reset()
 		m_EntityClassMap.clear();
 		m_EntityClassNameByPtr.clear();
 	}
+	// Must go with the class map. Reattaching to the same process (a false
+	// detach) sees the same class-name pointers, so a surviving cache marks
+	// every one as already resolved and the emptied map is never refilled —
+	// every entity bucket stays at zero for the rest of the session.
+	m_ResolvedClassPtrs.clear();
 
 	{
 		std::scoped_lock lock(m_FOWMutex);
@@ -179,10 +184,9 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 {
 	// Source 2 class-name pointers are static globals in client.dll — once resolved
-	// for a given class ptr, the string never moves. Cache resolved ptrs so we only
-	// scatter-read genuinely new classes; steady-state FullUpdate skips the read.
-	static std::unordered_set<uintptr_t> s_ResolvedClassPtrs;
-
+	// for a given class ptr, the string never moves. m_ResolvedClassPtrs caches
+	// resolved ptrs so we only scatter-read genuinely new classes; steady-state
+	// FullUpdate skips the read.
 	std::vector<uintptr_t> UniqueClassNames{};
 
 	for (auto& List : m_CompleteEntityList)
@@ -190,7 +194,7 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 		for (auto& Entry : List)
 		{
 			if (Entry.pEnt == 0 || Entry.pName == 0) continue;
-			if (s_ResolvedClassPtrs.contains(Entry.pName)) continue;
+			if (m_ResolvedClassPtrs.contains(Entry.pName)) continue;
 
 			if (std::find(UniqueClassNames.begin(), UniqueClassNames.end(), Entry.pName) != UniqueClassNames.end())
 				continue;
@@ -225,7 +229,7 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 
 		m_EntityClassMap[Name] = UniqueClassNames[i];
 		m_EntityClassNameByPtr[UniqueClassNames[i]] = Name;
-		s_ResolvedClassPtrs.insert(UniqueClassNames[i]);
+		m_ResolvedClassPtrs.insert(UniqueClassNames[i]);
 
 		// TEMP ClassProbe — remove once real powerup class names are wired in
 		// SortEntityList. Filters to breakable/item/pickup/powerup families so
