@@ -5,6 +5,8 @@
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Fuser/Visuals/Snapshot.h"
 #include "GUI/Fuser/Visuals/WorldText.h"
+#include "GUI/Fuser/Visuals/LastKnown.h"
+#include "GUI/Fuser/Visuals/Draw/CampTimers.h"
 #include "GUI/Theme/Theme.h"
 #include "GUI/Utils/ImageLoading.h"
 #include "Deadlock/Const/ETeam.h"
@@ -40,6 +42,8 @@ void Radar::RenderSettings()
 	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
 	ImGui::Checkbox("MOBA Style", &bMobaStyle);
 	ImGui::Checkbox("Player-Centered", &bPlayerCentered);
+	ImGui::Checkbox("Camp Timers", &Draw_CampTimers::bRadar);
+	ImGui::Checkbox("Last-Known Positions", &LastKnown::bRadar);
 }
 
 ImVec2 Radar::GetLocalPlayerScreenPos(const ImVec2& RadarWindowCenter, const Vector3& RadarCenterGamePos) {
@@ -119,6 +123,14 @@ void Radar::DrawEntities()
 
 	const auto RadarCenterGamePos = GetRadarCenterScreenPos();
 
+	// Under the player dots: timers and ghosts are context, live players are
+	// the thing being tracked.
+	if (Draw_CampTimers::bMasterToggle && Draw_CampTimers::bRadar)
+		DrawCampTimers(DrawList, RadarWindowCenter, RadarCenterGamePos, LocalPlayerTeam);
+
+	if (LastKnown::bEnabled && LastKnown::bRadar)
+		DrawGhosts(DrawList, RadarWindowCenter, RadarCenterGamePos, LocalPlayerTeam);
+
 	// No locks: pawns, controllers and the pawn↔controller join all come from the
 	// frame snapshot, which also means no linear GetAssociatedPC scan per entity.
 	for (const auto& View : snap.players)
@@ -128,19 +140,7 @@ void Radar::DrawEntities()
 		if (Pawn.IsDormant())
 			continue;
 
-		const Vector3 RawRelativePos = { Pawn.m_Position.x - RadarCenterGamePos.x, Pawn.m_Position.y - RadarCenterGamePos.y, Pawn.m_Position.z - RadarCenterGamePos.z };
-
-		const auto GetFinalScreenPos = [](const Vector3& RawRelativePos, const ImVec2& RadarWindowCenter, float fRadarScale, const ETeam& LocalTeam) -> ImVec2 {
-			switch (LocalTeam) {
-			case ETeam::ARCH_MOTHER:
-				return { RadarWindowCenter.x - (RawRelativePos.x / fRadarScale), RadarWindowCenter.y + (RawRelativePos.y / fRadarScale) };
-			case ETeam::HIDDEN_KING:
-			default:
-				return { RadarWindowCenter.x + (RawRelativePos.x / fRadarScale), RadarWindowCenter.y - (RawRelativePos.y / fRadarScale) };
-			}
-			};
-
-		const ImVec2 FinalScreenPos = GetFinalScreenPos(RawRelativePos, RadarWindowCenter, fRadarScale, LocalPlayerTeam);
+		const ImVec2 FinalScreenPos = WorldToRadar(Pawn.m_Position, RadarCenterGamePos, RadarWindowCenter, LocalPlayerTeam);
 
 		if (View.localPlayer) {
 			DrawLocalPlayerViewRay(DrawList, FinalScreenPos, LocalPlayerTeam);
@@ -151,6 +151,67 @@ void Radar::DrawEntities()
 		DrawList->AddCircleFilled(FinalScreenPos, 5.0f, GetRadarColor(View));
 
 		DrawPlayer(View, FinalScreenPos);
+	}
+}
+
+ImVec2 Radar::WorldToRadar(const Vector3& WorldPos, const Vector3& RadarCenterGamePos, const ImVec2& RadarWindowCenter, ETeam LocalTeam)
+{
+	const float dx = WorldPos.x - RadarCenterGamePos.x;
+	const float dy = WorldPos.y - RadarCenterGamePos.y;
+
+	// Each team sees the map from its own base, so Sapphire's view is Amber's
+	// rotated 180 degrees.
+	switch (LocalTeam) {
+	case ETeam::ARCH_MOTHER:
+		return { RadarWindowCenter.x - (dx / fRadarScale), RadarWindowCenter.y + (dy / fRadarScale) };
+	case ETeam::HIDDEN_KING:
+	default:
+		return { RadarWindowCenter.x + (dx / fRadarScale), RadarWindowCenter.y - (dy / fRadarScale) };
+	}
+}
+
+void Radar::DrawCampTimers(ImDrawList* DrawList, const ImVec2& RadarWindowCenter, const Vector3& RadarCenterGamePos, ETeam LocalTeam)
+{
+	const FrameSnapshot& snap = Snapshot::Current();
+	if (!snap.haveObjectiveTimers) return;
+
+	for (const auto& camp : snap.campTimers)
+	{
+		const float remaining = camp.nextSpawnTime - snap.matchClock;
+		if (remaining <= 0.0f) continue;
+
+		const ImVec2 pos = WorldToRadar(camp.origin, RadarCenterGamePos, RadarWindowCenter, LocalTeam);
+		const ImU32  col = ImGui::ColorConvertFloat4ToU32(
+			(camp.isMidBoss ? ColorPicker::MidBossTimerColor : ColorPicker::CampTimerColor).Value);
+
+		DrawList->AddCircle(pos, camp.isMidBoss ? 6.0f : 3.5f, col, 0, 1.5f);
+		WorldText::Draw(DrawList, ImVec2(pos.x, pos.y + 5.0f),
+			Draw_CampTimers::FormatCountdown(remaining), col, ImGui::GetTextLineHeight() * 0.85f);
+	}
+}
+
+void Radar::DrawGhosts(ImDrawList* DrawList, const ImVec2& RadarWindowCenter, const Vector3& RadarCenterGamePos, ETeam LocalTeam)
+{
+	const FrameSnapshot& snap = Snapshot::Current();
+
+	for (const auto& g : snap.ghosts)
+	{
+		// The radar still draws a live dot for enemies that are only hidden by
+		// the ESP's Visible Only filter, so a ghost there would be a duplicate.
+		if (!g.stale) continue;
+
+		const ImVec2 pos   = WorldToRadar(g.position, RadarCenterGamePos, RadarWindowCenter, LocalTeam);
+		const float  life  = std::clamp(1.0f - g.ageSec / std::max(LastKnown::fMaxAgeSec, 0.1f), 0.0f, 1.0f);
+		const ImU32  team  = ImGui::ColorConvertFloat4ToU32(
+			(g.team == ETeam::HIDDEN_KING ? ColorPicker::HiddenKingTeamColor : ColorPicker::ArchMotherTeamColor).Value);
+		const ImU32  col   = WorldText::Fade(team, 0.35f + 0.55f * life);
+
+		if (LastKnown::bShowReach && g.reachUnits > 0.0f)
+			DrawList->AddCircle(pos, g.reachUnits / fRadarScale, WorldText::Fade(col, 0.5f), 0, 1.0f);
+
+		DrawList->AddCircle(pos, 5.0f, col, 0, 1.5f);
+		WorldText::Draw(DrawList, ImVec2(pos.x, pos.y + 6.0f),
+			std::format("{} {:.0f}s", g.heroName, g.ageSec), col, ImGui::GetTextLineHeight() * 0.85f);
 	}
 }
 

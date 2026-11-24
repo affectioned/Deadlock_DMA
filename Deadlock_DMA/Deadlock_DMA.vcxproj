@@ -173,6 +173,7 @@
     <ClCompile Include="Deadlock\Entity List\Core.cpp" />
     <ClCompile Include="Deadlock\Entity List\Debug.cpp" />
     <ClCompile Include="Deadlock\Entity List\Fow.cpp" />
+    <ClCompile Include="Deadlock\Entity List\Objectives.cpp" />
     <ClCompile Include="Deadlock\Entity List\Players.cpp">
       <ObjectFileName>$(IntDir)EntityList_Players.obj</ObjectFileName>
     </ClCompile>
@@ -209,6 +210,7 @@
     <ClCompile Include="GUI\Debug GUI\Trooper List\Trooper List.cpp" />
     <ClCompile Include="GUI\Fonts\Fonts.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\Draw\Camps.cpp" />
+    <ClCompile Include="GUI\Fuser\Visuals\Draw\CampTimers.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\Draw\Players.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\Draw\Sinners.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\Draw\Troopers.cpp" />
@@ -217,6 +219,7 @@
     <ClCompile Include="GUI\Fuser\Visuals\Visuals.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\WorldText.cpp" />
     <ClCompile Include="GUI\Fuser\Visuals\Snapshot.cpp" />
+    <ClCompile Include="GUI\Fuser\Visuals\LastKnown.cpp" />
     <ClCompile Include="GUI\Theme\Theme.cpp" />
     <ClCompile Include="GUI\Settings\Settings.cpp" />
     <ClCompile Include="GUI\Fuser\Fuser.cpp" />
@@ -251,6 +254,7 @@
     <ClInclude Include="GUI\Fonts\Data\IBMPlexMono.h" />
     <ClInclude Include="GUI\Fonts\Fonts.h" />
     <ClInclude Include="GUI\Fuser\Visuals\Draw\Camps.h" />
+    <ClInclude Include="GUI\Fuser\Visuals\Draw\CampTimers.h" />
     <ClInclude Include="GUI\Fuser\Visuals\Draw\Players.h" />
     <ClInclude Include="GUI\Fuser\Visuals\Draw\Sinners.h" />
     <ClInclude Include="GUI\Fuser\Visuals\Draw\Troopers.h" />
@@ -301,6 +305,7 @@
     <ClInclude Include="GUI\Fuser\Visuals\Visuals.h" />
     <ClInclude Include="GUI\Fuser\Visuals\WorldText.h" />
     <ClInclude Include="GUI\Fuser\Visuals\Snapshot.h" />
+    <ClInclude Include="GUI\Fuser\Visuals\LastKnown.h" />
     <ClInclude Include="GUI\Theme\Theme.h" />
     <ClInclude Include="GUI\Settings\Settings.h" />
     <ClInclude Include="GUI\Fuser\Fuser.h" />

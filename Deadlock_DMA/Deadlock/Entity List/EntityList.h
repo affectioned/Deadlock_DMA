@@ -64,6 +64,11 @@ public: /* Interface methods */
 	static void FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc);
 	static void QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc);
 
+	// Reads the server-networked camp / Mid Boss respawn timers off
+	// C_CitadelGameRules (reached through the citadel_gamerules proxy entity
+	// SortEntityList records). Fills m_ObjectiveTimers.
+	static void RefreshObjectiveTimers(DMA_Connection* Conn, Process* Proc);
+
 	// Reads base bullet speed for primary fire from the local pawn's
 	// citadel_ability_primary_weapon -> m_pSubclassVData -> m_mapWeaponInfos
 	// -> CCitadelWeaponInfo::m_flBulletSpeed. Latches into g_LocalBulletSpeed.
@@ -108,6 +113,35 @@ public: /* Interface variables */
 	// this bucket — Draw_Powerups colors by m_Label.
 	static inline std::mutex m_PowerupMutex{};
 	static inline std::vector<C_BaseEntity> m_Powerups{};
+
+	// One entry per neutral camp the server runs a respawn timer for. Times are
+	// on the match clock (see Offsets::C_CitadelGameRules). Negative means no
+	// timer is running, and a time at or before the match clock means the camp
+	// is up.
+	struct CampTimer
+	{
+		Vector3 origin{ 0.0f };
+		float   nextSpawnTime{ -1.0f };
+		bool    isMidBoss{ false };
+	};
+	struct ObjectiveTimers
+	{
+		std::vector<CampTimer> camps;
+		// Match-clock time of the next Mid Boss spawn. <= 0 when the server has
+		// none scheduled (boss alive, or not yet unlocked).
+		float nextMidBossSpawnTime{ 0.0f };
+		// match clock = server time - gameStartTime. The game also subtracts
+		// paused time; we don't, so after a pause timers read short by the
+		// pause length. Pauses are rare in matchmaking.
+		float gameStartTime{ 0.0f };
+		// m_eGameState >= 6. Before that the game's match clock reads 0.
+		bool  clockRunning{ false };
+		// False until a read lands from a resolved game rules pointer, so the
+		// overlay can tell "no timers running" from "no data".
+		bool  valid{ false };
+	};
+	static inline std::mutex m_ObjectiveMutex{};
+	static inline ObjectiveTimers m_ObjectiveTimers{};
 
 	// Base muzzle speed for the local pawn's primary weapon, in hu/s. Latched
 	// from the weapon ability's VData by RefreshPrimaryWeaponBulletSpeed. Atomic
@@ -175,6 +209,8 @@ private: /* Internal variables */
 	static inline std::vector<uintptr_t> m_PrimaryWeaponAbilityAddresses{};
 	// Class-name pointers UpdateEntityClassMap has already read. DMA thread only.
 	static inline std::unordered_set<uintptr_t> m_ResolvedClassPtrs{};
+	// The citadel_gamerules entity. One per map; 0 until SortEntityList sees it.
+	static inline uintptr_t m_GameRulesProxyAddress = 0;
 
 	// Single ScatterRead shared across all DMA operations on the DMA thread.
 	// Initialized once via InitScatterHandle(); cleared before each batch.

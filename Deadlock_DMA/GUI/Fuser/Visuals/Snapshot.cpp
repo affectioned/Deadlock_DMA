@@ -3,6 +3,7 @@
 #include "Deadlock/Deadlock.h"
 #include "Deadlock/Entity List/EntityList.h"
 #include "GUI/Fuser/Fuser.h"
+#include "LastKnown.h"
 
 namespace
 {
@@ -152,6 +153,14 @@ const FrameSnapshot& Snapshot::Acquire()
 		std::scoped_lock lock(EntityList::m_PowerupMutex);
 		snap.powerups = EntityList::m_Powerups;
 	}
+	{
+		std::scoped_lock lock(EntityList::m_ObjectiveMutex);
+		snap.campTimers           = EntityList::m_ObjectiveTimers.camps;
+		snap.nextMidBossSpawnTime = EntityList::m_ObjectiveTimers.nextMidBossSpawnTime;
+		snap.haveObjectiveTimers  = EntityList::m_ObjectiveTimers.valid &&
+		                            EntityList::m_ObjectiveTimers.clockRunning;
+		snap.matchClock           = snap.serverTime - EntityList::m_ObjectiveTimers.gameStartTime;
+	}
 
 	// Join pawns to controllers and resolve the per-entity predicates. Done after
 	// every vector is final so the PawnView pointers stay valid for the frame.
@@ -195,6 +204,10 @@ const FrameSnapshot& Snapshot::Acquire()
 		view.distanceMeters   = snap.DistanceMeters(pawn);
 		snap.players.push_back(view);
 	}
+
+	// Needs the finished players list, and must run every frame whether or not
+	// anything draws ghosts so the history doesn't go stale while hidden.
+	LastKnown::Update(snap);
 
 	s_Front ^= 1;
 	return snap;

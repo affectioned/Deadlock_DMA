@@ -4,6 +4,7 @@
 #include "Deadlock/Engine/Matrix.h"
 #include "Deadlock/Engine/Vector2.h"
 #include "Deadlock/Const/ETeam.h"
+#include "Deadlock/Entity List/EntityList.h"
 
 // Per-frame copy of everything the overlay draws.
 //
@@ -47,6 +48,35 @@ struct FrameSnapshot
 		float distanceMeters{ 0.0f };
 	};
 	std::vector<PawnView> players;
+
+	// Server-networked respawn timers, copied out of EntityList::m_ObjectiveTimers.
+	// Compare against matchClock, not serverTime: the game stores these on its
+	// match clock, which starts at m_flGameStartTime.
+	std::vector<EntityList::CampTimer> campTimers;
+	float nextMidBossSpawnTime{ 0.0f };
+	float matchClock{ 0.0f };
+	// False until timers have been read and the match clock is running —
+	// before that every countdown would be measured against a clock of 0.
+	bool  haveObjectiveTimers{ false };
+
+	// An enemy we've lost track of, drawn at the last place we had them. Built
+	// by LastKnown::Update from the per-controller history it keeps across
+	// frames — the snapshot itself has no memory.
+	struct Ghost
+	{
+		Vector3          position{ 0.0f };
+		float            ageSec{ 0.0f };
+		// How far they could have walked since: ageSec × assumed move speed,
+		// capped. Hammer units, same space as position.
+		float            reachUnits{ 0.0f };
+		ETeam            team{ ETeam::UNKNOWN };
+		std::string_view heroName{};
+		// True when the pawn is dormant or gone, i.e. the radar has no live dot
+		// for it either. False when it's only hidden by the Visible Only filter,
+		// which the radar doesn't apply.
+		bool             stale{ false };
+	};
+	std::vector<Ghost> ghosts;
 
 	Matrix44 viewMatrix{};
 	ETeam    localTeam{ ETeam::UNKNOWN };

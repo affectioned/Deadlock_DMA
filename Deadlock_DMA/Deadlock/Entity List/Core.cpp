@@ -32,6 +32,7 @@ void EntityList::Reset()
 	m_XpOrbAddresses.clear();
 	m_PowerupAddresses.clear();
 	m_PrimaryWeaponAbilityAddresses.clear();
+	m_GameRulesProxyAddress = 0;
 
 	{
 		std::scoped_lock lock(m_PawnMutex);
@@ -51,6 +52,7 @@ void EntityList::Reset()
 	{ std::scoped_lock lock(m_SinnerMutex);      m_Sinners.clear(); }
 	{ std::scoped_lock lock(m_XpOrbMutex);       m_XpOrbs.clear(); }
 	{ std::scoped_lock lock(m_PowerupMutex);     m_Powerups.clear(); }
+	{ std::scoped_lock lock(m_ObjectiveMutex);   m_ObjectiveTimers = {}; }
 
 	{
 		std::scoped_lock lock(m_ClassMapMutex);
@@ -299,6 +301,14 @@ void EntityList::SortEntityList()
 	// as a proxy for "there's a pickup here"; resolving m_hTrackedEntity to
 	// color-code by the underlying item is a later refinement.
 	uintptr_t InWorldItemPanelClass      = FindClass("in_world_item_panel");
+	// Designer name of C_CitadelGameRulesProxy, from client.dll's entity
+	// factory registration. Exactly one per map.
+	uintptr_t GameRulesProxyClass        = FindClass("citadel_gamerules");
+
+	// Not cleared with the address lists above: the proxy lives for the whole
+	// map, and keeping the last-known address across a cycle where it didn't
+	// show up costs nothing — RefreshObjectiveTimers validates what it reads.
+	uintptr_t GameRulesProxy = 0;
 
 	for (auto& List : m_CompleteEntityList)
 	{
@@ -319,7 +329,14 @@ void EntityList::SortEntityList()
 			else if (PickupIdolClass            && Entry.pName == PickupIdolClass)          m_PowerupAddresses.emplace_back(Entry.pEnt, "Idol");
 			else if (InWorldItemPanelClass      && Entry.pName == InWorldItemPanelClass)    m_PowerupAddresses.emplace_back(Entry.pEnt, "Panel");
 			else if (PrimaryWeaponAbilityClasses.contains(Entry.pName))                     m_PrimaryWeaponAbilityAddresses.push_back(Entry.pEnt);
+			else if (GameRulesProxyClass        && Entry.pName == GameRulesProxyClass)      GameRulesProxy = Entry.pEnt;
 		}
+	}
+
+	if (GameRulesProxy && GameRulesProxy != m_GameRulesProxyAddress)
+	{
+		m_GameRulesProxyAddress = GameRulesProxy;
+		Log::Info("[EL] gamerules proxy=0x{:X}", m_GameRulesProxyAddress);
 	}
 
 }

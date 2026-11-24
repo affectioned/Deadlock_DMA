@@ -129,4 +129,29 @@ namespace Offsets
 		inline std::ptrdiff_t m_nEntIndex     = 0x30; // CEntityIndex (4b)
 		inline std::ptrdiff_t m_bVisibleOnMap = 0x41; // bool (1b)
 	}
+
+	// The "citadel_gamerules" entity. Holds a pointer to the game rules object
+	// rather than being it, so reaching the rules costs one extra hop but no
+	// signature scan.
+	namespace C_CitadelGameRulesProxy
+	{
+		inline std::ptrdiff_t m_pGameRules = 0x5F0; // C_CitadelGameRules* (8b)
+	}
+
+	// Camp and Mid Boss respawn timers, networked by the server — the same data
+	// CCitadelNeutralCampTimerSystem draws as the in-world countdowns. The three
+	// vectors are parallel: entry i of each describes the same camp.
+	//
+	// The timers are *match clock* times, not curtime. client.dll's
+	// GetMatchClock (RVA 0x781DD0) returns curtime - paused time -
+	// m_flGameStartTime, and 0 until m_eGameState reaches 6.
+	namespace C_CitadelGameRules
+	{
+		inline std::ptrdiff_t m_flGameStartTime              = 0x60;  // GameTime_t (4b)
+		inline std::ptrdiff_t m_eGameState                   = 0x74;  // EGameState (4b)
+		inline std::ptrdiff_t m_tNextMidBossSpawnTime        = 0x22C; // float32 (4b)
+		inline std::ptrdiff_t m_vecNeutralCampTimerOrigins   = 0x230; // C_NetworkUtlVectorBase< VectorWS > (24b)
+		inline std::ptrdiff_t m_vecNeutralCampNextSpawnTimes = 0x248; // C_NetworkUtlVectorBase< float32 > (24b)
+		inline std::ptrdiff_t m_vecNeutralCampTimerIsMidBoss = 0x260; // C_NetworkUtlVectorBase< bool > (24b)
+	}
 }

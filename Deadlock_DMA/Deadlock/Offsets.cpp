@@ -91,6 +91,14 @@ namespace
 		{ "C_CitadelTeam",            "m_vecFOWEntities",   &Offsets::C_CitadelTeam::m_vecFOWEntities },
 		{ "STeamFOWEntity",           "m_nEntIndex",        &Offsets::STeamFOWEntity::m_nEntIndex },
 		{ "STeamFOWEntity",           "m_bVisibleOnMap",    &Offsets::STeamFOWEntity::m_bVisibleOnMap },
+
+		{ "C_CitadelGameRulesProxy",  "m_pGameRules",       &Offsets::C_CitadelGameRulesProxy::m_pGameRules },
+		{ "C_CitadelGameRules",       "m_flGameStartTime",              &Offsets::C_CitadelGameRules::m_flGameStartTime },
+		{ "C_CitadelGameRules",       "m_eGameState",                   &Offsets::C_CitadelGameRules::m_eGameState },
+		{ "C_CitadelGameRules",       "m_tNextMidBossSpawnTime",        &Offsets::C_CitadelGameRules::m_tNextMidBossSpawnTime },
+		{ "C_CitadelGameRules",       "m_vecNeutralCampTimerOrigins",   &Offsets::C_CitadelGameRules::m_vecNeutralCampTimerOrigins },
+		{ "C_CitadelGameRules",       "m_vecNeutralCampNextSpawnTimes", &Offsets::C_CitadelGameRules::m_vecNeutralCampNextSpawnTimes },
+		{ "C_CitadelGameRules",       "m_vecNeutralCampTimerIsMidBoss", &Offsets::C_CitadelGameRules::m_vecNeutralCampTimerIsMidBoss },
 	};
 
 	// Walks the live schema and overwrites every binding above that resolves.

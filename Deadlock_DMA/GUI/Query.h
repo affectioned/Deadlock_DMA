@@ -8,4 +8,5 @@ namespace Query
 	bool IsUsingSinners();
 	bool IsUsingXpOrbs();
 	bool IsUsingPowerups();
+	bool IsUsingObjectiveTimers();
 }

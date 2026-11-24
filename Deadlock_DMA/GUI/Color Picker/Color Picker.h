@@ -38,6 +38,8 @@ public:
 	// so it's obvious when panel labels aren't being resolved.
 	static inline ImColor PowerupPanelColor { 0.61f, 0.56f, 0.48f, 1.0f };
 	static inline ImColor MonsterCampColor{ 0.69f, 0.55f, 0.34f, 1.0f };
+	static inline ImColor CampTimerColor{ 0.94f, 0.87f, 0.75f, 1.0f };  // cream
+	static inline ImColor MidBossTimerColor{ 0.70f, 0.30f, 0.80f, 1.0f }; // the pit's violet
 	static inline ImColor LocalPlayerRadar{ 0.50f, 0.69f, 0.41f, 1.0f };
 	static inline ImColor UnsecuredSoulsTextColor{ 0.91f, 0.86f, 0.78f, 1.0f };   // cream
 	static inline ImColor UnsecuredSoulsHighlightedTextColor{ 0.91f, 0.66f, 0.24f, 1.0f };

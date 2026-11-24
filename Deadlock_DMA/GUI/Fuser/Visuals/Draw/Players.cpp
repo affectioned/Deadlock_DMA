@@ -8,6 +8,7 @@
 #include "GUI/Theme/Theme.h"
 #include "GUI/Fuser/Fuser.h"
 #include "GUI/Fuser/Visuals/WorldText.h"
+#include "GUI/Fuser/Visuals/LastKnown.h"
 
 namespace
 {
@@ -89,6 +90,11 @@ void Draw_Players::operator()()
 		// FOW gate: skip enemies the team minimap can't see. Friendlies are never
 		// in the local team's FOW list, so PawnView pre-resolves them to visible.
 		if (bVisibleOnly && !view.confirmedVisible) continue;
+
+		// A dormant pawn's position is frozen wherever the server stopped
+		// sending it. With last-known markers on, that spot is drawn as a
+		// ghost instead of as a live player who isn't there anymore.
+		if (LastKnown::bEnabled && LastKnown::bWorld && !view.friendly && view.pawn->IsDormant()) continue;
 
 		const WorldText::Falloff falloff = WorldText::Compute(view.distanceMeters);
 		if (falloff.alpha <= 0.0f) continue; // past the max-distance cull

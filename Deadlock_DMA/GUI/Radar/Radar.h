@@ -9,6 +9,11 @@ public:
 	static void RenderSettings();
 private:
 	static void DrawEntities();
+	// World position → radar window pixel, in the same rotated, scaled frame
+	// the player dots use.
+	static ImVec2 WorldToRadar(const Vector3& WorldPos, const Vector3& RadarCenterGamePos, const ImVec2& RadarWindowCenter, ETeam LocalTeam);
+	static void DrawCampTimers(ImDrawList* DrawList, const ImVec2& RadarWindowCenter, const Vector3& RadarCenterGamePos, ETeam LocalTeam);
+	static void DrawGhosts(ImDrawList* DrawList, const ImVec2& RadarWindowCenter, const Vector3& RadarCenterGamePos, ETeam LocalTeam);
 	static void DrawLocalPlayerViewRay(ImDrawList* DrawList, const ImVec2& ScreenPos, const ETeam& LocalTeam);
 	static void DrawPlayer(const FrameSnapshot::PawnView& View, const ImVec2& RadarPos);
 	static void DrawNameTag(const FrameSnapshot::PawnView& View, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber);

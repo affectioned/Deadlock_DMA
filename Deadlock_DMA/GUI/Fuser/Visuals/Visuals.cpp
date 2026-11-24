@@ -13,7 +13,9 @@
 #include "Draw/Sinners.h"
 #include "Draw/XpOrbs.h"
 #include "Draw/Powerups.h"
+#include "Draw/CampTimers.h"
 
+#include "LastKnown.h"
 #include "WorldText.h"
 #include "Snapshot.h"
 
@@ -62,6 +64,15 @@ void Visuals::OnFrame()
 		GuiWatchdog::GuiStage("Visuals/Powerups");
 		Draw_Powerups::operator()();
 	}
+
+	if (Draw_CampTimers::bMasterToggle)
+	{
+		GuiWatchdog::GuiStage("Visuals/CampTimers");
+		Draw_CampTimers::operator()();
+	}
+
+	GuiWatchdog::GuiStage("Visuals/LastKnown");
+	LastKnown::DrawWorld();
 
 	ImGui::PopFont();
 }
@@ -193,6 +204,49 @@ void Visuals::RenderSettings()
 		ImGui::Checkbox("Show Distance##Powerups", &Draw_Powerups::bShowDistance);
 		ImGui::SetNextItemWidth(150.0f);
 		ImGui::SliderFloat("Circle Radius##Powerups", &Draw_Powerups::fCircleRadius, 1.0f, 12.0f, "%.1f");
+		ImGui::Unindent();
+	}
+
+	ImGui::Spacing();
+
+	if (ImGui::CollapsingHeader("Last-Known Positions", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Indent();
+		ImGui::Checkbox("Enable##LastKnown", &LastKnown::bEnabled);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Mark where an enemy was last seen once they go dormant\n"
+			                  "(or leave the minimap, with Visible Only on), instead of\n"
+			                  "drawing their frozen pawn as though it were live.");
+		ImGui::Checkbox("In World##LastKnown", &LastKnown::bWorld);
+		ImGui::Checkbox("On Radar##LastKnown", &LastKnown::bRadar);
+		ImGui::Checkbox("Reach Ring", &LastKnown::bShowReach);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Circle growing at the speed below: how far they\n"
+			                  "could have walked since they were last seen.");
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::SliderFloat("Forget After (s)", &LastKnown::fMaxAgeSec, 3.0f, 60.0f, "%.0f");
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::SliderFloat("Move Speed (m/s)", &LastKnown::fMoveSpeedMps, 1.0f, 15.0f, "%.1f");
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::SliderFloat("Max Reach (m)", &LastKnown::fMaxReachM, 5.0f, 150.0f, "%.0f");
+		ImGui::Unindent();
+	}
+
+	ImGui::Spacing();
+
+	if (ImGui::CollapsingHeader("Camp Timers", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Indent();
+		ImGui::Checkbox("Enable##CampTimers", &Draw_CampTimers::bMasterToggle);
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Respawn countdowns for every neutral camp and the Mid Boss,\n"
+			                  "read from the server's own timers.");
+		ImGui::Checkbox("In World##CampTimers", &Draw_CampTimers::bWorld);
+		ImGui::Checkbox("On Radar##CampTimers", &Draw_CampTimers::bRadar);
+		ImGui::Checkbox("Mid Boss Banner",      &Draw_CampTimers::bMidBossBanner);
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::SliderFloat("Max Distance (m)##CampTimers", &Draw_CampTimers::fMaxDistanceM, 0.0f, 400.0f,
+		                   Draw_CampTimers::fMaxDistanceM <= 0.0f ? "off" : "%.0f");
 		ImGui::Unindent();
 	}
 

@@ -54,6 +54,10 @@ bool DeadlockContext::Initialize(DMA_Connection* conn)
 		{ ms(3000),  timed("FullCamp",        [conn, proc] { EntityList::FullMonsterCampRefresh(conn, proc); }) },
 		{ ms(250),   timed("QuickCamp",       [conn, proc] { EntityList::QuickMonsterCampRefresh(conn, proc); }) },
 
+		// Respawn timers are absolute GameTimes that only change when a camp
+		// dies or respawns; the overlay counts down locally between reads.
+		{ ms(500),   timed("ObjectiveTimers", [conn, proc] { EntityList::RefreshObjectiveTimers(conn, proc); }) },
+
 		{ ms(2000),  timed("FullController",  [conn, proc] { EntityList::FullControllerRefresh_lk(conn, proc); }) },
 		{ ms(300),   timed("QuickController", [conn, proc] { EntityList::QuickControllerRefresh(conn, proc); }) },
 

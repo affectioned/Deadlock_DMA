@@ -123,6 +123,15 @@
     <ClCompile Include="GUI\Fuser\Visuals\Draw\Camps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Fuser\Visuals\Draw\CampTimers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Fuser\Visuals\LastKnown.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Deadlock\Entity List\Objectives.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GUI\Fuser\Visuals\Draw\Players.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -303,6 +312,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Fuser\Visuals\Draw\Camps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Fuser\Visuals\Draw\CampTimers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Fuser\Visuals\LastKnown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Fuser\Visuals\Draw\Players.h">

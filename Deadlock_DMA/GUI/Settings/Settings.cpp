@@ -11,6 +11,8 @@
 #include "GUI/Fuser/Visuals/Snapshot.h"
 #include "GUI/Fuser/Visuals/WorldText.h"
 #include "GUI/Fuser/Visuals/Draw/Camps.h"
+#include "GUI/Fuser/Visuals/Draw/CampTimers.h"
+#include "GUI/Fuser/Visuals/LastKnown.h"
 #include "GUI/Fuser/Visuals/Draw/Players.h"
 #include "GUI/Fuser/Visuals/Draw/Powerups.h"
 #include "GUI/Fuser/Visuals/Draw/Sinners.h"
@@ -179,6 +181,22 @@ namespace
 			B ("Fuser.Draw_Powerups.bShowDistance", "Powerups: Show Distance", &Draw_Powerups::bShowDistance),
 			F ("Fuser.Draw_Powerups.fCircleRadius", "Powerups: Circle Radius", &Draw_Powerups::fCircleRadius, 1.0f, 12.0f, "%.1f"),
 
+			// ---- Camp timers -------------------------------------------------
+			B ("Fuser.Draw_CampTimers.bMasterToggle", "Camp Timers: Enable",          &Draw_CampTimers::bMasterToggle),
+			B ("Fuser.Draw_CampTimers.bWorld",        "Camp Timers: In World",        &Draw_CampTimers::bWorld),
+			B ("Fuser.Draw_CampTimers.bRadar",        "Camp Timers: On Radar",        &Draw_CampTimers::bRadar),
+			B ("Fuser.Draw_CampTimers.bMidBossBanner","Camp Timers: Mid Boss Banner", &Draw_CampTimers::bMidBossBanner),
+			F ("Fuser.Draw_CampTimers.fMaxDistanceM", "Camp Timers: Max Distance (m)",&Draw_CampTimers::fMaxDistanceM, 0.0f, 400.0f, "%.0f"),
+
+			// ---- Last-known positions ----------------------------------------
+			B ("Fuser.LastKnown.bEnabled",      "Last Known: Enable",           &LastKnown::bEnabled),
+			B ("Fuser.LastKnown.bWorld",        "Last Known: In World",         &LastKnown::bWorld),
+			B ("Fuser.LastKnown.bRadar",        "Last Known: On Radar",         &LastKnown::bRadar),
+			B ("Fuser.LastKnown.bShowReach",    "Last Known: Reach Ring",       &LastKnown::bShowReach),
+			F ("Fuser.LastKnown.fMaxAgeSec",    "Last Known: Forget After (s)", &LastKnown::fMaxAgeSec, 3.0f, 60.0f, "%.0f"),
+			F ("Fuser.LastKnown.fMoveSpeedMps", "Last Known: Move Speed (m/s)", &LastKnown::fMoveSpeedMps, 1.0f, 15.0f, "%.1f"),
+			F ("Fuser.LastKnown.fMaxReachM",    "Last Known: Max Reach (m)",    &LastKnown::fMaxReachM, 5.0f, 150.0f, "%.0f"),
+
 			// ---- Status bars -------------------------------------------------
 			B ("Fuser.StatusBars.bMasterToggle",         "Status Bars: Enable",       &StatusBars::bMasterToggle),
 			B ("Fuser.StatusBars.bRenderTeamHealthBar",  "Status Bars: Team Health",  &StatusBars::bRenderTeamHealthBar),
@@ -209,6 +227,8 @@ namespace
 			C ("ColorPicker.PowerupItemColor",         "Color: Powerup Item",      &ColorPicker::PowerupItemColor),
 			C ("ColorPicker.PowerupPanelColor",        "Color: Powerup Panel",     &ColorPicker::PowerupPanelColor),
 			C ("ColorPicker.MonsterCampColor",         "Color: Monster Camp",      &ColorPicker::MonsterCampColor),
+			C ("ColorPicker.CampTimerColor",           "Color: Camp Timer",        &ColorPicker::CampTimerColor),
+			C ("ColorPicker.MidBossTimerColor",        "Color: Mid Boss Timer",    &ColorPicker::MidBossTimerColor),
 			C ("ColorPicker.LocalPlayerRadar",         "Color: Local Player (Radar)",&ColorPicker::LocalPlayerRadar),
 			C ("ColorPicker.ArchMotherTeamColor",      "Color: Sapphire Team",     &ColorPicker::ArchMotherTeamColor),
 			C ("ColorPicker.HiddenKingTeamColor",      "Color: Amber Team",        &ColorPicker::HiddenKingTeamColor),

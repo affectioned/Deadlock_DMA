@@ -7,6 +7,8 @@
 #include "GUI/Fuser/Visuals/Draw/Sinners.h"
 #include "GUI/Fuser/Visuals/Draw/XpOrbs.h"
 #include "GUI/Fuser/Visuals/Draw/Powerups.h"
+#include "GUI/Fuser/Visuals/Draw/CampTimers.h"
+#include "GUI/Radar/Radar.h"
 
 bool Query::IsUsingPlayers()
 {
@@ -46,6 +48,17 @@ bool Query::IsUsingXpOrbs()
 bool Query::IsUsingPowerups()
 {
 	if (Fuser::bMasterToggle && Draw_Powerups::bMasterToggle) return true;
+
+	return false;
+}
+bool Query::IsUsingObjectiveTimers()
+{
+	if (!Draw_CampTimers::bMasterToggle) return false;
+
+	// Read for either consumer: the world tags and banner on the Fuser, or the
+	// radar, which renders in its own window independent of the Fuser toggle.
+	if (Fuser::bMasterToggle && (Draw_CampTimers::bWorld || Draw_CampTimers::bMidBossBanner)) return true;
+	if (Radar::bMasterToggle && Draw_CampTimers::bRadar) return true;
 
 	return false;
 }
